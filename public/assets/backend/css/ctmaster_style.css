@@ -1,0 +1,143 @@
+/*
+ * It is advised not to edit the smartadmin_production.css
+ * as this will override any changes you make in the 
+ * later versions of this theme. 
+ * 
+ * We advise that you use use this CSS to override 
+ * SmartAdmin styles. 
+ * 
+ * Rename the stylesheet to whatever your liking so it will stay
+ * unique to you with each update of SmartAdmin.
+ */
+
+/*
+ * INDEX
+ * 
+ * - HTML
+ * - BODY
+ * - CUSTOM STYLES
+ */
+ /*Funny Boxes
+------------------------------------*/
+.funny-boxes {
+  overflow: hidden;
+  padding: 15px 20px;
+  margin-bottom: 2px;
+  /*background: #f7f7f7;*/
+  -webkit-transition:all 0.3s ease-in-out;
+  -moz-transition:all 0.3s ease-in-out;
+  -o-transition:all 0.3s ease-in-out;
+  transition:all 0.3s ease-in-out;
+}
+
+.funny-boxes h2 a {
+  color: #555;
+}
+
+.funny-boxes p a {
+  color: #72c02c;
+}
+
+.funny-boxes .funny-boxes-img li i {
+  color: #72c02c;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.funny-boxes .funny-boxes-img img {
+  display: block;
+  margin: 5px 10px 10px 0;
+}
+
+.funny-boxes h2 {
+  margin-top: 0;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.funny-boxes ul.funny-boxes-rating li {
+  display: inline;
+}
+
+.funny-boxes ul.funny-boxes-rating li i {
+  color: #f8be2c;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.funny-boxes ul.funny-boxes-rating li i:hover {
+  color: #f8be2c;
+}
+
+/*Funny Colored Boxes*/
+.funny-boxes-colored p,
+.funny-boxes-colored h2 a,
+.funny-boxes-colored .funny-boxes-img li,
+.funny-boxes-colored .funny-boxes-img li i {
+  color: #fff !important;
+}
+
+/*Red Funny Box*/
+.funny-boxes-red {
+  background: #e74c3c;
+}
+
+/*Blue Funny Box*/
+.funny-boxes-blue {
+  background: #3498db;
+}
+
+/*Grey Funny Box*/
+.funny-boxes-grey {
+  background: #95a5a6;
+}
+
+/*Turquoise Funny Box*/
+.funny-boxes-sea {
+  background: #1abc9c;
+}
+
+/*Turquoise Top Bordered Funny Box*/
+.funny-boxes-top-sea {
+  border-top: solid 0px #1abc9c;
+}
+
+.funny-boxes-top-sea:hover {
+  border-top-color: #16a085; 
+}
+
+/*Yellow Top Bordered Funny Box**/
+.funny-boxes-top-yellow {
+  border-top: solid 2px #f1c40f;
+}
+
+.funny-boxes-top-yellow:hover {
+  border-top-color: #f39c12;
+}
+
+/*Orange Left Bordered Funny Box**/
+.funny-boxes-left-orange {
+  border-left: solid 2px #e67e22;
+}
+
+.funny-boxes-left-orange:hover {
+  border-left-color: #d35400;
+}
+
+/*Green Left Bordered Funny Box**/
+.funny-boxes-left-green {
+  border-left: solid 2px #72c02c;
+}
+
+.funny-boxes-left-green:hover {
+  border-left-color: #5fb611;
+}
+
+/*Green Right Bordered Funny Box**/
+.funny-boxes-right-u {
+  border-right: solid 2px #72c02c;
+}
+
+.funny-boxes-right-u:hover {
+  border-right-color: #5fb611;
+}
