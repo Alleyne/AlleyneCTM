@@ -136,10 +136,10 @@
 				</div>
 				<!-- end collapse menu -->
 
-				<!-- logout button -->
+				<!-- logout button
 				<div id="logout" class="btn-header transparent pull-right">
 					<span> <a href="{{ url('/logout') }}" title="Sign Out"><i class="fa fa-sign-out"></i></a> </span>
-				</div>
+				</div> -->
 				<!-- end logout button -->
 
 				<!-- search mobile button (this is hidden till mobile view port) -->

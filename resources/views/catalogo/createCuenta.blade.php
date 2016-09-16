@@ -70,8 +70,8 @@
 											<div class="form-group">
 												<label class="col-md-2 control-label">Clasificacion</label>
 												<div class="col-md-10">
-												{!! Form::select('nivel1', ['Seleccione el Tipo de cuenta ...', 'Corriente', 'No corriente'], 0, ['class' => 'form-control']) !!}
-												{!! $errors->first('nivel1', '<li style="color:red">:message</li>') !!}
+												{!! Form::select('corriente_siono', ['Seleccione el Tipo de cuenta ...', 'Corriente', 'No corriente'], 0, ['class' => 'form-control']) !!}
+												{!! $errors->first('corriente_siono', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>	
 										@endif

@@ -74,5 +74,13 @@
 @endif	
 
 <li>
-	<a href="{{ url('/logout') }}"><i class="fa fa-lg fa-fw fa-sign-out"></i> <span class="menu-item-parent">Logout</span></a>
+	<a href="{{ url('/logout') }}"
+    	onclick="event.preventDefault();
+        document.getElementById('logout-form').submit();"><i class="fa fa-lg fa-fw fa-sign-out"></i>
+        <span class="menu-item-parent">Logout</span>
+    </a>
 </li>
+
+<form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+    {{ csrf_field() }}
+</form>

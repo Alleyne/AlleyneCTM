@@ -57,21 +57,11 @@ class CatalogosController extends Controller {
         $codigo=Input::get('codigo');
         //dd($codigo[0], Input::get('id'));
         
-        $exist= Catalogo::where('codigo', $codigo)->first();
-        if ($exist) {
-			Session::flash('danger', 'La cuenta ' .$codigo. ' ya existe, no puede haber duplicados.');
-        	return Redirect::back()->withInput();	
-        }				
-        elseif ($codigo[0]!=Input::get('id')) {
-			Session::flash('danger', 'La cuenta ' .$codigo. ' debe comenzar con '.Input::get('id'));
-        	return Redirect::back()->withInput();	
-        }	
-        
         if (Input::get('codigo')==1 || Input::get('codigo')==2) {
 	        $rules = array(
 	            'nombre'    => 'required',
 	        	'codigo'    => 'required|between:7,7',
-	    		'nivel1'    => 'required'
+	    		'corriente_siono'    => 'required'
 	        );
         
         } elseif (Input::get('codigo')==6) {
@@ -98,20 +88,30 @@ class CatalogosController extends Controller {
 		if ($validation->passes())
 		{
 			
+	        $exist= Catalogo::where('codigo', $codigo)->first();
+	        if ($exist) {
+				Session::flash('danger', 'La cuenta '.$codigo.' ya existe, no puede haber duplicados.');
+	        	return Redirect::back()->withInput();	
+	        }				
+	        elseif ($codigo[0]!=Input::get('id')) {
+				Session::flash('danger', 'La cuenta '.$codigo.' debe comenzar con '.Input::get('id'));
+	        	return Redirect::back()->withInput();	
+	        }	
+
 			$dato = new Catalogo;
 
 	        if ($codigo[0]=='1' || $codigo[0]=='2') {
 				$dato->nombre       	   = Input::get('nombre');
 				$dato->codigo		       = Input::get('codigo');
 				$dato->tipo			  	   = Input::get('id');
-				$dato->nivel1		  	   = Input::get('nivel1');
+				$dato->corriente_siono 	   = Input::get('corriente_siono');
 				$dato->save();	
 				
 				// Registra en bitacoras
-				$detalle =	'nombre= '.		    $dato->nombre. ', '.
-							'codigo= '.   		$dato->codigo. ', '.
-	    					'nivel1= '.   		$dato->nivel1. ', '.
-	    					'tipo= '.		    $dato->tipo;
+				$detalle =	'nombre= '.		     $dato->nombre. ', '.
+							'codigo= '.   		 $dato->codigo. ', '.
+	    					'corriente_siono= '. $dato->corriente_siono. ', '.
+	    					'tipo= '.		     $dato->tipo;
 
 	        } elseif ($codigo[0]=='3' || $codigo[0]=='4') {
 				$dato->nombre       	   = Input::get('nombre');
@@ -139,7 +139,7 @@ class CatalogosController extends Controller {
 	        }
 
 			Sity::RegistrarEnBitacora(12, 'cuentas', $dato->id, $detalle);
-			Session::flash('success', 'La cuenta "' .$dato->nombre. '" ha sido creada con éxito.');
+			Session::flash('success', 'La cuenta -'.$dato->nombre.'- ha sido creada con éxito.');
 			return Redirect::route('catalogos.index');
 		}
         return Redirect::back()->withInput()->withErrors($validation);

@@ -1,0 +1,1570 @@
+/*
+|--------------------------------------------------------------------------
+| Ejemplos de código
+|--------------------------------------------------------------------------
+|
+| Este es un listado de codigos útiles.
+| Desarrollados y probados por:
+| Germán Barrios
+|
+*/
+
+|--------------------------------------------------------------------------
+|- Crea un array que contiene todos los productos que pertenecen a la requisición $req_id
+|--------------------------------------------------------------------------
+	-Crea un array de objetos
+	$detallereqs=Detallereq::where('req_id', '=', $req_id)->get();
+	
+	-Crea un array de strings
+	$detallereqs=Detallereq::where('req_id', '=', $req_id)->get()->toArray();
+	
+	-Crea un array de objetos donde se selecciona solo algunos campos y combierte el array en string
+	$detallereqs=Detallereq::where('req_id', '=', $req_id)->get(array('req_id', 'producto_id'))->toArray();
+	
+	-Crea un array de objetos donde se selecciona solo algunos campos y combierte el array en string	
+	$detallereqs=Detallereq::where('req_id', '=', $req_id)->select('req_id', 'producto_id')->get();
+	
+	-Crea un array de objetos y los despliega en formato array de string para efectos de debuguear
+	$detallereqs=Detallereq::where('req_id', '=', $req_id)->get();	
+	dd($detallereqs->toArray());	
+	
+	-Encuentra todos los registros o modelos contenidos en la tabla worker y combiente el array en string
+	var_dump(Worker::find(1)->toArray());
+
+|--------------------------------------------------------------------------	
+|- Agregar un nuevo elemento a un array multidimencional
+|--------------------------------------------------------------------------
+array (size=2)
+  0 => 
+    array (size=6)
+      'id' => int 22
+      'req_id' => int 7
+      'producto_id' => int 1
+      'cant' => int 8
+      'cant_aprobada' => int 6
+      'entregado' => int 0
+  1 => 
+    array (size=6)
+      'id' => int 23
+      'req_id' => int 7
+      'producto_id' => int 3
+      'cant' => int 5
+      'cant_aprobada' => int 5
+      'entregado' => int 0
+
+
+$cant_almacen array
+  (
+  	$i  =>array("cant_almacen" => $cant_almcacen);
+  );
+
+// resultado
+array (size=2)
+  0 => 
+    array (size=6)
+      'id' => int 22
+      'req_id' => int 7
+      'producto_id' => int 1
+      'cant' => int 8
+      'cant_aprobada' => int 6
+      'entregado' => int 0
+  1 => 
+    array (size=6)
+      'id' => int 23
+      'req_id' => int 7
+      'producto_id' => int 3
+      'cant' => int 5
+      'cant_aprobada' => int 5
+      'entregado' => int 0
+  3 => 
+    array (size=6)
+      'cant_almacen"  => int 23
+
+
+|--------------------------------------------------------------------------	
+|- Agregar un elemento a un array multidimencional en la posicion indicada
+|--------------------------------------------------------------------------    
+//Crea un array que contiene todos los productos que pertenecen a la requisición $req_id
+$detallereqs=Detallereq::where('req_id', '=', $req_id)->get();
+
+$i=0;		
+foreach ($detallereqs as $detallereq) {
+	$cant_en_almacen = Detalleoc::where('consumido', '=', 0)
+							    ->where('producto_id', '=', $detallereq->producto_id)
+							    ->sum('cant_en_almacen');
+
+    // Agrega la cantidad en almacen al array principal para enviar toda la información consolidada en un solo array
+    $detallereqs[$i]["cant_en_almacen"] = $cant_en_almacen;
+    $detallereqs[$i]["ejemplo"] = 'ejemplo';
+    $i++;
+}	
+
+
+|--------------------------------------------------------------------------	
+|- Forma personalizada de validar campos en un controlador 
+|--------------------------------------------------------------------------     
+// El nuevo valor deberá ser menor que el anterior.
+  if (Input::get('cant_aprobada_old') > Input::get('cant_aprobada') )
+  {
+
+  	... codigo aqui
+	Notification::success('La nueva cantidad aprobada es ok.');  	
+	return Redirect::route('VerDetallesDeReqPorAprobar', $req_id);  
+  }
+
+	Notification::success('La nueva cantidad aprobada deberá ser menor que la anterior.'); 
+	return Redirect::back()->withInput();
+
+|--------------------------------------------------------------------------	
+|- Ocultar un campo en una vista 
+|-------------------------------------------------------------------------- 
+<div>
+	{{ Form::hidden('cant_aprobada', $detallereq->cant_aprobada) }}
+</div>
+
+|--------------------------------------------------------------------------	
+|- Selecciona todos los campos que contiene un registro
+|-------------------------------------------------------------------------- 
+//Carga una matriz con los productos que contiene la requisicion en estudio
+$detallereqs= Detallereq::where('req_id', '=', $req_id)
+						    ->orderBy('producto_id')
+						    ->get();
+/*--debug	
+dd($detallereqs->toArray());
+	
+array (size=2)
+  0 => 
+    array (size=6)
+      'id' => int 22
+      'req_id' => int 7
+      'producto_id' => int 1
+      'cant' => int 8
+      'cant_aprobada' => int 2
+      'entregado' => int 0
+  1 => 
+    array (size=6)
+      'id' => int 23
+      'req_id' => int 7
+      'producto_id' => int 3
+      'cant' => int 12
+      'cant_aprobada' => int 0
+      'entregado' => int 0
+--debug */
+
+|--------------------------------------------------------------------------	
+|- Selecciona solo algunos de los campos que contiene un registro
+|-------------------------------------------------------------------------- 
+//Carga una matriz con los productos que contiene la requisicion en estudio
+$detallereqs= Detallereq::where('req_id', '=', $req_id)
+						    ->orderBy('producto_id')
+						    ->get(array('producto_id','cant_aprobada'));
+/*--debug		
+dd($detallereqs->toArray());
+
+array (size=2)
+  0 => 
+    array (size=2)
+      'producto_id' => int 1
+      'cant_aprobada' => int 2
+  1 => 
+    array (size=2)
+      'producto_id' => int 3
+      'cant_aprobada' => int 0
+--debug */     
+
+//Ejemplo usando select
+$picks = Picks::distinct()
+              ->select('user_id')
+              ->where('weeknum', '=', 1)
+              ->groupBy('user_id')
+              ->get();
+
+//Obtiene todos los propietarios registrados
+$datos = Users_group::distinct()
+                    ->where('group_id', '7')
+                    ->join('uns_users_groups', 'uns_users_groups.users_group_id', '=', 'users_groups.id')
+                    ->with('user')
+                    ->select('user_id')
+                    ->get();
+
+|--------------------------------------------------------------------------	
+|- Caching queries
+|-------------------------------------------------------------------------- 
+Remember, Remember
+To cache your query results, you can simply add a remember(100) clause to remember the results
+of your query for a specified number of minutes like so:
+
+User::where('active', '=', '1')->remember(100)->get();
+
+This will remember all users with the ‘active’ column marked as ’1′ for 100 minutes. Whenever you
+use this query, it will not contact the database but will use cache instead: VERY useful.
+Imagine creating a complex, giant beast of a query, and instead of having to run it several times
+over the course of a user’s request, you can simply cache it!
+
+|--------------------------------------------------------------------------	
+|- Para armar un array de una consulta
+|-------------------------------------------------------------------------- 
+$pins = Pin::get();
+foreach($pins as $p){
+ $pin[] = $p->to_array();
+}
+
+
+|-------------------------------------------------------------------------- 
+|- Ejemplos de data query
+|-------------------------------------------------------------------------- 
+Retrieving All Rows From A Table
+$users = DB::table('users')->get();
+
+foreach ($users as $user)
+{
+var_dump($user->name);
+}
+
+Retrieving A Single Row From A Table
+$user = DB::table('users')->where('name', 'John')->first();
+var_dump($user->name);
+
+Retrieving A Single Column From A Row
+$name = DB::table('users')->where('name', 'John')->pluck('name');
+
+Retrieving A List Of Column Values
+$roles = DB::table('roles')->lists('title');
+
+This method will return an array of role titles. You may also specify a custom key column for the returned array:
+$roles = DB::table('roles')->lists('title', 'name');
+
+Specifying A Select Clause
+$users = DB::table('users')->select('name', 'email')->get();
+$users = DB::table('users')->distinct()->get();
+$users = DB::table('users')->select('name as user_name')->get();
+
+|-------------------------------------------------------------------------- 
+|- Ordena un array multidimensional por uno de sus elementos,
+|- en este caso la fecha.
+|-------------------------------------------------------------------------- 
+
+array (size=4)
+  0 => 
+    array (size=5)
+      'fecha' => string '2013-07-01' (length=10)
+      'req_numero' => int 10
+      'anno' => int 2013
+      'mes' => string 'Jul' (length=3)
+      'cant_aprobada' => int 8
+  1 => 
+    array (size=5)
+      'fecha' => string '2012-09-01' (length=10)
+      'req_numero' => int 9
+      'anno' => int 2012
+      'mes' => string 'Sep' (length=3)
+      'cant_aprobada' => int 5
+  2 => 
+    array (size=5)
+      'fecha' => string '2012-08-01' (length=10)
+      'req_numero' => int 8
+      'anno' => int 2012
+      'mes' => string 'Ago' (length=3)
+      'cant_aprobada' => int 9
+  3 => 
+    array (size=5)
+      'fecha' => string '2012-07-01' (length=10)
+      'req_numero' => int 7
+      'anno' => int 2012
+      'mes' => string 'Jul' (length=3)
+      'cant_aprobada' => int 10
+
+// Procede a ordenar por fecha ascendentemente
+$fechas = array();
+foreach ($historial as $his) {    
+    $fechas[] = $his['fecha'];
+}
+
+// Procede a ordernar el array principal
+array_multisort($fechas, SORT_ASC, $historial);
+
+// Resultado
+array (size=4)
+  0 => 
+    array (size=5)
+      'fecha' => string '2012-07-01' (length=10)
+      'req_numero' => int 7
+      'anno' => int 2012
+      'mes' => string 'Jul' (length=3)
+      'cant_aprobada' => int 10
+  1 => 
+    array (size=5)
+      'fecha' => string '2012-08-01' (length=10)
+      'req_numero' => int 8
+      'anno' => int 2012
+      'mes' => string 'Ago' (length=3)
+      'cant_aprobada' => int 9
+  2 => 
+    array (size=5)
+      'fecha' => string '2012-09-01' (length=10)
+      'req_numero' => int 9
+      'anno' => int 2012
+      'mes' => string 'Sep' (length=3)
+      'cant_aprobada' => int 5
+  3 => 
+    array (size=5)
+      'fecha' => string '2013-07-01' (length=10)
+      'req_numero' => int 10
+      'anno' => int 2013
+      'mes' => string 'Jul' (length=3)
+      'cant_aprobada' => int 8
+
+// para accesar a los datos del array
+dd($historial[1]['fecha']); 
+string '2012-08-01' (length=10)
+
+|-------------------------------------------------------------------------- 
+|- 
+|- html Nombre y apellido horizontalmente
+|--------------------------------------------------------------------------       
+  <div class="control-group">
+    <label class="control-label" for="name">Name</label>
+    <div class="controls controls-row">
+      <input class="span6" type="text" placeholder="First Name">
+      <input class="span6 input-left-top-margins" type="text" placeholder="Last Name">
+    </div>
+  </div>
+
+
+|-------------------------------------------------------------------------- 
+|- Ejemplo de Eager Loading
+|- 
+|--------------------------------------------------------------------------     
+// Utilizamos Eager Loading para cargar todos los Ajustes con su respectivo
+// registro en la tabla Ajustestipo.
+
+$ajustes = Ajuste::with('AjustesTipo')->get();
+//$ajustes = Ajustestipo::with('Ajustes')->where('id', '=', 1)->get();    
+/*--debug
+  dd($ajustes->toArray());        
+  
+    array (size=2)
+    0 => 
+      array (size=7)
+        'id' => int 1
+        'ajustes_tipo_id' => int 1
+        'fecha' => string '2013-09-30' (length=10)
+        'descripcion' => string 'Ajuste por robo de mercancia.' (length=29)
+        'usuario' => int 2013
+        'pdf' => string 'assets/pdf/ajustes/ajuste_1.pdf' (length=31)
+        'ajustes_tipo' => 
+          array (size=2)
+            'id' => int 1
+            'tipo' => string 'Tipo 1' (length=6)
+    1 => 
+      array (size=7)
+        'id' => int 2
+        'ajustes_tipo_id' => int 2
+        'fecha' => string '2013-09-30' (length=10)
+        'descripcion' => string 'Ajuste por daÃ±o de mercancÃ­a.' (length=31)
+        'usuario' => int 2013
+        'pdf' => string 'assets/pdf/ajustes/ajuste_2.pdf' (length=31)
+        'ajustes_tipo' => 
+          array (size=2)
+            'id' => int 2
+            'tipo' => string 'Tipo 2' (length=6)
+  
+  //Ejemplo de como extraer los datos de los arreglos anidados
+  
+  $ajuste->descripcion         // Del arreglo principal
+  $ajuste->AjustesTipo->tipo   // Del arreglo anidado
+--debug */
+
+
+//What if we want to add some conditions to our eager loading, maybe we are only going to be using blue hats?
+$users = User::with(array('hat' => function($query) {
+    $query->where('color', '=', 'blue');
+}))->get();
+
+//Eager loading con condiciones para cada una de las tablas.
+Work::with(
+    array('users'=>function($query){
+            $query->where('id',2); //user id of 2 (work has an owner (admin) user, also work has many users which is defined with pivot)
+        },'projects'=>function($query){
+            $query->where('id',2); //project id of 2
+            $query->where('created_at','<',date('Y-m-d H:i:s')); //e.g it's created in the past
+        },'companies'=>function($query){
+            $query->where('id',6); //company id of 6
+        },'jobs'=>function($query){
+            $query->where('user_id',5); //this is a model for pivot, pivot's user_id of 5
+        })
+    )
+    ->where('active',1)
+    ->get();
+
+|-------------------------------------------------------------------------- 
+|- Ejemplo de joining multiples tablas.
+|- 
+|-------------------------------------------------------------------------- 
+    $oc = Oc::join('detalle_ocs', 'detalle_ocs.oc_id', '=', 'ocs.id')
+            ->join('unidades', 'unidades.id', '=', 'ocs.unidade_id')
+            ->where('ocs.id', '=', $oc_id)
+            ->get(array('ocs.id','ocs.oc_numero','ocs.fecha','ocs.factura','unidades.nombre','detalle_ocs.id','detalle_ocs.oc_id','detalle_ocs.cod_producto','detalle_ocs.cant'));
+  
+        dd($datos->toArray());
+    array (size=2)
+      0 => 
+        array (size=8)
+          'id' => int 70
+          'oc_numero' => string '789' (length=3)
+          'fecha' => string '2013-08-01' (length=10)
+          'factura' => int 0
+          'nombre' => string 'Dirección de Tecnologia Informática y Comunicaciones' (length=55)
+          'oc_id' => int 17
+          'cod_producto' => string '262-001' (length=7)
+          'cant' => int 50
+      1 => 
+        array (size=8)
+          'id' => int 71
+          'oc_numero' => string '789' (length=3)
+          'fecha' => string '2013-08-01' (length=10)
+          'factura' => int 0
+          'nombre' => string 'Dirección de Tecnologia Informática y Comunicaciones' (length=55)
+          'oc_id' => int 17
+          'cod_producto' => string '262-005' (length=7)
+          'cant' => int 50 
+
+        
+        $dato = Seccione::where('secciones.id', $seccione_id)
+                ->join('bloques','bloques.id', '=', 'secciones.bloque_id')
+                ->join('phs','phs.id', '=', 'secciones.ph_id')
+                ->first(array('secciones.id as seccione_id','bloques.id as bloque_id','secciones.tipo','bloques.codigo as codigobloque','secciones.codigo as codigoseccion','phs.codigo as codigoph'));
+        dd($dato->toArray());
+
+|-------------------------------------------------------------------------- 
+|- Ejemplo de enviar un array de datos desde un view a una ruta.
+|- 
+|-------------------------------------------------------------------------- 
+  <a href="{{ URL::route('AprobarCantidad', array($detallereq->req_id, $detallereq->producto_id, $detallereq->cant_en_almacen )) }}" class="btn btn btn-warning btn-mini pull-left">Editar cantidad</a>   
+
+
+|-------------------------------------------------------------------------- 
+|- Ejemplo nest views.
+|- 
+|-------------------------------------------------------------------------- 
+  public function show($id)
+   {
+    return \View::make('admin.productos.show')->with('producto', Producto::find($id))
+                          ->nest('grafica_1', 'admin.graficas.grafica_1');  
+   }
+
+
+  /*************************************************************************************
+   * Ejemplo de como llamar a la function UsuarioEnGrupo para validad un usuario
+   ***********************************************************************************/  
+  public function show($id)
+  {
+    $grupos = array('Admin', 'Auditor', 'Prueba');
+      if (Invent::UsuarioEnGrupo($grupos))      
+      {
+        return \View::make('admin.productos.show')->with('producto', Producto::find($id));    
+      }
+      return 'no tiene permiso';
+  }
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Verifica si el usuario corriente pertenece a un determinado grupo.
+    |-------------------------------------------------------------------------------------
+    */
+    public static function UsuarioEnGrupo($grupos) {
+        // dd($grupos);
+        
+        // Find the user using the user id
+        // $user = Sentry::findUserByID(1);
+        
+        // Get the current active/logged in user
+        $user = Sentry::getUser();
+
+        foreach ($grupos as $grupo) 
+        {
+            // dd($grupo);
+            
+            // Encuentra el grupo
+            $a = Sentry::findGroupByName($grupo);            
+            // dd($a);
+            
+            // Verifica que el usuario pertenezca al grupo
+            if ($user->inGroup($a))
+            {
+                return true;
+            }
+        }    
+    }
+    
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para recortar una cadena.
+    |-------------------------------------------------------------------------------------
+    */
+    $detalleoc->cod_producto = '201.001'
+    $s= ssubstr($detalleoc->cod_producto, 0,2);
+    $s = '20'
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para concatenar campos
+    |-------------------------------------------------------------------------------------
+    */
+    return self::get( array( 'id', 'CONCAT(first_name, " ", last_name)' ) );
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para ver y regresar a la página anterior
+    |-------------------------------------------------------------------------------------
+    */
+     <ul>
+        <li>Current page  = {{{URL::current()}}}</li>
+        <li>Previous page = {{{URL::previous()}}}</li>
+     </ul>
+    
+     <h4><a href="{{ URL::previous() }}"><i class="icon-backward"></i><span class="hidden-tablet"> Regresar</span></a></h4>      
+     
+     <a href="{{ URL::previous() }}" class="btn btn-primary btn-large">Regresar</a>
+     <a href="{{ URL::previous() }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>            
+     
+     //para rutas que no usan parametros
+     <h4><a href="{{ URL::route('admin.proveedores.index') }}">&laquo; Regresar</a></h4>
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para usar variables en eloquent
+    |-------------------------------------------------------------------------------------
+    */
+      $name = 'phill';
+      $language = 'en';
+      User::where('lang', '=', $language)->where(function($query) use ($name)
+      {
+          $query->where('first_name', 'like', "%$name%");
+          $query->or_where('last_name', 'like', "%$name%");
+      })
+      ->order_by("last_name", "asc")->paginate(20);
+
+      $datos = Jd::find($jd_id);
+      $datos->load(['bloques' => function ($query) use ($bloque_id) {
+         $query->where('id', $bloque_id);
+      }]);
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- notificaciones
+    |-------------------------------------------------------------------------------------
+    */
+    // Notification::success('Success message');
+    // Notification::error('Error message');
+    // Notification::info('Info message');
+    // Notification::warning('Warning message');
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- otra opción para validar permisos en el base controller
+    |-------------------------------------------------------------------------------------
+    */
+    public function __construct()
+    {
+ 
+        $clase = get_called_class();
+        $metodo= Route::currentRouteAction(); // string 'App\Controllers\Admin\ProductosController@show' (length=46)
+        //$metodo=Route::currentRouteName(); // string 'admin.productos.show' (length=20)
+        //$metodo=Route::current()();
+        //$metodo=Request::path();
+        //dd($clase);
+        dd($metodo);
+
+        switch($clase) {
+            //--- Productos Controller
+            case 'App\Controllers\Admin\ProductosController':
+           switch($metodo) {
+                case 'App\Controllers\Admin\ProductosController@index':
+                    //dd(!Sentry::getUser()->hasAnyAccess(['productos.index']));
+                    if (!Sentry::getUser()->hasAnyAccess(['admin','productos.index']))
+              {
+                          $this->beforeFilter('error401'); 
+                    }
+                    break;
+                              
+                case 'App\Controllers\Admin\ProductosController@show':
+                    if (!Sentry::getUser()->hasAnyAccess(['admin','productos.show']))
+              {
+                          $this->beforeFilter('error401');
+                    }
+                    break;
+                 
+                case 'App\Controllers\Admin\ProductosController@edit':
+                    if (!Sentry::getUser()->hasAnyAccess(['admin','productos.edit']))
+              {
+                          $this->beforeFilter('error401');
+                    }
+                    break;
+                
+                case 'App\Controllers\Admin\ProductosController@create':
+                    if (!Sentry::getUser()->hasAnyAccess(['admin','productos.create']))
+              {
+                          $this->beforeFilter('error401');
+                    }
+                    break;                     
+                
+                default:
+                      $this->beforeFilter('error404');
+                    break;
+            }                
+                break;
+            //---
+            
+            // Reqs controller 
+            case 'App\Controllers\Admin\ReqsController':
+            switch($metodo) {
+                case 'App\Controllers\Admin\ReqsController@index':
+                    if (Sentry::getUser()->hasAnyAccess(['admin','reqs.index']))
+              {
+                          $this->beforeFilter('error401');
+                    }
+                    break;                
+
+                case 'App\Controllers\Admin\ReqsController@show':
+                    if (Sentry::getUser()->hasAnyAccess(['admin','reqs.show']))
+              {
+                          $this->beforeFilter('error401');
+                    }
+                    break;
+                 
+                case 'App\Controllers\Admin\ReqsController@edit':
+                    if (Sentry::getUser()->hasAnyAccess(['admin','reqs.edit']))
+              {
+                          $this->beforeFilter('error401');
+                    }
+                    break;
+                     
+                default:
+                      $this->beforeFilter('error404');
+                    break;
+            }                
+                break;
+            //---     
+            
+            default:
+              // nada
+                break;
+        }
+  }
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Lo que se despliega en el url
+    |-------------------------------------------------------------------------------------
+    */  
+    Route::get('Lo que pongas aqui será lo que veas en el url/{ajuste_id}', array('as' => 'VerDetallesDeAjusteComun', 'uses' => 'App\Controllers\Admin\AjustesDetallesController@VerDetallesDeAjusteComun'));    
+    
+    Route::get('VerDetallesDeAjusteComun/{ajuste_id}', array('as' => 'VerDetallesDeAjusteComun', 'uses' => 'App\Controllers\Admin\AjustesDetallesController@VerDetallesDeAjusteComun'));    
+    Ejemplo: http://localhost/l4_site/public/index.php/admin/VerDetallesDeAjusteComun/36
+    
+    Route::get('/{ajuste_id}', array('as' => 'VerDetallesDeAjusteComun', 'uses' => 'App\Controllers\Admin\AjustesDetallesController@VerDetallesDeAjusteComun'));    
+    Ejemplo: http://localhost/l4_site/public/index.php/admin/36
+
+
+
+    Route::post('SalvarProductoAsignadoAlProveedorNo/{id}', array('as' => 'SalvarProductoAsignadoAlProveedorNo',  function($id) {  
+      return 'ok'. $id;
+    }));
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- despliega 'Si' si el campo contiene el valor 1, 'No' si su valor es 0
+    |-------------------------------------------------------------------------------------
+    */  
+    {{ $producto->activo ? 'Si' : 'No' }}
+
+
+
+    Event::listen('laravel.query', function($sql) {
+      var_dump($sql);
+    });
+    
+    
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para probar mi libreria personal
+    |-------------------------------------------------------------------------------------
+    */ 
+    Route::get('ejemplo/{id}', function($id)
+      {
+         //así obtenemos una requisición con nuestro método
+         $data = Invet::getDataParaGrafica_1($id);
+         var_dump($data->toArray());
+      });
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Despues de un composer update o install se debe editar el archivo
+    |- vendor/barryvdh/laravel-dompdf/scr/barryvdh/dompdf/pdf.php  
+    |- de lo contrario el generador de pdf no funcionará
+    |-------------------------------------------------------------------------------------
+    */  
+    linea 35
+    $config_file = \Config::get('laravel-dompdf::config_file') ?: base_path() .'/vendor/dompdf/dompdf/dompdf_config.inc.php';    
+
+    
+    linea 140
+    // código original  
+    public function loadView($view, $data = array(), $mergeData = array(), $encoding = null){
+        $html = \View::make($view, $data, $mergeData);
+        $this->loadHTML($html, $encoding);
+        return $this;
+    }    
+
+    // codigo editado
+    public function loadView($html, $encoding = null){
+        $this->loadHTML($html, $encoding);
+        return $this;
+    }
+
+
+    //Uso en un controlador
+    $html = \View::make('admin.Reqs.VerCostoRealDeReq')->with('bs', $bs)
+                              ->with('id', $id)
+                              ->with('req_numero', $req_numero)
+                              ->with('nombre', $nombre)
+                              ->with('tipo', $tipo)
+                              ->with('fecha', $fecha);
+      
+    //$pdf = PDF::loadView($html)->setPaper('legal')->setOrientation('landscape')->setWarnings(false);
+    $pdf = PDF::loadView($html)->setPaper('legal')->setWarnings(false);
+
+    //return $pdf->download('invoice.pdf');
+    return $pdf->stream();
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Go back to previus page with parameters
+    |-------------------------------------------------------------------------------------
+    */  
+    // Salvando el url-----------
+    // in the controller
+    $url = URL::full();
+    dd($url);
+    'http://localhost/l4_site/public/index.php/admin/reqs/11'
+    
+    // in the view
+    <a href="{{ url($url) }}">Back</a>
+    //-------------------
+    
+    <h6><a href="{{ URL::previous() }}"><i class="icon-backward"></i><span class="hidden-tablet"> Regresar</span></a></h6>      
+    <h6><a href="javascript:history.go(-1)" class="btn btn-large">Cancel</a></h6>
+
+    <h6><a href="{{ URL::route('admin.proveedores.index') }}"><i class="icon-backward"></i><span class="hidden-tablet"> Regresar</span></a></h6>      
+    <h6><a href="{{ URL::route('Exclusivas') }}"><i class="icon-backward"></i><span class="hidden-tablet"> Regresar</span></a>
+    <h6><a href="{{ URL::route('VerDetallesDeOc', $oc_id) }}" class="btn btn-large">Cancel</a></h6> 
+    <h6><a href="{{ URL::to('admin/VerReqsPorAprobar') }}"><i class="icon-backward"></i><span class="hidden-tablet"> Regresar</span></a></h6>     
+    <h6><a href="{{ URL::route('VerDetallesDeLaRequisionPorAprobar', array($req_id, $req_numero, $req_tipo, $unidade_id, $unidad)) }}"><i class="icon-backward"></i><span class="hidden-tablet"> Regresar</span></a></h6> 
+    <h6><a href="{{ URL::route('VerDetallesDeLaRequisionPorAprobar', array($req_id, $req_numero, $req_tipo, $unidade_id, $unidad)) }}" class="btn btn-large">Cancelar</a></h6> 
+
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Confirmación de acciones mediante dialog boxes
+    |-------------------------------------------------------------------------------------
+    */
+    // En un view tipo index, usando clase modal de bootstrap
+    <td col width="80px">
+      {{ Form::open(array('route' => array('DesvincularProductoDeProveedor', $producto->id, $proveedore_id), 'method' => 'get')) }}
+        <a href="#myModal" role="button" class="btn btn-danger btn-mini" data-toggle="modal">Desvincular</a>
+        <!-- Modal -->
+        <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h2 id="myModalLabel">PRODUCTOS - PROVEEDORES</h2>
+            </div>
+            <div class="modal-body">
+              <p><h3>Está seguro de que desea desvincular este producto?</h3></p>
+            </div>
+            <div class="modal-footer">
+              <a class="btn" data-dismiss="modal" aria-hidden="true">No</a>
+              <button class="btn btn-danger btn-save">Desvincular</button>
+            </div>
+        </div>
+      {{ Form::close() }}           
+    </td>
+
+    // En un view tipo index, usando clase modal sencilla
+    <td col width="80px">
+      {{ Form::open(array('route' => array('DesvincularProductoDeProveedor', $producto->id, $proveedore_id), 'method' => 'get', 'data-confirm' => 'Deseas desvincular?')) }}
+         <button type="submit" href="{{ URL::route('DesvincularProductoDeProveedor', array($producto->id, $proveedore_id)) }}" class="btn btn-danger btn-mini">Desvincular</button>
+      {{ Form::close() }}           
+    </td>
+
+    
+    // En un view tipo edit, usando clase modal de bootstrap
+    {{ Form::model($categoria, array('method' => 'put', 'route' => array('admin.categorias.update', $categoria->id))) }}
+      <div>
+        <label class="mi-add-on span3">Nombre </label>
+          {{ Form::text('nombre', $categoria->nombre, array('class' => 'span9', 'title' => 'Escriba el nombre de la categoría')) }}
+          {{ $errors->first('nombre', '<span class="label label-important">*</span>') }}    
+      </div>    
+
+      <div class="form-actions">
+        <a href="#myModal" role="button" class="btn btn-success btn-save btn-large" data-toggle="modal">Salvar</a>
+        <a href="{{ URL::route('admin.categorias.index') }}" class="btn btn-large">Cancelar</a>
+      </div>                      
+
+      <!-- Modal -->
+      <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h2 id="myModalLabel">Categorías de productos</h2>
+          </div>
+          <div class="modal-body">
+            <p><h3>Está seguro de que desea salvar los cambios?</h3></p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-save">Salvar cambios</button>
+            <a class="btn" data-dismiss="modal" aria-hidden="true">No</a>
+          </div>
+      </div>
+    {{ Form::close() }}
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para limitar el numero de renglones en un textarea
+    |-------------------------------------------------------------------------------------
+    */
+    <div> 
+      <label class="mi-add-on span3">Observacion </label>
+        {{ Form::textarea('observacion', '', array('class' => 'span8', 'title' => 'Escriba la observación', 'rows' => '5')) }}
+        {{ $errors->first('observacion', '<span class="label label-important">*</span>') }}   
+    </div>
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para introducir un campo de fecha con datepicker en un formulario para editar
+    |-------------------------------------------------------------------------------------
+    */
+    <div> 
+      <label class="mi-add-on span3">Fecha de la OC</label>
+        <input type="date" name="fecha" value="{{ $oc->fecha }}" class="span4" title="Escriba en Número de la Fecha de la Orden de compra")>
+        {{ $errors->first('fecha', '<span class="label label-important">*</span>') }}   
+    </div>
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para introducir un campo de fecha con datepicker en un formulario de crear
+    |-------------------------------------------------------------------------------------
+    */
+      <div> 
+        <label class="mi-add-on span2">Fecha de la OC</label>
+          <input type="date" name="fecha" value="{{ Input::old('fecha')}}" class="span3" title="Escriba en Número de la Fecha de la Orden de compra">
+          {{ $errors->first('fecha', '<span class="label label-important">*</span>') }}   
+      </div>   
+
+    /*
+    |-------------------------------------------------------------------------------------
+    |- Para determinar si un array de objetos está vacio o continen datos.
+    |-------------------------------------------------------------------------------------
+    */
+      @if (!$productos->isEmpty())
+          No está vacio
+      @else
+          Está vacio
+      @endif
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para concatenar campos
+    |-------------------------------------------------------------------------------------
+    */
+    
+    En el modelo
+    class User extends Eloquent
+    {
+        public function getFullNameAttribute()
+        {
+            return $this->attributes['first_name'] . ' ' . $this->attributes['last_name'];
+        }
+    }
+
+    En el controlador
+    $usuarios= User::orderBy('last_name')->get();
+    $usuarios= $usuarios->lists('FullName', 'id');
+    dd($usuarios);
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Para debuguear dentro de un view
+    |-------------------------------------------------------------------------------------
+    */
+    {{dd()}} 
+    {{dd($phadmins->count())}}
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Example: Post model belongs to an Author. We only want the name of the author.
+    |-------------------------------------------------------------------------------------
+    */
+    $posts = Post::with(array('author' => function($query)
+    {
+        // Notice that you add either the primary key or the
+        // foreign key to the field list, or else Laravel
+        // won't be able to link the models together!
+        $query->addSelect(array('id', 'name'));
+    }))->get();
+
+    // To further explain the note I place within the closure, let's do it the other way around as well.
+
+    // Example: We only want the title of the posts.
+    $authors = Author::with(array('posts' => function($query) 
+    {
+        // Notice the addition of the author_id field!
+        $query->addSelect(array('title', 'author_id'));
+    }))->get();
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Example: Para crear un array de con la data contenida en un Input::all().
+    |-------------------------------------------------------------------------------------
+    */
+    if ( $v->passes() ) {
+        User::create(array(
+                'real_name'=> Input::get('real_name'),
+                'email'=>     Input::get('email'),
+                'password'=>  Hash::make(Input::get('password')),
+                'age'=>       Input::has('age') ? intval(Input::get('age')) : null,
+        ));
+
+        return 'Thanks for registering!';
+    }
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Example:     You can see that Eloquent returns a collection object - an object always passes an empty() check as True. Instead, do
+    |-------------------------------------------------------------------------------------
+    */
+
+    if ( ! $subpages->isEmpty() )
+    Or even
+
+    if ( $subpages->count() )
+
+    
+    /*
+    |------------------------------------------------------------------------------------
+    |- Example: Share variables between views
+    |-------------------------------------------------------------------------------------
+    */
+    class BloquesController extends \BaseController {
+  
+    public function __construct()
+    {       
+      $name = 'germancito';    
+      View::share('minombre', $name); // Share $user with all views that are called from this controller
+    }
+
+    In your view
+    {{ $minombre }}
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Example: How do you check “if not null” with Eloquent?
+    |-------------------------------------------------------------------------------------
+    */
+
+    Model::whereNotNull('sent_at')
+    
+    /*
+    |------------------------------------------------------------------------------------
+    |- Example: eloquent with raw, join and select
+    |-------------------------------------------------------------------------------------
+    */
+    $shares = Share::where('shares.status', '=', SHARE_STATUS_APPROVED)
+                    ->where('shares.deleted', '=', '0')
+                    ->where('locations.lat', '<=', $nelat)
+                    ->where('locations.lat', '>=', $swlat)
+                    ->where('locations.lng', '>=', $nelng)
+                    ->where('locations.lng', '<=',  $swlng)
+                    ->where('users.id', '=',  $user)
+                    ->orWhere('shares.connected_user_id', '=',  $user)
+                    ->join('users', 'shares.user_id', '=', 'users.id')
+                    ->join('locations', 'locations.id', '=', 'users.location_id')
+                    ->join('provinces', 'provinces.id', '=', 'locations.province_id')
+                    ->join('countries', 'countries.id', '=', 'locations.country_id')
+                    ->select('shares.id AS share_id', 'users.id AS user_id', 'shares.connected_user_id', 'shares.original_language_id', 'shares.image',
+                        'users.first_name', 'users.last_name', 'users.email',
+                        'locations.city', 'provinces.name', 'countries.code',
+                        'locations.lat', 'locations.lng',
+                        'shares.created_at')
+                    ->raw('(CASE WHEN users.id = ' . $user . ' THEN 1 ELSE 0 END) AS is_user')
+                    ->orderBy('shares.created_at', 'desc')
+                    ->orderBy('users.id', 'asc')
+                    ->orderBy('shares.connected_user_id', 'asc')
+                    ->get();
+
+    // otro ejemplo
+    $user = User::where('u_id', '=', $userid)
+                ->where('type', '=', 1)
+                ->where('is_active', '=', 1)
+                ->select('firstname', 'lastname')
+                ->get() / first()
+
+    // or
+    $user = User::where('u_id', '=', $userid)
+                ->where('type', '=', 1)
+                ->where('is_active', '=', 1)
+                ->get(['firstname', 'lastname']) / first(['firstname', 'lastname'])
+
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Example: divisores
+    |-------------------------------------------------------------------------------------
+    */
+      <hr class="divider">
+      <hr  noshade>
+      <HR WIDTH=95% ALIGN=CENTER COLOR="BLACK">
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Example: combobox with autocomplete
+    |-------------------------------------------------------------------------------------
+    */
+      <div class="form-group">
+        <label class="col-md-3 control-label">Unidad</label>
+        <div class="col-md-9">
+          <label class="input">
+            <input type="text" list="list" name="un_id">
+            <datalist id="list">
+              @foreach ($uns as $un)
+                <option value="{{$un->codigo}}">{{$un->codigo}}</option>
+              @endforeach
+            </datalist> </label>
+            {{ $errors->first('un_id', '<li style="color:red">:message</li>') }}
+          <div class="note">
+            <strong>Nota:</strong> Funciona en Chrome, Firefox, Opera and IE10.
+          </div>
+        </div>
+      </div>    
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- view no responde a los cambios que se hagan al codigo
+    |-------------------------------------------------------------------------------------
+    */
+    Borre todos los archivos que se encuentren en app/storage/views
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Comparing dates using Eloquent and Carbon date
+    |-------------------------------------------------------------------------------------
+    */
+    You have to convert you string representation of the date into a Carbon instance.
+    $date = Carbon::parse(Input::get('date'));
+
+    // determina si habra recargo el dia que se haga un pago
+    $f_vence = Carbon::parse($da->f_vencimiento)->addDay();
+    //dd($f_vence);
+
+    if(Carbon::today() > $f_vence)  {
+      //dd('aqui');
+      dd(Carbon::today(), $f_vence);
+      $das[$i]['recargo'] = $da->recargo;         
+    }
+    
+    else {
+      //dd('aqui');
+      //dd(Carbon::today(), $f_vence);
+      $das[$i]['recargo'] = '';   
+    }
+    
+    /*
+    |------------------------------------------------------------------------------------
+    |- Pasar variables de un controlador a un view
+    |-------------------------------------------------------------------------------------
+    */  
+    $first = 'German';
+    $last = 'Barrios';
+
+    return view('pages.about', compact('first', 'last')); 
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- condicionales en blade views
+    |-------------------------------------------------------------------------------------
+    */ 
+    @unless es equivalente a if !
+
+    @foreelse 'si el array no esta vacio entonces has esto'
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- query scopes
+    |-------------------------------------------------------------------------------------
+    */    
+    En el controlador
+    $articles = Article::latest('published_ad')->published()->get();
+
+    En el model
+    public function scopepublished($query)
+    {
+
+      $query->where('published_at', '<='), Carbon::now());
+    }
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- para convertir string date a carbon dates
+    |-------------------------------------------------------------------------------------
+    */     
+    En el modelo
+
+    protected $dates = ['published_at'];
+
+
+    Carbon::setLocale('es');
+    foreach ($datos as $dato) {
+      if (dd($dato->fecha)) {
+        $dato->fecha= Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y');
+      }        
+    }
+
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- Easy Relationships
+    |-------------------------------------------------------------------------------------
+    */ 
+
+    class Task extends Eloquent {
+        public function user()
+        {
+            return $this->belongsTo('User');
+        }
+    }
+     
+    class User extends Eloquent {
+        public function tasks()
+        {
+            return $this->hasMany('Task');
+        }
+    }
+
+    $user = User::find(1);
+    $tasks = $user->tasks;
+
+    $task = Task::find(1);
+    $user = $task->user;
+
+      //Obtiene todos los bloques de una determinada junta directiva
+      $datos = Jd::find($jd_id)->bloques;
+      dd($datos->toArray());
+
+    /*
+    |------------------------------------------------------------------------------------
+    |- PHP function return array
+    |-------------------------------------------------------------------------------------
+    */ 
+    function cart_stats($cart_id){
+
+    $sql = "select sum(price) sum_bids, count(*) total_bids from carts_bids where cart_id = '$cart_id'";
+    $rs = mysql_query($sql);
+    $row = mysql_fetch_object($rs);
+    $total_bids = $row->total_bids;
+    $sum_bids = $row->sum_bids;
+    $avarage = $sum_bids/$total_bids;
+
+     $array["total_bids"] = "$total_bids";
+     $array["avarage"] = " $avarage";
+
+     return $array;
+    }  
+    
+    and you get the array data like this
+
+    $data = cart_stats($_GET['id']); 
+    <?=$data['total_bids']?> 
+
+    /****************************************************************************************
+     * Esta function encuentra el ultimo id de la tabla dasm para usarlo como
+     * referencia en asientos de otras cuentas.
+     *****************************************************************************************/
+    public static function findUltimoid()
+    {
+        $ultimoid = Dasm::orderBy('id', 'desc')->first();             
+        if (is_null($ultimoid)) {
+            $ultimoid = 1;
+        }
+        else {
+            $ultimoid = $ultimoid->id + 1;
+        }
+        return $ultimoid;
+    }
+
+    //encuentra el ultimo id de la tabla Dasm para usarlo para referencia
+    $ultimoid = Sity::findUltimoid();
+
+    To get last record details
+     1.  Model ::all()->last(); or
+     2. Model ::orderBy('id', 'desc')->first();
+        To get last record id
+
+    1. Model::all()->last()->id; or 
+    2. Model ::orderBy('id', 'desc')->first()->id;
+
+    $periodo= Pcontable::all()->last()->id; 
+
+    /****************************************************************************************
+    * Function que regresa un array @return array
+    *****************************************************************************************/
+    public static function checkDescuento($un_id, $cuota_mant, $descuento, $ocobro)
+    {
+
+      $pagada = 0;
+      $descuento_siono = 0;
+
+      // Encuentra saldo de cuotas de mantenimiento pagadas por adelantado de la unidad
+      $mgcmppa = Mgcmppa::where('un_id', $un_id)
+                    ->orderBy('id', 'desc')
+                    ->first();
+      //dd($mgcmppa->toArray());
+      
+      if (!is_null($mgcmppa) and ($mgcmppa->saldo >= $cuota_mant)) {
+          // hay descuento por pago adelantado
+          $pagada = 1;
+          $descuento_siono = 1;         
+          
+          //registra asiento para el nuevo saldo de la unidad en Mgcmppa
+          $nuevosaldo = Mgcmppa::where('un_id', $un_id)->get();  
+          $nuevosaldo = new Mgcmppa;
+          $nuevosaldo->fecha      = Carbon::today();
+          $nuevosaldo->credito    = $cuota_mant - $descuento;
+          $nuevosaldo->saldo      = $mgcmppa->saldo - ($cuota_mant - $descuento);
+        //$nuevosaldo->ref        = $ultimoid;
+          $nuevosaldo->detalle    = 'Pago cuota de mantenimiento ocobro no. '. $ocobro;
+          $nuevosaldo->un_id      = $un->id;
+          $nuevosaldo->save();
+      }
+      
+      $data['pagada'] = $pagada;
+      $data['descuento_siono'] = $descuento_siono;
+
+      return $data;
+    }
+
+    // ejecuta la function para determinar si hubo o no descuento
+    $checkDescuento = Sity::checkDescuento($un_id, $cuota_mant, $descuento, $ocobro);
+    //dd($checkDescuento['pagada']);
+
+    $dato->pagada           = $checkDescuento['pagada'];
+    $dato->descuento_siono  = $checkDescuento['descuento_siono'];
+
+
+     /****************************************************************************************
+     * Function para hacer busquedas search
+     *****************************************************************************************/
+    public function postSearch() {
+    $search = '%'.Input::get('search').'%';
+
+    $pages      = DB::table('tblpages')
+                    ->select('tblpages.name', 'tblpages.uri')
+                    ->where('name', 'LIKE', $search);
+
+    $blogitems  = DB::table('tblnewsblog_entries')
+                    ->select('tblnewsblog_entries.id', 'tblnewsblog_entries.author', 'tblnewsblog_entries.title', 'tblnewsblog_entries.intro', 'tblnewsblog_entries.entry')
+                    ->where('author', 'LIKE', $search)
+                    ->orWhere('title', 'LIKE', $search)
+                    ->orWhere('intro', 'LIKE', $search)
+                    ->orWhere('entry', 'LIKE', $search);
+
+    $results = $pages->union($blogitems)->take(30)->get();
+
+    return View::make('search.results', ['results' => $results]);
+  }
+
+
+  $tables = DB::select('SHOW TABLES');
+    //dd($tables);
+    foreach($tables as $table)
+    {
+         echo $table->Tables_in_elechim2_Sityla52;
+      
+      $tbl = $table->Tables_in_elechim2_Sityla52;
+      $columns = DB::select("SHOW COLUMNS FROM ". $tbl);
+      echo $columns;
+      
+      $pages = DB::table('tbl')
+                   ->select('tbl.name', 'tbl.uri')
+                   ->where('name', 'LIKE', $search);    
+    }
+
+  /****************************************************************************************
+  * Php trim string at a particular character
+  *****************************************************************************************/
+  Route::get('/test', function () {
+  $text = '1A-T100R2+MARQUE#1';
+  $trimmed = strtok($text, '+');
+  return $trimmed;
+  });
+    
+
+  /****************************************************************************************
+  * Passing select options :-
+  *****************************************************************************************/
+  public function oplist(){
+    $options="";
+    for($i=1;$i<10;$i++) {
+      $options.="<option value=".$i.">".$i."</option>";
+    }
+    return View::make('viewname')->with('options',$options);
+  }
+
+  //Accessing on view :-
+  <select>{!!$options!!}</select>
+
+  /****************************************************************************************
+  * Combine two DB query results in Laravel?
+  * Merging two collecction
+  *****************************************************************************************/
+ 	// get all film projects
+	$filmProjects= FilmProject::all();
+	 
+	// get all new media projects
+	$newMediaProjects=  NewMediaProject::all();
+	 
+	// merge projects,
+	foreach($filmProjects as $filmProject) {
+	    $newMediaProjects->add($filmProject);
+	}
+	 
+	// or we can also do this $newMediaProjects->toBase()->merge($filmProjects);
+	dd($newMediaProjects->toArray());
+
+    Ejemplo
+    $imps = Ctdasm::where('un_id', $un_id)
+                  ->where('pagada', 0)
+                  ->get();    
+
+    $recs = Ctdasm::where('un_id', $un_id)
+                      ->where('recargo_siono', 1) 
+                      ->where('recargo_pagado', 0)
+                      ->get();
+
+    $renglones=$imps->toBase()->merge($recs);
+    $renglones = $renglones->sortBy('fecha');
+    //dd($renglones->toArray());
+
+  /****************************************************************************************
+  * To display in the browser instead of forcing the file to be download, you can pass a
+  * second parameter to the method.
+  *****************************************************************************************/
+  use Anam\PhantomMagick\Converter;
+  Route::get('/pdf', function () {
+    Converter::make('http://google.com')
+        ->toPdf()
+      ->serve();
+  });
+
+
+  use Anam\PhantomMagick\Converter;
+  Route::get('/pdf2', function () {
+    $conv = new Converter();
+    $conv->addPage('<html><body><h1>Welcome to PhantomMagick</h1></body></html>')
+         ->addPage('http://facebook.com')
+         ->addPage('/html/file/from/local/drive/example.html')
+         ->serve();
+  });
+
+
+  /****************************************************************************************
+  * You could always store the Model names in the array and do smth like:
+  *****************************************************************************************/
+    $models=array('Model1','Model2','Model3');
+    foreach($models AS $model){
+      if(some condition){
+        $m=new $model();
+        $m->findAll();
+      }
+    }
+
+  /****************************************************************************************
+  * Get Current Url Parameter
+  *****************************************************************************************/
+  Ejemplo: http://ctmaster.app/ksubcuentas/1
+
+  en un controller
+  $segment = Request::segment(2);
+
+  en un view
+  {{ dd($segment = Request::segment(2)) }}
+
+  retorna "1"
+
+  /****************************************************************************************
+  * Utilizando Cache para guardar urls
+  *****************************************************************************************/
+  en el controller
+  Cache::forever('goto_kbalancecta_show', URL::full());
+  return redirect(Cache::get('goto_kbalancecta_show'));
+
+  en los views
+  <a href="{{ url(Cache::get('goto_kbalancecta_show')) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
+
+  /****************************************************************************************
+  * recorta un string
+  *****************************************************************************************/
+  $str = "The quick brown fox jumps over the lazy dog."
+  $str2 = substr($str, 4);
+  resultado "quick brown fox jumps over the lazy dog."
+
+  <?php
+  echo substr('abcdef', 1);     // bcdef
+  echo substr('abcdef', 1, 3);  // bcd
+  echo substr('abcdef', 0, 4);  // abcd
+  echo substr('abcdef', 0, 8);  // abcdef
+  echo substr('abcdef', -1, 1); // f
+
+  // El acceso a caracteres específicos en una cadena 
+  // se puede conseguir usando "corchetes"
+  $string = 'abcdef';
+  echo $string[0];                 // a
+  echo $string[3];                 // d
+  echo $string[strlen($string)-1]; // f
+
+  ?>
+
+  /****************************************************************************************
+  * Passing an optional parameter in PHP Function
+  *****************************************************************************************/  
+  function test($required, $optional = NULL){..} 
+  then you can call
+
+  test($required, $optional)
+  and with $optional null
+
+  test($required);
+
+
+  /****************************************************************************************
+  * How To Sum Values Of An Array With The Same Key In PHP
+  *****************************************************************************************/  
+  For the purpose of this article, we'll be using the following PHP associative array. 
+  $items = array(
+    'item_1' => array('id' => 1, 'name' => 'White Shirt', 'qty' => 2),
+    'item_2' => array('id' => 2, 'name' => 'Blue Shirt', 'qty' => 3)
+  );
+
+  $sum = 0;
+  foreach($items as $item) {
+    $sum += $item['qty'];
+  }
+
+  echo $sum; // output 5 
+
+
+  /*************************************************************************************
+   * Trabajar con parametros null
+   ************************************************************************************/  
+  Route::get('createAjuste/{periodo}, {tipo?}, {grupo}, {cuenta}, {codigo}, {un_id?}, {org_id?}', 'AjustesController@createAjuste')->name('createAjuste');
+
+  public function createAjuste($periodo, $tipo=Null, $grupo, $cuenta, $codigo, $un_id=Null, $org_id=Null)
+  {
+      //dd($periodo, $tipo, $grupo, $cuenta, $codigo, $un_id, $org_id);
+      return view('contabilidad.ajustes.createAjuste')
+              ->with('periodo', $periodo)
+              ->with('tipo', $tipo)
+              ->with('grupo', $grupo)
+              ->with('cuenta', $cuenta)
+              ->with('codigo', $codigo)
+              ->with('un_id', $un_id)
+              ->with('org_id', $org_id);
+  }
+
+  <td class="text-center">
+  <a href="{{ URL::route('createAjuste', array($dato['periodo'],
+             $dato['tipo']==null ? 0: $dato['tipo'],
+             $dato['grupo'],
+             $dato['cuenta'],
+             $dato['codigo'],
+             $dato['un_id']==null ? 0: $dato['un_id'],
+             $dato['org_id']
+           )) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-wrench"></i></a>
+</td>
+
+
+  /*************************************************************************************
+   * merge and sort arrays
+   ************************************************************************************/ 
+
+    $activos= Sity::saldoActualPorCtaMayorAux(1, $pcontable_id, Null);
+    $pasivos= Sity::saldoActualPorCtaMayorAux(2, $pcontable_id, Null);
+    $patrimonio= Sity::saldoActualPorCtaMayorAux(3, $pcontable_id, Null);
+    $ingresos= Sity::saldoActualPorCtaMayorAux(4, $pcontable_id, Null);
+    $gastos= Sity::saldoActualPorCtaMayorAux(6, $pcontable_id, Null);
+    dd($activos, $pasivos, $patrimonio, $ingresos, $gastos);
+    
+    //consolica todos los arreglos en uno solo 
+    $datos= array_merge($activos, $pasivos, $patrimonio, $gastos, $ingresos);
+    
+    //ordena el array
+    $datos = array_values(array_sort($datos, function ($value) {
+        return $value['codigo'];
+    }));
+    
+    //dd($datos);
+
+
+  /*************************************************************************************
+   * format string to corrency
+   ************************************************************************************/ 
+    echo number_format("1000000")."<br>";
+    echo number_format("1000000",2)."<br>";
+    echo number_format("1000000",2,",",".");
+
+    1,000,000
+    1,000,000.00
+    1.000.000,00
+
+
+  /*************************************************************************************
+   * redondear y convertir a moneda un string 
+   ************************************************************************************/ 
+  round(floatval($kdata->ajusteDebito),2);
+
+
+  /*************************************************************************************
+   * para ejecutar un cron job desde la terminal 
+   ************************************************************************************/ 
+  php artisan ctmaster:autofacturar
+
+
+  /*************************************************************************************
+   * Laravel 4 eloquent WHERE with OR AND OR?
+   ************************************************************************************/ 
+  Model::where(function ($query) {
+      $query->where('a', '=', 1)
+            ->orWhere('b', '=', 1);
+  })->where(function ($query) {
+      $query->where('c', '=', 1)
+            ->orWhere('d', '=', 1);
+  });
+
+  If you want to use parameters for a,b,c,d in Laravel 4
+  Model::where(function ($query) use ($a,$b) {
+      $query->where('a', '=', $a)
+            ->orWhere('b', '=', $b);
+  })
+  ->where(function ($query) use ($c,$d) {
+      $query->where('c', '=', $c)
+            ->orWhere('d', '=', $d);
+  });

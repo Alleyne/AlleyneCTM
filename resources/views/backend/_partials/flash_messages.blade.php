@@ -23,7 +23,7 @@
 	<div class="alert alert-danger" role="alert">
 	  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 	  <span class="sr-only">Error:</span>
-	  {{ Session::get('warning') }}
+	  {{ Session::get('danger') }}
 	</div>
 @endif
 

@@ -3,7 +3,7 @@
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->  
 <!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->  
 <head>
-    <title>Unify | Welcome...</title>
+    <title>ctmaster.net | Welcome...</title>
 
     <!-- Meta -->
     <meta charset="utf-8">
@@ -127,7 +127,7 @@
     <!--=== End Header ===-->    
     
     <!-- Contenido -->
-        {!! Notification::showAll() !!}
+
         @yield('main')
         @include('frontend._partials.contenido') 
     

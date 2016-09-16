@@ -81,7 +81,14 @@
 												<td><strong>{{ $dato->nombre }}</strong></td>
 												<td col width="50px"><strong>{{ $dato->codigo }}</strong></td>
 												<td col width="50px">{{ $dato->tipo }}</td>
-												<td col width="80px">{{ $dato->nivel1 ? 'Corriente' : 'No corriente' }}</td>
+												<td col width="80px">
+													@if ($dato->corriente_siono===1)
+														Corriente
+													@elseif ($dato->corriente_siono===0)
+														No corriente
+													@elseif ($dato->corriente_siono===null)
+													@endif
+												</td>
 												<td col width="70px" align="right">
 													<ul class="demo-btns">
 														<li>
