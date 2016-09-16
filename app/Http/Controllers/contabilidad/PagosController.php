@@ -189,10 +189,6 @@ class PagosController extends Controller {
                     ->select('pagos.id','pagos.anulado','bancos.nombre','pagos.f_pago','pagos.monto','pagos.un_id')
                     ->first();
     
-	    //Carbon::setLocale('es');	    
-    	//$pago->f_pago=Carbon::createFromFormat('Y-m-d', $pago->f_pago)->format('M j\\, Y');
-		//dd($pago->toArray());
- 		
  		//Encuentra todos los detalles del pago
 		$detalles = Detallepago::where('pago_id', $pago_id)
                 	    	   ->where('no','!=',0)

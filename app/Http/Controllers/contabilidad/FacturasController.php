@@ -63,9 +63,7 @@ class FacturasController extends Controller {
 	public function create()
 	{
         //Encuentra todos los proveedores registrados
-		$proveedores = Org::orderBy('nombre')->get();
-		$proveedores = $proveedores->lists('nombre', 'id');
-		$proveedores = $proveedores->toArray();
+		$proveedores = Org::orderBy('nombre')->pluck('nombre', 'id')->all();
 	    //dd($proveedores);
         
         return view('contabilidad.facturas.registrar.create')

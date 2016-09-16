@@ -1,9 +1,10 @@
 <?php namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Redirect, Notification;
+use Redirect;
 use App\Permission;
 use Cache;
+use Session;
 
 class hasAccess
 {
@@ -66,12 +67,12 @@ class hasAccess
                 return response('Unauthorized.', 401);
             } else {
                 //dd('aquiiii');
-                Notification::warning('--'. $currentAction . '-- Usted no tiene permiso para accesar esta pagina!');
+                Session::flash('warning', '--'. $currentAction . '-- Usted no tiene permiso para accesar esta pagina!');
                 return Redirect::back();
             }                      
         
         } else {
-            Notification::warning('Su sesión ha caducado o usted no tiene permiso para accesar esta pagina!, favor autenticarse!');
+            Session::flash('warning', 'Su sesión ha caducado o usted no tiene permiso para accesar esta pagina!, favor autenticarse!');
             return redirect()->to('/login'); 
         }
     }  

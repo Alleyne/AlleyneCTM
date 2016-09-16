@@ -40,8 +40,7 @@ class BlqadminsController extends Controller {
         //------datos para el Modal box
 
 	    //Obtiene todos los propietarios registrados en la base de datos.
- 	    $datos_1= User::orderBy('email')->get();
-	    $datos_1= $datos_1->lists('email', 'id')->toArray();       
+ 	    $datos_1= User::orderBy('email')->pluck('email', 'id')->all();
 	    //dd($datos_1);
 	    
 	    //Obtiene todos los blqadmins vinculados a un determinado bloque.
@@ -51,7 +50,7 @@ class BlqadminsController extends Controller {
 		//dd($datos_2->toArray());   
         
         // Convierte a formato array
-        $datos_2 = $datos_2->lists('user.email', 'user.id')->toArray();
+        $datos_2 = $datos_2->pluck('user.email', 'user.id')->all();
         //dd($datos_2);
         
         // Subtrae de la lista total de los usuarios registrados todos aquellos
@@ -62,7 +61,7 @@ class BlqadminsController extends Controller {
         
 	    //Obtiene todos las organizaciones actualmente registrada en la base de datos.
  	    $orgs= Org::orderBy('nombre')->get();
-	    $orgs= $orgs->lists('nombre', 'id')->toArray();              
+	    $orgs= $orgs->pluck('nombre', 'id')->all();              
 		//dd($orgs);        
         //------datos para el Modal box        
    		
@@ -136,10 +135,10 @@ class BlqadminsController extends Controller {
 
 			// Registra en bitacoras			
 			Sity::RegistrarEnBitacora(8, 'blqadmins', $dato->id, $detalle);
-			Session::success($detalle);
+			Session::flash('success', $detalle);
 			return Redirect::route('indexblqadmin', array(Input::get('bloque_id')));
 		}
-		Session::warning('Se encontraron errores en su formulario, inténtelo nuevamente!');
+		Session::flash('warning', 'Se encontraron errores en su formulario, inténtelo nuevamente!');
         return Redirect::back()->withInput()->withErrors($validation);
 	}
     
@@ -173,7 +172,7 @@ class BlqadminsController extends Controller {
 
 		// Registra en bitacoras			
 		Sity::RegistrarEnBitacora(9, 'blqadmins', $dato->id, $detalle);
-		Session::success($detalle);
+		Session::flash('success', $detalle);
 		return Redirect::route('indexblqadmin', $dato->bloque->id);	
 	}
 } 

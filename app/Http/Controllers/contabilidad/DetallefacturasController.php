@@ -31,18 +31,16 @@ class DetallefacturasController extends Controller {
                 ->get();
         //dd($datos->toArray());		
 
-		$datos_2= $datos->lists('detalle', 'id');       
-		$datos_2= $datos_2->toArray();
+		$datos_2= $datos->pluck('detalle', 'id')->all();       
   		//dd($datos_2);
 	   
 	    $factura= Factura::find($factura_id);
 
 	    //Obtiene todas las cuenta de gastos asignadas a un determinado proveedor
  	    $datos_1= Org::find($factura->org_id)->catalogos;
-	    $datos_1= $datos_1->lists('nombre_factura', 'id');       
-		$datos_1= $datos_1->toArray();
+	    $datos_1= $datos_1->pluck('nombre_factura', 'id')->all();       
 	    //dd($datos_1, $datos_2);
-		
+
 		// calcula y agrega el total
 		$i=0;		
 		foreach ($datos as $dato) {

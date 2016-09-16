@@ -232,7 +232,6 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class, 
         'Image' => Intervention\Image\Facades\Image::class,
-        'Notification' => 'Krucas\Notification\Facades\Notification',
         'Date' => Jenssegers\Date\Date::class
     ],
 

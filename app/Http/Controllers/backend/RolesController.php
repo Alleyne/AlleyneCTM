@@ -37,13 +37,12 @@ class RolesController extends Controller
 	{
 		//Encuentra todos los permisos registrados 
 		$datos = Role::find($role_id)->permissions;
-		$datos_1 = $datos->lists('name', 'id');
-		$datos_1 = $datos_1->toArray();
+		$datos_1 = $datos->pluck('name', 'id')->all();
 	    //dd($datos_1);
 
 	    //Obtiene todos los permisos registrados en la base de datos
  	    $datos_2= Permission::orderBy('name')->get();
-	    $datos_2= $datos_2->lists('name', 'id')->toArray();       
+	    $datos_2= $datos_2->pluck('name', 'id')->all();      
 	    //dd($datos_1, $datos_2);
         
         // Subtrae de la lista total de permisos registrados todos aquellos

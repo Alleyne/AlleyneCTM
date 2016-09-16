@@ -44,8 +44,7 @@ class PropsController extends Controller {
 	{
  	    
 	    //Obtiene todos los propietarios registrados en la base de datos.
- 	    $datos_1= User::orderBy('email')->get();
-	    $datos_1= $datos_1->lists('email', 'id')->toArray();       
+ 	    $datos_1= User::orderBy('email')->pluck('email', 'id')->all();
 	    //dd($datos_1);
 	    
 	    //Obtiene todos los propietarios vinculados a una determinada unidad.
@@ -57,7 +56,7 @@ class PropsController extends Controller {
 		//dd($datos_2->toArray());   
         
         // Convierte a formato array
-        $datos_2 = $datos_2->lists('email', 'id')->toArray();
+        $datos_2 = $datos_2->pluck('email', 'id')->all();
         //dd($datos_2);
         
         // Subtrae de la lista total de los usuarios registrados todos aquellos

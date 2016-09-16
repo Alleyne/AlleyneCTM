@@ -37,16 +37,14 @@ class OrgsController extends Controller
 	{
 		//Encuentra todos las cuentas de gastos asignadas a una determinada Organizacion
 		$datos = Org::find($org_id)->catalogos;
-		$datos_1 = $datos->lists('nombre_factura', 'id');
-		$datos_1 = $datos_1->toArray();
+		$datos_1 = $datos->pluck('nombre_factura', 'id')->all(); 
 	    //dd($datos_1);
 
 	    //Obtiene todas las cuentas de gastos registrados en la base de datos
  	    $datos_2= Catalogo::where('enfactura',1)
                     ->orderBy('nombre_factura')
                     ->get();
-	    $datos_2= $datos_2->lists('nombre_factura', 'id');       
-		$datos_2 = $datos_2->toArray();
+	    $datos_2= $datos_2->pluck('nombre_factura', 'id')->all();       
 	    //dd($datos_1, $datos_2);
         
         // Subtrae de la lista total de cuentas de gastos registrados toda aquellas

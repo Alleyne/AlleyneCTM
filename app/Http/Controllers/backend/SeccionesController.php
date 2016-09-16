@@ -358,7 +358,7 @@ class SeccionesController extends Controller {
 		//dd($sec->toArray());
 		
 		//Almacena una lista de todos los Phs para ser enviados al view.
-        $phs = Ph::lists('nombre', 'id')->toArray();  		
+        $phs = Ph::pluck('nombre', 'id')->all();  		
 
 		if ($sec->tipo==1) {
 		    //$dato = Seccione::find($id)->secapto; // trae solamente los datos de secaptos
