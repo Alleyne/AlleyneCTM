@@ -281,6 +281,7 @@ class Sity {
     // Encuentra todos los recargos por pagar
     $datos = Ctdasm::where('pcontable_id','<', $periodo)
                    ->where('un_id', $un_id)
+                   ->where('f_vencimiento','<', $f_pago)
                    ->where('recargo_siono', 1)
                    ->where('recargo_pagado', 0)
                    ->get();

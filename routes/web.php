@@ -197,6 +197,22 @@ Route::group(['middleware' => 'web'], function () {
 
 	});
 
+
+	//---------------------------------------------------------//
+	// Funciones del controlador EmailsController
+	//---------------------------------------------------------// 	
+	Route::get('/email', function() {
+	    return view('emails.create');
+	});	    
+
+	Route::group(['namespace' => 'emails'], function()
+	{
+		Route::post('/create', 'EmailsController@store');		
+
+	});
+
+
+
 	//---------------------------------------------------------//
 	// Informes financieros
 	//---------------------------------------------------------//

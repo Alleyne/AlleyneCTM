@@ -62,10 +62,10 @@ return [
     | will be used by the PHP date and date-time functions. We have gone
     | ahead and set this to a sensible default for you out of the box.
     |
-    */
 
-    'timezone' => 'UTC',
-
+    'timezone' => 'UTC',*/
+    'timezone'  => 'America/Panama',
+    
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
@@ -77,7 +77,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'es',
 
     /*
     |--------------------------------------------------------------------------
@@ -177,7 +177,13 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+    
+        /*
+        * Agregadas por German...
+        */
         Collective\Html\HtmlServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+        'Jenssegers\Date\DateServiceProvider',
     ],
 
     /*

@@ -315,7 +315,7 @@ class PagosController extends Controller {
 		//dd($dato->toArray());
 		
 		// proceso de contabilizar el pago recibido
-		Sity::contabilizarPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago);
+		Sity::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago);
 
 		// Registra el pago como tramitado
 		$dato1 = Pago::find($pago_id);
