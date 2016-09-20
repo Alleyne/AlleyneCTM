@@ -446,19 +446,47 @@ class Sity {
    *****************************************************************************************/
   public static function getSaldoCtaPagosAnticipados($un_id, $periodo)
   {
-
-    $tcredito= Ctmayore::where('un_id', $un_id)
-                ->where('pcontable_id', '<=',$periodo)
-                ->where('cuenta', 5)
-                ->sum('credito');
-
-    $tdebito= Ctmayore::where('un_id', $un_id)
-                ->where('pcontable_id', '<=',$periodo)
-                ->where('cuenta', 5)
-                ->sum('debito');
-    //dd($tcredito, $tdebito);    
+    $sa= 0;
     
-    $sa= round(floatval($tcredito),2) - round(floatval($tdebito),2);
+    // encuentra el total de pagos anticipados tomando en cuenta y determinado periodo y los periodo anteriores al mismo
+    if($periodo) {
+      $tcredito= Ctmayore::where('un_id', $un_id)
+                  ->where('pcontable_id', '<=',$periodo)
+                  ->where('cuenta', 5)
+                  ->sum('credito');
+
+      $tdebito= Ctmayore::where('un_id', $un_id)
+                  ->where('pcontable_id', '<=',$periodo)
+                  ->where('cuenta', 5)
+                  ->sum('debito');
+      //dd($tcredito, $tdebito);        
+      
+      $sa= round(floatval($tcredito),2) - round(floatval($tdebito),2);
+    
+    } else {
+      
+      //encuentra todos los periodos contables que no este cerrados
+      $periodos= Pcontable::where('cerrado', 0)
+                       ->orderBy('id')
+                       ->get();
+      //dd($periodos);
+      
+      // calcula el total de pagos anticipados de todos los periodos abiertos
+      foreach ($periodos as $periodo) {
+        $tcredito= Ctmayore::where('un_id', $un_id)
+                    ->where('pcontable_id', '=', $periodo->id)
+                    ->where('cuenta', 5)
+                    ->sum('credito');
+
+        $tdebito= Ctmayore::where('un_id', $un_id)
+                    ->where('pcontable_id', '=', $periodo->id)
+                    ->where('cuenta', 5)
+                    ->sum('debito');
+        //dd($tcredito, $tdebito);  
+        
+        $sa= $sa+ round(floatval($tcredito),2) - round(floatval($tdebito),2);
+      }
+    }
 
     // si no tiene saldo, iniciliza en cero
     $sa = ($sa) ? $sa : 0;

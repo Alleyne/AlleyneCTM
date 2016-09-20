@@ -83,14 +83,8 @@ class CtdasmsController extends Controller {
     $ph = Ph::find($seccion->ph_id);
     // dd($ph->toArray()); 
     
-    //encuentra el periodo contable mas antiguo que no este cerrado en donde se encuentras los saldos acutales
-    $periodo= Pcontable::where('cerrado', 0)
-                       ->orderBy('id')
-                       ->first()->id;
-    //dd($periodo);
-
     // Encuentra saldo pagados por anticipado
-    $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, $periodo);
+    $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, Null);
     $total=number_format(($total_importe + $total_recargo), 2);
     
     if ($total==0) {
