@@ -7,6 +7,10 @@ use Input, Session, Redirect, Str, Carbon\Carbon, URL;
 use Validator, View;
 use Debugbar;
 
+use Mail;
+use App\Mail\sendnuevoEcuentas;
+
+
 use App\Bitacora;
 use App\Hash;
 use App\Ctdasm;
@@ -121,25 +125,9 @@ class CtdasmsController extends Controller {
       'pagos_anticipados'  => 'B/. ' . number_format($pagos_anticipados, 2),
       'total_adeudado'  => 'B/. ' . number_format($total_adeudado, 2),
     ];
-    
-    /*---------------------------------------------------------------
-    Mail::send('emails.email', $data, function($message) use ($user)
-    {
-      $message->to($user->email, $user->name)
-              ->subject('Welcome to Cribbb!');
-    });
-    ---------------------------------------------------------------*/
-    //dd($prop->user->email);
-    //dd($prop->user->nombre_completo);
-    
-    // Envia Estado de cuenta mediante email a cada uno de los propietarios encargados de una unidad  
-    /*Mail::queue('emails.estado_de_cuenta', array($data, $das), function($message) use ($prop)
-    {
-      $message->to($prop->user->email, $prop->user->nombre_completo)
-          ->subject('Welcome to Sityweb mail.Sityweb.net!');
-    });*/
-        
+       
     //dd($imps->toArray(),$recs->toArray(),$total_importe,$total_recargo);
+    
     if ($tipo == 'corto') {
       return view('contabilidad.ctdasms.ecuentasCorto')
               ->with('data', $data);
@@ -150,5 +138,10 @@ class CtdasmsController extends Controller {
             ->with('imps', $imps)
             ->with('recs', $recs);
     }
+    elseif ($tipo == 'email') {
+        Mail::to('gabarriosb@gmail.com', 'German Barrios')
+            ->send(new sendnuevoEcuentas($data, $imps, $recs));
+    }
+
   }
 }

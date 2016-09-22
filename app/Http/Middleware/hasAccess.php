@@ -38,7 +38,7 @@ class hasAccess
                 if ($request->ajax()) {
                     return response('Unauthorized.', 401);
                 } else {
-                    Notification::warning('Usted no tiene ningun Role, favor contacte al administrador del sistema!.');
+                    Session::flash('warning', 'Usted no tiene ningun Role, favor contacte al administrador del sistema!');
                     return redirect()->to('/login');
                 } 
             }

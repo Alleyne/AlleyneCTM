@@ -1568,3 +1568,25 @@ Work::with(
       $query->where('c', '=', $c)
             ->orWhere('d', '=', $d);
   });
+
+
+  /*************************************************************************************
+   * Laravel 5.3 sending emails
+   ************************************************************************************/
+
+  EJEMPLOS
+  $address = 'ignore@batcave.io';
+  $name = 'Ignore Me';
+  $subject = 'Krytonite Found';
+
+  return $this->view('emails.kryptonite-found')
+              ->from($address, $name)
+              ->cc($address, $name)
+              ->bcc($address, $name)
+              ->replyTo($address, $name)
+              ->subject($subject);
+  
+  return $this->from('hello@app.com', 'Your Application')
+      ->subject('Event Reminder: ' . $this->datos->name)
+      ->view('emails.reminder')
+      ->with(['title' => $this->datos->name]);

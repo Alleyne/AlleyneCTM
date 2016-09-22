@@ -284,6 +284,7 @@ class Sity {
                    ->where('f_vencimiento','<', $f_pago)
                    ->where('recargo_siono', 1)
                    ->where('recargo_pagado', 0)
+                   ->where('pagada', 1)
                    ->get();
     //dd($datos->toArray());
     

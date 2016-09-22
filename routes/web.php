@@ -184,34 +184,36 @@ Route::group(['middleware' => 'web'], function () {
 	    Route::get('verAjustes/{id}, {periodo}, {cuenta}, {codigo}', 'AjustesController@verAjustes')->name('verAjustes');
 	    Route::get('createAjustes/{periodo}', 'AjustesController@createAjustes')->name('createAjustes');
 		Route::resource('ajustes', 'AjustesController');
+		
+		//---------------------------------------------------------//
+		// Funciones del controlador InicializarController
+		//---------------------------------------------------------// 		
+	    Route::get('inicializaUn/{un_id}', 'InicializaunController@inicializaUn')->name('inicializaUn');
+	    Route::get('inicializaUn/{un_id}', 'InicializaunController@inicializaUn')->name('inicializaUn');
+	    Route::post('storeInicializacion', 'InicializaunController@storeInicializacion')->name('storeInicializacion');
 	});	
 
 	Route::group(['namespace' => 'catalogo'], function()
 	{
-		
 		//---------------------------------------------------------//
 		// Funciones del controlador CatalogosController
 		//---------------------------------------------------------// 	
 	    Route::get('createCuenta/{id}', 'CatalogosController@createCuenta')->name('createCuenta');
 		Route::resource('catalogos', 'CatalogosController');
-
 	});
 
 
 	//---------------------------------------------------------//
 	// Funciones del controlador EmailsController
 	//---------------------------------------------------------// 	
-	Route::get('/email', function() {
-	    return view('emails.create');
-	});	    
+	//Route::get('/email', function() {
+	    //return view('emails.create');
+	//});	    
 
 	Route::group(['namespace' => 'emails'], function()
 	{
-		Route::post('/create', 'EmailsController@store');		
-
+		Route::get('/email', 'EmailsController@emailNuevoEcuentas');		
 	});
-
-
 
 	//---------------------------------------------------------//
 	// Informes financieros

@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\emails;
 
-use App\Http\Requests;
+use App\User;
+use App\Mail\nuevoEcuentas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 
 class EmailsController extends Controller
 {
-    
-    public function store(Request $request)
+    /**
+     * Ship the given order.
+     *
+     * @param  Request  $request
+     * @param  int  $orderId
+     * @return Response
+     */
+    public function emailNuevoEcuentas()
     {
-        $all= $request->all();        
-        //dd($all);
-
-        Mail::queue('emails.mailtemplate', compact('all'), function($message) use($all) {
-            $message->from($all['sender_email'])
-                    ->to($all['recipient_email'])
-                    ->subject($all['subject']);
-        });
-    
-        return redirect('/email');
+        $datos = User::findOrFail(9);
+        Mail::to($datos->email)
+            ->cc($datos->email)
+            ->bcc($datos->email)
+            ->send(new nuevoEcuentas($datos));
     }
-
 }

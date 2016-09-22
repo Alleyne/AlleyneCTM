@@ -20,7 +20,7 @@
             
             <header>
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Unidades </h2>
+                <h2>Editar inicializacion de la Unidad </h2>
                 <div class="widget-toolbar">
                  </div>
             </header>
