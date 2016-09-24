@@ -28,7 +28,7 @@ class InicializaunController extends Controller {
 	public function inicializaUn($un_id)
 	{
 
-  	return view('contabilidad.inicializaUn.createInicializacion')->with('un_id', $un_id);     	
+  	return view('contabilidad.inicializaun.createInicializacion')->with('un_id', $un_id);     	
 	}	
 
   /*************************************************************************************

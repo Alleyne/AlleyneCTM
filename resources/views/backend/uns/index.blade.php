@@ -77,7 +77,7 @@
                                             <ul class="demo-btns">
                                                 @if ($dato->inicializada==0)
                                                     <li>
-                                                         <a href="{{ URL::route('inicializaUn', $dato->id) }}" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-fire"></i></a>
+                                                         <a href="{{ URL::route('inicializauUn', $dato->id) }}" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-fire"></i></a>
                                                     </li> 
                                                 @endif
                                                 <li>
