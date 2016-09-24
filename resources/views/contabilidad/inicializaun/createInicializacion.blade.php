@@ -26,7 +26,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Datos para inicializar una Unidad</h2>
+						<h2>Formunlario para inicializar una Unidad</h2>
 					</header>
 	
 					<!-- widget div-->

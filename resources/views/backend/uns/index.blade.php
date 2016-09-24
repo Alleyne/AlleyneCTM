@@ -73,7 +73,7 @@
                                     <td>{{ $dato->propietarios }}</td>
 
                                     @if (Cache::get('esAdminkey'))
-                                        <td col width="60px" align="right">
+                                        <td col width="80px" align="right">
                                             <ul class="demo-btns">
                                                 @if ($dato->inicializada==0)
                                                     <li>
