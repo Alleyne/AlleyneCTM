@@ -257,6 +257,12 @@ Route::get('/aaa', function () {
 	return 'Escenario de prueba creado con exito ...';
 });
 
+Route::get('/bbb', function () {
+	Un::where('inicializada', 1)
+      ->update(['inicializada' => 0]);
+	
+	return 'Se inicializa todas las unidades a cero ...';
+});
 
 //---------------------------------------------------------//
 // Ruta para hacer pruebas
