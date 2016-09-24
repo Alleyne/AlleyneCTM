@@ -124,7 +124,7 @@ class UnsController extends Controller {
 	    // Almacena los datos de las unidades que pertenecen a una determinada sección
 	    $datos = Un::where('seccione_id', $seccione_id)
 	               ->orderBy('id', 'ASC')
-	               ->select('id', 'codigo')
+	               ->select('id', 'codigo', 'inicializada')
 	               ->get();
 	    //dd($datos->toArray());
 	    

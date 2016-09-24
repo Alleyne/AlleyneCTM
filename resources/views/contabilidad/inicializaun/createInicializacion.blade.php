@@ -41,13 +41,13 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{{ Form::open(['class' => 'form-horizontal', 'route' => 'editainicializacion']) }}
+							{{ Form::open(['class' => 'form-horizontal', 'route' => 'storeInicializacion']) }}
 									<fieldset>
 	 									{{ csrf_field() }}
 	 									{{ Form::hidden('un_id', $un_id) }}
-                                       
+
 										<div class="form-group">
-											<label class="col-md-3 control-label">Meses</label>
+											<label class="col-md-3 control-label">Total de meses adeudados</label>
 											<div class="col-md-9">
 												{{ Form::text('meses', old('meses'),
 													array(
@@ -57,12 +57,12 @@
 														'autocomplete' => 'off'
 													))
 												}} 
-												{{ $errors->first('meses', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('meses', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 										
 										<div class="form-group">
-											<label class="col-md-3 control-label">Monto adeudado</label>
+											<label class="col-md-3 control-label">Monto total adeudado</label>
 											<div class="col-md-9">
 												{{ Form::text('monto', old('monto'),
 													array(
@@ -72,27 +72,12 @@
 														'autocomplete' => 'off'
 													))
 												}} 
-												{{ $errors->first('monto', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
-
-										<div class="form-group">
-											<label class="col-md-3 control-label">Recargo adeudado</label>
-											<div class="col-md-9">
-												{{ Form::text('recargo', old('recargo'),
-													array(
-													    'class' => 'form-control',
-													    'id' => 'recargo',
-													    'placeholder' => 'Escriba el monto total adeudado en recargos ...',
-														'autocomplete' => 'off'
-													))
-												}} 
-												{{ $errors->first('recargo', '<li style="color:red">:message</li>') }}
-											</div>
-										</div>		
 										
 										<div class="form-group">
-											<label class="col-md-3 control-label">Pagos anticipados</label>
+											<label class="col-md-3 control-label">Total de pagos anticipados</label>
 											<div class="col-md-9">
 												{{ Form::text('anticipados', old('anticipados'),
 													array(
@@ -102,7 +87,7 @@
 														'autocomplete' => 'off'
 													))
 												}} 
-												{{ $errors->first('anticipados', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('anticipados', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>		
 									</fieldset>

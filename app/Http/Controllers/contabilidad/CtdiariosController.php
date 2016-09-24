@@ -2,14 +2,17 @@
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Input, Session, Redirect, Str, URL;
+use Validator, View;
+use Carbon\Carbon;
+use Jenssegers\Date\Date;
 use App\Hash;
+
 use App\Ctdiario;
 use App\Ctdiariohi;
 use App\Bitacora;
 use App\Pcontable;
-use Input, Session, Redirect, Str, URL;
-use Validator, View;
-use Jenssegers\Date\Date;
+
 
 class CtdiariosController extends Controller {
     

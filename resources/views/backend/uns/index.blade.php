@@ -71,10 +71,15 @@
                                         <td col width="60px"><span class="label label-danger">Moroso</span></td>
                                     @endif
                                     <td>{{ $dato->propietarios }}</td>
-                                    
+
                                     @if (Cache::get('esAdminkey'))
                                         <td col width="60px" align="right">
                                             <ul class="demo-btns">
+                                                @if ($dato->inicializada==0)
+                                                    <li>
+                                                         <a href="{{ URL::route('inicializaUn', $dato->id) }}" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-fire"></i></a>
+                                                    </li> 
+                                                @endif
                                                 <li>
                                                      <a href="{{ URL::route('uns.show', $dato->id) }}" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-folder-open"></i></a>
                                                 </li>                

@@ -60,9 +60,6 @@
                                         <td col width="60px" align="right">
                                             <ul class="demo-btns">
                                                 <li>
-                                                     <a href="{{ URL::route('inicializaUn', $dato->id) }}" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-fire"></i></a>
-                                                </li> 
-                                                <li>
                                                      <a href="{{ URL::route('uns.show', $dato->id) }}" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-folder-open"></i></a>
                                                 </li>                
                                             </ul>

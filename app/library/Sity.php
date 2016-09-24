@@ -772,7 +772,7 @@ class Sity {
   /*****************************************************************************************
    *  Registra en Bitacoras.
    *****************************************************************************************/
-  public static function RegistrarEnBitacora($accione_id, $tabla, $registro, $detalle) {
+  public static function RegistrarEnBitacora($accione_id, $tabla, $registro=Null, $detalle) {
       $bitacora = new Bitacora;
       $bitacora->fecha           = Carbon::today();       
       $bitacora->hora            = Carbon::now('America/Panama');
@@ -1408,7 +1408,7 @@ class Sity {
             $data->fecha         = Carbon::today();
             $data->detalle = $dato['cta_nombre'].'. Saldo del periodo anterior';
             $data->debito  = $dato['saldoAjustado_debito'];
-            $data->credito = "";
+            $data->credito = Null;
             $data->save();
 
           } else {
@@ -1417,7 +1417,7 @@ class Sity {
             $data->pcontable_id  = $pcontable_id+1;
             $data->detalle = $dato['cta_nombre'].'. Saldo del periodo anterior';
             $data->debito  = $dato['saldoAjustado_debito'];
-            $data->credito = "";
+            $data->credito = Null;
             $data->save();
           }
           $i++;
@@ -1445,7 +1445,7 @@ class Sity {
           $data = new Ctdiario;
           $data->pcontable_id  = $pcontable_id+1;
           $data->detalle = $dato['cta_nombre'].'. Saldo del periodo anterior';
-          $data->debito  =  "";
+          $data->debito  =  Null;
           $data->credito = $dato['saldoAjustado_credito'];
           $data->save();  
         }
@@ -1567,6 +1567,7 @@ public static function periodo($todate)
   // crea nuevo periodo contable
   $periodo= new Pcontable;
   $periodo->periodo = Sity::getMonthName($month).'-'.$year;
+  $periodo->fecha= $todate;
   $periodo->cerrado = 0;
   $periodo->save();
 

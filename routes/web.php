@@ -189,7 +189,6 @@ Route::group(['middleware' => 'web'], function () {
 		// Funciones del controlador InicializarController
 		//---------------------------------------------------------// 		
 	    Route::get('inicializaUn/{un_id}', 'InicializaunController@inicializaUn')->name('inicializaUn');
-	    Route::get('inicializaUn/{un_id}', 'InicializaunController@inicializaUn')->name('inicializaUn');
 	    Route::post('storeInicializacion', 'InicializaunController@storeInicializacion')->name('storeInicializacion');
 	});	
 

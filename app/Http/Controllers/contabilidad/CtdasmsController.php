@@ -35,12 +35,14 @@ class CtdasmsController extends Controller {
     $imps = Ctdasm::where('un_id', $un_id)
                       ->where('pagada', 0)
                       ->select('id','mes_anio','f_vencimiento','importe')
+                      ->orderBy('fecha')
                       ->get();    
 
     $recs = Ctdasm::where('un_id', $un_id)
                       ->where('recargo_siono', 1) 
                       ->where('recargo_pagado', 0)
                       ->select('id','mes_anio','recargo_siono','recargo_pagado','recargo')
+                      ->orderBy('fecha')
                       ->get();
 
     // inicializa los contadores

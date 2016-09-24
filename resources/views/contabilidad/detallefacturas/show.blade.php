@@ -81,14 +81,14 @@
 													<td col width="40px" align="right">
 														<ul class="demo-btns">
 															<li>
-																{{Form::open(array(
+																{{ Form::open(array(
 																	'route' => array('detallefacturas.destroy', $dato->id),
 																	'method' => 'DELETE',
 																	'style' => 'display:inline'
 																	))
 																}}
 
-																{{Form::button('Borrar', array(
+																{{ Form::button('Borrar', array(
 																	'class' => 'btn btn-danger btn-xs',
 																	'data-toggle' => 'modal',
 																	'data-target' => '#confirmDelete',
@@ -100,7 +100,7 @@
 																	))
 																}}
 
-																{{Form::close()}}
+																{{ Form::close() }}
 															</li>
 														</ul>
 													</td>
@@ -138,42 +138,42 @@
 					</div>
 					<div class="modal-body">
 		
-						{!! Form::open(array('class' => 'form-horizontal', 'route' => 'detallefacturas.store')) !!}
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'detallefacturas.store')) }}
 							<fieldset>
-								{!! Form::hidden('factura_id', $factura->id) !!}
+								{{ Form::hidden('factura_id', $factura->id) }}
 								
 								<div class="form-group">
 									<label class="col-md-3 control-label">Cuentas de gastos</label>
 									<div class="col-md-9">
-										{!! Form::select('catalogo_id', ['' => 'Selecione una cuenta de  gastos ...'] + $kresultadoctas, 0, ['class' => 'form-control']) !!}
+										{{ Form::select('catalogo_id', ['' => 'Selecione una cuenta de  gastos ...'] + $kresultadoctas, 0, ['class' => 'form-control']) }}
 										{!! $errors->first('catalogo_id', '<li style="color:red">:message</li>') !!}
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-md-3 control-label">Precio</label>
 									<div class="col-md-9">
-										{!! Form::text('precio', old('precio'),
+										{{ Form::text('precio', old('precio'),
 											array(
 											    'class' => 'form-control',
 											    'id' => 'precio',
 											    'placeholder' => 'Escriba el precio ...',
 												'autocomplete' => 'off',
 											))
-										!!} 
+										}} 
 										{!! $errors->first('precio', '<li style="color:red">:message</li>') !!}
 									</div>
 								</div>	
 								<div class="form-group">
 									<label class="col-md-3 control-label">Itbms</label>
 									<div class="col-md-9">
-										{!! Form::text('itbms', old('itbms'),
+										{{ Form::text('itbms', old('itbms'),
 											array(
 											    'class' => 'form-control',
 											    'id' => 'itbms',
 											    'placeholder' => 'Escriba el Itbms ...',
 												'autocomplete' => 'off',
 											))
-										!!} 
+										}} 
 										{!! $errors->first('itbms', '<li style="color:red">:message</li>') !!}
 									</div>
 								</div>	
@@ -181,12 +181,12 @@
 							</fieldset>				
 							
 							<div class="form-actions">
-								{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 								<button type="button" class="btn btn-default" data-dismiss="modal">
 									Cancel
 								</button>
 							</div>
-						{!! Form::close() !!}
+						{{ Form::close() }}
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
