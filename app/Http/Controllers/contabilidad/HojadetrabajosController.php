@@ -476,6 +476,12 @@ class HojadetrabajosController extends Controller {
     ************************************************************************************/ 
     public function cierraPeriodo($pcontable_id, $periodo) {
         
+        $datos= Un::where('inicializada', 0)->first();
+        if ($datos) {
+            Session::flash('danger', 'Hay algunas unidades que no han sido inicializadas, antes de cerrar el periodo debera inicializar todas las unidades!');
+            return Redirect::route('pcontables.index');
+        }
+
         // inicializa las cuentas permanentes en periodo posterior
         Sity::inicializaCuentasPerm($pcontable_id);
         //dd('aqui');
