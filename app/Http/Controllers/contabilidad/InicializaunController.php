@@ -78,9 +78,9 @@ class InicializaunController extends Controller {
         $sumaMontoMensual=0;
 
         // convierte la fecha string a carbon/carbon
-        $fecha = Carbon::parse($periodo->fecha);   
+        $fecha= Carbon::parse($periodo->fecha);   
         //dd($fecha);
-
+        
         $seccion= Seccione::find($un->seccione_id);
         $blqAdmin= Blqadmin::where('bloque_id', $seccion->bloque_id)->first();
         $secapto= Secapto::where('seccione_id', $seccion->id)->first();
@@ -91,7 +91,7 @@ class InicializaunController extends Controller {
           $fecha= $fecha->subMonth();
           $month= $fecha->month;    
           $year=  $fecha->year; 
-          
+
           // determina el periodo al que corresponde la fecha de pago    
           $pdo= Sity::getMonthName($month).'-'.$year;  
           //dd($pdo);
@@ -121,7 +121,7 @@ class InicializaunController extends Controller {
             $dto->importe        = round($monto/$meses,2);
           }
           
-          $dto->f_vencimiento    = $fecha;
+          $dto->f_vencimiento    = Carbon::createFromDate($year, $month, 1)->endOfMonth();
           $dto->recargo          = 0;
           $dto->recargo_pagado   = 1;
           $dto->f_descuento      = $fecha;   
@@ -132,7 +132,7 @@ class InicializaunController extends Controller {
           $dto->recargo_siono      = 1;
           $dto->save(); 
         } 
-        
+                
         // contabiliza la inicializacion
         $dato = new Ctdiario;
         $dato->pcontable_id  = $periodo->id;

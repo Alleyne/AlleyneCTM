@@ -245,6 +245,8 @@ use App\Un;
 // Crea un escenario de prueba de enero y febrero
 //---------------------------------------------------------//
 Route::get('/aaa', function () {
+	Un::where('inicializada', 1)
+      ->update(['inicializada' => 0]);	
 	Sity::limpiar();
 	Sity::periodo('2016-07-01');
 	Sity::facturar('2016-07-01');
@@ -260,7 +262,6 @@ Route::get('/aaa', function () {
 Route::get('/bbb', function () {
 	Un::where('inicializada', 1)
       ->update(['inicializada' => 0]);
-	
 	return 'Se inicializa todas las unidades a cero ...';
 });
 

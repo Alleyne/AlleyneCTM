@@ -164,6 +164,7 @@ class Sity {
     $datos = Ctdasm::where('pcontable_id', '<=', $periodo)
                   ->where('un_id', $un_id)
                   ->where('pagada', 0)
+                  ->orderBy('fecha', 'asc')
                   ->get();
     //dd($datos->toArray());
     
@@ -174,6 +175,8 @@ class Sity {
     if ($datos) {
       foreach ($datos as $dato) {
         $importe= round(floatval($dato->importe),2);
+        $montoRecibido= round(floatval($montoRecibido),2);
+        $saldocpa= round(floatval($saldocpa),2);
         $ocobro= $dato->ocobro;
         
         if (($montoRecibido+ $saldocpa)>= $importe) {
@@ -183,7 +186,7 @@ class Sity {
           $dato->save();            
 
           // verifica si la unidad tiene recargo impuesto por el sistema
-          if ($dato->recargo_siono==1) {
+          if ($dato->recargo_siono==1 && $dato->recargo_pagado==0) {
             // si la unidad tiene recargo en el presente mes entonces analiza si la unidad es merecedora o no del recargo impuesto
             Sity::analizaRecargoMerecido($dato->id, $dato->f_vencimiento, $f_pago, $pago_id);
           }          

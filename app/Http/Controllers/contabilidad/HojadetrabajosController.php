@@ -11,6 +11,7 @@ use App\Ctmayore;
 use App\Catalogo;
 use App\Pcontable;
 use App\Ht;
+use App\Un;
 
 class HojadetrabajosController extends Controller {
     
