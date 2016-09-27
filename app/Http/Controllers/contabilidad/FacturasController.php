@@ -171,12 +171,6 @@ class FacturasController extends Controller {
     $org_id= $factura->org_id;
     //dd($org_id);
 
-    //determina el periodo contable vigente
-    //$periodo= Pcontable::where('cerrado', 0)->first();
-    //dd($periodo);
-    
-
-
     // convierte la fecha string a carbon/carbon
     $f_factura = Carbon::parse($factura->fecha);   
     $month= $f_factura->month;    
@@ -190,10 +184,9 @@ class FacturasController extends Controller {
     //dd($periodo); 
 
     if (!$periodo) {
-        Session::flash('warning', '<< ATENCION >> La presente factura no puede ser contabilizada ya que el periodo contable al cual pertenece ha sido cerrado. Edite la fecha de la factura de manera que se pueda contabilizar en el proximo periodo contable abierto.');
+        Session::flash('warning', '<< ATENCION >> La presente factura no puede ser contabilizada ya que el periodo contable al cual pertenece ha sido cerrado. Borre la factura y sus detalles e ingrecela nuevamente con fecha del periodo actualmente abierto.');
         return Redirect::back();
     }
-
 
     //Encuentra totos los detalles de un determinada factura
     $datos= Detallefactura::where('factura_id', $factura_id)
