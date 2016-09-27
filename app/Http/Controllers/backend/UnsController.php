@@ -320,13 +320,15 @@ class UnsController extends Controller {
 			$dato->finca       	 	  = Input::get('finca');
 			$dato->documento     	  = Input::get('documento');
 			$dato->caracteristicas    = Input::get('caracteristicas');			
+			$dato->activa			  = Input::has('activa');	
 			$dato->save();			
 			
 			// Registra en bitacoras
 			$detalle =	'codigo= '.		   	  	$dato->codigo. ', '.
 						'finca= '.   		  	$dato->finca. ', '.
 						'documento= '.   	  	$dato->documento. ', '.
-						'caracteristicas= '.    $dato->caracteristicas;
+						'caracteristicas= '.    $dato->caracteristicas. ', '.
+						'activa= '.	    		$dato->activa;
 			
 			Sity::RegistrarEnBitacora(2, 'uns', $dato->id, $detalle);
 			Session::flash('success', 'La Unidad administrada No. ' .$id. ' ha sido editada con éxito.');

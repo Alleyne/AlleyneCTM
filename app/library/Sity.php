@@ -1583,7 +1583,8 @@ public static function periodo($todate)
 
   foreach ($secaptos as $secapto) {
       // Encuentra todas las unidades que pertenecen a la seccion 
-      $uns= Un::where('seccione_id', $secapto->seccione_id)->get();
+      $uns= Un::where('seccione_id', $secapto->seccione_id)
+               ->where('activa', 1)->get();
       //dd($uns->toArray());
 
       // calcula el total que debera ingresar mensualmente en concepto de cuotas de mantenimiento
@@ -1642,7 +1643,8 @@ public static function facturar($fecha)
         //dd($blqadmin);
 
         // Encuentra todas las unidades que pertenecen a la seccion 
-        $uns= Un::where('seccione_id', $secapto->seccione_id)->get();
+        $uns= Un::where('seccione_id', $secapto->seccione_id)
+                ->where('activa', 1)->get();
         //dd($uns->toArray());
 
         // Por cada apartamento que exista registra su cuota de mantenimiento por cobrar en el ctdiario auxiliar
@@ -1698,7 +1700,8 @@ public static function facturar($fecha)
       
       foreach ($secaptos as $secapto) {
           // Encuentra todas las unidades que pertenecen a la seccion 
-          $uns= Un::where('seccione_id', $secapto->seccione_id)->get();
+          $uns= Un::where('seccione_id', $secapto->seccione_id)
+                  ->where('activa', 1)->get();
           //dd($uns->toArray());
 
           // calcula el total que debera ingresar mensualmente en concepto de cuotas de mantenimiento

@@ -7,6 +7,7 @@ use Redirect, Session;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
 use Validator;
+use Carbon\Carbon;
 
 use App\Org;
 use App\Factura;
@@ -163,14 +164,27 @@ class DetallepagofacturasController extends Controller {
   public static function contabilizaDetallePagoFactura($detallepagofactura_id)
   {
 
-    // determina el periodo contable vigente
-    $periodo= Pcontable::where('cerrado', 0)->first();
-    //dd($periodo);
-    
     // encuentra los datos del detalle de pago en estudio
     $dato= Detallepagofactura::find($detallepagofactura_id);
     //dd($dato->toArray());
     
+    // convierte la fecha string a carbon/carbon
+    $f_DetallePagofactura = Carbon::parse($dato->fecha);   
+    $month= $f_DetallePagofactura->month;    
+    $year= $f_DetallePagofactura->year;    
+
+    // determina el periodo al que corresponde la fecha de pago    
+    $pdo= Sity::getMonthName($month).'-'.$year;
+    $periodo= Pcontable::where('periodo', $pdo)
+			->where('cerrado', 0)
+    		->first();
+    //dd($periodo);     
+
+    if (!$periodo) {
+        Session::flash('warning', '<< ATENCION >> El presente pago no puede ser contabilizado ya que el periodo contable al cual pertenece ha sido cerrado. Borre el detalle de pago de factura y ingrecelo nuevamente con fecha del periodo actualmente abierto.');
+        return Redirect::back();
+    }
+
     // encuentra el proveedor de la factura
     $factura= Factura::find($dato->factura_id);
     

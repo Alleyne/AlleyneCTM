@@ -8,7 +8,7 @@
 		<div class="row">
 	
 			<!-- NEW WIDGET START -->
-			<article class="col-sm-12 col-md-12 col-lg-9">
+			<article class="col-sm-12 col-md-12 col-lg-12">
 	
 				<!-- Widget ID (each widget will need unique ID)-->
 				<div class="jarviswidget jarviswidget-color-orange" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
@@ -42,7 +42,7 @@
 						<!-- end widget edit box -->
 						
 						<div class="row show-grid">
-						    <div class="col-xs-12 col-sm-6 col-md-8">		
+						    <div class="col-xs-12 col-sm-6 col-md-6">		
 								<div class="widget-body"><!-- widget content -->
 								{{ Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('uns.update', $dato->id))) }}
 										{{ csrf_field() }}
@@ -77,6 +77,12 @@
 												    {!! $errors->first('caracteristicas', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>													
+											<div class="form-group">
+												<label class="col-md-3 control-label">Activa</label>
+												<div class="col-md-9">
+													{{ Form::checkbox('activa') }}
+												</div>
+											</div>	
 											
 											@if ($seccion->tipo==1) <!-- Apartamentos -->
 												<legend>Sección tipo apartamentos</legend>
@@ -269,7 +275,7 @@
 								</div><!-- end widget content -->
 							</div>
 
-							<div class="col-xs-6 col-sm-6 col-md-4">
+							<div class="col-xs-6 col-sm-6 col-md-6">
 								<div class="well">
 									@include('backend.secciones.imagen')
 								</div>
