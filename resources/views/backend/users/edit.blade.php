@@ -43,85 +43,85 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{!! Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('users.update', $dato->id))) !!}
+							{{ Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('users.update', $dato->id))) }}
 									<fieldset>
-										{!! csrf_field() !!}
+										{{ csrf_field() }}
 										<div class="form-group">
 											<label class="col-md-3 control-label">Usuario</label>
 											<div class="col-md-9">
-												{!! Form::text('username', $dato->username, array('class' => 'form-control input-sm', 'title' => 'Escriba su usuario...')) !!}
+												{{ Form::text('username', $dato->username, array('class' => 'form-control input-sm', 'title' => 'Escriba su usuario...')) }}
 												{!! $errors->first('username', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
 											<label class="col-md-3 control-label">Email</label>
 											<div class="col-md-9">
-												{!! Form::text('email', $dato->email, array('class' => 'form-control input-sm', 'title' => 'Escriba su email...')) !!}
+												{{ Form::text('email', $dato->email, array('class' => 'form-control input-sm', 'title' => 'Escriba su email...')) }}
 												{!! $errors->first('email', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-3 control-label">Primer nombre</label>
 											<div class="col-md-9">
-												{!! Form::text('first_name', $dato->first_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su primer nombre...')) !!}
+												{{ Form::text('first_name', $dato->first_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su primer nombre...')) }}
 												{!! $errors->first('first_name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-3 control-label">Seg nombre</label>
 											<div class="col-md-9">
-												{!! Form::text('middle_name', $dato->middle_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su segundo nombre...')) !!}
+												{{ Form::text('middle_name', $dato->middle_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su segundo nombre...')) }}
 												{!! $errors->first('middle_name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-3 control-label">Apellido</label>
 											<div class="col-md-9">
-												{!! Form::text('last_name', $dato->last_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su apellido paterno...')) !!}
+												{{ Form::text('last_name', $dato->last_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su apellido paterno...')) }}
 												{!! $errors->first('last_name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-3 control-label">Apellido materno</label>
 											<div class="col-md-9">
-												{!! Form::text('sur_name', $dato->sur_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su apellido materno...')) !!}
+												{{ Form::text('sur_name', $dato->sur_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su apellido materno...')) }}
 												{!! $errors->first('sur_name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-3 control-label">Cedula</label>
 											<div class="col-md-9">
-												{!! Form::text('cedula', $dato->cedula, array('class' => 'form-control input-sm', 'title' => 'Escriba su cedula...')) !!}
+												{{ Form::text('cedula', $dato->cedula, array('class' => 'form-control input-sm', 'title' => 'Escriba su cedula...')) }}
 												{!! $errors->first('cedula', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-3 control-label">Telefono</label>
 											<div class="col-md-9">
-												{!! Form::text('telefono', $dato->telefono, array('class' => 'form-control input-sm', 'title' => 'Escriba su telefono...')) !!}
+												{{ Form::text('telefono', $dato->telefono, array('class' => 'form-control input-sm', 'title' => 'Escriba su telefono...')) }}
 												{!! $errors->first('telefono', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-3 control-label">Celular</label>
 											<div class="col-md-9">
-												{!! Form::text('celular', $dato->celular, array('class' => 'form-control input-sm', 'title' => 'Escriba su celular...')) !!}
+												{{ Form::text('celular', $dato->celular, array('class' => 'form-control input-sm', 'title' => 'Escriba su celular...')) }}
 												{!! $errors->first('celular', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-3 control-label">Activado</label>
 											<div class="col-md-9">
-												{!! Form::text('activated', $dato->activated, array('class' => 'form-control input-sm', 'title' => 'Usuario activado si o no...')) !!}
+												{{ Form::text('activated', $dato->activated, array('class' => 'form-control input-sm', 'title' => 'Usuario activado si o no...')) }}
 												{!! $errors->first('activated', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 									</fieldset>
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::route('users.index') }}" class="btn btn-large">Cancelar</a>
 									</div>
-							{!! Form::close() !!}
+							{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>
@@ -170,14 +170,14 @@
 			              	<p>
 								<img style="height: 275px; border-radius: 8px;" src="{{asset($dato->imagen_L)}}" class="img-responsive" alt="Responsive image">
 			             	</p>
-				         	{!! Form::open(array('route' => array('subirImagenUser', $dato->id),'files'=>true)) !!}
+				         	{{ Form::open(array('route' => array('subirImagenUser', $dato->id),'files'=>true)) }}
 								<div class="form-actions">
 				         		<div>
-									{!! Form::file('file') !!}
+									{{ Form::file('file') }}
 								</div>						
-									{!! Form::submit('Subir imagen', array('class' => 'btn btn-success btn-save btn-large')) !!}
+									{{ Form::submit('Subir imagen', array('class' => 'btn btn-success btn-save btn-large')) }}
 								</div>
-			          		{!! Form::close() !!}			            
+			          		{{ Form::close() }}			            
 			            </div>
 						<!-- end widget content -->
 	

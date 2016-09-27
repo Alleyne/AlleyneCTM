@@ -43,62 +43,62 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-								{!! Form::open(array('class' => 'form-horizontal', 'route' => 'users.store')) !!}		
+								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'users.store')) }}		
 									<fieldset>
-										{!! csrf_field() !!}
+										{{ csrf_field() }}
 										<div class="form-group">
 											<label class="col-md-2 control-label">Usuario</label>
 											<div class="col-md-10">
-												{!! Form::text('username', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su usuario...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('username', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su usuario...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('username', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Email</label>
 											<div class="col-md-10">
-												{!! Form::text('email', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su email...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('email', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su email...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('email', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Primer nombre</label>
 											<div class="col-md-10">
-												{!! Form::text('first_name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su primer nombre...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('first_name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su primer nombre...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('first_name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Segundo nombre</label>
 											<div class="col-md-10">
-												{!! Form::text('middle_name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su segundo nombre...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('middle_name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su segundo nombre...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('middle_name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Apellido paterno</label>
 											<div class="col-md-10">
-												{!! Form::text('last_name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su apellido paterno...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('last_name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su apellido paterno...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('last_name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Apellido materno</label>
 											<div class="col-md-10">
-												{!! Form::text('sur_name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su apellido materno...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('sur_name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su apellido materno...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('sur_name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Telefono</label>
 											<div class="col-md-10">
-												{!! Form::text('telefono', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su telefono...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('telefono', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su telefono...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('telefono', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Celular</label>
 											<div class="col-md-10">
-												{!! Form::text('celular', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su celular...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('celular', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su celular...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('celular', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
@@ -112,16 +112,17 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Confirmar clave</label>
 											<div class="col-md-10">
-                                				<input type="password" class="form-control" name="password_confirmation">												{!! $errors->first('password_confirmation', '<li style="color:red">:message</li>') !!}
+                                				<input type="password" class="form-control" name="password_confirmation">
+                                				{!! $errors->first('password_confirmation', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::route('users.index') }}" class="btn btn-large">Cancelar</a>
 									</div>
-								{!! Form::close() !!}
+								{{ Form::close() }}
 
 							</div>
 							<!-- end widget content -->

@@ -59,7 +59,7 @@
 							<div class="form-group">
 								<label class="col-md-3 control-label">Características propia</label>
 								<div class="col-md-9">
-									{!! Form::textarea('caracteristicas', $dato->caracteristicas, array('class' => 'form-control input-sm', 'rows' => '2', 'readonly' => 'readonly')) !!}
+									{{ Form::textarea('caracteristicas', $dato->caracteristicas, array('class' => 'form-control input-sm', 'rows' => '2', 'readonly' => 'readonly')) }}
 								</div>
 							</div>	
 							

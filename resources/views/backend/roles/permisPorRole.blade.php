@@ -109,14 +109,14 @@
 					</div>
 					<div class="modal-body">
 		
-						{!! Form::open(array('class' => 'form-horizontal', 'route' => 'roles.store')) !!}
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'roles.store')) }}
 							<fieldset>
-								{!! Form::hidden('role_id', $role_id) !!}
+								{{ Form::hidden('role_id', $role_id) }}
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="cargo"> Permisos</label>
-											{!! Form::select('id', array('' => 'Escoja el permiso que desea vincular...') + $permisos, array('title' => 'Escoja el permiso que desea vincular')) !!}
+											{{ Form::select('id', array('' => 'Escoja el permiso que desea vincular...') + $permisos, array('title' => 'Escoja el permiso que desea vincular')) }}
 											{!! $errors->first('id', '<li style="color:red">:message</li>') !!}
 										</div>
 									</div>
@@ -124,12 +124,12 @@
 							</fieldset>				
 							
 							<div class="form-actions">
-								{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 								<button type="button" class="btn btn-default" data-dismiss="modal">
 									Cancel
 								</button>
 							</div>
-						{!! Form::close() !!}
+						{{ Form::close() }}
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->

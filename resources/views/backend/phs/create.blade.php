@@ -45,7 +45,7 @@
 							<div class="widget-body">
 								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'phs.store')) }}		
 									<fieldset>
-										{!! csrf_field() !!}
+										{{ csrf_field() }}
 										<div class="form-group">
 											<label class="col-md-2 control-label">Tipo</label>
 											<div class="col-md-10">
@@ -58,7 +58,7 @@
 													<input type="radio" class="radiobox" name="tipo" value = "2">
 													<span>Residencial</span>  
 												</label>
-												{{ $errors->first('tipo', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('tipo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>										
 
@@ -66,77 +66,77 @@
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
 												{{ Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del Ph...')) }}
-												{{ $errors->first('nombre', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
 											<label class="col-md-2 control-label">Código</label>
 											<div class="col-md-10">
 												{{ Form::text('codigo', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el código del Ph...')) }}
-												{{ $errors->first('codigo', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('codigo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">País</label>
 											<div class="col-md-10">
 												{{ Form::text('pais', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el país...')) }}
-												{{ $errors->first('pais', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('pais', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 										<div class="form-group">
 											<label class="col-md-2 control-label">Provincia</label>
 											<div class="col-md-10">
 												{{ Form::text('provincia', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la provincia...')) }}
-												{{ $errors->first('provincia', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('provincia', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Distrito</label>
 											<div class="col-md-10">
 												{{ Form::text('distrito', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el distrito...')) }}
-												{{ $errors->first('distrito', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('distrito', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
 											<label class="col-md-2 control-label">Corregimiento</label>
 											<div class="col-md-10">
 												{{ Form::text('corregimiento', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el corregimiento...')) }}
-												{{ $errors->first('corregimiento', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('corregimiento', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
 											<label class="col-md-2 control-label">Comunidad</label>
 											<div class="col-md-10">
 												{{ Form::text('comunidad', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la comunidad...')) }}
-												{{ $errors->first('comunidad', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('comunidad', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 										<div class="form-group">
 											<label class="col-md-2 control-label">Calle</label>
 											<div class="col-md-10">
 												{{ Form::text('calle', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la calle...')) }}
-												{{ $errors->first('calle', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('calle', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 										<div class="form-group">
 											<label class="col-md-2 control-label">Teléfono</label>
 											<div class="col-md-10">
 												{{ Form::text('telefono', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el teléfono...')) }}
-												{{ $errors->first('telefono', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('telefono', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
 											<label class="col-md-2 control-label">Celular</label>
 											<div class="col-md-10">
 												{{ Form::text('celular', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el celular...')) }}
-												{{ $errors->first('celular', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('celular', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
 											<label class="col-md-2 control-label">email</label>
 											<div class="col-md-10">
 												{{ Form::text('email', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el email...')) }}
-												{{ $errors->first('email', '<li style="color:red">:message</li>') }}
+												{!! $errors->first('email', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 									</fieldset>

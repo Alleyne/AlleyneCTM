@@ -78,9 +78,9 @@
 																<a href="{{ URL::route('permissions.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
 															</li>
 															<li>
-																{!! Form::open(array('route' => array('permissions.destroy', $dato->id), 'method' => 'delete', 'data-confirm' => 'Deseas borrar el permiso '. $dato->name. ' permanentemente?')) !!}
+																{{ Form::open(array('route' => array('permissions.destroy', $dato->id), 'method' => 'delete', 'data-confirm' => 'Deseas borrar el permiso '. $dato->name. ' permanentemente?')) }}
 																	<button type="submit" href="{{ URL::route('permissions.destroy', $dato->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
-																{!! Form::close() !!}										
+																{{ Form::close() }}										
 															</li>
 														</ul>
 													</td>

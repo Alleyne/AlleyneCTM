@@ -44,16 +44,16 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{!! Form::open(array('class' => 'form-horizontal', 'route' => 'secciones.store')) !!}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'secciones.store')) }}		
 									<fieldset>
-				 						{!! csrf_field() !!}
-				 						{!! Form::hidden('bloque_id', $bloque_id) !!}
-				 						{!! Form::hidden('tipo', $tipo) !!}
+				 						{{ csrf_field() }}
+				 						{{ Form::hidden('bloque_id', $bloque_id) }}
+				 						{{ Form::hidden('tipo', $tipo) }}
 							
 										<div class="form-group">
 											<label class="col-md-3 control-label">Sección Nombre</label>
 											<div class="col-md-9">
-												{!! Form::text('nombre', '', array('class' => 'form-control','title' => 'Escriba el nombre de la Seccion...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('nombre', '', array('class' => 'form-control','title' => 'Escriba el nombre de la Seccion...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
@@ -61,7 +61,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Codigo</label>
 											<div class="col-md-9">
-												{!! Form::text('codigo', '', array('class' => 'form-control','title' => 'Escriba el codigo de la Seccion...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('codigo', '', array('class' => 'form-control','title' => 'Escriba el codigo de la Seccion...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('codigo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
@@ -69,7 +69,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Descripción</label>
 											<div class="col-md-9">
-												{!! Form::text('descripcion', '', array('class' => 'form-control','title' => 'Escriba la descripción del Bloque administrativo...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('descripcion', '', array('class' => 'form-control','title' => 'Escriba la descripción del Bloque administrativo...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>			
@@ -79,7 +79,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de Cuartos</label>
 												<div class="col-md-9">
-													{!! Form::text('cuartos', '', array('class' => 'form-control','title' => 'Escriba el número de cuartos que tiene la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('cuartos', '', array('class' => 'form-control','title' => 'Escriba el número de cuartos que tiene la unidad...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('cuartos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>										
@@ -87,7 +87,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de baños</label>
 												<div class="col-md-9">
-													{!! Form::text('banos', '', array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('banos', '', array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('banos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -95,7 +95,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Agua caliente</label>
 												<div class="col-md-9">
-													{!! Form::text('agua_caliente', '', array('class' => 'form-control','title' => 'Tiene Agua caliente?...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('agua_caliente', '', array('class' => 'form-control','title' => 'Tiene Agua caliente?...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('agua_caliente', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>					
@@ -103,7 +103,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de Estacionamientos</label>
 												<div class="col-md-9">
-													{!! Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -111,7 +111,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Area/m2</label>
 												<div class="col-md-9">
-													{!! Form::text('area', '', array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('area', '', array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('area', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>	
@@ -119,7 +119,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Cuota mantenimiento</label>
 												<div class="col-md-9">
-													{!! Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -127,7 +127,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Recargo (%)</label>
 												<div class="col-md-9">
-													{!! Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('recargo', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -135,7 +135,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Descuento (%)</label>
 												<div class="col-md-9">
-													{!! Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('descuento', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -170,7 +170,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Avenida</label>
 												<div class="col-md-9">
-													{!! Form::text('avenida', '', array('class' => 'form-control','title' => 'Escriba la avenida en donde se encuentra localizada la residencia...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('avenida', '', array('class' => 'form-control','title' => 'Escriba la avenida en donde se encuentra localizada la residencia...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('avenida', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>					
@@ -178,7 +178,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de Cuartos</label>
 												<div class="col-md-9">
-													{!! Form::text('cuartos', '', array('class' => 'form-control','title' => 'Escriba el número de cuartos que tiene la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('cuartos', '', array('class' => 'form-control','title' => 'Escriba el número de cuartos que tiene la unidad...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('cuartos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>										
@@ -186,7 +186,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de baños</label>
 												<div class="col-md-9">
-													{!! Form::text('banos', '', array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('banos', '', array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('banos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -194,7 +194,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Agua caliente</label>
 												<div class="col-md-9">
-													{!! Form::text('agua_caliente', '', array('class' => 'form-control','title' => 'Tiene Agua caliente?...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('agua_caliente', '', array('class' => 'form-control','title' => 'Tiene Agua caliente?...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('agua_caliente', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>					
@@ -202,7 +202,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de Estacionamientos</label>
 												<div class="col-md-9">
-													{!! Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -210,7 +210,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Area/m2</label>
 												<div class="col-md-9">
-													{!! Form::text('area', '', array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('area', '', array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('area', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>	
@@ -218,7 +218,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Cuota mantenimiento</label>
 												<div class="col-md-9">
-													{!! Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -226,7 +226,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Recargo (%)</label>
 												<div class="col-md-9">
-													{!! Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('recargo', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -234,7 +234,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Descuento (%)</label>
 												<div class="col-md-9">
-													{!! Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('descuento', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -269,7 +269,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de baños</label>
 												<div class="col-md-9">
-													{!! Form::text('banos', '', array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('banos', '', array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('banos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -277,7 +277,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Agua caliente</label>
 												<div class="col-md-9">
-													{!! Form::text('agua_caliente', '', array('class' => 'form-control','title' => 'Tiene Agua caliente?...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('agua_caliente', '', array('class' => 'form-control','title' => 'Tiene Agua caliente?...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('agua_caliente', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>					
@@ -285,7 +285,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de Estacionamientos</label>
 												<div class="col-md-9">
-													{!! Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -293,7 +293,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Area/m2</label>
 												<div class="col-md-9">
-													{!! Form::text('area', '', array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('area', '', array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('area', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -301,7 +301,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Cuota mantenimiento</label>
 												<div class="col-md-9">
-													{!! Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -309,7 +309,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Recargo (%)</label>
 												<div class="col-md-9">
-													{!! Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('recargo', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -317,7 +317,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Descuento (%)</label>
 												<div class="col-md-9">
-													{!! Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('descuento', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -354,7 +354,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Avenida</label>
 												<div class="col-md-9">
-													{!! Form::text('avenida', '', array('class' => 'form-control','title' => 'Escriba la avenida en donde se encuentra localizada la residencia...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('avenida', '', array('class' => 'form-control','title' => 'Escriba la avenida en donde se encuentra localizada la residencia...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('avenida', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -362,7 +362,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de baños</label>
 												<div class="col-md-9">
-													{!! Form::text('banos', '', array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('banos', '', array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('banos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -370,7 +370,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Agua caliente</label>
 												<div class="col-md-9">
-													{!! Form::text('agua_caliente', '', array('class' => 'form-control','title' => 'Tiene Agua caliente?...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('agua_caliente', '', array('class' => 'form-control','title' => 'Tiene Agua caliente?...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('agua_caliente', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>					
@@ -378,7 +378,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de Estacionamientos</label>
 												<div class="col-md-9">
-													{!! Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -386,7 +386,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Area/m2</label>
 												<div class="col-md-9">
-													{!! Form::text('area', '', array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('area', '', array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) }}
 													{!! $errors->first('area', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>						
@@ -394,7 +394,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Cuota mantenimiento</label>
 												<div class="col-md-9">
-													{!! Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -402,7 +402,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Recargo (%)</label>
 												<div class="col-md-9">
-													{!! Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('recargo', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -410,7 +410,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Descuento (%)</label>
 												<div class="col-md-9">
-													{!! Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('descuento', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>
@@ -452,10 +452,10 @@
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
                                         <a href="{{ URL::route('indexsecplus', $bloque_id) }}" class="btn btn-large">Cancelar</a>
 									</div>
-							{!! Form::close() !!}
+							{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>

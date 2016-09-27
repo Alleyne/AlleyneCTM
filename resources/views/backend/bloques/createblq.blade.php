@@ -41,15 +41,15 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{!! Form::open(array('class' => 'form-horizontal', 'route' => 'bloques.store')) !!}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'bloques.store')) }}		
 									<fieldset>
-										{!! csrf_field() !!}
-										{!! Form::hidden('jd_id', $jd_id) !!}
+										{{ csrf_field() }}
+										{{ Form::hidden('jd_id', $jd_id) }}
 										
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{!! Form::text('nombre', '', array('class' => 'form-control','title' => 'Escriba el nombre del Bloque administrativo...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('nombre', '', array('class' => 'form-control','title' => 'Escriba el nombre del Bloque administrativo...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
@@ -57,7 +57,7 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Codigo</label>
 											<div class="col-md-10">
-												{!! Form::text('codigo', '', array('class' => 'form-control','title' => 'Escriba el codigo del bloque ejemplo ABCDEF...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('codigo', '', array('class' => 'form-control','title' => 'Escriba el codigo del bloque ejemplo ABCDEF...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('codigo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
@@ -65,17 +65,17 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Descripción</label>
 											<div class="col-md-10">
-												{!! Form::text('descripcion', '', array('class' => 'form-control','title' => 'Escriba la descripción del Bloque administrativo...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('descripcion', '', array('class' => 'form-control','title' => 'Escriba la descripción del Bloque administrativo...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>				
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 									    <a href="{{ URL::route('indexblqplus', array($jd_id)) }}" class="btn btn-large">Cancelar</a>
 									</div>
-								{!! Form::close() !!}
+								{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>

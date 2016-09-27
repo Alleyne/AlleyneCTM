@@ -9,64 +9,64 @@
 
 <div class="container">
 
-	{!! Form::open(['url' => 'create', 'method' => 'post']) !!}
-	  {!! csrf_field() !!}
+	{{ Form::open(['url' => 'create', 'method' => 'post']) }}
+	  {{ csrf_field() }}
 
 		<div class="form-group">
-		    {!! Form::label('Subject') !!}
-		    {!! Form::text('subject', null, 
+		    {{ Form::label('Subject') }}
+		    {{ Form::text('subject', null, 
 		        array('required', 
 		              'class'=>'form-control', 
-		              'placeholder'=>'Subject')) !!}
+		              'placeholder'=>'Subject')) }}
 		</div>	  
 		
 		<div class="form-group">
-		    {!! Form::label('Sender name') !!}
-		    {!! Form::text('sender_name', null, 
+		    {{ Form::label('Sender name') }}
+		    {{ Form::text('sender_name', null, 
 		        array('required', 
 		              'class'=>'form-control', 
-		              'placeholder'=>'Sender name')) !!}
+		              'placeholder'=>'Sender name')) }}
 		</div>
 
 		<div class="form-group">
-		    {!! Form::label('Sender email') !!}
-		    {!! Form::email('sender_email', null, 
+		    {{ Form::label('Sender email') }}
+		    {{ Form::email('sender_email', null, 
 		        array('required',
 		              'class'=>'form-control', 
-		              'placeholder'=>'Sender email')) !!}
+		              'placeholder'=>'Sender email')) }}
 		</div>	  
 
 		<div class="form-group">
-		    {!! Form::label('Recipiente name') !!}
-		    {!! Form::text('recipient_name', null, 
+		    {{ Form::label('Recipiente name') }}
+		    {{ Form::text('recipient_name', null, 
 		        array('required', 
 		              'class'=>'form-control', 
-		              'placeholder'=>'Recipiente name')) !!}
+		              'placeholder'=>'Recipiente name')) }}
 		</div>	  
 
 		<div class="form-group">
-		    {!! Form::label('Recipient email') !!}
-		    {!! Form::email('recipient_email', null, 
+		    {{ Form::label('Recipient email') }}
+		    {{ Form::email('recipient_email', null, 
 		        array('required', 
 		              'class'=>'form-control', 
-		              'placeholder'=>'Recipient email')) !!}
+		              'placeholder'=>'Recipient email')) }}
 		</div>	
 
 		<div class="form-group">
-		    {!! Form::label('Content') !!}
-		    {!! Form::textarea('content', 'null', 
+		    {{ Form::label('Content') }}
+		    {{ Form::textarea('content', 'null', 
 		        array('required', 
 		              'class'=>'form-control', 
 		              'cols'=> 30,
 		              'rows'=>10,
-		              'placeholder'=>'Content')) !!}
+		              'placeholder'=>'Content')) }}
 		</div>
 	  
 		<div class="form-group">
-		    {!! Form::submit('Send', 
-		      array('class'=>'btn btn-primary')) !!}
+		    {{ Form::submit('Send', 
+		      array('class'=>'btn btn-primary')) }}
 		</div>
-	{!! Form::close() !!}
+	{{ Form::close() }}
 </div>
 
 	

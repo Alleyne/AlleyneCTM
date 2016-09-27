@@ -148,9 +148,9 @@
 					</div>
 					<div class="modal-body">
 		
-						{!! Form::open(array('class' => 'form-horizontal', 'route' => 'detallepagofacturas.store')) !!}
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'detallepagofacturas.store')) }}
 							<fieldset>
-								{!! Form::hidden('factura_id', $factura->id) !!}
+								{{ Form::hidden('factura_id', $factura->id) }}
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Fecha</label>
                                     <div class="col-md-9">
@@ -164,40 +164,40 @@
 								<div class="form-group">
 									<label class="col-md-3 control-label">Detalle</label>
 									<div class="col-md-9">
-										{!! Form::text('detalle', old('detalle'),
+										{{ Form::text('detalle', old('detalle'),
 											array(
 											    'class' => 'form-control',
 											    'id' => 'detalle',
 											    'placeholder' => 'Escriba el detalle del pago...',
 												'autocomplete' => 'off',
 											))
-										!!} 
+										}} 
 										{!! $errors->first('detalle', '<li style="color:red">:message</li>') !!}
 									</div>
 								</div>	
 								<div class="form-group">
 									<label class="col-md-3 control-label">Monto</label>
 									<div class="col-md-9">
-										{!! Form::text('monto', old('monto'),
+										{{ Form::text('monto', old('monto'),
 											array(
 											    'class' => 'form-control',
 											    'id' => 'monto',
 											    'placeholder' => 'Escriba el monto ...',
 												'autocomplete' => 'off',
 											))
-										!!} 
+										}} 
 										{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
 									</div>
 								</div>	
 							</fieldset>				
 							
 							<div class="form-actions">
-								{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 								<button type="button" class="btn btn-default" data-dismiss="modal">
 									Cancel
 								</button>
 							</div>
-						{!! Form::close() !!}
+						{{ Form::close() }}
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->

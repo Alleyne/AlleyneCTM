@@ -43,37 +43,37 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-								{!! Form::open(array('class' => 'form-horizontal', 'route' => 'permissions.store')) !!}		
+								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'permissions.store')) }}		
 									<fieldset>
-										{!! csrf_field() !!}
+										{{ csrf_field() !!}
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{!! Form::text('name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del permiso...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('name', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del permiso...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Valor</label>
 											<div class="col-md-10">
-												{!! Form::text('value', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el valor del permiso...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('value', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el valor del permiso...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('value', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Descripción</label>
 											<div class="col-md-10">
-												{!! Form::text('description', '', array('class' => 'form-control input-sm', 'title' => 'Escriba una descripción del permiso...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('description', '', array('class' => 'form-control input-sm', 'title' => 'Escriba una descripción del permiso...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('description', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::route('permissions.index') }}" class="btn btn-large">Cancelar</a>
 									</div>
-								{!! Form::close() !!}
+								{{ Form::close() }}
 
 							</div>
 							<!-- end widget content -->

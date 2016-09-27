@@ -44,9 +44,9 @@
 						<div class="row show-grid">
 						    <div class="col-xs-12 col-sm-6 col-md-8">		
 								<div class="widget-body"><!-- widget content -->
-								{!! Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('uns.update', $dato->id))) !!}
+								{{ Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('uns.update', $dato->id))) }}
 										{{ csrf_field() }}
-                                        {!! Form::hidden('seccione_id', $seccion->id) !!}
+                                        {{ Form::hidden('seccione_id', $seccion->id) }}
 										<fieldset>
 											<div class="form-group">
 												<label class="col-md-3 control-label">Código</label>
@@ -58,14 +58,14 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Finca</label>
 												<div class="col-md-9">
-													{!! Form::text('finca', $dato->finca, array('class' => 'form-control','title' => 'Escriba el númeo de finca...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('finca', $dato->finca, array('class' => 'form-control','title' => 'Escriba el númeo de finca...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('finca', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>			
 											<div class="form-group">
 												<label class="col-md-3 control-label">Documento</label>
 												<div class="col-md-9">
-													{!! Form::text('documento', $dato->documento, array('class' => 'form-control','title' => 'Escriba el númeo del documento...', 'autocomplete' => 'off')) !!}
+													{{ Form::text('documento', $dato->documento, array('class' => 'form-control','title' => 'Escriba el númeo del documento...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('documento', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>			
@@ -73,7 +73,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Caracteristicas propia</label>
 												<div class="col-md-9">
-													{!! Form::textarea('caracteristicas', $dato->caracteristicas, array('class' => 'form-control input-sm', 'rows' => '2', 'title' => 'Escriba las características propias de la unidad...')) !!}
+													{{ Form::textarea('caracteristicas', $dato->caracteristicas, array('class' => 'form-control input-sm', 'rows' => '2', 'title' => 'Escriba las características propias de la unidad...')) }}
 												    {!! $errors->first('caracteristicas', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>													
@@ -261,11 +261,11 @@
 										</fieldset>
 										
 										<div class="form-actions">
-											{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+											{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 											<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
 
 										</div>
-									{!! Form::close() !!}
+									{{ Form::close() }}
 								</div><!-- end widget content -->
 							</div>
 

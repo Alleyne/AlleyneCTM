@@ -104,14 +104,14 @@
 					</div>
 					<div class="modal-body">
 
-						{!! Form::open(array('class' => 'form-horizontal', 'route' => 'orgs.store')) !!}
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'orgs.store')) }}
 							<fieldset>
-								{!! Form::hidden('org_id', $org_id) !!}
+								{{ Form::hidden('org_id', $org_id) }}
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="cargo"> Subcuentas</label>
-											{!! Form::select('id', array('' => 'Escoja la subcuenta que desea vincular...') + $ksubcuentas, array('title' => 'Escoja la subcuenta que desea vincular')) !!}
+											{{ Form::select('id', array('' => 'Escoja la subcuenta que desea vincular...') + $ksubcuentas, array('title' => 'Escoja la subcuenta que desea vincular')) }}
 											{!! $errors->first('id', '<li style="color:red">:message</li>') !!}
 										</div>
 									</div>
@@ -119,12 +119,12 @@
 							</fieldset>				
 							
 							<div class="form-actions">
-								{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 								<button type="button" class="btn btn-default" data-dismiss="modal">
 									Cancel
 								</button>
 							</div>
-						{!! Form::close() !!}
+						{{ Form::close() }}
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->

@@ -120,7 +120,7 @@ class PagosController extends Controller {
 		    //dd($periodo);
 		    
 		    if (!$periodo) {
-	            Session::flash('danger', '<< ERROR >>No existe un periodo contable que corresponda la fecha de pago.');
+	            Session::flash('danger', '<< ERROR >> No existe un periodo contable que corresponda la fecha de pago.');
         		return Redirect::back()->withInput()->withErrors($validation);
 		    }
 

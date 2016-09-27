@@ -43,30 +43,30 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-								{!! Form::open(array('class' => 'form-horizontal', 'route' => 'jds.store')) !!}		
+								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'jds.store')) }}		
 									<fieldset>
-										{!! csrf_field() !!}
+										{{ csrf_field() }}
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{!! Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre de la Junta Directiva...', 'autocomplete' => 'off')) !!}
-												{{ $errors->first('nombre', '<li style="color:red">:message</li>') }}
+												{{ Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre de la Junta Directiva...', 'autocomplete' => 'off')) }}
+												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Descripción</label>
 											<div class="col-md-10">
-												{!! Form::text('descripcion', '', array('class' => 'form-control input-sm', 'title' => 'Escriba una descripción de la Junta Directiva...', 'autocomplete' => 'off')) !!}
-												{{ $errors->first('descripcion', '<li style="color:red">:message</li>') }}
+												{{ Form::text('descripcion', '', array('class' => 'form-control input-sm', 'title' => 'Escriba una descripción de la Junta Directiva...', 'autocomplete' => 'off')) }}
+												{!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::route('jds.index') }}" class="btn btn-large">Cancelar</a>
 									</div>
-								{!! Form::close() !!}
+								{{ Form::close() }}
 
 							</div>
 							<!-- end widget content -->

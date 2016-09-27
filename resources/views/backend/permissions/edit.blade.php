@@ -43,37 +43,37 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{!! Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('permissions.update', $dato->id))) !!}
+							{{ Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('permissions.update', $dato->id))) }}
 									{{ csrf_field() }}
 									<fieldset>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{!! Form::text('name', $dato->name, array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del permiso...')) !!}
+												{{ Form::text('name', $dato->name, array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del permiso...')) }}
 												{!! $errors->first('name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Valor</label>
 											<div class="col-md-10">
-												{!! Form::text('value', $dato->value, array('class' => 'form-control input-sm', 'title' => 'Escriba el valor del permiso...')) !!}
+												{{ Form::text('value', $dato->value, array('class' => 'form-control input-sm', 'title' => 'Escriba el valor del permiso...')) }}
 												{!! $errors->first('value', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>				
 										<div class="form-group">
 											<label class="col-md-2 control-label">Descripción</label>
 											<div class="col-md-10">
-												{!! Form::text('description', $dato->description, array('class' => 'form-control input-sm', 'title' => 'Escriba la descripcion del permiso...')) !!}
+												{{ Form::text('description', $dato->description, array('class' => 'form-control input-sm', 'title' => 'Escriba la descripcion del permiso...')) }}
 												{!! $errors->first('description', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::route('permissions.index') }}" class="btn btn-large">Cancelar</a>
 									</div>
-							{!! Form::close() !!}
+							{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>

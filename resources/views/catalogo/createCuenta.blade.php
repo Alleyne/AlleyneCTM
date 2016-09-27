@@ -43,26 +43,26 @@
 							<div class="widget-body">
 								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'catalogos.store')) }}		
 									<fieldset>
-										{!! csrf_field() !!}
-										{!! Form::hidden('id', $id) !!}
+										{{ csrf_field() }}
+										{{ Form::hidden('id', $id) }}
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{!! Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre de la cuenta ...')) !!}
+												{{ Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre de la cuenta ...')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
 											<label class="col-md-2 control-label">Código</label>
 											<div class="col-md-10">
-												{!! Form::text('codigo', old('codigo'),
+												{{ Form::text('codigo', old('codigo'),
 													array(
 													    'class' => 'form-control',
 													    'id' => 'codigo',
 													    'placeholder' => 'Escriba el código de la cuenta. Ejempo escriba 01.00 para crear la cuenta XX01.00',
 														'autocomplete' => 'off',
 													))
-												!!} 
+												}} 
 												{!! $errors->first('codigo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
@@ -70,7 +70,7 @@
 											<div class="form-group">
 												<label class="col-md-2 control-label">Clasificacion</label>
 												<div class="col-md-10">
-												{!! Form::select('corriente_siono', ['Seleccione el Tipo de cuenta ...', 'Corriente', 'No corriente'], 0, ['class' => 'form-control']) !!}
+												{{ Form::select('corriente_siono', ['Seleccione el Tipo de cuenta ...', 'Corriente', 'No corriente'], 0, ['class' => 'form-control']) }}
 												{!! $errors->first('corriente_siono', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>	
@@ -79,14 +79,14 @@
 											<div class="form-group">
 												<label class="col-md-2 control-label">Nombre en factura</label>
 												<div class="col-md-10">
-													{!! Form::text('nombre_factura', old('nombre_factura'),
+													{{ Form::text('nombre_factura', old('nombre_factura'),
 														array(
 														    'class' => 'form-control',
 														    'id' => 'nombre_factura',
 														    'placeholder' => 'Escriba nombre de la cuenta que usara en las facturas.',
 															'autocomplete' => 'off',
 														))
-													!!} 
+													}} 
 													{!! $errors->first('nombre_factura', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>

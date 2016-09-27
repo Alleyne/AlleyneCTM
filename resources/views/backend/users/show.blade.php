@@ -58,7 +58,7 @@
 												<div class="form-group">
 													<label class="col-md-3 control-label">Dirección</label>
 													<div class="col-md-9">
-														{!! Form::textarea('direccion', $dato->direccion, array('class' => 'form-control input-sm', 'rows' => '2', 'readonly' => 'readonly')) !!}
+														{{ Form::textarea('direccion', $dato->direccion, array('class' => 'form-control input-sm', 'rows' => '2', 'readonly' => 'readonly')) }}
 													</div>
 												</div>	
 												<div class="form-group">

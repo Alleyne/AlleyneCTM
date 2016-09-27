@@ -120,14 +120,14 @@
 					</div>
 					<div class="modal-body">
 		
-						{!! Form::open(array('class' => 'form-horizontal', 'route' => 'blqadmins.store')) !!}
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'blqadmins.store')) }}
 							<fieldset>
-								{!! Form::hidden('bloque_id', $bloque_id) !!}
+								{{ Form::hidden('bloque_id', $bloque_id) }}
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="cargo"> Usuarios</label>
-											{!! Form::select('user_id', array('' => 'Escoja al Usuario que desea vincular...') + $usuarios, array('title' => 'Escoja el usuario que desea vincular')) !!}
+											{{ Form::select('user_id', array('' => 'Escoja al Usuario que desea vincular...') + $usuarios, array('title' => 'Escoja el usuario que desea vincular')) }}
 											{!! $errors->first('user_id', '<li style="color:red">:message</li>') !!}
 										</div>
 									</div>
@@ -137,7 +137,7 @@
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="cargo"> Cargo</label>
-											{!! Form::select('cargo', array('0' => 'Persona Natural', '1' => 'Persona Jurídica'), array('title' => 'Escoja su tipo de propietario')) !!}
+											{{ Form::select('cargo', array('0' => 'Persona Natural', '1' => 'Persona Jurídica'), array('title' => 'Escoja su tipo de propietario')) }}
  											{!! $errors->first('cargo', '<li style="color:red">:message</li>') !!}										
 										</div>
 									</div>
@@ -147,7 +147,7 @@
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="category"> Organizacion</label>
-											{!! Form::select('org_id', array('' => 'Escoja la organización...') + $orgs, array('title' => 'Escoja la organización a la cual pertenece')) !!}
+											{{ Form::select('org_id', array('' => 'Escoja la organización...') + $orgs, array('title' => 'Escoja la organización a la cual pertenece')) }}
 											{!! $errors->first('org_id', '<li style="color:red">:message</li>') !!}
 										</div>
 									</div>
@@ -158,7 +158,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Encargado</label>
 											<div class="col-md-9">
-												{!! Form::checkbox('encargado','1', false) !!}
+												{{ Form::checkbox('encargado','1', false) }}
 											</div>
 										</div>
 									</div>
@@ -166,12 +166,12 @@
 							</fieldset>				
 							
 							<div class="form-actions">
-								{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 								<button type="button" class="btn btn-default" data-dismiss="modal">
 									Cancel
 								</button>
 							</div>
-						{!! Form::close() !!}
+						{{ Form::close() }}
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->

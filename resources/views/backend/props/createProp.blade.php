@@ -43,33 +43,33 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-								{!! Form::open(array('class' => 'form-horizontal', 'route' => 'props.store')) !!}		
+								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'props.store')) }}		
 									<fieldset>
-										{!! csrf_field() !!}
-										{!! Form::hidden('un_id', $un_id) !!}
-										{!! Form::hidden('seccione_id', $seccione_id) !!}
+										{{ csrf_field() }}
+										{{ Form::hidden('un_id', $un_id) }}
+										{{ Form::hidden('seccione_id', $seccione_id) }}
 										
 										<div class="form-group">
 											<label class="col-md-3 control-label">Usuarios disponibles</label>
 											<div class="col-md-9">
-												{!! Form::select('user_id', array('' => 'Escoja al Usuario que desea agregar...') + $datos, array('title' => 'Escoja el usuario que desea agregar')) !!}
+												{{ Form::select('user_id', array('' => 'Escoja al Usuario que desea agregar...') + $datos, array('title' => 'Escoja el usuario que desea agregar')) }}
 												{!! $errors->first('user_id', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
 											<label class="col-md-3 control-label">Encargado</label>
 											<div class="col-md-9">
-												{!! Form::checkbox('encargado','1', false) !!}
+												{{ Form::checkbox('encargado','1', false) }}
 											</div>
 										</div>	
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::route('indexprops', array($un_id, $seccione_id)) }}" class="btn btn-large">Cancelar</a>
 										<!-- <a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a> -->
 									</div>
-								{!! Form::close() !!}
+								{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>

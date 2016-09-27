@@ -37,7 +37,7 @@
 					<div class="form-group">
 						<label class="col-md-2 control-label">Descripción</label>
 						<div class="col-md-10">
-							{!! Form::textarea('descripcion', $bloque->descripcion, array('class' => 'form-control input-sm', 'rows' => '2', 'readonly' => 'readonly')) !!}
+							{{ Form::textarea('descripcion', $bloque->descripcion, array('class' => 'form-control input-sm', 'rows' => '2', 'readonly' => 'readonly')) }}
 						</div>
 					</div>					
 				</fieldset>

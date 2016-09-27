@@ -100,10 +100,10 @@
                                             <a href="{{ URL::route('secciones.edit', array($seccion->id)) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
                                         </li>
                                         <li>
-                                            {!! Form::open(array('route' => array('secciones.destroy', $seccion->id), 'method' => 'delete', 'data-confirm' =>
-                                            'Deseas borrar la seccion administrativa '. $seccion->nombre. ' permanentemente?')) !!}
+                                            {{ Form::open(array('route' => array('secciones.destroy', $seccion->id), 'method' => 'delete', 'data-confirm' =>
+                                            'Deseas borrar la seccion administrativa '. $seccion->nombre. ' permanentemente?')) }}
                                             <button type="submit" href="{{ URL::route('secciones.destroy', $seccion->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
-                                            {!! Form::close() !!}
+                                            {{ Form::close() }}
                                          </li>
                                     </ul>
                                 </td>

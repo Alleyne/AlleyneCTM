@@ -43,30 +43,30 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{!! Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('jds.update', $dato->id))) !!}
+							{{ Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('jds.update', $dato->id))) }}
 									{{ csrf_field() }}
 									<fieldset>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{!! Form::text('nombre', $dato->nombre, array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del Ph...')) !!}
+												{{ Form::text('nombre', $dato->nombre, array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del Ph...')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
 											<label class="col-md-2 control-label">Descripción</label>
 											<div class="col-md-10">
-												{!! Form::text('descripcion', $dato->descripcion, array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del Ph...')) !!}
+												{{ Form::text('descripcion', $dato->descripcion, array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del Ph...')) }}
 												{!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::route('jds.index') }}" class="btn btn-large">Cancelar</a>
 									</div>
-							{!! Form::close() !!}
+							{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>

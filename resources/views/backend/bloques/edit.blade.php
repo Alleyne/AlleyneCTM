@@ -43,13 +43,13 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-								{!! Form::model($bloque, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('bloques.update', $bloque->id))) !!}
+								{{ Form::model($bloque, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('bloques.update', $bloque->id))) }}
 									{{ csrf_field() }}
 									<fieldset>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{!! Form::text('nombre', $bloque->nombre, array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del Bloque...', 'autocomplete' => 'off')) !!}
+												{{ Form::text('nombre', $bloque->nombre, array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del Bloque...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
@@ -57,18 +57,17 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Descripción</label>
 											<div class="col-md-10">
-												{!! Form::textarea('descripcion', $bloque->descripcion, array('class' => 'form-control input-sm', 'rows' => '7', 'title' => 'Escriba la descripción del Bloque...', 'autocomplete' => 'off')) !!}
-											   {{-- {!! Form::textarea('message', null, array('required', 'class'=>'form-control', 'placeholder'=>'Your message')) !!} --}}
+												{{ Form::textarea('descripcion', $bloque->descripcion, array('class' => 'form-control input-sm', 'rows' => '7', 'title' => 'Escriba la descripción del Bloque...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::route('indexblqplus', array($bloque->jd_id)) }}" class="btn btn-large">Cancelar</a>
 									</div>
-								{!! Form::close() !!}
+								{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>
@@ -117,14 +116,14 @@
 			              	<p>
 								<img style="height: 275px; border-radius: 8px;" src="{{asset($bloque->imagen_L)}}" class="img-responsive" alt="Responsive image">
 			             	</p>
-				         	{!! Form::open(array('route' => array('subirImagenBloque', $bloque->id),'files'=>true)) !!}
+				         	{{ Form::open(array('route' => array('subirImagenBloque', $bloque->id),'files'=>true)) }}
 								<div class="form-actions">
 				         		<div>
-									{!! Form::file('file') !!}
+									{{ Form::file('file') }}
 								</div>						
-									{!! Form::submit('Subir imagen', array('class' => 'btn btn-success btn-save btn-large')) !!}
+									{{ Form::submit('Subir imagen', array('class' => 'btn btn-success btn-save btn-large')) }}
 								</div>
-			          		{!! Form::close() !!}			            
+			          		{{ Form::close() }}			            
 			            </div>
 						<!-- end widget content -->
 	

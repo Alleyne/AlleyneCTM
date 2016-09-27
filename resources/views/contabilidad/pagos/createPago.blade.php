@@ -41,15 +41,15 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{!! Form::open(array('class' => 'form-horizontal', 'route' => 'pagos.store')) !!}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'pagos.store')) }}		
 									<fieldset>
-	 									{!! csrf_field() !!}
-	 									{!! Form::hidden('un_id', $un_id) !!}
+	 									{{ csrf_field() }}
+	 									{{ Form::hidden('un_id', $un_id) }}
                                        
 										<div class="form-group">
 											<label class="col-md-3 control-label">Banco</label>
 											<div class="col-md-9">
-												{!! Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control']) !!}
+												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control']) }}
 												{!! $errors->first('banco_id', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
@@ -68,7 +68,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Tipo de transaccion</label>
 											<div class="col-md-9">
-											{!! Form::select('trans_tipo', ['Seleccione el Tipo de Transaccion ...', 'Cheque', 'Transferencia'], 0, ['class' => 'form-control']) !!}
+											{{ Form::select('trans_tipo', ['Seleccione el Tipo de Transaccion ...', 'Cheque', 'Transferencia'], 0, ['class' => 'form-control']) }}
 											{!! $errors->first('trans_tipo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
@@ -76,14 +76,14 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Transaccion No.</label>
 											<div class="col-md-9">
-												{!! Form::text('trans_no', old('trans_no'),
+												{{ Form::text('trans_no', old('trans_no'),
 													array(
 													    'class' => 'form-control',
 													    'id' => 'trans_no',
 													    'placeholder' => 'Escriba el numero de la transaccion...',
 														'autocomplete' => 'off'
 													))
-												!!} 
+												}} 
 												{!! $errors->first('trans_no', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
@@ -91,14 +91,14 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Monto</label>
 											<div class="col-md-9">
-												{!! Form::text('monto', old('monto'),
+												{{ Form::text('monto', old('monto'),
 													array(
 													    'class' => 'form-control',
 													    'id' => 'monto',
 													    'placeholder' => 'Escriba el monto recibido ...',
 														'autocomplete' => 'off'
 													))
-												!!} 
+												}} 
 												{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
@@ -106,22 +106,22 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Descripción</label>
 											<div class="col-md-9">
-										        {!! Form::textarea('descripcion', old('descripcion'),
+										        {{ Form::textarea('descripcion', old('descripcion'),
 										        	array(
 										        		'class' => 'form-control',
 										        		'title' => 'Escriba la descripcion',
 										        		'rows' => '3'
-										        	)) !!}
+										        	)) }}
 										        {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}   
 											</div>
 										</div>				
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
 									</div>
-								{!! Form::close() !!}
+								{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>

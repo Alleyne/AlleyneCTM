@@ -43,15 +43,15 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-								{!! Form::open(array('class' => 'form-horizontal', 'route' => 'storeungrupo')) !!}		
+								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'storeungrupo')) }}		
 									<fieldset>
-				 						{!! csrf_field() !!}
-                                        {!! Form::hidden('seccione_id', $dato->seccione_id) !!}
-                                        {!! Form::hidden('tipo', $dato->tipo) !!}
-                                        {!! Form::hidden('codigoseccion', $dato->codigoseccion) !!}
-                                        {!! Form::hidden('bloque_id', $dato->bloque_id) !!}
-                                        {!! Form::hidden('codigobloque', $dato->codigobloque) !!}									
-										{!! Form::hidden('codigoph', $dato->codigoph) !!}	
+				 						{{ csrf_field() }}
+                                        {{ Form::hidden('seccione_id', $dato->seccione_id) }}
+                                        {{ Form::hidden('tipo', $dato->tipo) }}
+                                        {{ Form::hidden('codigoseccion', $dato->codigoseccion) }}
+                                        {{ Form::hidden('bloque_id', $dato->bloque_id) }}
+                                        {{ Form::hidden('codigobloque', $dato->codigobloque) }}									
+										{{ Form::hidden('codigoph', $dato->codigoph) }}	
 										
 										@if ($dato->tipo==1) 
 											<legend>Crear grupo de Unidades tipo apartamento</legend>
@@ -83,7 +83,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Letras</label>
 											<div class="col-md-6">
-												{!! Form::text('letras', '', array('class' => 'form-control tagsinput', 'data-role' => 'tagsinput')) !!}
+												{{ Form::text('letras', '', array('class' => 'form-control tagsinput', 'data-role' => 'tagsinput')) }}
 												<p class="text-left">Escriba las letras que desea utilizar para la numeración presionando "Enter" después de cada una.</p>
 											    {!! $errors->first('letras', '<li style="color:red">:message</li>') !!}
 											</div>
@@ -91,10 +91,10 @@
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
 									</div>
-								{!! Form::close() !!}
+								{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>

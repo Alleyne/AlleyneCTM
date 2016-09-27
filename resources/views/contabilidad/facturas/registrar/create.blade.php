@@ -41,27 +41,27 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{!! Form::open(array('class' => 'form-horizontal', 'route' => 'facturas.store')) !!}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'facturas.store')) }}		
 									<fieldset>
-	 									{!! csrf_field() !!}
+	 									{{ csrf_field() }}
 										<div class="form-group">
 											<label class="col-md-3 control-label">Proveedor</label>
 											<div class="col-md-9">
-												{!! Form::select('org_id', ['' => 'Selecione un proveedor ...'] + $proveedores, 0, ['class' => 'form-control']) !!}
+												{{ Form::select('org_id', ['' => 'Selecione un proveedor ...'] + $proveedores, 0, ['class' => 'form-control']) }}
 												{!! $errors->first('org_id', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-3 control-label">Factura No.</label>
 											<div class="col-md-9">
-												{!! Form::text('no', old('no'),
+												{{ Form::text('no', old('no'),
 													array(
 													    'class' => 'form-control',
 													    'id' => 'no',
 													    'placeholder' => 'Escriba el numero de la factura...',
 														'autocomplete' => 'off',
 													))
-												!!} 
+												}} 
 												{!! $errors->first('no', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
@@ -78,23 +78,23 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Total</label>
 											<div class="col-md-9">
-												{!! Form::text('total', old('total'),
+												{{ Form::text('total', old('total'),
 													array(
 													    'class' => 'form-control',
 													    'id' => 'total',
 													    'placeholder' => 'Escriba el monto total de la factura...',
 														'autocomplete' => 'off',
 													))
-												!!} 
+												}} 
 												{!! $errors->first('total', '<li style="color:red">:message</li>') !!}
 											</div>
 									</fieldset>
 									
 									<div class="form-actions">
-										{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 										<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
 									</div>
-								{!! Form::close() !!}
+								{{ Form::close() }}
 							</div>
 							<!-- end widget content -->
 					</div>

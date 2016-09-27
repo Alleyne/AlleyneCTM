@@ -41,9 +41,9 @@
 							<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 						</head>
 						<body>
-						{!! Form::open(array('route' => 'ajustes.store')) !!}		
-							{!! csrf_field() !!}
-							{!! Form::hidden('periodo_id', $periodo_id) !!}
+						{{ Form::open(array('route' => 'ajustes.store')) }}		
+							{{ csrf_field() }}
+							{{ Form::hidden('periodo_id', $periodo_id) }}
 							<table>
 								<thead>
 									<tr>
@@ -74,22 +74,22 @@
 							<div class="form-group">
 								<label class="col-md-1 control-label">Descripción</label>
 								<div class="col-md-11">
-							        {!! Form::textarea('descripcion', old('descripcion'),
+							        {{ Form::textarea('descripcion', old('descripcion'),
 							        	array(
 							        		'class' => 'form-control',
 							        		'title' => 'Escriba la descripcion',
 							        		'rows' => '2'
-							        	)) !!}
+							        	)) }}
 							        {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}   
 								</div>
 							</div>	
 							<br />	
 							<br />	
 							<div class="form-actions">
-								{!! Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) !!}
+								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 								<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
 							</div>
-						{!! Form::close() !!}
+						{{ Form::close() }}
 						<script>
 							$(document).ready(function(){
 								$(".debito").each(function(){

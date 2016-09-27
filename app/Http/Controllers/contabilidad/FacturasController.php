@@ -100,6 +100,18 @@ class FacturasController extends Controller {
 		if ($validation->passes())
 		{
 			
+		    // verifica que exista un periodo de acuerdo a la fecha de pago
+		    $year= Carbon::parse(Input::get('fecha'))->year;
+		    $month= Carbon::parse(Input::get('fecha'))->month;
+		    $pdo= Sity::getMonthName($month).'-'.$year;    
+		    $periodo= Pcontable::where('periodo', $pdo)->first();
+		    //dd($periodo);
+		    
+		    if (!$periodo) {
+	            Session::flash('danger', '<< ERROR >> No existe un periodo contable que corresponda la fecha de la factura.');
+	    		return Redirect::back()->withInput()->withErrors($validation);
+		    }	
+
 			$dato = new Factura;
 			$dato->org_id       	= Input::get('org_id');
 			$dato->no			    = strtoupper(Input::get('no'));
@@ -160,9 +172,29 @@ class FacturasController extends Controller {
     //dd($org_id);
 
     //determina el periodo contable vigente
-    $periodo= Pcontable::where('cerrado', 0)->first();
+    //$periodo= Pcontable::where('cerrado', 0)->first();
     //dd($periodo);
     
+
+
+    // convierte la fecha string a carbon/carbon
+    $f_factura = Carbon::parse($factura->fecha);   
+    $month= $f_factura->month;    
+    $year= $f_factura->year;    
+
+    // determina el periodo al que corresponde la fecha de pago    
+    $pdo= Sity::getMonthName($month).'-'.$year;
+    $periodo= Pcontable::where('periodo', $pdo)
+			->where('cerrado', 0)
+    		->first();
+    //dd($periodo); 
+
+    if (!$periodo) {
+        Session::flash('warning', '<< ATENCION >> La presente factura no puede ser contabilizada ya que el periodo contable al cual pertenece ha sido cerrado. Edite la fecha de la factura de manera que se pueda contabilizar en el proximo periodo contable abierto.');
+        return Redirect::back();
+    }
+
+
     //Encuentra totos los detalles de un determinada factura
     $datos= Detallefactura::where('factura_id', $factura_id)
             ->join('catalogos', 'catalogos.id', '=', 'detallefacturas.catalogo_id')
@@ -233,9 +265,9 @@ class FacturasController extends Controller {
   
 	// Registra en bitacoras
 	$detalle =	'Contabiliza factura '.$factura_id. ', '.
-				'pcontable_id= '. ', '.
-				'no= '.$factura->no. ', '.
-				'org_id= '.$factura->org_id. ', '.
+				'pcontable_id= '.$pdo.', '.
+				'no= '.$factura->no.', '.
+				'org_id= '.$factura->org_id.', '.
 				'fecha= '.$factura->fecha;
 
 	Sity::RegistrarEnBitacora(15, 'facturas', $factura_id, $detalle);
