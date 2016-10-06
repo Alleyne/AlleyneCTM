@@ -1641,7 +1641,7 @@ public static function facturar($fecha)
             $pagada=1;
             
             // registra el descuento como consumido
-            $desc->consumido= 1;
+            $desc->consumido=1;
             $desc->save();            
           } 
 
