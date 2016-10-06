@@ -37,7 +37,7 @@ class HomeController extends Controller
             Cache::forever('esPropietariokey', Grupo::esPropietario());
         } else {
             Session::flash('warning', '<< ATENCION >> Usuario no pertenece a ningun grupo!');
-            return Redirect::back();
+            return view('backend.bienvenida_backend');
         }
         
         Cache::forever('userRoleskey', Auth::user()->roles()->get());
