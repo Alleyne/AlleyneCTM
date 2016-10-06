@@ -46,7 +46,7 @@ class autofacturar extends Command
         //dd($year,$month,$monthAnterior);
 
         // calcula la cantidad de periodos abiertos a la fecha
-        $periodosCant= Pcontable::where('cerrado',0)->orderBy('id')->count();
+        $periodosCant= Pcontable::where('cerrado',0)->count();
         //dd($periodosCant);
         
         // verifica si existe el periodo anterior al actual
