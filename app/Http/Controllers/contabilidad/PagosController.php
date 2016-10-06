@@ -112,15 +112,18 @@ class PagosController extends Controller {
 		if ($validation->passes())
 		{
 			
-		    // verifica que exista un periodo de acuerdo a la fecha de pago
+		    // calcula el periodo al que corresponde la fecha de pago
 		    $year= Carbon::parse(Input::get('f_pago'))->year;
 		    $month= Carbon::parse(Input::get('f_pago'))->month;
 		    $pdo= Sity::getMonthName($month).'-'.$year;    
-		    $periodo= Pcontable::where('periodo', $pdo)->first();
+		    
+		    // encuentra el periodo mas antiguo abierto
+			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
 		    //dd($periodo);
 		    
-		    if (!$periodo) {
-	            Session::flash('danger', '<< ERROR >> No existe un periodo contable que corresponda la fecha de pago.');
+		    // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
+		    if ($pdo != $periodo->periodo) {
+	            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo de '.$periodo->periodo);
         		return Redirect::back()->withInput()->withErrors($validation);
 		    }
 
@@ -165,7 +168,7 @@ class PagosController extends Controller {
 			    $dato->save();
 
 				// proceso de contabilizar el pago recibido
-				Sity::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'));
+				Sity::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id);
 
 				// Registra en bitacoras
 				$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $dato->monto;  

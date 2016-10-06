@@ -12,6 +12,7 @@ use App\Catalogo;
 use App\Pcontable;
 use App\Ht;
 use App\Un;
+use App\Secapto;
 
 class HojadetrabajosController extends Controller {
     
@@ -61,78 +62,57 @@ class HojadetrabajosController extends Controller {
         
         // verifica si el presente periodo admite ajustes, solo se permiten
         // hacer ajustes si se cumplen las siguientes condiciones:
-        // 1. Si se trata del primer periodo y el mismo no esta cerrado
-        // 2. Solo se permitira hacer ajustes a un periodo si el previo esta cerrado
-
-        // verifica si se trata del primer periodo en la base de datos y no esta cerrado
-        if ($pcontable_id==1) {
-            $p1= Pcontable::where('id', 1)
-                          ->where('cerrado', 0)->first();
-            if ($p1) {
-                $p1='Si';
-                $p2='Si';
-            }
-        } else {
-            // verifica si el periodo anterior esta cerrado
-            $p2= Pcontable::where('id', ($pcontable_id-1))
-                          ->where('cerrado', 1)->first();
-            if ($p2) {
-                $p1='Si';
-                $p2='Si';
- 
-             } else {
-                $p1='No';
-                $p2='No';
-            }
-        
-        }
-        //dd($p1, $p2);
-        
-        // permitir ajustes 
-        if ($p1=='Si' && $p2=='Si') {
-            $permitirAjustes= 'Si';
-        } elseif ($pcontable_id>1 && $p2=='Si') {
-            $permitirAjustes= 'Si';
-        } else {
-            $permitirAjustes= 'No';
-        }
-        //dd($permitirAjustes);
-        
-        // verifica si el presente periodo admite ser cerrado, solo se permiten
-        // cerrar un periodo si se cumplen las siguientes condiciones:
-        // 1. Si se trata del primer periodo y el mismo no esta cerrado
-        // 2. El periodo anterior debe estar cerrado       
-        // 3. Exista un periodo posterior abierto
-        // 4. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
-
-        // verifica si exite un o mas periodo posteriores abiertos
-        $p3= Pcontable::where('id', ($pcontable_id+1))
-                      ->where('cerrado', 0)->first();
-        if ($p3) {
-            $p3='Si';
-        } else {
-            $p3='No';
-        }
-        //dd($p3);        
+        // 1. Si el periodo esta abierto
+        // 2. Si el periodo previo esta cerrado
+        // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
         
         // verifica si exite balance entre el $totalAjustadoDebito y $totalAjustadoCredito
-        if ($totalAjustadoDebito == $totalAjustadoCredito) {
-            $p4='Si';
-        } else {
-            $p4='No';
-        }
-        //dd($p4);        
-     
+        $p3= $totalAjustadoDebito == $totalAjustadoCredito;
 
-        // permite cerrar 
-        if (($p1=='Si' && $p3=='Si' && $p4=='Si') || ($p2=='Si' && $p3=='Si' && $p4=='Si')) {
+        // verifica si se trata del primer periodo en la base de datos y no esta cerrado
+        if ($pcontable_id==1 && $p3==true) {
+            $permitirAjustes= 'Si';
             $permitirCerrar= 'Si';
-         } else {
-            $permitirCerrar= 'No';
-        }
-
-        //dd($datos);
         
+        } elseif ($pcontable_id==1 && $p3==false) {
+            $permitirAjustes= 'Si';
+            $permitirCerrar= 'Si';
+        
+        } else {
+
+            // verifica si el periodo esta abierto
+            $p1= Pcontable::where('id', $pcontable_id)->first()->cerrado;
+            
+            // verifica si el periodo previo esta cerrado
+            $p2= Pcontable::where('id', ($pcontable_id-1))->first()->cerrado;
+            //dd($p1, $p2);
+            
+            // permitir ajustes 
+            if ($p1==0 && $p2==1) {
+                $permitirAjustes= 'Si';
+            } else {
+                $permitirAjustes= 'No';
+            }
+            //dd($permitirAjustes);
+     
+            // verifica si el presente periodo admite ser cerrado, solo se permiten
+            // cerrar un periodo si se cumplen las siguientes condiciones:
+            // 1. Si se trata de un periodo no esta cerrado
+            // 2. El periodo anterior debe estar cerrado       
+            // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
+
+            //dd($p1, $p2, $p3);
+            
+            // permite cerrar 
+            if ($p1==0 && $p2==1 && $p3) {
+                $permitirCerrar= 'Si';
+            } else {
+                $permitirCerrar= 'No';
+            }
+        }
+        //dd($permitirCerrar);
+        
+        //dd($datos);
         return \View::make('contabilidad.hojadetrabajos.show')
                     ->with('periodo', $periodo)
                     ->with('permitirAjustes', $permitirAjustes)
@@ -371,7 +351,6 @@ class HojadetrabajosController extends Controller {
     * Despliega el mayor auxiliar de una determinada cuenta
     ************************************************************************************/   
     public function verMayorAux($periodo, $cuenta) {
-        
         $datos= Ctmayore::where('pcontable_id', $periodo)
                        ->where('cuenta', $cuenta)
                        ->get();
@@ -386,7 +365,6 @@ class HojadetrabajosController extends Controller {
                     $saldo= $dato->debito-$dato->credito;
                     $datas[$i]['fecha']= $dato->fecha;
                     $datas[$i]['codigo']= $dato->codigo;
-                    //$datas[$i]['nombre']= Catalogo::find($dato->cuenta)->nombre;
                     $datas[$i]['detalle']= $dato->detalle;
                     $datas[$i]['ref']= "";
                     $datas[$i]['debito']= $dato->debito;
@@ -397,7 +375,6 @@ class HojadetrabajosController extends Controller {
                     $saldo= ($dato->debito-$dato->credito)+$saldo;
                     $datas[$i]['fecha']= $dato->fecha;
                     $datas[$i]['codigo']= $dato->codigo;
-                    //$datas[$i]['nombre']= Catalogo::find($dato->cuenta)->nombre;
                     $datas[$i]['detalle']= $dato->detalle;
                     $datas[$i]['ref']= "";
                     $datas[$i]['debito']= $dato->debito;
@@ -405,13 +382,11 @@ class HojadetrabajosController extends Controller {
                     $datas[$i]['saldo']=  $saldo;
                 }       
 
-
             } elseif ($dato->tipo==2 || $dato->tipo==3 || $dato->tipo==4) {  
                 if ($i==1) {
                     $saldo= $dato->credito-$dato->debito;
                     $datas[$i]['fecha']= $dato->fecha;
                     $datas[$i]['codigo']= $dato->codigo;
-                    //$datas[$i]['nombre']= Catalogo::find($dato->cuenta)->nombre;
                     $datas[$i]['detalle']= $dato->detalle;
                     $datas[$i]['ref']= "";
                     $datas[$i]['debito']= $dato->debito;
@@ -422,7 +397,6 @@ class HojadetrabajosController extends Controller {
                     $saldo= ($dato->credito-$dato->debito)+$saldo;
                     $datas[$i]['fecha']= $dato->fecha;
                     $datas[$i]['codigo']= $dato->codigo;
-                    //$datas[$i]['nombre']= Catalogo::find($dato->cuenta)->nombre;
                     $datas[$i]['detalle']= $dato->detalle;
                     $datas[$i]['ref']= "";
                     $datas[$i]['debito']= $dato->debito;
@@ -433,13 +407,11 @@ class HojadetrabajosController extends Controller {
             } else {
               return 'Error: tipo de cuenta no exite en function Sity::getSaldoCuenta()';
             }
- 
             $i++;
         }
         //dd($datas);
 
         $cuenta= Catalogo::find($cuenta);
-
         return view('contabilidad.hojadetrabajos.verMayorAux')
                 ->with('datas', $datas)
                 ->with('cuenta', $cuenta);
@@ -474,32 +446,87 @@ class HojadetrabajosController extends Controller {
     /***********************************************************************************
     * Cierra definitivamente un determinado periodo contable
     ************************************************************************************/ 
-    public function cierraPeriodo($pcontable_id, $periodo) {
-        
+    public function cierraPeriodo($pcontable_id, $periodo, $fecha) {
+
         $datos= Un::where('inicializada', 0)->first();
         if ($datos) {
             Session::flash('danger', 'Hay algunas unidades que no han sido inicializadas, antes de cerrar el periodo debera inicializar todas las unidades!');
-            return Redirect::route('pcontables.index');
+            //return Redirect::route('pcontables.index');
         }
+        
+        // Construye la fecha del periodo real
+        $year=Carbon::today()->year;
+        $month=Carbon::today()->month;
+        $periodoReal= Carbon::createFromDate($year, $month, 1);
+        
+        // calcula cual seria la fecha del nuevo periodo si se llegara a crear
+        $fecha= Carbon::parse($fecha);
+        $fechaNuevoPeriodo= clone $fecha;
+        $fechaNuevoPeriodo->addMonth();
+        
+        // verifica si el nuevo periodo ya existe
+        $newPeriodo= Pcontable::find($pcontable_id+1);         
+
+        // si la fecha del nuevo periodo no es igual a la fecha del periodo real,
+        // entonces se procede a crear el nuevo periodo
+        if (($periodoReal->ne($fecha)) && !$newPeriodo) {
+            
+            // si no existe entonces crea un nuevo periodo contable
+            $fecha= $fecha->addMonth();
+            Sity::periodo($fecha);
+            
+            $year= Carbon::parse($fecha)->year;
+            $month= Carbon::parse($fecha)->month;
+            
+            // crea facturacion para el nuevo periodo contable
+            // facturacion para las secciones que generan las ordenes de cobro los dias 1
+            Sity::facturar(Carbon::createFromDate($year, $month, 1));
+            // facturacion para las secciones que generan las ordenes de cobro los dias 16
+            Sity::facturar(Carbon::createFromDate($year, $month, 16));
+
+            // penaliza todas aquellas unidades cuya orden de cobro se genera los dias primero de cada mes
+            $secs= Secapto::select('d_registra_cmpc','d_gracias')->distinct()->orderBy('d_gracias')->get();
+            //dd($secs->toArray());
+
+            foreach ($secs as $sec) {
+                $f_vence = clone $fecha; // mantiene el valor original de la variable $fecha
+                if ($sec->d_registra_cmpc==1) {
+                    //dump($sec->d_gracias, $f_vence->addDays($sec->d_gracias-1));
+                    Sity::penalizar($f_vence->addDays($sec->d_gracias-1), $sec->d_registra_cmpc);
+                
+                } elseif ($sec->d_registra_cmpc==16) {
+                    //dump($sec->d_gracias, $f_vence->addDays(14+$sec->d_gracias));
+                    Sity::penalizar($f_vence->addDays(15+$sec->d_gracias-1), $sec->d_registra_cmpc);                
+                }
+            }
+
+            // Registra en bitacoras
+            $detalle =  'Se crea periodo contable de '.Pcontable::all()->last()->periodo;
+            Sity::RegistrarEnBitacora(1, 'pcontables', 1, $detalle);     
+        } 
+        
+        // procede a cerrar el periodo               
+        $fnext= clone $fecha;
+        $fnext= $fnext->addMonth();
 
         // inicializa las cuentas permanentes en periodo posterior
-        Sity::inicializaCuentasPerm($pcontable_id);
-        //dd('aqui');
+        Sity::inicializaCuentasPerm($pcontable_id, $fnext);
+
         // calcula la utilidad del periodo contable antes de cerrarlo y se la pasa al periodo posterior
-        Sity::pasarUtilidad($pcontable_id, $periodo);
+        Sity::pasarUtilidad($pcontable_id, $periodo, $fnext);
 
         // almacena datos del periodo antes de cerrarlo y las almacena en la tabla Hts (hoja de trabajo historica)
         Sity::migraDatosHts($pcontable_id);
 
         // cierra todas la cuentas nominales o temporales por finalizacion de periodo contable
-        Sity::cierraCuentasTemp($pcontable_id);
+        Sity::cierraCuentasTemp($pcontable_id, $fecha);
 
         // cierra el periodo contable
-        $periodo= Pcontable::find($pcontable_id);
-        $periodo->cerrado = 1;
-        $periodo->f_cierre = Carbon::today();
-        $periodo->save();
-         
+        $pc= Pcontable::find($pcontable_id);
+        $pc->cerrado= 1;
+        $pc->f_cierre= $fecha->endOfMonth();
+        $pc->save();
+        
         // migra los datos de ctmayores a la tabla de datos historicos ctmayorehi y 
         // posteriormente los borra de la tabla ctmayores
         Sity::migraDatosCtmayorehis($pcontable_id);
@@ -510,7 +537,7 @@ class HojadetrabajosController extends Controller {
 
         // registra en bitacoras
         Sity::RegistrarEnBitacora(17, 'pcontables', $pcontable_id, $periodo);
-        Session::flash('success', 'Periodo '.$periodo->periodo.' ha sido cerrado permanentemente!');
+        Session::flash('success', 'Periodo '.$periodo.' ha sido cerrado permanentemente!');
         return Redirect::route('pcontables.index');
     }
 } // fin de controller

@@ -4,10 +4,9 @@
 
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
-		
+
 			<!-- row -->
 			<div class="row">
-		
 				<!-- NEW WIDGET START -->
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<!-- Widget ID (each widget will need unique ID)-->
@@ -28,10 +27,14 @@
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 							<h2>Periodos contables </h2>
 							<div class="widget-toolbar">
-
-							</div>	
+								@if (!$datos->count())
+									<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
+										 Crear primer periodo contable
+									</button>
+								@endif
+							</div>
 						</header>
-		
+
 						<!-- widget div-->
 						<div>
 		
@@ -49,7 +52,7 @@
 
 									</div>
 								</div>
-								
+
 								<table id="dt_basic" class="table table-hover">
 									<thead>
 										<tr>
@@ -96,14 +99,14 @@
 																<a href="{{ URL::route('bg', $dato->id) }}" class="btn btn-default txt-color-yellow btn-xs"><i class="glyphicon glyphicon-lock"></i> Balance General Final</a>
 															</li>
 														@endif															
-
-
 													</ul>
 												</td>
 											</tr>
 										@endforeach
 									</tbody>
 								</table>
+								<!-- Incluye la modal box -->
+								@include('backend._partials.modal_confirm')
 							</div>
 							<!-- end widget content -->
 		
@@ -119,8 +122,42 @@
 		
 		</section>
 		<!-- end widget grid -->
-
-
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Crear Periodo contable inicial</h4>
+					</div>
+					<div class="modal-body">
+		
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'pcontables.store')) }}
+							<fieldset>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Fecha</label>
+                                    <div class="col-md-9">
+										<div class="input-group">
+											<input type="text" class="datepicker" name="fecha" placeholder="Seleccione la fecha del pago de la factura ..." data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+										</div>
+                                    	{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
+                                    </div>
+                                </div> 
+							</fieldset>				
+							
+							<div class="form-actions">
+								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
+								<button type="button" class="btn btn-default" data-dismiss="modal">
+									Cancel
+								</button>
+							</div>
+						{{ Form::close() }}
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 @stop
 
 @section('relatedplugins')
@@ -222,7 +259,28 @@
 			}
 		});
 
-	/* END TABLE TOOLS */
+		$(function () {
+
+		    $(".datepicker").datepicker({
+		        dateFormat: 'yy-mm-dd'
+		    });
+
+		    $("#dialog").dialog({
+		        autoOpen: false,
+		        show: {
+		            effect: "blind",
+		            duration: 1000
+		        },
+		        hide: {
+		            effect: "explode",
+		            duration: 1000
+		        }
+		    });
+		    $("#opener").click(function () {
+		        $("#dialog").dialog("open");
+		    });
+		});
+
 	})
 	</script>
 @stop

@@ -156,6 +156,7 @@ Route::group(['middleware' => 'web'], function () {
 		//---------------------------------------------------------//
 		// Funciones del controlador PcontablesController
 		//---------------------------------------------------------// 	
+	    Route::get('crearPeriodoInicial/{todate}', 'PcontablesController@crearPeriodoInicial')->name('crearPeriodoInicial');
 	    Route::get('cerrarPeriodoContable/{pcontable_id}', 'PcontablesController@cerrarPeriodoContable')->name('cerrarPeriodoContable');
 		Route::resource('pcontables', 'PcontablesController');
 
@@ -174,7 +175,7 @@ Route::group(['middleware' => 'web'], function () {
 	    Route::get('balancegeneral/{pcontable_id},{periodo}', 'HojadetrabajosController@balancegeneral')->name('balancegeneral');
 	    Route::get('hojadetrabajo/{periodo}', 'HojadetrabajosController@hojadetrabajo')->name('hojadetrabajo');
 	    Route::get('verMayorAux/{periodo}, {cuenta}', 'HojadetrabajosController@verMayorAux')->name('verMayorAux');
-	    Route::get('cierraPeriodo/{pcontable_id},{periodo}', 'HojadetrabajosController@cierraPeriodo')->name('cierraPeriodo');
+	    Route::get('cierraPeriodo/{pcontable_id},{periodo},{fecha}', 'HojadetrabajosController@cierraPeriodo')->name('cierraPeriodo');
 		Route::resource('hojadetrabajos', 'HojadetrabajosController');
 	
 		//---------------------------------------------------------//
@@ -248,15 +249,15 @@ Route::get('/aaa', function () {
 	Un::where('inicializada', 1)
       ->update(['inicializada' => 0]);	
 	Sity::limpiar();
-	Sity::periodo('2016-07-01');
-	Sity::facturar('2016-07-01');
-	Sity::periodo('2016-08-01');
-	Sity::facturar('2016-08-01');
-	Sity::penalizar('2016-08-04');
-	Sity::periodo('2016-09-01');
-	Sity::facturar('2016-09-01');
-	Sity::penalizar('2016-09-04');	
-	return 'Escenario de prueba creado con exito ...';
+	//Sity::periodo('2016-07-01');
+	//Sity::facturar('2016-07-01');
+	//Sity::periodo('2016-08-01');
+	//Sity::facturar('2016-08-01');
+	//Sity::penalizar('2016-08-04');
+	//Sity::periodo('2016-09-01');
+	//Sity::facturar('2016-09-01');
+	//Sity::penalizar('2016-09-04');	
+	return 'Escenario limpiado ...';
 });
 
 Route::get('/bbb', function () {

@@ -3,7 +3,7 @@
 @section('main')
 	<div class="row">
 	  <div class="col-md-12"><strong><p class="text-center">SityWEB INC.</p></strong></div>
-	  <div class="col-md-12"><strong><p class="text-center">HOJA DE TRABAJO</p></strong></div>
+	  <div class="col-md-12"><strong><p class="text-center">HOJA DE TRABAJO PROYECTADA</p></strong></div>
 	  <div class="col-md-12"><p class="text-center">Periodo contable del mes de {{ $periodo->periodo }}</p></div>
 	  <div class="col-md-12"><p class="text-center">(En Balboas)</p></div>
 	</div>
@@ -74,7 +74,7 @@
 							
 							@if ($permitirCerrar=='Si')
 								<div id="ask_3" class="col-md-6">
-									<a href="{{ URL::route('cierraPeriodo', array($periodo->id, $periodo->periodo)) }}" class="btn bg-color-red txt-color-white btn-xs"><i class="glyphicon glyphicon-lock"></i></a>
+									<a href="{{ URL::route('cierraPeriodo', array($periodo->id, $periodo->periodo, $periodo->fecha)) }}" class="btn bg-color-red txt-color-white btn-xs"><i class="glyphicon glyphicon-lock"></i></a>
 								</div>
 							@endif	
 							

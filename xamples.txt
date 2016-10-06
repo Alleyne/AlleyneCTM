@@ -1546,7 +1546,34 @@ Work::with(
    * para ejecutar un cron job desde la terminal 
    ************************************************************************************/ 
   php artisan ctmaster:autofacturar
+  
+  /*----------------------------------------------------------------------
+  Ejemplos:
+  //$schedule->command('ctmaster:penalizar')->daily();        
+  //$schedule->command('ctmaster:crearNuevoPeriodo', ['dia' => 1])->cron('0 * 1 * * *');
+  $schedule->command('ctmaster:autofacturar')->everyMinute()->timezone('America/Panama');
+  //$schedule->command('ctmaster:autofacturar')->everyFiveMinutes()->timezone('America/Panama');
 
+  //This will run once a month, on the 1th day of the month at minute cero 
+  //(i.e. January 1th 00:01am, February 1th 00:01am etc.):
+  $schedule->command('ctmaster:facturar', ['dia' => 1])->cron('0 * 1 * * *');
+  
+  // This will run once a month, on the 16th day of the month at minute cero 
+  //(i.e. January 16th 00:01am, February 16th 00:01am etc.):
+  $schedule->command('ctmaster:facturar', ['dia' => 16])->cron('0 * 16 * * *');
+
+  Runs once a week on Monday at 13:00...
+  ->weekly()->mondays()->at('13:00');
+  ->dailyAt('14:28');
+  ->monthly();        
+  
+  // Este cron corre cada hora 
+  //$schedule->command('ctmaster:autofacturar')->hourly();        
+  
+  $schedule->command('ctmaster:monthyJob1')->cron('0 * 1 * * *');
+  $schedule->command('ctmaster:monthyJob1')->cron('0 * 16 * * *');         
+  $schedule->command('inspire')->hourly();
+  ------------------------------------------------------------------------*/
 
   /*************************************************************************************
    * Laravel 4 eloquent WHERE with OR AND OR?
@@ -1590,3 +1617,28 @@ Work::with(
       ->subject('Event Reminder: ' . $this->datos->name)
       ->view('emails.reminder')
       ->with(['title' => $this->datos->name]);
+
+  /*************************************************************************************
+   * para mantener el valor original de una variable tipo carbon/carbon fecha, evitando
+   * que su valor cambie cada ves que se utilize alguno de los metodos de carbon/carbon tal
+   * como addDays(2) etc.
+   ************************************************************************************/
+  foreach ($secs as $sec) {
+      $f_vence = clone $fecha;
+      dump($sec->d_gracias, $f_vence->addDays($sec->d_gracias-1));
+      //Sity::penalizar($fecha->addDays($sec->d_gracias), 1);
+  }
+
+  /*************************************************************************************
+   * comparar fechas en eloquent
+   ************************************************************************************/
+  $desc= Detalledescuento::whereDate('fecha', Carbon::parse($fecha)->toDateString())
+                       ->where('un_id', $un_id)->first();
+  
+  $fecha= Carbon::createFromDate($year, $month, 1)->toDateString();
+  $periodoActualExiste= Pcontable::where('fecha', $fecha)->first();
+  dd($periodoActualExiste);
+  
+  $q->whereDay('created_at', '=', date('d'));
+  $q->whereMonth('created_at', '=', date('m'));
+  $q->whereYear('created_at', '=', date('Y'));
