@@ -46,7 +46,7 @@
 							<!-- end widget edit box -->
 		
 							<!-- widget content -->
-							<div class="widget-body no-padding">
+							<div class="widget-body">
 								<div class="widget-body-toolbar">
 									<div class="col-xs-3 col-sm-7 col-md-7 col-lg-11 text-right">
 
@@ -161,126 +161,69 @@
 @stop
 
 @section('relatedplugins')
-	<!-- PAGE RELATED PLUGIN(S) -->
-	<!-- <script src="js/plugin/datatables/jquery.dataTables-cust.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
-	
-	<!-- <script src="js/plugin/datatables/ColReorder.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
+    <script src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+ 
+    <script>
+        $(document).ready(function() {
+            // Setup - add a text input to each footer cell
+            $('#dt_basic tfoot th').each( function () {
+                var title = $('#dt_basic thead th').eq( $(this).index() ).text();
+                $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+            } );
+         
+            // DataTable
+            var table = $('#dt_basic').DataTable( {
+                stateSave: true,
+          
+                 "language": {
+                    "decimal":        "",
+                    "emptyTable":     "No hay datos disponibles para esta tabla",
+                    "info":           "Mostrando _END_ de un total de _MAX_ periodos",
+                    "infoEmpty":      "",
+                    "infoFiltered":   "",
+                    "infoPostFix":    "",
+                    "thousands":      ",",
+                    "lengthMenu":     "Mostrar _MENU_ periodos",
+                    "loadingRecords": "Cargando...",
+                    "processing":     "Procesando...",
+                    "search":         "Buscar:",
+                    "zeroRecords":    "No se encontro ningun periodo con ese filtro",
+                    "paginate": {
+                        "first":      "Primer",
+                        "last":       "Ultimo",
+                        "next":       "Proximo",
+                        "previous":   "Anterior"
+                    },
+                    "aria": {
+                        "sortAscending":  ": active para ordenar ascendentemente",
+                        "sortDescending": ": active para ordenar descendentemente"
+                    }
+                }
+            } );           
 
-	<!-- <script src="js/plugin/datatables/FixedColumns.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/FixedColumns.min.js') }}"></script>
-
-	<!-- <script src="js/plugin/datatables/ColVis.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColVis.min.js') }}"></script>
-
-	<!-- <script src="js/plugin/datatables/ZeroClipboard.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/ZeroClipboard.js') }}"></script>
-	
-	<!-- <script src="js/plugin/datatables/media/js/TableTools.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/media/js/TableTools.min.js') }}"></script>
-	
-	<!-- <script src="js/plugin/datatables/DT_bootstrap.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
-	
-	<script type="text/javascript">
-	// DO NOT REMOVE : GLOBAL FUNCTIONS!
-	$(document).ready(function() {
-		pageSetUp();
-		
-		/*
-		 * BASIC
-		 */
-		$('#dt_basic').dataTable({
-			"sPaginationType" : "bootstrap_full"
-		});
-
-		/* END BASIC */
-
-		/* Add the events etc before DataTables hides a column */
-		$("#datatable_fixed_column thead input").keyup(function() {
-			oTable.fnFilter(this.value, oTable.oApi._fnVisibleToColumnIndex(oTable.fnSettings(), $("thead input").index(this)));
-		});
-
-		$("#datatable_fixed_column thead input").each(function(i) {
-			this.initVal = this.value;
-		});
-		$("#datatable_fixed_column thead input").focus(function() {
-			if (this.className == "search_init") {
-				this.className = "";
-				this.value = "";
-			}
-		});
-		$("#datatable_fixed_column thead input").blur(function(i) {
-			if (this.value == "") {
-				this.className = "search_init";
-				this.value = this.initVal;
-			}
-		});		
-		
-
-		var oTable = $('#datatable_fixed_column').dataTable({
-			"sDom" : "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
-			//"sDom" : "t<'row dt-wrapper'<'col-sm-6'i><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'>>",
-			"oLanguage" : {
-				"sSearch" : "Search all columns:"
-			},
-			"bSortCellsTop" : true
-		});		
-
-		/*
-		 * COL ORDER
-		 */
-		$('#datatable_col_reorder').dataTable({
-			"sPaginationType" : "bootstrap",
-			"sDom" : "R<'dt-top-row'Clf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
-			"fnInitComplete" : function(oSettings, json) {
-				$('.ColVis_Button').addClass('btn btn-default btn-sm').html('Columns <i class="icon-arrow-down"></i>');
-			}
-		});
-		
-		/* END COL ORDER */
-
-		/* TABLE TOOLS */
-		$('#datatable_tabletools').dataTable({
-			"sDom" : "<'dt-top-row'Tlf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
-			"oTableTools" : {
-				"aButtons" : ["copy", "print", {
-					"sExtends" : "collection",
-					"sButtonText" : 'Save <span class="caret" />',
-					"aButtons" : ["csv", "xls", "pdf"]
-				}],
-				"sSwfPath" : "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
-			},
-			"fnInitComplete" : function(oSettings, json) {
-				$(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
-					$(this).addClass('btn-sm btn-default');
-				});
-			}
-		});
-
-		$(function () {
-
-		    $(".datepicker").datepicker({
-		        dateFormat: 'yy-mm-dd'
-		    });
-
-		    $("#dialog").dialog({
-		        autoOpen: false,
-		        show: {
-		            effect: "blind",
-		            duration: 1000
-		        },
-		        hide: {
-		            effect: "explode",
-		            duration: 1000
-		        }
-		    });
-		    $("#opener").click(function () {
-		        $("#dialog").dialog("open");
-		    });
-		});
-
-	})
-	</script>
+            // Restore state
+            if ( state ) {
+              table.columns().eq( 0 ).each( function ( colIdx ) {
+                var colSearch = state.columns[colIdx].search;
+                
+                if ( colSearch.search ) {
+                  $( 'input', table.column( colIdx ).footer() ).val( colSearch.search );
+                }
+              } );
+              
+              table.draw();
+            }
+         
+            // Apply the search
+            table.columns().eq( 0 ).each( function ( colIdx ) {
+                $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
+                    table
+                        .column( colIdx )
+                        .search( this.value )
+                        .draw();
+                } );
+            } );
+        } );
+    </script>
 @stop

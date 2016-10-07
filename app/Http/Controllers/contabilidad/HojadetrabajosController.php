@@ -114,12 +114,16 @@ class HojadetrabajosController extends Controller {
 
             // verifica si el periodo real ya existe
             $periodoRealExiste= Pcontable::where('periodo', $pdoReal)->first();
-            //dd($periodoRealExiste);
+            //dd($periodoRealExiste, $pdoReal, $pdo);
             
-            // Si se trata de periodo previo al periodo real, y el periodo real no existe no debe permitir cerrar
+            // Si se trata de periodo previo al periodo real y el periodo real no existe no debe permitir cerrar
             $p4='Si';
             if ($pdoReal== $pdo) {
                 if (!$periodoRealExiste) {
+                    $p4='No';
+                }
+            } elseif ($periodoRealExiste) {
+                if (!Pcontable::where('periodo', $pdo)->first()) {
                     $p4='No';
                 }
             }
