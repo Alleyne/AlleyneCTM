@@ -74,7 +74,7 @@
 													<ul class="demo-btns">
 														@if ( $dato->cerrado == 0 )
 															<li>
-																<a href="{{ URL::route('hojadetrabajos.show', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> Hoja de trabajo</a>
+																<a href="{{ URL::route('hojadetrabajos.show', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> Hoja trabajo</a>
 															</li>	
 															<li>
 																<a href="{{ URL::route('ctdiarios.show', $dato->id) }}" class="btn bg-color-green txt-color-white btn-xs"><i class="fa fa-search"></i> Diario</a>
