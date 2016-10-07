@@ -110,16 +110,18 @@ class HojadetrabajosController extends Controller {
             // Construye la fecha del periodo actual mas un mes
             $year=Carbon::parse($periodo->fecha)->year;
             $month=Carbon::parse($periodo->fecha)->addMonth()->month;
-            $pdo= Sity::getMonthName($month).'-'.$year); 
+            $pdo= Sity::getMonthName($month).'-'.$year; 
 
             // verifica si el periodo real ya existe
-            $periodoRealExiste= Periodo::where('periodo', $pdoReal)->first();
-
-            // Si se trata de periodo previo al periodo real actual, no debe permitir cerrar
-            if ($pdoReal== $pdo && $periodoRealExiste) {
-                $p4='Si';
-            } else {
-                $p4='No';
+            $periodoRealExiste= Pcontable::where('periodo', $pdoReal)->first();
+            //dd($periodoRealExiste);
+            
+            // Si se trata de periodo previo al periodo real, y el periodo real no existe no debe permitir cerrar
+            $p4='Si';
+            if ($pdoReal== $pdo) {
+                if (!$periodoRealExiste) {
+                    $p4='No';
+                }
             }
             //dd($p1, $p2, $p3, $p4);
             
