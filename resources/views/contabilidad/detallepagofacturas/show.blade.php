@@ -323,9 +323,6 @@
 		        $("#dialog").dialog("open");
 		    });
 		});
-	
-
-
 	})
 	</script>
 @stop

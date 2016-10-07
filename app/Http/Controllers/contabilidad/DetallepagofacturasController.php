@@ -64,6 +64,17 @@ class DetallepagofacturasController extends Controller {
 
 		if ($validation->passes())
 		{
+			
+		    // encuentra el periodo mas antiguo abierto
+			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+		    //dd($periodo);
+		    
+		    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+		    if (Carbon::parse($periodo->fecha)->gt(Carbon::parse(Input::get('fecha')))) {
+	            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pago de facturas de gastos cuya fecha se mayor o igual al periodo vigente de '.$periodo->periodo);
+        		return Redirect::back()->withInput()->withErrors($validation);
+		    }
+
 			// encuentra el monto total de la factura			
         	$factura= Factura::find(Input::get('factura_id'));
         	$totalfactura=round(floatval($factura->total),2);
@@ -210,7 +221,7 @@ class DetallepagofacturasController extends Controller {
 			2,
 			6,
 			$dato->fecha,
-	    	'Registra pago '. $pagotipo. ' de la factura '. $factura->no,
+	    	'Registra pago '. $pagotipo. ' de la factura N0.'. $factura->no,
 	    	$dato->monto,
 	       	Null,
 	       	$org->id
@@ -247,7 +258,7 @@ class DetallepagofacturasController extends Controller {
     // registra en Ctdiario principal
     $diario = new Ctdiario;
     $diario->pcontable_id  = $periodo->id;
-    $diario->detalle = 'Para registra pago '. $pagotipo. ' de la factura '. $factura->no;
+    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura No.'. $factura->no;
     $diario->save(); 
 
 	// registra el detalle de pago de factura como contabilizado	

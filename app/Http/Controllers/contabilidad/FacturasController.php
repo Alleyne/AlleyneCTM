@@ -104,13 +104,16 @@ class FacturasController extends Controller {
 		    $year= Carbon::parse(Input::get('fecha'))->year;
 		    $month= Carbon::parse(Input::get('fecha'))->month;
 		    $pdo= Sity::getMonthName($month).'-'.$year;    
-		    $periodo= Pcontable::where('periodo', $pdo)->first();
+
+		    // encuentra el periodo mas antiguo abierto
+			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
 		    //dd($periodo);
 		    
-		    if (!$periodo) {
-	            Session::flash('danger', '<< ERROR >> No existe un periodo contable que corresponda la fecha de la factura.');
-	    		return Redirect::back()->withInput()->withErrors($validation);
-		    }	
+		    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+		    if ($pdo != $periodo->periodo) {
+	            Session::flash('danger', '<< ERROR >> Solamente se permite registrar facturas de gastos que correspondan al periodo vigente de '.$periodo->periodo);
+        		return Redirect::back()->withInput()->withErrors($validation);
+		    }
 
 			$dato = new Factura;
 			$dato->org_id       	= Input::get('org_id');

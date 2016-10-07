@@ -310,8 +310,8 @@
 			}
 		</script> -->
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-		<!--<script>
+		<!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script>
 			if (!window.jQuery.ui) {
 				<script src="{{ URL::asset('assets/backend/js/libs/jquery-ui-1.10.3.min.js.js') }}"></script>
 			}

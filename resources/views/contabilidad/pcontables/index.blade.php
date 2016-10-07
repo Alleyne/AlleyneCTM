@@ -53,7 +53,7 @@
 									</div>
 								</div>
 
-								<table id="dt_basic" class="table table-hover">
+								<table id="dt_basic2" class="table table-hover">
 									<thead>
 										<tr>
 											<th>NO</th>
@@ -161,19 +161,19 @@
 @stop
 
 @section('relatedplugins')
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
+
     <script src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
- 
+
     <script>
         $(document).ready(function() {
             // Setup - add a text input to each footer cell
-            $('#dt_basic tfoot th').each( function () {
-                var title = $('#dt_basic thead th').eq( $(this).index() ).text();
+            $('#dt_basic2 tfoot th').each( function () {
+                var title = $('#dt_basic2 thead th').eq( $(this).index() ).text();
                 $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
             } );
          
             // DataTable
-            var table = $('#dt_basic').DataTable( {
+            var table = $('#dt_basic2').DataTable( {
                 stateSave: true,
           
                  "language": {
@@ -225,5 +225,5 @@
                 } );
             } );
         } );
-    </script>
+     </script>
 @stop

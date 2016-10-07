@@ -113,9 +113,9 @@ class PagosController extends Controller {
 		{
 			
 		    // calcula el periodo al que corresponde la fecha de pago
-		    $year= Carbon::parse(Input::get('f_pago'))->year;
-		    $month= Carbon::parse(Input::get('f_pago'))->month;
-		    $pdo= Sity::getMonthName($month).'-'.$year;    
+		    //$year= Carbon::parse(Input::get('f_pago'))->year;
+		    //$month= Carbon::parse(Input::get('f_pago'))->month;
+		    //$pdo= Sity::getMonthName($month).'-'.$year;    
 		    
 		    // encuentra el periodo mas antiguo abierto
 			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
