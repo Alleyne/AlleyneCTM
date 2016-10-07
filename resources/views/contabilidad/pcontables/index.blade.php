@@ -67,10 +67,10 @@
 										@foreach ($datos as $dato)
 											<tr>
 												<td col width="40px" align="right"><strong>{{ $dato->id }}</strong></td>
-												<td col width="90px" align="right"><strong>{{ $dato->periodo }}</strong></td>
+												<td col width="80px" align="right"><strong>{{ $dato->periodo }}</strong></td>
 												<td col width="90px" align="right">{{ $dato->f_cierre }}</td>
 												<td col width="90px" align="center">{{ $dato->cerrado ? 'Si' : 'No' }}</td>
-												<td col width="700px" align="right">
+												<td col width="710px" align="right">
 													<ul class="demo-btns">
 														@if ( $dato->cerrado == 0 )
 															<li>
