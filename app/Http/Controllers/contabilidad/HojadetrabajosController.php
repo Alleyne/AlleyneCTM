@@ -105,7 +105,7 @@ class HojadetrabajosController extends Controller {
             // Construye la fecha del periodo real
             $yearReal=Carbon::today()->year;
             $monthReal=Carbon::today()->month;
-            $pdoReal= Sity::getMonthName($monthReal).'-'.$yearReal); 
+            $pdoReal= Sity::getMonthName($monthReal).'-'.$yearReal; 
             
             // Construye la fecha del periodo actual mas un mes
             $year=Carbon::parse($periodo->fecha)->year;
