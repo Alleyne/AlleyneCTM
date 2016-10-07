@@ -76,7 +76,7 @@ class HojadetrabajosController extends Controller {
         
         } elseif ($pcontable_id==1 && $p3==false) {
             $permitirAjustes= 'Si';
-            $permitirCerrar= 'Si';
+            $permitirCerrar= 'No';
         
         } else {
 
@@ -100,11 +100,31 @@ class HojadetrabajosController extends Controller {
             // 1. Si se trata de un periodo no esta cerrado
             // 2. El periodo anterior debe estar cerrado       
             // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
+            // 4. Si se trata del periodo previo al periodo real pero elperiodo real aun no existe
 
-            //dd($p1, $p2, $p3);
+            // Construye la fecha del periodo real
+            $yearReal=Carbon::today()->year;
+            $monthReal=Carbon::today()->month;
+            $pdoReal= Sity::getMonthName($monthReal).'-'.$yearReal); 
+            
+            // Construye la fecha del periodo actual mas un mes
+            $year=Carbon::parse($periodo->fecha)->year;
+            $month=Carbon::parse($periodo->fecha)->addMonth()->month;
+            $pdo= Sity::getMonthName($month).'-'.$year); 
+
+            // verifica si el periodo real ya existe
+            $periodoRealExiste= Periodo::where('periodo', $pdoReal)->first();
+
+            // Si se trata de periodo previo al periodo real actual, no debe permitir cerrar
+            if ($pdoReal== $pdo && $periodoRealExiste) {
+                $p4='Si';
+            } else {
+                $p4='No';
+            }
+            //dd($p1, $p2, $p3, $p4);
             
             // permite cerrar 
-            if ($p1==0 && $p2==1 && $p3) {
+            if ($p1==0 && $p2==1 && $p3 && $p4=='Si') {
                 $permitirCerrar= 'Si';
             } else {
                 $permitirCerrar= 'No';

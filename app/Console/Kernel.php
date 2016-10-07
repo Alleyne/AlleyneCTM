@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('ctmaster:autofacturar')->everyMinute()->timezone('America/Panama');
-        //$schedule->command('ctmaster:autofacturar')->everyFiveMinutes()->timezone('America/Panama');
+        //$schedule->command('ctmaster:autofacturar')->everyMinute()->timezone('America/Panama');
+        $schedule->command('ctmaster:autofacturar')->everyFiveMinutes()->timezone('America/Panama');
     }
 }
