@@ -140,12 +140,12 @@
                                     <label class="col-md-3 control-label">Fecha</label>
                                     <div class="col-md-9">
 										<div class="input-group">
-											<input type="text" class="datepicker" name="fecha" placeholder="Seleccione la fecha del pago de la factura ..." data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+											<input type="text" name="fecha" placeholder="Seleccione del primer periodo a registrar ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 										</div>
                                     	{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
                                     </div>
-                                </div> 
+                                </div>  
 							</fieldset>				
 							
 							<div class="form-actions">
@@ -161,7 +161,6 @@
 @stop
 
 @section('relatedplugins')
-
     <script src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 
     <script>
