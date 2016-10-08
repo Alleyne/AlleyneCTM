@@ -56,7 +56,7 @@
                                         <td col width="60px"><span class="label label-danger">Moroso</span></td>
                                     @endif
                                     <td>{{ $dato->propietarios }}</td>
-                                    <td col width="10px">{{ $dato->activa ? '' : 'Inactiva' }}</td>
+                                    <td col width="10px">{{ $dato->activa ? '' : 'inactiva' }}</td>
                                     @if (Cache::get('esAdminkey') || Cache::get('esAdminDeBloquekey'))
                                         <td col width="60px" align="right">
                                             <ul class="demo-btns">

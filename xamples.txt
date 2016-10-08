@@ -1642,3 +1642,11 @@ Work::with(
   $q->whereDay('created_at', '=', date('d'));
   $q->whereMonth('created_at', '=', date('m'));
   $q->whereYear('created_at', '=', date('Y'));
+
+
+  /*************************************************************************************
+   * para general listas para desplegar en combobox
+   ************************************************************************************/
+  //Obtiene todos los propietarios registrados en la base de datos.
+  $datos= User::orderBy('email')->pluck('email', 'id')->all();
+  //dd($datos);

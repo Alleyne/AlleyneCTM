@@ -1634,7 +1634,8 @@ public static function facturar($fecha)
                                  ->where('un_id', $un_id)->first();
           
           if ($desc) {
-            // si encuentra descuento en la presente orden de cobro, entonces cambia los parametros para que registren el descuento
+            // si encuentra descuento en la presente orden de cobro, entonces cambia los parametros
+            // para que registren el descuento
             $cuota_mant= $desc->importe;
             $descuento= $desc->descuento;
             $descuento_siono= 1;
@@ -1645,7 +1646,7 @@ public static function facturar($fecha)
             $desc->save();            
           } 
 
-          // Registra facturacion mensual de la unidad en estudio en el Ctdiario auxiliar de servicios de mantenimiento
+          // Registra facturacion mensual de la unidad 
           $dato= new Ctdasm;
           $dato->pcontable_id     = $periodo;
           $dato->fecha            = $fecha;
@@ -1671,11 +1672,21 @@ public static function facturar($fecha)
           $dato->save(); 
           
           // Acumula el total facturado
-          $totalIngresosDia_1 = $totalIngresosDia_1+ $cuota_mant;
+          $totalIngresosDia_1 = $totalIngresosDia_1+ $cuota_mant;         
           
-          // Verifica si la unidad clasifica para obtener descuento por pagos adelantados,
-          // si la misma clasifica, otorga el debido descuento
-          //Sity::checkDescuento($dato->id, $dato->un_id, $dato->importe, $dato->f_descuento, $dato->descuento);
+          // encuentra el ultimo pago registrado
+          $pago= Pago::all()->last(); 
+          //dd($pago);
+          
+          if ($pago) {
+            $pago= $pago->id+1;
+          } else {
+            $pago= 1;
+          }
+          
+          // verifica si se puede realizar pagos de cuotas o recargos utilizando solamente el contenido
+          // de la cuenta de pagos anticipados de la unidad
+          Sity::iniciaPago($un_id, 0, $pago+1, $fecha, $periodo); 
       }
   }    
     

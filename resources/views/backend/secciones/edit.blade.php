@@ -66,7 +66,7 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Ph</label>
                                             <div class="col-md-9">
-                                                {{ Form::select('ph_id', array('' => 'Selecione un Ph') + $phs, array('class' => 'form-control', 'title' => 'Escoja el Ph al cual pertenece la presente Sección administrativa')) }}
+                                                {{ Form::select('ph_id', array('' => 'Selecione un Ph') + $phs, $dato->ph_id, array('class' => 'form-control', 'title' => 'Escoja el Ph al cual pertenece la presente Sección administrativa')) }}
                                                 {!! $errors->first('ph_id', '<span class="label label-important">  *</span>') !!}
                                             </div>
                                         </div>      
@@ -114,7 +114,7 @@
                                             </div>    
                                             
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Cuota mantenimiento</label>
+                                                <label class="col-md-3 control-label">Cuota mant (B/.)</label>
                                                 <div class="col-md-9">
                                                     {{ Form::text('cuota_mant', $dato->secapto->cuota_mant, array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
@@ -122,7 +122,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Recargo (%)</label>
+                                                <label class="col-md-3 control-label">Recargo (B/.)</label>
                                                 <div class="col-md-9">
                                                     {{ Form::text('recargo', $dato->secapto->recargo, array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('recargo', '<li style="color:red">:message</li>') !!}
@@ -130,7 +130,7 @@
                                             </div>
                                             
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Descuento (%)</label>
+                                                <label class="col-md-3 control-label">Descuento (B/.)</label>
                                                 <div class="col-md-9">
                                                     {{ Form::text('descuento', $dato->secapto->descuento, array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('descuento', '<li style="color:red">:message</li>') !!}
@@ -158,7 +158,7 @@
                                                 <label class="col-md-3 control-label">Meses para descuento</label>
                                                 <div class="col-md-9">
                                                     <input class="form-control spinner-left"  id="spinner3" name="m_descuento" value= "{{ $dato->secapto->m_descuento }}" type="text">
-                                                    <p class="text-left">Días de gracias despues de la fecha de vencimiento de pago.</p>
+                                                    <p class="text-left">Cantidad de meses que se debera pagar por adelantado para obtener descuento por pagos anticipados.</p>
                                                     {!! $errors->first('m_descuento', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>  

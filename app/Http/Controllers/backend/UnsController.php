@@ -124,7 +124,7 @@ class UnsController extends Controller {
 	    // Almacena los datos de las unidades que pertenecen a una determinada sección
 	    $datos = Un::where('seccione_id', $seccione_id)
 	               ->orderBy('id', 'ASC')
-	               ->select('id', 'codigo', 'inicializada')
+	               ->select('id', 'codigo', 'inicializada', 'activa')
 	               ->get();
 	    //dd($datos->toArray());
 	    
@@ -303,8 +303,8 @@ class UnsController extends Controller {
         //dd(Input::get());
         $input = Input::all();
         $rules = array(
-            'finca'    	=> 'required',
-            'documento'	=> 'required'
+            //'finca'    	=> 'required',
+            //'documento'	=> 'required'
         );
     
         $messages = [
@@ -330,6 +330,9 @@ class UnsController extends Controller {
 						'caracteristicas= '.    $dato->caracteristicas. ', '.
 						'activa= '.	    		$dato->activa;
 			
+			// refresca el cache para que refleje los cambios
+			Cache::forever('unsAllkey', Un::all());
+
 			Sity::RegistrarEnBitacora(2, 'uns', $dato->id, $detalle);
 			Session::flash('success', 'La Unidad administrada No. ' .$id. ' ha sido editada con éxito.');
             return Redirect::route('uns.show',$id);
@@ -435,17 +438,9 @@ class UnsController extends Controller {
 	    $props = null;
         //dd($props);
 		
-		//$historial = Hiscuotamant::find($un_id);
-		//dd($historial);
-
 		if(!empty($props)) {
 			Session::flash('success', 'La Unidad administrada ' .$dato->codigo. ' no puede ser borrada porque tiene por lo menos un propietario asignado, deberá primero borrar todos los propietarios vinculados a esta Unidad.');
 		}  
-		
-		/*elseif(!empty($historial)) {
-			Session::flash('success','La Unidad administrada ' .$dato->codigo. ' no puede ser borrada porque tiene un historial de pagos de cuotas de mantenimiento, deberá primero borrar todo el historial de pagos de esta Unidad.');
-		}*/  
-		
 		else {
 			
 			$dato->delete();

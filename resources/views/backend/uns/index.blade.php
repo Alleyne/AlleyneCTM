@@ -56,6 +56,7 @@
                                 <th>CÓDIGO</th>                          
                                 <th>ESTATUS</th>                                   
                                 <th>PROPIETARIOS</th> 
+                                <th>ACTIVA</th>
                                 <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
                             </tr>
                         </thead>
@@ -71,7 +72,7 @@
                                         <td col width="60px"><span class="label label-danger">Moroso</span></td>
                                     @endif
                                     <td>{{ $dato->propietarios }}</td>
-
+                                    <td col width="10px">{{ $dato->activa ? '' : 'Inactiva' }}</td>
                                     @if (Cache::get('esAdminkey'))
                                         <td col width="80px" align="right">
                                             <ul class="demo-btns">
