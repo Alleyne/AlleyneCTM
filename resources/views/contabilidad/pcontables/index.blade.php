@@ -140,7 +140,7 @@
                                     <label class="col-md-3 control-label">Fecha</label>
                                     <div class="col-md-9">
 										<div class="input-group">
-											<input type="text" name="fecha" placeholder="Seleccione del primer periodo a registrar ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+											<input type="text" name="fecha" placeholder="Entre la fecha del primer periodo a registrar (aaaa/mm/dd)" ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 										</div>
                                     	{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
