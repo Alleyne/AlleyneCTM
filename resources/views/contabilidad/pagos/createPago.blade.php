@@ -119,7 +119,7 @@
 									
 									<div class="form-actions">
 										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
-										<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
+										<a href="{{ URL::route('indexPagos', $un_id) }}" class="btn btn-large">Cancelar</a>
 									</div>
 								{{ Form::close() }}
 							</div>
