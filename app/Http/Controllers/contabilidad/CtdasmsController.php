@@ -6,7 +6,7 @@ use App\library\Sity;
 use Input, Session, Redirect, Str, Carbon\Carbon, URL;
 use Validator, View;
 use Debugbar;
-
+use Jenssegers\Date\Date;
 use Mail;
 use App\Mail\sendnuevoEcuentas;
 
@@ -19,7 +19,6 @@ use App\Seccione;
 use App\Ph;
 use App\Un;
 use App\Pcontable;
-use Jenssegers\Date\Date;
 
 class CtdasmsController extends Controller {
     
@@ -32,6 +31,7 @@ class CtdasmsController extends Controller {
    * Esta funcion gerera el estado de cuentas de una determinada unidad, puede ser en formato corto y largo
   ************************************************************************************************************/ 
   public function ecuentas($un_id, $tipo) {  
+    dd($un_id, $tipo);
     $imps = Ctdasm::where('un_id', $un_id)
                       ->where('pagada', 0)
                       ->select('id','mes_anio','f_vencimiento','importe')
@@ -140,10 +140,10 @@ class CtdasmsController extends Controller {
             ->with('imps', $imps)
             ->with('recs', $recs);
     }
-    elseif ($tipo == 'email') {
+/*    elseif ($tipo == 'email') {
         Mail::to('gabarriosb@gmail.com', 'German Barrios')
             ->send(new sendnuevoEcuentas($data, $imps, $recs));
-    }
+    }*/
 
   }
 }

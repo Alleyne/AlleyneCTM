@@ -11,7 +11,10 @@
 use Event;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Debugbar;
+use Debugbar, URL;
+use Jenssegers\Date\Date;
+use Mail;
+use App\Mail\sendnuevoEcuentas;
 
 use App\Bitacora;
 use App\User;
@@ -28,6 +31,9 @@ use App\Pcontable;
 use App\Catalogo;
 use App\Ht;
 use App\Detalledescuento;
+use App\Prop;
+use App\Seccione;
+use App\Ph;
 
 // eliminar en un futuro
 use DB;
@@ -2230,23 +2236,131 @@ public static function migraDatosCtdiariohis($pcontable_id) {
   public static function iniciaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo) {
     
     $montoRecibido = round(floatval($montoRecibido),2);
-    
-    // convierte la fecha string a carbon/carbon
-    //$f_pago = Carbon::parse($f_pago);   
-    //$month= $f_pago->month;    
-    //$year= $f_pago->year;    
-
-    // determina el periodo al que corresponde la fecha de pago    
-    //$pdo= Sity::getMonthName($month).'-'.$year;
-    //$periodoFpago= Pcontable::where('periodo', $pdo)->first()->id;
-    //dd($periodoFpago);          
-    
+   
     // procesa el pago recibido
     Sity::procesaPago($periodo, $un_id, $montoRecibido, $pago_id, $f_pago);
  
     // llama al proceso que pasa los registro del pago del ctmayores al ctdiarios 
     Sity::registaEnDiario($pago_id);
+    
+    // encuentra los datos para generar el estado de cuentas de un determinada unidad
+    $datos= Sity::getdataEcuenta($un_id);
+    //dd($datos['imps']->toArray());    
+    
+    $props=Prop::where('un_id', $un_id)
+           ->where('encargado', 1)
+           ->join('users','users.id','=','props.user_id')
+           ->select('email','nombre_completo')
+           ->get();
+    //dd($props->toArray());
+    
+    
+    // envia email a cada uno de los propietarios de la unidad que sean encargados  
+    foreach ($props as $prop) {
+        Mail::to($prop->email, $prop->nombre_completo)
+            ->send(new sendnuevoEcuentas($datos['data'], $datos['imps'], $datos['recs']));
+    }
+
   } // end function
+
+  /***********************************************************************************
+  * Proceso de recoger la data de un estado de cuentas
+  ************************************************************************************/ 
+  public static function getdataEcuenta($un_id) {
+    $imps = Ctdasm::where('un_id', $un_id)
+                      ->where('pagada', 0)
+                      ->select('id','mes_anio','f_vencimiento','importe')
+                      ->orderBy('fecha')
+                      ->get();    
+
+    $recs = Ctdasm::where('un_id', $un_id)
+                      ->where('recargo_siono', 1) 
+                      ->where('recargo_pagado', 0)
+                      ->select('id','mes_anio','recargo_siono','recargo_pagado','recargo')
+                      ->orderBy('fecha')
+                      ->get();
+
+    // inicializa los contadores
+    $total_importe=0;
+    $total_recargo=0;
+
+    foreach ($imps as $imp) {
+      $imp->f_vencimiento= Date::parse($imp->f_vencimiento)->toFormattedDateString();
+
+      // Acumula el total de importe a pagar
+      if ($imp->pagada==0) {
+        $total_importe  = $total_importe + $imp->importe;  
+      }
+    }       
+
+    foreach ($recs as $rec) {
+      // Acumula el total de recargos a pagar
+      if ($rec->recargo_siono==1 && $rec->recargo_pagado==0) {
+        $total_recargo  = $total_recargo + $rec->recargo;  
+      }      
+    }     
+
+    // Obtiene todos los propietarios de una determinada unidad que sean encardados.  
+    $prop = Prop::where('un_id', $un_id)
+                  ->where('encargado', '1')
+                  ->with('user')
+                  ->first();
+    // dd($prop); 
+
+    // Encuentra los datos de la unidad
+    $un = Un::find($un_id);
+    // dd($un->toArray());
+
+    // Encuentra los datos de la sección a la cual pertenece la unidad
+    $seccion = Seccione::find($un->seccione_id);
+    // dd($seccion->toArray());
+    
+    // Encuentra los datos del Ph al que pertenece la unidad
+    $ph = Ph::find($seccion->ph_id);
+    // dd($ph->toArray()); 
+    
+    // Encuentra saldo pagados por anticipado
+    $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, Null);
+    $total=number_format(($total_importe + $total_recargo), 2);
+    
+    if ($total==0) {
+      $total_adeudado=(number_format(0, 2));
+    }
+    else {
+      $total_adeudado=abs(number_format($total-$pagos_anticipados, 2));      
+    }
+
+    // Prepara datos del encabezado del Estado de cuenta
+   
+    $data = [
+      'Titulo'    => 'Bienvenido al ctmaster.net',
+      'Contenido'   => 'Contenido del email',
+      
+      'phlogo'    => $ph->logo,
+      'phnombre'    => $ph->nombre,
+      'phcalle'   => $ph->calle,
+      'phlote'    => $ph->lote,
+      'phdistrito'  => $ph->distrito,
+      'phprovincia' => $ph->provincia,
+      'phtelefono'  => $ph->telefono,
+      'phemail'   => $ph->email,          
+      
+      'propnombre'    => $prop->user->nombre_completo,          
+      'propprovincia'   => $prop->user->provincia,
+      'propdistrito'    => $prop->user->distrito,
+      'propcorregimiento' => $prop->user->corregimiento,
+      
+      'un_id'      => $un->id, 
+      'codigo'      => $un->codigofull, 
+      'fecha'       => Date::today()->format('l\, j \d\e F Y'),
+      'total'  => 'B/. ' . $total,
+      'pagos_anticipados'  => 'B/. ' . number_format($pagos_anticipados, 2),
+      'total_adeudado'  => 'B/. ' . number_format($total_adeudado, 2),
+    ];
+       
+    //dd($imps->toArray(),$recs->toArray(),$total_importe,$total_recargo);
+    return array('imps'=>$imps,'recs'=>$recs,'data'=>$data);  
+  }
 
   /***********************************************************************************
   * Registra en diario el resumen de las transacciones generadas producto del pago recibido
