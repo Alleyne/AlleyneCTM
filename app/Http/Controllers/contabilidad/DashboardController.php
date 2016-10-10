@@ -29,8 +29,8 @@ class DashboardController extends Controller
 //$ingresos =DB::table('ctdasms')->groupBy('pcontable_id')->sum('importe');
 
 
-$ingresos= DB::table('ctdasms')->select('importe', DB::raw('count(*) as total'))->groupBy('pcontable_id') ->get();	    
-dd($ingresos);	    
+/*$ingresos= DB::table('ctdasms')->select('importe', DB::raw('count(*) as total'))->groupBy('pcontable_id') ->get();	    
+dd($ingresos);*/	    
 
 	    // Determina si la unidad tiene alguna facturacion pendiente por pagar
 	    $pagados = Ctdasm::where('pcontable_id', $pcontable_id)
