@@ -1,15 +1,10 @@
 <?php namespace App\Http\Controllers\Contabilidad;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\library\Sity;
-use Input, Session, Redirect, Str, Carbon\Carbon, URL;
+use Input, Session, Redirect, Str, Carbon\Carbon;
 use Validator, View;
-use Debugbar;
 use Jenssegers\Date\Date;
-use Mail;
-use App\Mail\sendnuevoEcuentas;
-
 
 use App\Bitacora;
 use App\Hash;
@@ -140,10 +135,5 @@ class CtdasmsController extends Controller {
             ->with('imps', $imps)
             ->with('recs', $recs);
     }
-/*    elseif ($tipo == 'email') {
-        Mail::to('gabarriosb@gmail.com', 'German Barrios')
-            ->send(new sendnuevoEcuentas($data, $imps, $recs));
-    }*/
-
   }
 }

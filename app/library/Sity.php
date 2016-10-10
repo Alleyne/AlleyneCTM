@@ -11,10 +11,10 @@
 use Event;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Debugbar, URL;
 use Jenssegers\Date\Date;
 use Mail;
 use App\Mail\sendnuevoEcuentas;
+use DB;
 
 use App\Bitacora;
 use App\User;
@@ -34,9 +34,6 @@ use App\Detalledescuento;
 use App\Prop;
 use App\Seccione;
 use App\Ph;
-
-// eliminar en un futuro
-use DB;
 use App\Secapto;
 
 class Sity {
@@ -2258,7 +2255,7 @@ public static function migraDatosCtdiariohis($pcontable_id) {
     // envia email a cada uno de los propietarios de la unidad que sean encargados  
     foreach ($props as $prop) {
         Mail::to($prop->email, $prop->nombre_completo)
-            ->send(new sendnuevoEcuentas($datos['data'], $datos['imps'], $datos['recs']));
+            ->queue(new sendnuevoEcuentas($datos['data'], $datos['imps'], $datos['recs']));
     }
 
   } // end function

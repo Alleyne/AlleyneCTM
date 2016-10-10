@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'My Application',
+    'name' => 'ctmaster.net',
 
     /*
     |--------------------------------------------------------------------------
@@ -184,6 +184,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         'Jenssegers\Date\DateServiceProvider',
+        ConsoleTVs\Charts\ChartsServiceProvider::class,
     ],
 
     /*
@@ -238,7 +239,8 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class, 
         'Image' => Intervention\Image\Facades\Image::class,
-        'Date' => Jenssegers\Date\Date::class
+        'Date' => Jenssegers\Date\Date::class,
+        'Charts' => ConsoleTVs\Charts\Charts::class
     ],
 
 ];

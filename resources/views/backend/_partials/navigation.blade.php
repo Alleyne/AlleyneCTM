@@ -51,6 +51,9 @@
 	<li>
 		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Organizaciones</span></a>
 	</li>
+	<li>
+		<a href="{{ URL::route('graph_1', 1) }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Dashboard</span></a>
+	</li>
 @endif		
 
 @if (Cache::get('esAdminkey') || Cache::get('esJuntaDirectivakey'))

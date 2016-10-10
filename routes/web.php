@@ -191,6 +191,12 @@ Route::group(['middleware' => 'web'], function () {
 		//---------------------------------------------------------// 		
 	    Route::get('inicializaUn/{un_id}', 'InicializaunController@inicializaUn')->name('inicializaUn');
 	    Route::post('storeInicializacion', 'InicializaunController@storeInicializacion')->name('storeInicializacion');
+	
+		//---------------------------------------------------------//
+		// Funciones del controlador DashboardController
+		//---------------------------------------------------------// 		
+	    Route::get('dashboard/graph_1/{pcontable_id}', 'DashboardController@graph_1')->name('graph_1');
+
 	});	
 
 	Route::group(['namespace' => 'catalogo'], function()

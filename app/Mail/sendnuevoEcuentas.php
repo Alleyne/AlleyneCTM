@@ -17,7 +17,7 @@ class sendnuevoEcuentas extends Mailable
      * @return void
      */
     
-    public $datos;
+    public $data, $imps, $recs;
 
     public function __construct($data, $imps, $recs)
     {
