@@ -2253,10 +2253,10 @@ public static function migraDatosCtdiariohis($pcontable_id) {
     
     
     // envia email a cada uno de los propietarios de la unidad que sean encargados  
-    foreach ($props as $prop) {
+/*    foreach ($props as $prop) {
         Mail::to($prop->email, $prop->nombre_completo)
             ->queue(new sendnuevoEcuentas($datos['data'], $datos['imps'], $datos['recs']));
-    }
+    }*/
 
   } // end function
 
