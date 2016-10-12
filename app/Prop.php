@@ -1,9 +1,12 @@
 <?php namespace App;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Prop extends Model 
 {
-	protected $table = 'props';
+	use Notifiable;
+
+    protected $table = 'props';
     public $timestamps = false;    
     
     public function uns() {

@@ -1650,3 +1650,35 @@ Work::with(
   //Obtiene todos los propietarios registrados en la base de datos.
   $datos= User::orderBy('email')->pluck('email', 'id')->all();
   //dd($datos);
+
+
+  /*************************************************************************************
+   * php error handling for cool kids   filp/whoops
+   ************************************************************************************/
+  composer require filp/whoops
+  
+  editar app/Exceptions/Handler.php
+  al final del archivo pegar el siguiente codigo
+
+  /**
+   * Create a Symfony response for the given exception.
+   *
+   * @param  \Exception  $e
+   * @return mixed
+   */
+  protected function convertExceptionToResponse(Exception $e)
+  {
+      if (config('app.debug')) {
+          $whoops = new \Whoops\Run;
+          $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+
+          return response()->make(
+              $whoops->handleException($e),
+              method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500,
+              method_exists($e, 'getHeaders') ? $e->getHeaders() : []
+          );
+      }
+
+      return parent::convertExceptionToResponse($e);
+  }
+

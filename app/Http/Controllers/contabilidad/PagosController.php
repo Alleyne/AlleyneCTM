@@ -168,7 +168,7 @@ class PagosController extends Controller {
 			    $dato->save();
 
 				// proceso de contabilizar el pago recibido
-				Sity::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id);
+				Sity::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo= Null);
 
 				// Registra en bitacoras
 				$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $dato->monto;  

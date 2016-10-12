@@ -13,7 +13,8 @@
         "predis/predis": "~1.0",
         "jenssegers/date": "^3.2",
         "guzzlehttp/guzzle": "^6.2",
-        "consoletvs/charts": "^1.8"
+        "consoletvs/charts": "^1.8",
+        "filp/whoops": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

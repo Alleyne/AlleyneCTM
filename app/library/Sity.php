@@ -15,6 +15,7 @@ use Jenssegers\Date\Date;
 use Mail;
 use App\Mail\sendnuevoEcuentas;
 use DB;
+use App\Notifications\emailNuevaOcobro;
 
 use App\Bitacora;
 use App\User;
@@ -1689,7 +1690,7 @@ public static function facturar($fecha)
           
           // verifica si se puede realizar pagos de cuotas o recargos utilizando solamente el contenido
           // de la cuenta de pagos anticipados de la unidad
-          Sity::iniciaPago($un_id, 0, $pago+1, $fecha, $periodo); 
+          Sity::iniciaPago($un_id, 0, $pago+1, $fecha, $periodo, Null); 
       }
   }    
     
@@ -2230,7 +2231,7 @@ public static function migraDatosCtdiariohis($pcontable_id) {
   /***********************************************************************************
   * Proceso de contabilizar los pagos recibidos
   ************************************************************************************/ 
-  public static function iniciaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo) {
+  public static function iniciaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $pdo) {
     
     $montoRecibido = round(floatval($montoRecibido),2);
    
@@ -2247,19 +2248,24 @@ public static function migraDatosCtdiariohis($pcontable_id) {
     $props=Prop::where('un_id', $un_id)
            ->where('encargado', 1)
            ->join('users','users.id','=','props.user_id')
-           ->select('email','nombre_completo')
+           ->select('users.id','email','nombre_completo')
            ->get();
     //dd($props->toArray());
     
-    
     // envia email a cada uno de los propietarios de la unidad que sean encargados  
-    foreach ($props as $prop) {
+    /* foreach ($props as $prop) {
         Mail::to($prop->email, $prop->nombre_completo)
             ->queue(new sendnuevoEcuentas($datos['data'], $datos['imps'], $datos['recs']));
-    }
+       }*/
 
-  } // end function
-
+     // envia una notificacion via email a cada uno de los propietarios de la unidad que sean encargados  
+    foreach ($props as $prop) {
+      $user= User::find($prop->id);
+      //dd($user);
+      $user->notify(new emailNuevaOcobro($pdo));      
+    
+    } // end function
+  }
   /***********************************************************************************
   * Proceso de recoger la data de un estado de cuentas
   ************************************************************************************/ 
