@@ -42,8 +42,10 @@ class emailNuevaOcobro extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
+                    ->subject('Orden de cobro mes de '. $this->pdo)
+                    ->greeting('Buen dia estimado propietario!')
                     ->line('Estimado propietario, para notificarle que se ha emitido la orden de cobro del mes de '. $this->pdo)
-                    ->action('Notification Action', 'https://ctmaster.net')
+                    ->action('Ver estado de cuenta', 'http://ctmaster.net')
                     ->line('Gracias por su tiempo!');
     }
 

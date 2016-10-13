@@ -1682,3 +1682,53 @@ Work::with(
       return parent::convertExceptionToResponse($e);
   }
 
+
+  /*************************************************************************************
+   * displaying json data in a view 
+   ************************************************************************************/
+
+  {"error":false,"member":[{"id":"1","firstName":"first","lastName":"last","phoneNumber":"0987654321","email":"email@yahoo.com","owner":{
+  "id":"10","firstName":"first","lastName":"last"}}]}
+
+  I wanted to display something like this
+
+  Member ID: 1
+  Firstname: First
+  Lastname: Last
+  Phone: 0987654321
+
+  Owner ID: 10
+  Firstname: First 
+  Lastname: Last
+
+  view('your-view')->with('leads', json_decode($leads, true));
+
+  @foreach($leads['member'] as $member)
+    Member ID: {{ $member['id'] }}
+    Firstname: {{ $member['firstName'] }}
+    Lastname: {{ $member['lastName'] }}
+    Phone: {{ $member['phoneNumber'] }}
+
+    Owner ID: {{ $member['owner']['id'] }}
+    Firstname: {{ $member['owner']['firstName'] }} 
+    Lastname: {{ $member['owner']['lastName'] }}
+  @endforeach
+
+
+  $osi = '{"physical":"cables","data link":"mac address","network":"ip address","transport":"tcp","session":"application connections","presentation":"translation","application":"email"}';
+  $osi = json_decode($osi);
+   
+  foreach ($osi as $key => $value){
+      echo $key.' => '.$value.'<br>';  
+  }
+  physical => cables
+  data link => mac address
+  network => ip address
+  transport => tcp
+  session => application connections
+  presentation => translation
+  application => email
+
+  @foreach(json_decode($h->before, true) as $key => $value)
+    {{ $key }} - {{ $value }}, 
+  @endforeach

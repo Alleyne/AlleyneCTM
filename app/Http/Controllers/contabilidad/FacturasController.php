@@ -121,14 +121,18 @@ class FacturasController extends Controller {
 			$dato->fecha 	       	= Input::get('fecha');
 			$dato->total 	       	= Input::get('total');
 			$dato->save();	
-			
+
+			//dd($dato->tojson());
+			//$dato = json_decode($dato, true);
+
 			// Registra en bitacoras
-			$detalle =	'org_id= '.		    $dato->org_id. ', '.
+			/*$detalle =	'org_id= '.		    $dato->org_id. ', '.
 						'no= '.   			$dato->no. ', '.
 						'total= '.   		$dato->total. ', '.
-						'fecha= '.   		$dato->fecha;
+						'fecha= '.   		$dato->fecha;*/
     
-			Sity::RegistrarEnBitacora(1, 'facturas', $dato->id, $detalle);
+			Sity::RegistrarEnBitacora(1, 'facturas', $dato->id, $dato->tojson());
+
 			Session::flash('success', 'La factura No. ' .$dato->no. ' ha sido creada con éxito.');
 
 			return Redirect::route('facturas.index');

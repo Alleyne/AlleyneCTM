@@ -1604,7 +1604,7 @@ public static function facturar($fecha)
   //dd($year, $month, $day);
     
   // encuentra el ultimo periodo contable registrado
-  $periodo= Pcontable::all()->last()->id; 
+  $periodo= Pcontable::all()->last(); 
   //dd($periodo);
 
   // Encuentra todas las secciones de apartamentos en las cuales la fecha de registro
@@ -1652,7 +1652,7 @@ public static function facturar($fecha)
 
           // Registra facturacion mensual de la unidad 
           $dato= new Ctdasm;
-          $dato->pcontable_id     = $periodo;
+          $dato->pcontable_id     = $periodo->id;
           $dato->fecha            = $fecha;
           $dato->ocobro           = $ocobro;
           $dato->diafact          = $day;                
@@ -1690,58 +1690,60 @@ public static function facturar($fecha)
           
           // verifica si se puede realizar pagos de cuotas o recargos utilizando solamente el contenido
           // de la cuenta de pagos anticipados de la unidad
-          Sity::iniciaPago($un_id, 0, $pago+1, $fecha, $periodo, Null); 
+          Sity::iniciaPago($un_id, 0, $pago+1, $fecha, $periodo->id, $periodo->periodo); 
       }
   }    
+  
+  //dd($totalIngresosDia_1);
+  
+  // si se trata de la facturacion del dia primero se debe incluir el total que debera ingresar
+  // mensualmente en concepto de cuotas de mantenimiento para las unidades que generan ordenes de
+  // cobro los dias dieciséis de cada mes.
+  if ($day==1) {
+    // Encuentra todas las secciones de apartamentos en las cuales la fecha de registro
+    // de cuota de mantenimiento por cobrar es el dia primero o el dia dieciséis de cada mes.
+    $secaptos= Secapto::where('d_registra_cmpc', 16)->get();
+    //dd($secaptos->toArray());
     
-    //dd($totalIngresosDia_1);
+    foreach ($secaptos as $secapto) {
+        // Encuentra todas las unidades que pertenecen a la seccion 
+        $uns= Un::where('seccione_id', $secapto->seccione_id)
+                ->where('activa', 1)->get();
+        //dd($uns->toArray());
+
+        // calcula el total que debera ingresar mensualmente en concepto de cuotas de mantenimiento
+        foreach ($uns as $un) {
+             $totalIngresosDia_16= $totalIngresosDia_16+ floatval($secapto->cuota_mant);
+        }
+    }            
     
-    // si se trata de la facturacion del dia primero se debe incluir la de los dias diesiceis
-    if ($day==1) {
-      // Encuentra todas las secciones de apartamentos en las cuales la fecha de registro
-      // de cuota de mantenimiento por cobrar es el dia primero o el dia dieciséis de cada mes.
-      $secaptos= Secapto::where('d_registra_cmpc', 16)->get();
-      //dd($secaptos->toArray());
-      
-      foreach ($secaptos as $secapto) {
-          // Encuentra todas las unidades que pertenecen a la seccion 
-          $uns= Un::where('seccione_id', $secapto->seccione_id)
-                  ->where('activa', 1)->get();
-          //dd($uns->toArray());
+    //dd($totalIngresosDia_16);
+    
+    // Registra facturacion mensual de la unidad en cuenta 'Cuota de mantenimiento por cobrar' 1120.00
+    Sity::registraEnCuentas(
+            $periodo->id, // periodo                      
+            'mas',  // aumenta
+            1,      // cuenta id
+            1,      // '1120.00',
+            Carbon::createFromDate($year, $month, 1),   // fecha
+            'Resumen de Cuota de mantenimiento por cobrar '.Sity::getMonthName($month).'-'.$year, // detalle
+            ($totalIngresosDia_1+$totalIngresosDia_16) // monto
+           );
 
-          // calcula el total que debera ingresar mensualmente en concepto de cuotas de mantenimiento
-          foreach ($uns as $un) {
-               $totalIngresosDia_16= $totalIngresosDia_16+ floatval($secapto->cuota_mant);
-          }
-      }            
-      
-      //dd($totalIngresosDia_16);
-      
-      // Registra facturacion mensual de la unidad en cuenta 'Cuota de mantenimiento por cobrar' 1120.00
-      Sity::registraEnCuentas(
-              $periodo, // periodo                      
-              'mas',  // aumenta
-              1,      // cuenta id
-              1,      // '1120.00',
-              Carbon::createFromDate($year, $month, 1),   // fecha
-              'Resumen de Cuota de mantenimiento por cobrar '.Sity::getMonthName($month).'-'.$year, // detalle
-              ($totalIngresosDia_1+$totalIngresosDia_16) // monto
-             );
+    // Registra facturacion mensual de la unidad en cuenta 'Ingreso por cuota de mantenimiento' 4120.00
+    Sity::registraEnCuentas(
+            $periodo->id, // periodo
+            'mas',    // aumenta
+            4,        // cuenta id
+            3,        //'4120.00'
+            Carbon::createFromDate($year, $month, 1),   // fecha
+            'Resumen de Ingreso por cuota de mantenimiento '.Sity::getMonthName($month).'-'.$year, // detalle
+            ($totalIngresosDia_1+$totalIngresosDia_16) // monto
+           );
+  }  
 
-      // Registra facturacion mensual de la unidad en cuenta 'Ingreso por cuota de mantenimiento' 4120.00
-      Sity::registraEnCuentas(
-              $periodo, // periodo
-              'mas',    // aumenta
-              4,        // cuenta id
-              3,        //'4120.00'
-              Carbon::createFromDate($year, $month, 1),   // fecha
-              'Resumen de Ingreso por cuota de mantenimiento '.Sity::getMonthName($month).'-'.$year, // detalle
-              ($totalIngresosDia_1+$totalIngresosDia_16) // monto
-             );
-    }  
-
-    //$this->info('Finaliza facturacion para el mes de '.Sity::getMonthName($month).'-'.$year );
-    return 'Finaliza facturacion para el mes de '.Sity::getMonthName($month).'-'.$year ;
+  //$this->info('Finaliza facturacion para el mes de '.Sity::getMonthName($month).'-'.$year );
+  return 'Finaliza facturacion para el mes de '.Sity::getMonthName($month).'-'.$year ;
 
 }
 
@@ -2232,7 +2234,7 @@ public static function migraDatosCtdiariohis($pcontable_id) {
   * Proceso de contabilizar los pagos recibidos
   ************************************************************************************/ 
   public static function iniciaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $pdo) {
-    
+    //dd($pdo);
     $montoRecibido = round(floatval($montoRecibido),2);
    
     // procesa el pago recibido
@@ -2242,7 +2244,7 @@ public static function migraDatosCtdiariohis($pcontable_id) {
     Sity::registaEnDiario($pago_id);
     
     // encuentra los datos para generar el estado de cuentas de un determinada unidad
-    $datos= Sity::getdataEcuenta($un_id);
+    //$datos= Sity::getdataEcuenta($un_id);
     //dd($datos['imps']->toArray());    
     
     $props=Prop::where('un_id', $un_id)

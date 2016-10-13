@@ -26,7 +26,7 @@ class CtdasmsController extends Controller {
    * Esta funcion gerera el estado de cuentas de una determinada unidad, puede ser en formato corto y largo
   ************************************************************************************************************/ 
   public function ecuentas($un_id, $tipo) {  
-    dd($un_id, $tipo);
+    //dd($un_id, $tipo);
     $imps = Ctdasm::where('un_id', $un_id)
                       ->where('pagada', 0)
                       ->select('id','mes_anio','f_vencimiento','importe')
