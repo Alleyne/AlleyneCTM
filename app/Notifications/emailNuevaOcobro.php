@@ -10,16 +10,17 @@ use Illuminate\Notifications\Messages\MailMessage;
 class emailNuevaOcobro extends Notification
 {
     use Queueable;
-    public $pdo;
-
+    public $pdo, $propietario;
+    
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($pdo)
+    public function __construct($pdo, $propietario)
     {
        $this->pdo= $pdo;
+       $this->propietario= $propietario;
     }
 
     /**
@@ -42,11 +43,11 @@ class emailNuevaOcobro extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Orden de cobro mes de '. $this->pdo)
-                    ->greeting('Buen dia estimado propietario!')
-                    ->line('Estimado propietario, para notificarle que se ha emitido la orden de cobro del mes de '. $this->pdo)
+                    ->subject('Estado de cuenta de '. $this->pdo)
+                    ->greeting('Buen dia señor(a) '.$this->propietario)
+                    ->line('Le notificamos que se ha emitido la orden de cobro de la cuota de mantenimiento correspondiente al mes de '. $this->pdo. '. Para una información detallada haga click en el boton azul.')
                     ->action('Ver estado de cuenta', 'http://ctmaster.net')
-                    ->line('Gracias por su tiempo!');
+                    ->line('Gracias por la atención prestada.');
     }
 
     /**

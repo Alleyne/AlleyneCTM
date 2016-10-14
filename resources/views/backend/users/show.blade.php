@@ -11,7 +11,7 @@
 			<div class="row">
 		
 				<!-- NEW WIDGET START -->
-				<article class="col-sm-12 col-md-12 col-lg-8">
+				<article class="col-sm-12 col-md-12 col-lg-7">
 		
 					<!-- Widget ID (each widget will need unique ID)-->
 					<div class="jarviswidget jarviswidget-color-orange" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
@@ -116,7 +116,7 @@
 				<!-- WIDGET END -->
 		
 				<!-- NEW WIDGET START -->
-				<article class="col-sm-12 col-md-12 col-lg-4">
+				<article class="col-sm-12 col-md-12 col-lg-5">
 		
 					<!-- Widget ID (each widget will need unique ID)-->
 					<div class="jarviswidget jarviswidget-color-blue" id="wid-id-1" data-widget-editbutton="false" data-widget-deletebutton="false">

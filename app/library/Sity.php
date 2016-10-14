@@ -2264,7 +2264,7 @@ public static function migraDatosCtdiariohis($pcontable_id) {
     foreach ($props as $prop) {
       $user= User::find($prop->id);
       //dd($user);
-      $user->notify(new emailNuevaOcobro($pdo));      
+      $user->notify(new emailNuevaOcobro($pdo, $user->nombre_completo));      
     
     } // end function
   }
