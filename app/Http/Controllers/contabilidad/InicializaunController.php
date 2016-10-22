@@ -44,6 +44,14 @@ class InicializaunController extends Controller {
       return Redirect::back()->withInput();
     }
     
+    $pdo= Pcontable::find(1);
+    if (!$pdo) {
+      Session::flash('danger', '<< ERROR >> Antes de inicializar una unidad usted debera crear el primer periodo contable!');     
+      return Redirect::back()->withInput();
+    } 
+    
+   
+
     $rules = array(
         'meses'       => 'Required|Numeric|min:0',
         'monto'       => 'required|Numeric|min:0',
@@ -71,15 +79,18 @@ class InicializaunController extends Controller {
       $periodo= Pcontable::where('cerrado', 0)->orderBy('id', 'asc')->first();
       //dd($periodo->fecha);      
       
+      // convierte la fecha string a carbon/carbon
+      $f_periodo= Carbon::parse($periodo->fecha);   
+      //dd($fecha);      
+      
+      // hace una copia de la fecha original para evitar que $f_periodo cambie
+      $fecha = clone $f_periodo;
+      
       if (Input::get('meses')>0) {
         
         $monto= floatval(Input::get('monto'));
         $meses= floatval(Input::get('meses'));
         $sumaMontoMensual=0;
-
-        // convierte la fecha string a carbon/carbon
-        $fecha= Carbon::parse($periodo->fecha);   
-        //dd($fecha);
         
         $seccion= Seccione::find($un->seccione_id);
         $blqAdmin= Blqadmin::where('bloque_id', $seccion->bloque_id)->first();
@@ -90,13 +101,10 @@ class InicializaunController extends Controller {
 
           $fecha= $fecha->subMonth();
           $month= $fecha->month;    
-          $year=  $fecha->year; 
-
-          // determina el periodo al que corresponde la fecha de pago    
-          $pdo= Sity::getMonthName($month).'-'.$year;  
-          //dd($pdo);
+          $year= $fecha->year; 
+          $dia= $secapto->d_registra_cmpc==1 ? '01' : '16';
           
-          // calcula diferencia en centavos entre el total registrado de todos los meses y el total adeudado
+              // calcula diferencia en centavos entre el total registrado de todos los meses y el total adeudado
           for ($y= 1; $y <= $meses; $y++) {
             $sumaMontoMensual= round($sumaMontoMensual,2)+ round($monto/$meses,2);
           }
@@ -108,9 +116,9 @@ class InicializaunController extends Controller {
           $dto= new Ctdasm;
           $dto->pcontable_id     = $periodo->id;
           $dto->fecha            = $fecha;
-          $dto->ocobro           = $un->codigo.' '.$pdo;
+          $dto->ocobro           = $un->codigo.' '.Sity::getMonthName($month).$dia.'-'.$year;
           $dto->diafact          = $secapto->d_registra_cmpc;                
-          $dto->mes_anio         = $pdo;
+          $dto->mes_anio         = Sity::getMonthName($month).'-'.$year;
           $dto->detalle          = 'Cuota de mantenimiento Unidad No ' . Input::get('un_id');
           
           if ($x==1 && $diferencia>0) {
@@ -123,20 +131,20 @@ class InicializaunController extends Controller {
           
           $dto->f_vencimiento    = Carbon::createFromDate($year, $month, 1)->endOfMonth();
           $dto->recargo          = 0;
-          $dto->recargo_pagado   = 1;
+          $dto->recargo_pagado   = 0;
           $dto->f_descuento      = $fecha;   
           $dto->bloque_id        = $seccion->bloque_id;
           $dto->seccione_id      = $seccion->id;
           $dto->blqadmin_id      = $blqAdmin->id;
           $dto->un_id            = Input::get('un_id');
-          $dto->recargo_siono      = 1;
+          $dto->recargo_siono    = 0;
           $dto->save(); 
         } 
                 
         // contabiliza la inicializacion
         $dato = new Ctdiario;
         $dato->pcontable_id  = $periodo->id;
-        $dato->fecha         = Carbon::today();
+        $dato->fecha         = $f_periodo;
         $dato->detalle       = 'Cuota de mantenimiento por cobrar';
         $dato->debito        = Input::get('monto');
         $dato->save(); 
@@ -160,7 +168,7 @@ class InicializaunController extends Controller {
                 'mas',  // aumenta
                 1,      // cuenta id
                 1,      // '1120.00',
-                Carbon::createFromDate($year, $month, 1),   // fecha
+                $f_periodo,   // fecha
                 'Inicializa Cuota de mantenimiento por cobrar '.$un->codigo, // detalle
                 Input::get('monto') // monto
                );
@@ -171,7 +179,7 @@ class InicializaunController extends Controller {
                 'mas',    // aumenta
                 4,        // cuenta id
                 3,        //'4120.00'
-                Carbon::createFromDate($year, $month, 1),   // fecha
+                $f_periodo,   // fecha
                 'Inicializa Ingreso por cuota de mantenimiento '.$un->codigo, // detalle
                 Input::get('monto') // monto
                );
@@ -183,7 +191,7 @@ class InicializaunController extends Controller {
         // registra en Ctdiario principal
         $dato = new Ctdiario;
         $dato->pcontable_id  = $periodo->id;
-        $dato->fecha         = Carbon::today();
+        $dato->fecha         = $f_periodo;
         $dato->detalle       = Catalogo::find(8)->nombre;
         $dato->debito        = Input::get('anticipados');
         $dato->save(); 
@@ -201,8 +209,8 @@ class InicializaunController extends Controller {
         $dato->detalle = 'Para registrar pago anticipados por inicializacion, '.$un->codigo;
         $dato->save(); 
         
-        Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, Carbon::today(), Catalogo::find(8)->nombre.' '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
-        Sity::registraEnCuentas($periodo->id, 'mas', 2, 5, Carbon::today(), Catalogo::find(5)->nombre.' unidad '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
+        Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $f_periodo, Catalogo::find(8)->nombre.' '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
+        Sity::registraEnCuentas($periodo->id, 'mas', 2, 5, $f_periodo, Catalogo::find(5)->nombre.' unidad '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
       } 
 
       // Registra en bitacoras

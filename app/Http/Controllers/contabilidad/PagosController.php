@@ -119,7 +119,7 @@ class PagosController extends Controller {
 		    
 		    // encuentra el periodo mas antiguo abierto
 			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
-		    //dd($periodo);
+		    //dd($pdo, $periodo->periodo);
 		    
 		    // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
 		    if ($pdo != $periodo->periodo) {
@@ -145,6 +145,7 @@ class PagosController extends Controller {
 				$dato->un_id       = Input::get('un_id');
 			    $dato->user_id 	   = Auth::user()->id; 		    
 			    $dato->save();
+				
 				// Registra en bitacoras
 				$detalle =	'Registra pago de cuota de mantenimiento No.'.$dato->id.' con monto de B/.'.$montoRecibido.' no contabiliza';  
 	            
@@ -189,16 +190,35 @@ class PagosController extends Controller {
  		//Encuentra todos los datos del pago
 		$pago = Pago::where('pagos.id', $pago_id)
 					->join('bancos', 'bancos.id', '=', 'pagos.banco_id')
-                    ->select('pagos.id','pagos.anulado','bancos.nombre','pagos.f_pago','pagos.monto','pagos.un_id')
+                    ->select('pagos.id','pagos.anulado','bancos.nombre','pagos.f_pago','pagos.monto','pagos.un_id','pagos.trans_no','pagos.trans_tipo', 'pagos.f_pago')
                     ->first();
-    
+    	//dd($pago);
+
+    	// formatea la fecha de pago en la coleccion $pago
+    	$pago['f_pago']= Date::parse($pago->f_pago)->format('l\, j F Y');
+		$pago['idpaded'] = sprintf("%06d", $pago->id);
+    	
+    	// determina que tipo de pago es y se lo agrega a la coleccion $pago
+    	if ($pago->trans_tipo== 1) {
+			$pago['trans_tipo']= "Cheque";
+    	} elseif ($pago->trans_tipo== 2) {
+			$pago['trans_tipo']= "Transferencia";
+    	} elseif ($pago->trans_tipo== 3) {
+			$pago['trans_tipo']= "ACH";
+    	} elseif ($pago->trans_tipo== 4) {
+			$pago['trans_tipo']= "Banca en linea";
+    	} elseif ($pago->trans_tipo== 5) {
+			$pago['trans_tipo']= "Efectivo";
+    	}
+    	//dd($pago->toArray());
+ 		
  		//Encuentra todos los detalles del pago
 		$detalles = Detallepago::where('pago_id', $pago_id)
                 	    	   ->where('no','!=',0)
                 	    	   ->get();
 
-		$total=0;
 		// calcula el total	pagado    
+		$total=0;	    
 	    foreach ($detalles as $detalle) {
 			$total  = $total + $detalle->monto;  
 	    }       
@@ -239,7 +259,7 @@ class PagosController extends Controller {
 	    $ph = Ph::find($seccion->ph_id);
 	    //dd($ph->toArray()); 
 
-		return \View::make('contabilidad.pagos.showRecibo')
+		return view('contabilidad.pagos.showRecibo')
 					->with('pago', $pago)
 					->with('detalles', $detalles)
 					->with('un', $un)
@@ -317,8 +337,12 @@ class PagosController extends Controller {
                     ->first();
 		//dd($dato->toArray());
 		
+		// encuentra la fecha del periodo contable mas antiguo abierto
+		$periodo= Pcontable::where('cerrado', 0)->orderBy('id', 'asc')->first();
+		//dd($periodo->fecha);  
+
 		// proceso de contabilizar el pago recibido
-		Sity::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago);
+		Sity::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago, $periodo->id, $periodo->periodo);
 
 		// Registra el pago como tramitado
 		$dato1 = Pago::find($pago_id);

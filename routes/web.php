@@ -255,7 +255,7 @@ Route::get('/aaa', function () {
 	Un::where('inicializada', 1)
       ->update(['inicializada' => 0]);	
 	Sity::limpiar();
-	//Sity::periodo('2016-07-01');
+	//Sity::periodo('2016-01-01');
 	//Sity::facturar('2016-07-01');
 	//Sity::periodo('2016-08-01');
 	//Sity::facturar('2016-08-01');
@@ -271,6 +271,7 @@ Route::get('/bbb', function () {
       ->update(['inicializada' => 0]);
 	return 'Se inicializa todas las unidades a cero ...';
 });
+
 
 //---------------------------------------------------------//
 // Ruta para hacer pruebas
@@ -300,4 +301,76 @@ Route::get('/truncate-all', function () {
 
 	DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 	return 'tablas limpias';
+});
+
+Route::get('/test', function () {
+/***********************************************  
+  $diaFact= 1;
+  $f_ocobro= "2016/01/01";
+  $m_vence= 0; 
+  $d_vence= 9;
+	  +"date": "2016-01-09 00:00:00.000000"
+
+  $diaFact= 1;
+  $f_ocobro= "2016/02/01";
+  $m_vence= 0; 
+  $d_vence= 31; 
+	  +"date": "2016-02-29 23:59:59.000000"
+  
+  $diaFact= 1;
+  $f_ocobro= "2016/01/01";
+  $m_vence= 1; 
+  $d_vence= 9;
+	  +"date": "2016-02-09 00:00:00.000000"
+  
+  $diaFact= 1;
+  $f_ocobro= "2016/01/01";
+  $m_vence= 10; 
+  $d_vence= 31;
+  		+"date": "2016-11-30 23:59:59.000000"
+  
+  $diaFact= 1;
+  $f_ocobro= "2016/01/01";
+  $m_vence= 10; 
+  $d_vence= 23;
+  		+"date": "2016-11-23 00:00:00.000000"
+ **************************************************/   
+  
+/***********************************************  
+  $diaFact= 16;
+  $f_ocobro= "2016/01/16";
+  $m_vence= 0; 
+  $d_vence= 24;
+  	+"date": "2016-01-24 00:00:00.000000"
+  
+  $diaFact= 16;
+  $f_ocobro= "2016/02/16";
+  $m_vence= 0; 
+  $d_vence= 31; 
+	  +"date": "2016-02-29 23:59:59.000000"
+ 
+
+  $diaFact= 16;
+  $f_ocobro= "2016/01/16";
+  $m_vence= 1; 
+  $d_vence= 31;
+  	+"date": "2016-02-29 23:59:59.000000"
+
+
+  $diaFact= 16;
+  $f_ocobro= "2016/01/16";
+  $m_vence= 10; 
+  $d_vence= 31;
+  	+"date": "2016-11-30 23:59:59.000000"
+   
+  $diaFact= 16;
+  $f_ocobro= "2016/01/16";
+  $m_vence= 10; 
+  $d_vence= 23;
+  	+"date": "2016-11-23 00:00:00.000000"
+**************************************************/  
+
+  $f_vence= Sity::fechaLimiteRecargo($diaFact, $f_ocobro, $m_vence, $d_vence);
+  dd('fecha limite para recargo: ',$f_vence);
+  return $f_vence;
 });

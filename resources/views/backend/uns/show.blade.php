@@ -36,75 +36,89 @@
 					<form class="form-horizontal">
 						<fieldset>
 							<div class="form-group">
-								<label class="col-md-3 control-label">Codigo</label>
-								<div class="col-md-9">
+								<label class="col-md-4 control-label">Codigo</label>
+								<div class="col-md-8">
 									<input class="form-control input-lg" style="font-size:200% " name="numero" type="text" readonly value="{{ $dato->codigo }}">
 								</div>
 							</div>						
 			
 							<div class="form-group">
-								<label class="col-md-3 control-label">Finca</label>
-								<div class="col-md-9">
+								<label class="col-md-4 control-label">Finca</label>
+								<div class="col-md-8">
 									<input class="form-control input-sm" name="finca" type="text" readonly value="{{ $dato->finca }}">
 								</div>
 							</div>
 							
 							<div class="form-group">
-								<label class="col-md-3 control-label">Documento</label>
-								<div class="col-md-9">
+								<label class="col-md-4 control-label">Documento</label>
+								<div class="col-md-8">
 									<input class="form-control input-sm" name="documento" type="text" readonly value="{{ $dato->documento }}">
 								</div>
 							</div>					
 							
 							<div class="form-group">
-								<label class="col-md-3 control-label">Características propia</label>
-								<div class="col-md-9">
+								<label class="col-md-4 control-label">Características propia</label>
+								<div class="col-md-8">
 									{{ Form::textarea('caracteristicas', $dato->caracteristicas, array('class' => 'form-control input-sm', 'rows' => '2', 'readonly' => 'readonly')) }}
 								</div>
 							</div>	
 							
 							@if ($seccion->tipo==1) <!-- Apartamentos -->
 								<div class="form-group">
-									<label class="col-md-3 control-label">No de Cuartos</label>
-									<div class="col-md-9">
+									<label class="col-md-4 control-label">No de Cuartos</label>
+									<div class="col-md-8">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuartos }}">
 									</div>
 								</div>						
 
 								<div class="form-group">
-									<label class="col-md-3 control-label">No de baños</label>
-									<div class="col-md-9">
+									<label class="col-md-4 control-label">No de baños</label>
+									<div class="col-md-8">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->banos }}">
 									</div>
 								</div>	
 
 								<div class="form-group">
-									<label class="col-md-3 control-label">Agua caliente</label>
-									<div class="col-md-9">
+									<label class="col-md-4 control-label">Agua caliente</label>
+									<div class="col-md-8">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->agua_caliente }}">
 									</div>
 								</div>											
 
 								<div class="form-group">
-									<label class="col-md-3 control-label">Estacionamientos</label>
-									<div class="col-md-9">
+									<label class="col-md-4 control-label">Estacionamientos</label>
+									<div class="col-md-8">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->estacionamientos }}">
 									</div>
 								</div>						
 								
 								<div class="form-group">
-									<label class="col-md-3 control-label">Cuota</label>
-									<div class="col-md-9">
+									<label class="col-md-4 control-label">Cuota</label>
+									<div class="col-md-8">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuota_mant }}">
 									</div>
 								</div>
 												
 								<div class="form-group">
-									<label class="col-md-3 control-label">Area/m2</label>
-									<div class="col-md-9">
+									<label class="col-md-4 control-label">Area/m2</label>
+									<div class="col-md-8">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->area }}">
 									</div>
 								</div>
+
+								<div class="form-group">
+									<label class="col-md-4 control-label">Dias de gracia</label>
+									<div class="col-md-8">
+										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->d_gracias }}">
+									</div>
+								</div>							
+
+								<div class="form-group">
+									<label class="col-md-4 control-label">Meses descuento</label>
+									<div class="col-md-8">
+										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->m_descuento }}">
+									</div>
+								</div>							
 
 							@elseif ($seccion->tipo==2) <!-- Residencias -->
 								<legend>Sección tipo residencias</legend>

@@ -92,7 +92,10 @@ class CtdasmsController extends Controller {
       $total_adeudado=(number_format(0, 2));
     }
     else {
-      $total_adeudado=abs(number_format($total-$pagos_anticipados, 2));      
+      $total_adeudado=number_format($total-$pagos_anticipados, 2);      
+      if ($total_adeudado<0) {
+        $total_adeudado='0.00';
+      }
     }
 
     // Prepara datos del encabezado del Estado de cuenta

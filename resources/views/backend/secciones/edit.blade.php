@@ -48,24 +48,24 @@
                                         {{ csrf_field() }}
                                         {{ Form::hidden('bloque_id', $dato->bloque_id) }}
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Sección Nombre</label>
-                                            <div class="col-md-9">
+                                            <label class="col-md-4 control-label">Sección Nombre</label>
+                                            <div class="col-md-8">
                                                 {{ Form::text('nombre', $dato->nombre, array('class' => 'form-control','title' => 'Escriba el nombre del Bloque administrativo...', 'autocomplete' => 'off')) }}
                                                 {!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
                                             </div>
                                         </div>                    
 
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Descripción</label>
-                                            <div class="col-md-9">
+                                            <label class="col-md-4 control-label">Descripción</label>
+                                            <div class="col-md-8">
                                                 {{ Form::textarea('descripcion', $dato->descripcion, array('class' => 'form-control input-sm', 'rows' => '7', 'title' => 'Escriba el Ruc o número de cédula del Administrador...')) }}
                                                 {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}
                                             </div>
                                         </div>                                                    
                                         
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Ph</label>
-                                            <div class="col-md-9">
+                                            <label class="col-md-4 control-label">Ph</label>
+                                            <div class="col-md-8">
                                                 {{ Form::select('ph_id', array('' => 'Selecione un Ph') + $phs, $dato->ph_id, array('class' => 'form-control', 'title' => 'Escoja el Ph al cual pertenece la presente Sección administrativa')) }}
                                                 {!! $errors->first('ph_id', '<span class="label label-important">  *</span>') !!}
                                             </div>
@@ -74,89 +74,98 @@
                                         @if ($dato->tipo==1) <!-- Apartamentos -->
                                             <legend>Sección tipo apartamentos</legend>
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">No de Cuartos</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">No de Cuartos</label>
+                                                <div class="col-md-8">
                                                     {{ Form::text('cuartos', $dato->secapto->cuartos, array('class' => 'form-control','title' => 'Escriba el número de cuartos que tiene la unidad...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('cuartos', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>                                        
 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">No de baños</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">No de baños</label>
+                                                <div class="col-md-8">
                                                     {{ Form::text('banos', $dato->secapto->banos, array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('banos', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Agua caliente</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">Agua caliente</label>
+                                                <div class="col-md-8">
                                                     {{ Form::text('agua_caliente', $dato->secapto->agua_caliente, array('class' => 'form-control','title' => 'Tiene Agua caliente?...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('agua_caliente', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>                    
                                             
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">No de Estacionamientos</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">No de Estacionamientos</label>
+                                                <div class="col-md-8">
                                                     {{ Form::text('estacionamientos', $dato->secapto->estacionamientos, array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Area/m2</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">Area/m2</label>
+                                                <div class="col-md-8">
                                                     {{ Form::text('area', $dato->secapto->area, array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('area', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>    
                                             
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Cuota mant (B/.)</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">Cuota mant (B/.)</label>
+                                                <div class="col-md-8">
                                                     {{ Form::text('cuota_mant', $dato->secapto->cuota_mant, array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Recargo (B/.)</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">Recargo (B/.)</label>
+                                                <div class="col-md-8">
                                                     {{ Form::text('recargo', $dato->secapto->recargo, array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('recargo', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Descuento (B/.)</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">Descuento (B/.)</label>
+                                                <div class="col-md-8">
                                                     {{ Form::text('descuento', $dato->secapto->descuento, array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('descuento', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Genera Orden de cobro</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">Genera Orden de cobro</label>
+                                                <div class="col-md-8">
                                                     <input class="form-control spinner-left"  id="spinner1" name="d_registra_cmpc" value= "{{ $dato->secapto->d_registra_cmpc }}" type="text">
                                                     <p class="text-left">Día del mes en que se registra en el ctdiario la cuota de mantenimiento por cobrar.</p>
                                                     {!! $errors->first('d_registra_cmpc', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>                                            
-                                            
+
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Dias de gracias</label>
-                                                <div class="col-md-9">
-                                                    <input class="form-control spinner-left"  id="spinner2" name="d_gracias" value= "{{ $dato->secapto->d_gracias }}" type="text">
-                                                    <p class="text-left">Días de gracias despues de la fecha de vencimiento de pago.</p>
-                                                    {!! $errors->first('d_gracias', '<li style="color:red">:message</li>') !!}
+                                                <label class="col-md-4 control-label">Aplicar recargo en mes actual o posterior</label>
+                                                <div class="col-md-8">
+                                                    <div class="col-md-6">              
+                                                        <input class="form-control spinner-left" id="spinner4" name="m_vence" value="{{ $dato->secapto->m_vence }}" type="text">
+                                                        <p class="text-left">0= actual    1= proximo</p>
+                                                        {!! $errors->first('m_vence', '<li style="color:red">:message</li>') !!}
+                                                    </div>
+                                                    
+                                                    <div class="col-md-6">              
+                                                        <input class="form-control spinner-left" id="spinner2" name="d_vence" value="{{ $dato->secapto->d_vence }}" type="text">
+                                                        <p class="text-left">Día limite del mes para aplicar recargo</p>
+                                                        {!! $errors->first('d_vence', '<li style="color:red">:message</li>') !!}
+                                                    </div>
                                                 </div>
                                             </div>
+
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Meses para descuento</label>
-                                                <div class="col-md-9">
+                                                <label class="col-md-4 control-label">Meses para descuento</label>
+                                                <div class="col-md-8">
                                                     <input class="form-control spinner-left"  id="spinner3" name="m_descuento" value= "{{ $dato->secapto->m_descuento }}" type="text">
                                                     <p class="text-left">Cantidad de meses que se debera pagar por adelantado para obtener descuento por pagos anticipados.</p>
                                                     {!! $errors->first('m_descuento', '<li style="color:red">:message</li>') !!}
@@ -569,7 +578,7 @@ $(document).ready(function() {
     // Spinners
     $("#spinner2").spinner({
         min: 0,
-        max: 16,
+        max: 31,
         step: 1,
         start: 1,
         numberFormat: "C"
@@ -583,7 +592,15 @@ $(document).ready(function() {
         start: 1,
         numberFormat: "C"
     }); 
-
+    
+    // Spinners
+    $("#spinner4").spinner({
+        min: 0,
+        max: 1,
+        step: 1,
+        start: 0,
+        numberFormat: "C"
+    }); 
 })
 </script>
 @stop

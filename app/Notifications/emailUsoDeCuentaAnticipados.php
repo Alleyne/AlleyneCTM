@@ -7,19 +7,19 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class emailNuevaOcobro extends Notification
+class emailUsoDeCuentaAnticipados extends Notification
 {
     use Queueable;
-    public $pdo, $propietario;
+    public $nota, $propietario;
     
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($pdo, $propietario)
+    public function __construct($nota, $propietario)
     {
-       $this->pdo= $pdo;
+       $this->nota= $nota;
        $this->propietario= $propietario;
     }
 
@@ -43,9 +43,9 @@ class emailNuevaOcobro extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Estado de cuenta de '. $this->pdo)
+                    ->subject('Se utilizó su cuenta de pagos por anticipados')
                     ->greeting('Buen dia señor(a) '.$this->propietario)
-                    ->line('Le notificamos que se ha emitido la orden de cobro de la cuota de mantenimiento correspondiente al mes de '.$this->pdo.'. Para una información detallada haga click en el boton azul.')
+                    ->line($this->nota.'. Para una información detallada haga click en el boton azul.')
                     ->action('Ver estado de cuenta', 'http://ctmaster.net')
                     ->line('Gracias por la atención prestada.');
     }

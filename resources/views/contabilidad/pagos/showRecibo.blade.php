@@ -1,133 +1,158 @@
-@extends('backend._layouts.default')
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Recibo</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
+    <style type="text/css">
+      @page { margin: 0px; }
+      html { margin: 0px}
+     
+      body {
+        margin: 0px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        font-style: normal;
+        line-height: normal;
+        font-weight: normal;
+      }
+      
+      .contenedor-principal {
+        height: 11in;
+        width: 8.5in;
+        padding: 0.25in;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      
+      .p18 {
+        font-size: 18px; 
+      }
+      
+      .p20 {
+        font-size: 20px; 
+      }
+      
+      p {
+        font-size: 14px; 
+      }
+    
+    hr {
+        margin-top: 0px;
+        margin-bottom: 20px;
+        border: 0;
+        border-top: 1px solid #eee;
+    }
 
-@section('main')
-<div class="row show-grid">
-    <div class="col-xs-12 col-sm-6 col-md-12">        
-        <!-- NEW WIDGET START -->
-        <!-- Widget ID (each widget will need unique ID)-->
-        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="true" data-widget-deletebutton="false">
-            <!-- widget options:
-            usage: <div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false">
+    </style>
+  </head>
+  
+  <body>
+    <div class="contenedor-principal">
+      
+      <div class="row"><!-- row -->
+          <div class="col-xs-9">
+              <address>
+                <strong>{{ $ph->nombre }}</strong><br>
+                795 Via Espana, Pueblo Nuevo<br>
+                Panama<br>
+                <abbr title="Telefono">P:</abbr> (507) 456-7890
+              </address>
+          </div>
+          <div class="col-xs-3">
+              <img style="height: 40px; border-radius: 8px;" src="{{asset('assets/backend/img/logo.png')}}" class="img-responsive" alt="Responsive image">
+          </div>
+      </div><!-- end row  -->
 
-            data-widget-colorbutton="false"
-            data-widget-editbutton="false"
-            data-widget-togglebutton="false"
-            data-widget-deletebutton="false"
-            data-widget-fullscreenbutton="false"
-            data-widget-custombutton="false"
-            data-widget-collapsed="true"
-            data-widget-sortable="false"-->
-            
-            <header>
-                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Recibo </h2>
-                <div class="widget-toolbar">
-                    <a href="{{ URL::route('indexPagos', $pago->un_id) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>            
-                </div>
-            </header>
-
-            <div><!-- widget div-->
-                <div class="jarviswidget-editbox"><!-- widget edit box -->
-                    <!-- This area used as dropdown edit box -->
-                </div><!-- end widget edit box -->
-                
-                <div class="widget-body padding"><!-- widget content -->
-                    
-                    <div class="row"><!-- row -->
-                        <div class="col-xs-10">
-                            <address>
-                              <strong>{{ $ph->nombre }}</strong><br>
-                              795 Folsom Ave, Suite 600<br>
-                              San Francisco, CA 94107<br>
-                              <abbr title="Phone">P:</abbr> (123) 456-7890
-                            </address>
-                        </div>
-                        <div class="col-xs-2">
-                            <img style="height: 40px; border-radius: 8px;" src="{{asset('assets/backend/img/logo.png')}}" class="img-responsive" alt="Responsive image">
-                        </div>
-                    </div><!-- end row -->
-
-                    <!-- <HR WIDTH=95% ALIGN=CENTER COLOR="BLACK"> -->
-
-                    <div class="row">
-                      <div class="col-xs-12">
-                        <h4><p class="text-center"><strong>RECIBO DE PAGO NO.  {{ $pago->id }}</strong></p></h4>
-                        <h7><p class="text-center"><strong>UNIDAD NO. {{ $un->codigofull }}</strong></p></h7>       
-                        <h7><p class="text-center"><strong>Fecha: {{ Date::parse($pago->f_pago)->toFormattedDateString() }}</strong></p></h7>
-                        @if ($pago->anulado==1)
-                            <h1><p class="text-center"><strong>ANULADO</strong></p></h1>
-                        @endif
-                      </div>
-                    </div>  
-
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <address>
-                              <strong>{{ $prop->user->nombre_completo }}</strong><br>
-                              795 Folsom Ave, Suite 600<br>
-                              San Francisco, CA 94107<br>
-                              <abbr title="Phone">P:</abbr> (123) 456-7890
-                            </address>
-                        </div>
-                            
-                        <div class="col-xs-2">
-                        </div>
-                    </div>
-
-                    <div class="col-xs-12">
-                        <div class="row">
-                            <table class="table table-bordered table-striped">
-                                <thead>
-                                    <strong><tr>
-                                        <th col width="40px">No</th>
-                                        <th>Detalle</th>
-                                        <th col width="90px" class="text-center">Monto</th>                     
-                                    </tr></strong>
-                                </thead>
-                                <tbody>
-                                    @foreach ($detalles as $detalle)
-                                        <tr>
-                                            <td>{{ $detalle->no }}</td>
-                                            <td>{{ $detalle->detalle }}</td>
-                                            <td col width="90px" align="right">{{ $detalle->monto }}</td>                      
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>    
-                        </div><!-- end row -->
-                        
-                        <div class="row">
-                              <div class="col-xs-11">
-                                <p class="text-right"><strong>Total pagado</strong></p>
-                              </div>
-                              <div class="col-xs-1">
-                                <p class="text-right"><strong>{{ $total }}</strong></p>
-                              </div>
-                        </div>
-
-                        <div class="row">
-                              <div class="col-xs-11">
-                                <p class="text-right"></p>
-                              </div>
-                              <div class="col-xs-1">
-                                <p class="text-right">========</p>
-                              </div>
-                        </div>
-                        
-                        <div class="row">
-                              <div class="col-xs-11">
-                                <p class="text-left">{{ $nota }}</p>
-                              </div>
-                              <div class="col-xs-1">
-                                <p class="text-right"></p>
-                              </div>
-                        </div>          
-            
-                </div><!-- end widget content -->
-            </div><!-- end widget div -->
+      <div class="row">
+        <div class="col-md-12">
+          @if ($pago->anulado==1)
+              <p class="text-center p20"><strong>ANULADO</strong></p>
+          @endif
         </div>
-        <!-- end widget -->
-        <!-- WIDGET END -->
-    </div>        
-</div>
-@stop
+      </div>    
+
+      <HR WIDTH=95% ALIGN=CENTER COLOR="BLACK">
+      
+      <div class="row">
+          <div class="col-xs-7">
+              <div>
+                  <h4><strong>RECIBO DE PAGO</strong></h4>
+                  <h5><strong>No. {{ $pago->idpaded }} </strong></h5>
+              </div>
+          </div>
+          
+          <div class="col-xs-5">
+              <div class="well well-sm pull-right">
+                 <h4>Total Recibido &nbsp;&nbsp; <strong>B/. {{ $pago->monto }}</strong></h4>
+              </div>
+              <br>
+          </div>
+      </div>  
+      
+      <br>
+      
+      <div class="row">
+        <div class="col-md-12">
+           <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $un->codigofull }}</strong>, la suma de <strong>B/.{{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trans_tipo }}</strong> no <strong>{{ $pago->trans_no }}</strong> del <strong>{{ $pago->nombre }}</strong> el dia <strong>{{ $pago->f_pago }}</strong>, en concepto de pago por servicios de mantenimiento del {{ $ph->nombre }}.</p>
+           <p>Acontinuacion se deglosa la forma en que se contabilizo su pago:</p>
+        </div>
+      </div>
+      
+      <br>
+      
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+              <table class="table table-condensed">
+                  <thead>
+                    <strong><tr>
+                        <th col width="40px">No</th>
+                        <th>Detalle</th>
+                        <th col width="90px" class="text-center">Monto</th>                     
+                    </tr></strong>
+                  </thead>
+                  <tbody>
+                    @foreach ($detalles as $detalle)
+                      <tr>
+                          <td>{{ $detalle->no }}</td>
+                          <td>{{ $detalle->detalle }}</td>
+                          <td col width="90px" align="right">{{ $detalle->monto }}</td>                      
+                      </tr>
+                    @endforeach
+                  </tbody>
+              </table>    
+          </div>
+        </div><!-- end row -->
+
+          <div class="row">
+            <div class="col-md-3 col-md-offset-9">
+              <p class="text-right"><strong>Total B/. {{ $total }}</strong></p>
+            </div>
+          </div>
+          
+          <br>
+          
+          <div class="row">
+            <div class="col-md-12">
+              <p class="text-justify">{{ $nota }}</p>
+            </div>
+          </div>          
+      </div>
+      <br>      
+      
+      <HR WIDTH=95% ALIGN=CENTER COLOR="BLACK">
+
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-center">© Copyright 2016-2025 ctmaster.net - All Rights Reserved</p>
+        </div>
+      </div>         
+    </div> <!-- end container -->
+  </body>
+</html>

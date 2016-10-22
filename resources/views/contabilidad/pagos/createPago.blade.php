@@ -68,7 +68,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Tipo de transaccion</label>
 											<div class="col-md-9">
-											{{ Form::select('trans_tipo', ['Seleccione el Tipo de Transaccion ...', 'Cheque', 'Transferencia'], 0, ['class' => 'form-control']) }}
+											{{ Form::select('trans_tipo', ['Seleccione el Tipo de Transaccion ...', 'Cheque', 'Transferencia', 'ACH', 'Banca en línea', 'Efectivo'], 0, ['class' => 'form-control']) }}
 											{!! $errors->first('trans_tipo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	

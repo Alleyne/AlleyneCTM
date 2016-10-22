@@ -192,7 +192,7 @@ class SeccionesController extends Controller {
 				$t1->recargo               = Input::get('recargo');
 				$t1->descuento             = Input::get('descuento');								
 				$t1->d_registra_cmpc       = Input::get('d_registra_cmpc');
-				$t1->d_gracias             = Input::get('d_gracias');
+				$t1->d_vence             = Input::get('d_vence');
 				$t1->m_descuento           = Input::get('m_descuento');
 				$t1->area                  = Input::get('area');
 				$t1->seccione_id           = $dato->id;
@@ -211,7 +211,7 @@ class SeccionesController extends Controller {
 							'recargo= '.   	  	  $t1->recargo. ', '.
 							'descuento= '.   	  $t1->descuento. ', '.
 							'd_registra_cmpc= '.  $t1->d_registra_cmpc. ', '.
-							'd_gracias= '.   	  $t1->d_gracias. ', '.
+							'd_vence= '.   	  $t1->d_vence. ', '.
 							'm_descuento= '.   	  $t1->m_descuento. ', '.
 							'area= '.   	      $t1->area. ', '. 
 							'seccione_id= '.   	  $t1->seccione_id;			
@@ -229,7 +229,7 @@ class SeccionesController extends Controller {
 				$t2->recargo               = Input::get('recargo');
 				$t2->descuento             = Input::get('descuento');	
 				$t2->d_registra_cmpc       = Input::get('d_registra_cmpc');
-				$t2->d_gracias             = Input::get('d_gracias');
+				$t2->d_vence             = Input::get('d_vence');
 				$t2->m_descuento           = Input::get('m_descuento');
 				$t2->area                  = Input::get('area');
 				$t2->seccione_id           = $dato->id;
@@ -249,7 +249,7 @@ class SeccionesController extends Controller {
 							'descuento= '.   	  $t2->descuento. ', '.
 							'cuota_mant= '.   	  $t2->cuota_mant. ', '.
 							'd_registra_cmpc= '.  $t2->d_registra_cmpc. ', '.
-							'd_gracias= '.   	  $t2->d_gracias. ', '.
+							'd_vence= '.   	  $t2->d_vence. ', '.
 							'm_descuento= '.   	  $t2->m_descuento. ', '.
 							'area= '.   	      $t2->area. ', '. 
 							'seccione_id= '.   	  $t2->seccione_id;			
@@ -265,7 +265,7 @@ class SeccionesController extends Controller {
 				$t3->recargo                = Input::get('recargo');
 				$t3->descuento              = Input::get('descuento');	
 				$t3->d_registra_cmpc        = Input::get('d_registra_cmpc');
-				$t3->d_gracias              = Input::get('d_gracias');
+				$t3->d_vence              = Input::get('d_vence');
 				$t3->m_descuento            = Input::get('m_descuento');
 				$t3->area                   = Input::get('area');
 				$t3->seccione_id            = $dato->id;
@@ -283,7 +283,7 @@ class SeccionesController extends Controller {
 							'recargo= '.   	  	  $t3->recargo. ', '.
 							'descuento= '.   	  $t3->descuento. ', '.
 							'd_registra_cmpc= '.  $t3->d_registra_cmpc. ', '.
-							'd_gracias= '.   	  $t3->d_gracias. ', '.
+							'd_vence= '.   	  $t3->d_vence. ', '.
 							'm_descuento= '.   	  $t3->m_descuento. ', '.
 							'area= '.   	      $t3->area. ', '. 
 							'seccione_id= '.   	  $t3->seccione_id;			
@@ -300,7 +300,7 @@ class SeccionesController extends Controller {
 				$t4->recargo                = Input::get('recargo');
 				$t4->descuento              = Input::get('descuento');	
 				$t4->d_registra_cmpc        = Input::get('d_registra_cmpc');
-				$t4->d_gracias              = Input::get('d_gracias');
+				$t4->d_vence              = Input::get('d_vence');
 				$t4->m_descuento            = Input::get('m_descuento');
 				$t4->area                   = Input::get('area');
 				$t4->seccione_id            = $dato->id;
@@ -319,7 +319,7 @@ class SeccionesController extends Controller {
 							'recargo= '.   	  	  $t4->recargo. ', '.
 							'descuento= '.   	  $t4->descuento. ', '.
 							'd_registra_cmpc= '.  $t4->d_registra_cmpc. ', '.
-							'd_gracias= '.   	  $t4->d_gracias. ', '.
+							'd_vence= '.   	  $t4->d_vence. ', '.
 							'm_descuento= '.   	  $t4->m_descuento. ', '.
 							'area= '.   	      $t4->area. ', '. 
 							'seccione_id= '.   	  $t4->seccione_id;			
@@ -425,7 +425,8 @@ class SeccionesController extends Controller {
 				$t1->recargo               = Input::get('recargo');
 				$t1->descuento             = Input::get('descuento');	
 				$t1->d_registra_cmpc       = Input::get('d_registra_cmpc');
-				$t1->d_gracias       	   = Input::get('d_gracias');
+				$t1->d_vence       	   	   = Input::get('d_vence');
+				$t1->m_vence       	   	   = Input::get('m_vence');
 				$t1->m_descuento       	   = Input::get('m_descuento');
 				$t1->area                  = Input::get('area');
 				$t1->save();			
@@ -443,7 +444,8 @@ class SeccionesController extends Controller {
 							'recargo= '.   	  	  $t1->recargo. ', '.
 							'descuento= '.   	  $t1->descuento. ', '.
 							'd_registra_cmpc= '.  $t1->d_registra_cmpc. ', '.
-							'd_gracias= '.  	  $t1->d_gracias. ', '.
+							'd_vence= '.  	  	  $t1->d_vence. ', '.
+							'm_vence= '.  	  	  $t1->m_vence. ', '.
 							'm_descuento= '.  	  $t1->m_descuento. ', '.
 							'area= '.   	      $t1->area;
 			}
@@ -460,7 +462,8 @@ class SeccionesController extends Controller {
 				$t2->recargo               = Input::get('recargo');
 				$t2->descuento             = Input::get('descuento');	
 				$t2->d_registra_cmpc       = Input::get('d_registra_cmpc');
-				$t2->d_gracias       	   = Input::get('d_gracias');
+				$t2->d_vence       	   	   = Input::get('d_vence');
+				$t2->m_vence       	   	   = Input::get('m_vence');
 				$t2->m_descuento       	   = Input::get('m_descuento');
 				$t2->area                  = Input::get('area');
 				$t2->save();
@@ -478,8 +481,9 @@ class SeccionesController extends Controller {
 							'recargo= '.   	  	  $t2->recargo. ', '.
 							'descuento= '.   	  $t2->descuento. ', '.
 							'd_registra_cmpc= '.  $t2->d_registra_cmpc. ', '.
-							'd_gracias= '.  	  $t2->d_gracias. ', '.
-							'm_descuento= '.  	  $t1->m_descuento. ', '.
+							'd_vence= '.  	  	  $t2->d_vence. ', '.
+							'm_vence= '.  	  	  $t2->m_vence. ', '.
+							'm_descuento= '.  	  $t2->m_descuento. ', '.
 							'area= '.   	      $t2->area;  
 			}
 
@@ -493,7 +497,8 @@ class SeccionesController extends Controller {
 				$t3->recargo                = Input::get('recargo');
 				$t3->descuento              = Input::get('descuento');	
 				$t3->d_registra_cmpc        = Input::get('d_registra_cmpc');
-				$t3->d_gracias       	    = Input::get('d_gracias');
+				$t3->d_vence       	   	    = Input::get('d_vence');
+				$t3->m_vence       	   	    = Input::get('m_vence');
 				$t3->m_descuento       	    = Input::get('m_descuento');
 				$t3->area                   = Input::get('area');
 				$t3->save();
@@ -509,8 +514,9 @@ class SeccionesController extends Controller {
 							'recargo= '.   	  	  $t3->recargo. ', '.
 							'descuento= '.   	  $t3->descuento. ', '.
 							'd_registra_cmpc= '.  $t3->d_registra_cmpc. ', '.
-							'd_gracias= '.  	  $t3->d_gracias. ', '.
-							'm_descuento= '.  	  $t1->m_descuento. ', '.
+							'd_vence= '.  	      $t3->d_vence. ', '.
+							'm_vence= '.  	  	  $t3->m_vence. ', '.
+							'm_descuento= '.  	  $t3->m_descuento. ', '.
 							'area= '.   	      $t3->area; 
 			}
 
@@ -525,7 +531,8 @@ class SeccionesController extends Controller {
 				$t4->recargo                = Input::get('recargo');
 				$t4->descuento              = Input::get('descuento');	
 				$t4->d_registra_cmpc        = Input::get('d_registra_cmpc');
-				$t4->d_gracias       	    = Input::get('d_gracias');
+				$t4->d_vence       	   	    = Input::get('d_vence');
+				$t4->m_vence       	   	    = Input::get('m_vence');
 				$t4->m_descuento       	    = Input::get('m_descuento');
 				$t4->area                   = Input::get('area');
 				$t4->save();
@@ -539,11 +546,12 @@ class SeccionesController extends Controller {
 							'agua_caliente= '.    $t4->agua_caliente. ', '.
 							'estacionamientos= '. $t4->estacionamientos. ', '.
 							'cuota_mant= '.   	  $t4->cuota_mant. ', '.
-							'recargo= '.   	  	  $t4>recargo. ', '.
+							'recargo= '.   	  	  $t4->recargo. ', '.
 							'descuento= '.   	  $t4->descuento. ', '.
 							'd_registra_cmpc= '.  $t4->d_registra_cmpc. ', '.
-							'd_gracias= '.  	  $t4->d_gracias. ', '.
-							'm_descuento= '.  	  $t1->m_descuento. ', '.
+							'd_vence= '.  	      $t4->d_vence. ', '.
+							'm_vence= '.  	  	  $t4->m_vence. ', '.
+							'm_descuento= '.  	  $t4->m_descuento. ', '.
 							'area= '.   	      $t4->area; 
 			}			
 

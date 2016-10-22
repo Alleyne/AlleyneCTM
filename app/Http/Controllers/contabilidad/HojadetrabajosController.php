@@ -498,32 +498,25 @@ class HojadetrabajosController extends Controller {
         if (($periodoReal->ne($fecha)) && !$newPeriodo) {
             
             // si no existe entonces crea un nuevo periodo contable
-            $fecha= $fecha->addMonth();
-            Sity::periodo($fecha);
+            //$fecha= $fecha->addMonth();
+            Sity::periodo($fechaNuevoPeriodo);
             
-            $year= Carbon::parse($fecha)->year;
-            $month= Carbon::parse($fecha)->month;
+            $year= $fechaNuevoPeriodo->year;
+            $month= $fechaNuevoPeriodo->month;
             
             // crea facturacion para el nuevo periodo contable
             // facturacion para las secciones que generan las ordenes de cobro los dias 1
             Sity::facturar(Carbon::createFromDate($year, $month, 1));
+            
             // facturacion para las secciones que generan las ordenes de cobro los dias 16
             Sity::facturar(Carbon::createFromDate($year, $month, 16));
 
-            // penaliza todas aquellas unidades cuya orden de cobro se genera los dias primero de cada mes
-            $secs= Secapto::select('d_registra_cmpc','d_gracias')->distinct()->orderBy('d_gracias')->get();
+            // penaliza todas aquellas unidades cuya orden de cobro se genera los dias primero o diesiceis de cada mes
+            $secs= Secapto::select('d_registra_cmpc')->orderBy('d_registra_cmpc')->distinct()->get();
             //dd($secs->toArray());
 
             foreach ($secs as $sec) {
-                $f_vence = clone $fecha; // mantiene el valor original de la variable $fecha
-                if ($sec->d_registra_cmpc==1) {
-                    //dump($sec->d_gracias, $f_vence->addDays($sec->d_gracias-1));
-                    Sity::penalizar($f_vence->addDays($sec->d_gracias-1), $sec->d_registra_cmpc);
-                
-                } elseif ($sec->d_registra_cmpc==16) {
-                    //dump($sec->d_gracias, $f_vence->addDays(14+$sec->d_gracias));
-                    Sity::penalizar($f_vence->addDays(15+$sec->d_gracias-1), $sec->d_registra_cmpc);                
-                }
+                Sity::penalizar($fechaNuevoPeriodo, $sec->d_registra_cmpc);
             }
 
             // Registra en bitacoras
@@ -535,17 +528,14 @@ class HojadetrabajosController extends Controller {
         $fnext= clone $fecha;
         $fnext= $fnext->addMonth();
 
-        // inicializa las cuentas permanentes en periodo posterior
-        Sity::inicializaCuentasPerm($pcontable_id, $fnext);
-
-        // calcula la utilidad del periodo contable antes de cerrarlo y se la pasa al periodo posterior
-        Sity::pasarUtilidad($pcontable_id, $periodo, $fnext);
-
         // almacena datos del periodo antes de cerrarlo y las almacena en la tabla Hts (hoja de trabajo historica)
         Sity::migraDatosHts($pcontable_id);
 
         // cierra todas la cuentas nominales o temporales por finalizacion de periodo contable
         Sity::cierraCuentasTemp($pcontable_id, $fecha);
+        
+        // inicializa las cuentas permanentes en periodo posterior
+        Sity::inicializaCuentasPerm($pcontable_id, $fnext);
 
         // cierra el periodo contable
         $pc= Pcontable::find($pcontable_id);
