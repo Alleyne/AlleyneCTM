@@ -303,6 +303,9 @@ Route::get('/truncate-all', function () {
 	return 'tablas limpias';
 });
 
+
+
+
 Route::get('/test', function () {
 /***********************************************  
   $diaFact= 1;
@@ -368,7 +371,8 @@ Route::get('/test', function () {
   $m_vence= 10; 
   $d_vence= 23;
   	+"date": "2016-11-23 00:00:00.000000"
-**************************************************/  
+  
+**************************************************/
 
   $f_vence= Sity::fechaLimiteRecargo($diaFact, $f_ocobro, $m_vence, $d_vence);
   dd('fecha limite para recargo: ',$f_vence);

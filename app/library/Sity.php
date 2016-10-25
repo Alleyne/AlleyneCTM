@@ -97,6 +97,7 @@ class Sity {
 
     if ($datos) {
       foreach ($datos as $dato) {
+        
         $importe= round(floatval($dato->importe),2);
         $montoRecibido= round(floatval($montoRecibido),2);
         $saldocpa= round(floatval($saldocpa),2);
@@ -118,7 +119,7 @@ class Sity {
             Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, Catalogo::find(1)->nombre.' unidad '.$dato->ocobro, $importe, $un_id, $pago_id, Null, $dato->id);
 
             // Registra en Detallepago para generar un renglon en el recibo
-            Sity::registraDetallepago($periodo, $dato->ocobro, 'Paga cuota de mantenimiento de '. $dato->mes_anio, $dato->id, $importe, $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
+            Sity::registraDetallepago($periodo, $dato->ocobro, 'Paga cuota de mantenimiento de '. $dato->mes_anio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
 
             // Actualiza el nuevo monto disponible para continuar pagando
             $montoRecibido= $montoRecibido- $importe;
@@ -213,7 +214,7 @@ class Sity {
             Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, Catalogo::find(1)->nombre.' unidad '.$dato->ocobro, $montoRecibido, $un_id, $pago_id, Null, $dato->id);
            
             // registra en Detallepago para generar un renglon en el recibo
-            Sity::registraDetallepago($periodo, $dato->ocobro, 'Paga cuota de mantenimiento de '. $dato->mes_anio, $dato->id, $importe, $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
+            Sity::registraDetallepago($periodo, $dato->ocobro, 'Paga cuota de mantenimiento de '. $dato->mes_anio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
 
             // registra una disminucion en la cuenta de Pagos anticipados
             Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, Catalogo::find(5)->nombre.' unidad '.substr($dato->ocobro, 0, 9), ($importe - $montoRecibido), $un_id, $pago_id);
@@ -247,11 +248,11 @@ class Sity {
    *****************************************************************************************************/
   public static function cobraRecargos($periodo, $un_id, $montoRecibido, $pago_id, $f_pago)
   {   
-    
+    //dd($periodo, $un_id, $montoRecibido, $pago_id, $f_pago);
     // Encuentra todos los recargos por pagar
-    $datos = Ctdasm::where('pcontable_id','<', $periodo)
+    $datos = Ctdasm::where('pcontable_id','<=', $periodo)
                    ->where('un_id', $un_id)
-                   ->where('f_vencimiento','<', $f_pago)
+                   ->whereDate('f_vencimiento','<', $f_pago)
                    ->where('recargo_siono', 1)
                    ->where('recargo_pagado', 0)
                    ->where('pagada', 1)
@@ -345,7 +346,7 @@ class Sity {
             // salva un nuevo registro que representa una linea del recibo
             $dto = new Detallepago;
             $dto->pcontable_id = $periodo;
-            $dto->detalle = 'Estimado propietario, se descontó  de su cuenta de pagos anticipados un saldo de B/. '.number_format(($recargo-$montoRecibido),2). ' para completar el pago de recargo de '. $dato->mes_anio.' quedando en saldo B/.'.number_format($saldocpa,2);
+            $dto->detalle = 'Estimado propietario, se descontó de su cuenta de pagos anticipados un saldo de B/. '.number_format(($recargo-$montoRecibido),2). ' para completar el pago de recargo de '. $dato->mes_anio.' quedando en saldo B/.'.number_format($saldocpa,2);
             $dto->monto = $recargo;
             $dto->un_id = $un_id;
             $dto->tipo = 3;
@@ -1736,7 +1737,7 @@ public static function facturar($fecha)
       // parametros regulares
       $un_id= $un->id;
       $cuota_mant= floatval($secapto->cuota_mant);
-      $descuento= (floatval($secapto->cuota_mant) * floatval($secapto->descuento))/100;
+      $descuento= floatval($secapto->descuento);
       $ocobro= $un->codigo.' '.Sity::getMonthName($month).$day.'-'.$year;
       $descuento_siono= 0;
       $pagada= 0;
@@ -1770,7 +1771,7 @@ public static function facturar($fecha)
       $dato->detalle          = 'Cuota de mantenimiento Unidad No ' . $un->id;
       $dato->importe          = $cuota_mant;
       $dato->f_vencimiento    = Sity::fechaLimiteRecargo($secapto->d_registra_cmpc, $fecha->toDateString(), $secapto->m_vence, $secapto->d_vence);
-      $dato->recargo          = ($secapto->cuota_mant * $secapto->recargo)/100;
+      $dato->recargo          = $secapto->recargo;
       $dato->descuento        = $descuento;             
       $dato->f_descuento      = Carbon::createFromDate($year, $month, $day)->subMonths($secapto->m_descuento);   
       $dato->bloque_id        = $secapto->seccione->bloque_id;
@@ -1893,16 +1894,16 @@ public static function fechaLimiteRecargo($diaFact, $f_ocobro, $m_vence, $d_venc
 }
 
 /****************************************************************************************
-* Esta function penaliza a todo aquella unidad que no haga su pago a tiempo
+* Esta function penaliza en grupo al cierre de periodo
+* @param  carbon  $fecha       - fecha de inicio de periodo
 *****************************************************************************************/
-public static function penalizar($fecha, $dia)
+public static function penalizarTipo1($fecha)
 {
   // clona $fecha para mantener su valor original
-  $f_finalDelMes = clone $fecha;
-  
-  // encuentra las fechas de vencimiento del periodo
-  $vfechas= Ctdasm::whereDate('f_vencimiento','<', $f_finalDelMes->endOfMonth()->toDateString())
-              ->where('diafact', $dia)
+  $f_limite = clone $fecha;
+   
+  // encuentra todas las fechas de vencimiento que existen dentro de un periodo
+  $vfechas= Ctdasm::whereDate('f_vencimiento','<', $f_limite->endOfMonth()->toDateString())
               ->where('pagada', 0)
               ->where('recargo_siono', 0)
               ->select('f_vencimiento')
@@ -1910,13 +1911,13 @@ public static function penalizar($fecha, $dia)
               ->distinct()
               ->get();
   //dd($vfechas->toArray());
-
+  
   // si encuentra alguna fecha, quiere decir que hay unidades a penalizar        
   if ($vfechas->count()>0) {
     foreach ($vfechas as $vfecha) {
       
       // determina a que periodo corresponde la fecha de vencimiento 
-      $f_vencimiento = Carbon::parse($vfecha->f_vencimiento);
+      $f_vencimiento= Carbon::parse($vfecha->f_vencimiento);
       $month= $f_vencimiento->month;    
       $year= $f_vencimiento->year;    
     
@@ -1926,87 +1927,309 @@ public static function penalizar($fecha, $dia)
 
       // encuentra todas aquella unidades que no han sido pagadas y que tienen fecha de pago vencida
       $datos= Ctdasm::where('f_vencimiento', $vfecha->f_vencimiento)
-                  ->where('diafact', $dia)
                   ->where('pagada', 0)
                   ->where('recargo_siono', 0)
                   ->get();
-      //dd($fecha, $datos->toArray());
+      //dd($datos->toArray());
+
+      $i= 1;   
+      
+      // inicializa variable para almacenar el total de recargos
+      $totalRecargos= 0;       
+
+      if ($datos->count()) {
+        foreach ($datos as $dato) {
+          $dto = Ctdasm::find($dato->id);
+          $dto->recargo_siono= 1;
+          $dto->save();  
+
+          // acumula el total de recargos
+          $totalRecargos = $totalRecargos + $dato->recargo;
+          
+          // registra 'Recargo por cobrar en cuota de mantenimiento' 1130.00
+          Sity::registraEnCuentas(
+                $periodo,
+                'mas',
+                1,
+                2, //'1130.00',
+                $f_limite->endOfMonth()->toDateString(),
+                'Recargo en cuota de mantenimiento por cobrar unidad '.$dato->ocobro,
+                $dato->recargo,
+                $dato->un_id
+               );
+
+          // registra 'Ingreso por cuota de mantenimiento' 4130.00
+          Sity::registraEnCuentas(
+                $periodo,
+                'mas',
+                4,
+                4, //'4130.00',
+                $f_limite->endOfMonth()->toDateString(),
+                '   Ingreso por recargo en cuota de mantenimiento unidad '.$dato->ocobro,
+                $dato->recargo,
+                $dato->un_id
+               );
+
+          // registra resumen de la facturacion mensual en Ctdiario principal 
+          if ($i==1) {
+            // registra en Ctdiario principal
+            $dto = new Ctdiario;
+            $dto->pcontable_id  = $periodo;
+            $dto->fecha   = $f_limite->endOfMonth()->toDateString();
+            $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
+            $dto->debito  = $dato->recargo; 
+            $dto->save(); 
+          
+          } else {
+              // registra en Ctdiario principal
+              $dto = new Ctdiario;
+              $dto->pcontable_id  = $periodo;
+              $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
+              $dto->debito  = $dato->recargo;
+              $dto->save(); 
+          }
+          $i++;
+        } // end foreach $datos 
+        
+        // registra en Ctdiario principal
+        $dto = new Ctdiario;
+        $dto->pcontable_id = $periodo;
+        $dto->detalle = '   '.Catalogo::find(4)->nombre;
+        $dto->credito  = $totalRecargos;
+        $dto->save(); 
+
+        // registra en Ctdiario principal
+        $dto = new Ctdiario;
+        $dto->pcontable_id = $periodo;
+        $dto->detalle = 'Para registrar resumen de recargos en cuotas de mantenimiento por cobrar vencidas a '.Date::parse($dato->f_vencimiento)->toFormattedDateString();
+        $dto->save();     
+       
+        $totalRecargos= 0;
+      } // end of if
+    } // end foreach $vfechas
+  } // end of if
+} // end of function
+
+/****************************************************************************************
+* Esta function penaliza individual por fecha de pago
+* @param  carbon  $f_pago      - fecha en que se efectuo el pago
+* @param  string  $un_id       - unidad que se desea penalizar individualmente
+*****************************************************************************************/
+public static function penalizarTipo2($f_pago, $un_id)
+{
+  // clona $fecha para mantener su valor original
+  $f_limite = clone $f_pago;
+
+  // penaliza individualmente a una determinada unidad
+  $datos= Ctdasm::where('un_id', $un_id)
+              ->whereDate('f_vencimiento','<', $f_limite)
+              ->where('pagada', 0)
+              ->where('recargo_siono', 0)
+              ->get();
+  //dd($datos->toArray()); 
+
+  $i= 1;   
+  
+  // inicializa variable para almacenar el total de recargos
+  $totalRecargos= 0;       
+
+  if ($datos->count()) {
+    foreach ($datos as $dato) {
+      // determina a que periodo corresponde la fecha de vencimiento 
+      $f_vencimiento= Carbon::parse($dato->f_vencimiento)->addDay();
+      $month= $f_vencimiento->month;    
+      $year= $f_vencimiento->year;    
+
+      $pdo= Sity::getMonthName($month).'-'.$year;
+      $periodo= Pcontable::where('periodo', $pdo)->first()->id;
+      //dd($periodo);       
+
+      $dto = Ctdasm::find($dato->id);
+      $dto->recargo_siono= 1;
+      $dto->save();  
+
+      // acumula el total de recargos
+      $totalRecargos = $totalRecargos + $dato->recargo;
+      
+      // registra 'Recargo por cobrar en cuota de mantenimiento' 1130.00
+      Sity::registraEnCuentas(
+            $periodo,
+            'mas',
+            1,
+            2, //'1130.00'
+            $f_vencimiento,
+            'Recargo en cuota de mantenimiento por cobrar unidad '.$dato->ocobro,
+            $dato->recargo,
+            $dato->un_id
+           );
+
+      // registra 'Ingreso por cuota de mantenimiento' 4130.00
+      Sity::registraEnCuentas(
+            $periodo,
+            'mas',
+            4,
+            4, //'4130.00'
+            $f_vencimiento,
+            '   Ingreso por recargo en cuota de mantenimiento unidad '.$dato->ocobro,
+            $dato->recargo,
+            $dato->un_id
+           );
+
+      // registra resumen de la facturacion mensual en Ctdiario principal 
+      if ($i==1) {
+        // registra en Ctdiario principal
+        $dto = new Ctdiario;
+        $dto->pcontable_id  = $periodo;
+        $dto->fecha   = $f_vencimiento;
+        $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
+        $dto->debito  = $dato->recargo; 
+        $dto->save(); 
+      
+      } else {
+          // registra en Ctdiario principal
+          $dto = new Ctdiario;
+          $dto->pcontable_id  = $periodo;
+          $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
+          $dto->debito  = $dato->recargo;
+          $dto->save(); 
+      }
+      $i++;
+    } // end foreach $datos 
+    
+    // registra en Ctdiario principal
+    $dto = new Ctdiario;
+    $dto->pcontable_id = $periodo;
+    $dto->detalle = '   '.Catalogo::find(4)->nombre;
+    $dto->credito  = $totalRecargos;
+    $dto->save(); 
+
+    // registra en Ctdiario principal
+    $dto = new Ctdiario;
+    $dto->pcontable_id = $periodo;
+    $dto->detalle = 'Para registrar resumen de recargos en cuotas de mantenimiento por cobrar vencidas a '.Date::parse($dato->f_vencimiento)->toFormattedDateString();
+    $dto->save();     
+   
+    $totalRecargos= 0;
+  } // end of if
+} // end of function
+
+/****************************************************************************************
+* Esta function penaliza en grupo cada dia desde el cron
+* @param  carbon  $today       - fecha del dia de hoy
+*****************************************************************************************/
+public static function penalizarTipo3($today)
+{
+  // clona $fecha para mantener su valor original
+  $f_limite = clone $today;
+   
+  // encuentra las fechas de vencimiento del periodo al final del mes
+  $vfechas= Ctdasm::whereDate('f_vencimiento','<', $today)
+              ->where('pagada', 0)
+              ->where('recargo_siono', 0)
+              ->select('f_vencimiento')
+              ->orderBy('f_vencimiento')              
+              ->distinct()
+              ->get();
+  //dd($vfechas->toArray());
+  
+  // si encuentra alguna fecha, quiere decir que hay unidades a penalizar        
+  if ($vfechas->count()>0) {
+    foreach ($vfechas as $vfecha) {
+      
+      // determina a que periodo corresponde la fecha de vencimiento 
+      $f_vencimiento= Carbon::parse($vfecha->f_vencimiento);
+      $month= $f_vencimiento->month;    
+      $year= $f_vencimiento->year;    
+    
+      $pdo= Sity::getMonthName($month).'-'.$year;
+      $periodo= Pcontable::where('periodo', $pdo)->first()->id;
+      //dd($periodo);
+
+      // encuentra todas aquella unidades que no han sido pagadas y que tienen fecha de pago vencida
+      $datos= Ctdasm::where('f_vencimiento', $vfecha->f_vencimiento)
+                  ->where('pagada', 0)
+                  ->where('recargo_siono', 0)
+                  ->get();
+      //dd($datos->toArray());
       
       $i= 1;   
       
       // inicializa variable para almacenar el total de recargos
       $totalRecargos= 0;       
 
-      foreach ($datos as $dato) {
-        $dato = Ctdasm::find($dato->id);
-        $dato->recargo_siono= 1;
-        $dato->save();  
-        
-        // acumula el total de recargos
-        $totalRecargos = $totalRecargos + $dato->recargo;
-        
-        // registra 'Recargo por cobrar en cuota de mantenimiento' 1130.00
-        Sity::registraEnCuentas(
-              $periodo,
-              'mas',
-              1,
-              2, //'1130.00',
-              $fecha,
-              'Recargo en cuota de mantenimiento por cobrar unidad '.$dato->ocobro,
-              $dato->recargo,
-              $dato->un_id
-             );
+      if ($datos->count()) {
+        foreach ($datos as $dato) {
+          $dto = Ctdasm::find($dato->id);
+          $dto->recargo_siono= 1;
+          $dto->save();  
 
-        // registra 'Ingreso por cuota de mantenimiento' 4130.00
-        Sity::registraEnCuentas(
-              $periodo,
-              'mas',
-              4,
-              4, //'4130.00',
-              $fecha,
-              '   Ingreso por recargo en cuota de mantenimiento unidad '.$dato->ocobro,
-              $dato->recargo,
-              $dato->un_id
-             );
-        
-        // registra resumen de la facturacion mensual en Ctdiario principal 
-        if ($i==1) {
-          // registra en Ctdiario principal
-          $dto = new Ctdiario;
-          $dto->pcontable_id  = $periodo;
-          $dto->fecha   = $fecha;
-          $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
-          $dto->debito  = $dato->recargo; 
-          $dto->save(); 
-        
-        } else {
+          // acumula el total de recargos
+          $totalRecargos = $totalRecargos + $dato->recargo;
+          
+          // registra 'Recargo por cobrar en cuota de mantenimiento' 1130.00
+          Sity::registraEnCuentas(
+                $periodo,
+                'mas',
+                1,
+                2, //'1130.00',
+                $today,
+                'Recargo en cuota de mantenimiento por cobrar unidad '.$dato->ocobro,
+                $dato->recargo,
+                $dato->un_id
+               );
+
+          // registra 'Ingreso por cuota de mantenimiento' 4130.00
+          Sity::registraEnCuentas(
+                $periodo,
+                'mas',
+                4,
+                4, //'4130.00',
+                $today,
+                '   Ingreso por recargo en cuota de mantenimiento unidad '.$dato->ocobro,
+                $dato->recargo,
+                $dato->un_id
+               );
+
+          // registra resumen de la facturacion mensual en Ctdiario principal 
+          if ($i==1) {
             // registra en Ctdiario principal
             $dto = new Ctdiario;
             $dto->pcontable_id  = $periodo;
+            $dto->fecha   = $today;
             $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
-            $dto->debito  = $dato->recargo;
+            $dto->debito  = $dato->recargo; 
             $dto->save(); 
-        }
-        $i++;
-      } // end foreach $datos 
-      
-      // registra en Ctdiario principal
-      $dto = new Ctdiario;
-      $dto->pcontable_id = $periodo;
-      $dto->detalle = '   '.Catalogo::find(4)->nombre;
-      $dto->credito  = $totalRecargos;
-      $dto->save(); 
+          
+          } else {
+              // registra en Ctdiario principal
+              $dto = new Ctdiario;
+              $dto->pcontable_id  = $periodo;
+              $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
+              $dto->debito  = $dato->recargo;
+              $dto->save(); 
+          }
+          $i++;
+        } // end foreach $datos 
+        
+        // registra en Ctdiario principal
+        $dto = new Ctdiario;
+        $dto->pcontable_id = $periodo;
+        $dto->detalle = '   '.Catalogo::find(4)->nombre;
+        $dto->credito  = $totalRecargos;
+        $dto->save(); 
 
-      // registra en Ctdiario principal
-      $dto = new Ctdiario;
-      $dto->pcontable_id = $periodo;
-      $dto->detalle = 'Para registrar resumen de recargos en cuotas de mantenimiento por cobrar vencidas a '.Date::parse($dato->f_vencimiento)->toFormattedDateString();
-      $dto->save();     
-      
-      $totalRecargos= 0;
+        // registra en Ctdiario principal
+        $dto = new Ctdiario;
+        $dto->pcontable_id = $periodo;
+        $dto->detalle = 'Para registrar resumen de recargos en cuotas de mantenimiento por cobrar vencidas a '.Date::parse($dato->f_vencimiento)->toFormattedDateString();
+        $dto->save();     
+       
+        $totalRecargos= 0;
+      } // end of if
     } // end foreach $vfechas
   } // end of if
 } // end of function
+
 
 /****************************************************************************************
 * Esta function inicializa en el nuevo periodo todas las cuentas temporales

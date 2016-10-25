@@ -11,6 +11,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\autofacturar::class,
+        Commands\penalizar::class,  
     ];
 
     /**
@@ -23,5 +24,6 @@ class Kernel extends ConsoleKernel
     {
         //$schedule->command('ctmaster:autofacturar')->everyMinute()->timezone('America/Panama');
         $schedule->command('ctmaster:autofacturar')->everyFiveMinutes()->timezone('America/Panama');
+        $schedule->command('ctmaster:penalizar')->daily()->timezone('America/Panama');
     }
 }

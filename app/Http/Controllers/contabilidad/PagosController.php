@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Auth;
 use App\library\Sity;
-use Redirect, Session;
+use Redirect, Session, DB;
 use Grupo;
 use Validator;
 use Carbon\Carbon;
@@ -82,103 +82,119 @@ class PagosController extends Controller {
      ************************************************************************************/	
 	public function store()
 	{
-        //dd(Input::all());
-        $input = Input::all();
-
-        $f_final=Carbon::today()->addDay(1);
-
-        $rules = array(
-            'banco_id'   => 'required|not_in:0',
-            'trans_tipo' => 'required|not_in:0',
-            'trans_no'   => 'Required|Numeric|digits_between:1,10|min:1',
-            'monto'   	 => 'required|Numeric|min:0.01',
-            'f_pago'   	 => 'required|Date|Before:' . $f_final,
-            'descripcion'=> 'required',
-            'un_id'		 => 'required'            
-        );
-    
-      	$messages = [
-            'required'		=> 'Informacion requerida!',
-            'before'		=> 'La fecha del pago debe ser anterior o igual a fecha del dia de hoy!',
-        	'digits_between'=> 'El numero de la transaccion debe tener de uno a diez digitos!',
-        	'numeric'		=> 'Solo se admiten valores numericos!',
-        	'date'			=> 'Fecha invalida!',
-        	'min'			=> 'El monto del pago debe ser mayor que cero!'
-        ];         
-        //dd($rules, $messages);
         
-        $validation = \Validator::make($input, $rules, $messages);      	
+		DB::beginTransaction();
+		try {
+	        //dd(Input::all());
+	        $input = Input::all();
 
-		if ($validation->passes())
-		{
+	        $f_final=Carbon::today()->addDay(1);
+
+	        $rules = array(
+	            'banco_id'   => 'required|not_in:0',
+	            'trans_tipo' => 'required|not_in:0',
+	            'trans_no'   => 'Required|Numeric|digits_between:1,10|min:1',
+	            'monto'   	 => 'required|Numeric|min:0.01',
+	            'f_pago'   	 => 'required|Date|Before:' . $f_final,
+	            'descripcion'=> 'required',
+	            'un_id'		 => 'required'            
+	        );
+	    
+	      	$messages = [
+	            'required'		=> 'Informacion requerida!',
+	            'before'		=> 'La fecha del pago debe ser anterior o igual a fecha del dia de hoy!',
+	        	'digits_between'=> 'El numero de la transaccion debe tener de uno a diez digitos!',
+	        	'numeric'		=> 'Solo se admiten valores numericos!',
+	        	'date'			=> 'Fecha invalida!',
+	        	'min'			=> 'El monto del pago debe ser mayor que cero!'
+	        ];         
+	        //dd($rules, $messages);
+	        
+	        $validation = \Validator::make($input, $rules, $messages);      	
+
+			if ($validation->passes())
+			{
+				
+			    // calcula el periodo al que corresponde la fecha de pago
+			    $year= Carbon::parse(Input::get('f_pago'))->year;
+			    $month= Carbon::parse(Input::get('f_pago'))->month;
+			    $pdo= Sity::getMonthName($month).'-'.$year;    
+			    
+			    // encuentra el periodo mas antiguo abierto
+				$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+			    //dd($pdo, $periodo->periodo);
+			    
+			    // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
+			    if ($pdo != $periodo->periodo) {
+		            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo de '.$periodo->periodo);
+	        		return Redirect::back()->withInput()->withErrors($validation);
+			    }
+
+				// Almacena el monto de la transaccion
+				$montoRecibido= round(floatval(Input::get('monto')),2);
+
+				// Procesa el pago recibido	si el tipo de transaccion es cheque
+				if (Input::get('trans_tipo')==1) {
+					// Solamente registra el pago recibido no lo procesa
+					$dato = new Pago;
+					$dato->banco_id    = Input::get('banco_id');
+					$dato->trans_tipo  = Input::get('trans_tipo');
+				    $dato->trans_no    = Input::get('trans_no'); 
+					$dato->monto       = $montoRecibido;
+					$dato->f_pago      = Input::get('f_pago');
+					$dato->descripcion = Input::get('descripcion');
+				    $dato->fecha 	   = Carbon::today(); 		    
+					$dato->entransito  = 1;
+					$dato->un_id       = Input::get('un_id');
+				    $dato->user_id 	   = Auth::user()->id; 		    
+				    $dato->save();
+					
+					// Registra en bitacoras
+					$detalle =	'Registra pago de cuota de mantenimiento No.'.$dato->id.' con monto de B/.'.$montoRecibido.' no contabiliza';  
+		            
+		            Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
+					//DB::commit();	
+		            Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado con éxito.');			
 			
-		    // calcula el periodo al que corresponde la fecha de pago
-		    $year= Carbon::parse(Input::get('f_pago'))->year;
-		    $month= Carbon::parse(Input::get('f_pago'))->month;
-		    $pdo= Sity::getMonthName($month).'-'.$year;    
-		    
-		    // encuentra el periodo mas antiguo abierto
-			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
-		    //dd($pdo, $periodo->periodo);
-		    
-		    // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
-		    if ($pdo != $periodo->periodo) {
-	            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo de '.$periodo->periodo);
-        		return Redirect::back()->withInput()->withErrors($validation);
-		    }
+				} elseif (Input::get('trans_tipo')==2) {
+					
+					// Registra el pago recibido
+					$dato = new Pago;
+					$dato->banco_id    = Input::get('banco_id');
+					$dato->trans_tipo  = Input::get('trans_tipo');
+				    $dato->trans_no    = Input::get('trans_no'); 
+					$dato->monto       = $montoRecibido;
+					$dato->f_pago      = Input::get('f_pago');
+					$dato->descripcion = Input::get('descripcion');
+				    $dato->fecha 	   = Carbon::today(); 		    
+					$dato->entransito  = 0;
+					$dato->un_id       = Input::get('un_id');
+				    $dato->user_id 	   = Auth::user()->id; 		    
+				    $dato->save();
 
-			// Almacena el monto de la transaccion
-			$montoRecibido= round(floatval(Input::get('monto')),2);
+		            // antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
+	                Sity::penalizarTipo2(Carbon::parse(Input::get('f_pago')), Input::get('un_id'));
+	                //Sity::penalizarTipo2(Carbon::parse(Input::get('f_pago')), 16, Input::get('un_id'));
 
-			// Procesa el pago recibido	si el tipo de transaccion es cheque
-			if (Input::get('trans_tipo')==1) {
-				// Solamente registra el pago recibido no lo procesa
-				$dato = new Pago;
-				$dato->banco_id    = Input::get('banco_id');
-				$dato->trans_tipo  = Input::get('trans_tipo');
-			    $dato->trans_no    = Input::get('trans_no'); 
-				$dato->monto       = $montoRecibido;
-				$dato->f_pago      = Input::get('f_pago');
-				$dato->descripcion = Input::get('descripcion');
-			    $dato->fecha 	   = Carbon::today(); 		    
-				$dato->entransito  = 1;
-				$dato->un_id       = Input::get('un_id');
-			    $dato->user_id 	   = Auth::user()->id; 		    
-			    $dato->save();
-				
-				// Registra en bitacoras
-				$detalle =	'Registra pago de cuota de mantenimiento No.'.$dato->id.' con monto de B/.'.$montoRecibido.' no contabiliza';  
-	            
-	            Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
-	            Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado con éxito.');			
-		
-			} elseif (Input::get('trans_tipo')==2) {
-				
-				// Registra el pago recibido
-				$dato = new Pago;
-				$dato->banco_id    = Input::get('banco_id');
-				$dato->trans_tipo  = Input::get('trans_tipo');
-			    $dato->trans_no    = Input::get('trans_no'); 
-				$dato->monto       = $montoRecibido;
-				$dato->f_pago      = Input::get('f_pago');
-				$dato->descripcion = Input::get('descripcion');
-			    $dato->fecha 	   = Carbon::today(); 		    
-				$dato->entransito  = 0;
-				$dato->un_id       = Input::get('un_id');
-			    $dato->user_id 	   = Auth::user()->id; 		    
-			    $dato->save();
+					// proceso de contabilizar el pago recibido
+					Sity::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo);
 
-				// proceso de contabilizar el pago recibido
-				Sity::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo);
-
-				// Registra en bitacoras
-				$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $dato->monto;  
-	            Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
-	            Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado y procesado con éxito.');
+					// Registra en bitacoras
+					$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $dato->monto;  
+		            Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
+					DB::commit();		            
+		            Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado y procesado con éxito.');
+				}
+				return Redirect::route('indexPagos',  Input::get('un_id'));
 			}
-			return Redirect::route('indexPagos',  Input::get('un_id'));
+	        return Redirect::back()->withInput()->withErrors($validation);
+		
+		} catch (\Exception $e) {
+		    DB::rollback();
+        	Session::flash('warning', ' Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada!');
+
+        	return Redirect::back()->withInput()->withErrors($validation);
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
 	}
 
     /*************************************************************************************
@@ -275,41 +291,51 @@ class PagosController extends Controller {
 	public function procesaAnulacionPago($pago_id, $un_id)
 	{
     
-	    // Encuentra el o los periodos contables que fueron involucrados en el pago.
-	    // No permite anular el pago si el mismo involucra por lo menos a un periodo ya cerrado.
-	    $periodos=Ctmayore::where('pago_id', $pago_id)->select('pcontable_id')->get();
-		$periodos=$periodos->unique('pcontable_id');
-		//dd($periodos->toArray());
-		
-		foreach ($periodos as $periodo) {
-		    // verifica si alguno de los datos pertenece a un periodo ya cerrado
-		    $pdo= Pcontable::where('id', $periodo->pcontable_id)
-		    				->where('cerrado', 1)
-		                    ->first();
+		DB::beginTransaction();
+		try {
+		    // Encuentra el o los periodos contables que fueron involucrados en el pago.
+		    // No permite anular el pago si el mismo involucra por lo menos a un periodo ya cerrado.
+		    $periodos=Ctmayore::where('pago_id', $pago_id)->select('pcontable_id')->get();
+			$periodos=$periodos->unique('pcontable_id');
+			//dd($periodos->toArray());
+			
+			foreach ($periodos as $periodo) {
+			    // verifica si alguno de los datos pertenece a un periodo ya cerrado
+			    $pdo= Pcontable::where('id', $periodo->pcontable_id)
+			    				->where('cerrado', 1)
+			                    ->first();
+			    
+			    // solamente se pueden anular pagos que pertenezcan al periodo mas antiguo que no este cerrado
+			    if ($pdo) {
+			    	Session::flash('warning', '<< ATENCION >> No se puede anular este pago ya que involucra a uno o mas periodo contables ya cerrados!');
+		    		return Redirect::route('indexPagos',  $un_id);	
+	 		    }	
+			}
+			
+	 		//Encuentra todos lo registros de pago que son posteriores al pago en estudio
+			$datos = Pago::where('un_id', $un_id)
+	                     ->where('id','>',$pago_id)
+	                     ->where('anulado',0)
+	                     ->first();
+		    //dd($datos);		    
 		    
-		    // solamente se pueden anular pagos que pertenezcan al periodo mas antiguo que no este cerrado
-		    if ($pdo) {
-		    	Session::flash('warning', '<< ATENCION >> No se puede anular este pago ya que involucra a uno o mas periodo contables ya cerrados!');
-	    		return Redirect::route('indexPagos',  $un_id);	
- 		    }	
-		}
+		    if ($datos) {
+		    	Session::flash('warning', '<< ATENCION >> No se puede anular el Pago No. '.$pago_id.' ya que exite uno o mas pagos posteriores al mismo. Para poder anular el presente pagos, debera anular todos los pagos posteriores en orden cronologico!');
+	    		return Redirect::route('indexPagos', $un_id);	
+			}
+			
+			// procede a anular el pago
+	    	Sity::anulaPago($pago_id);
+			DB::commit();	    	
+	    	Session::flash('warning', 'Pago '.$pago_id. ' ha sido anulado.');	   
+		    return Redirect::route('indexPagos', $un_id);
 		
- 		//Encuentra todos lo registros de pago que son posteriores al pago en estudio
-		$datos = Pago::where('un_id', $un_id)
-                     ->where('id','>',$pago_id)
-                     ->where('anulado',0)
-                     ->first();
-	    //dd($datos);		    
-	    
-	    if ($datos) {
-	    	Session::flash('warning', '<< ATENCION >> No se puede anular el Pago No. '.$pago_id.' ya que exite uno o mas pagos posteriores al mismo. Para poder anular el presente pagos, debera anular todos los pagos posteriores en orden cronologico!');
-    		return Redirect::route('indexPagos', $un_id);	
-		}
-		
-		// procede a anular el pago
-    	Sity::anulaPago($pago_id);
-    	Session::flash('warning', 'Pago '.$pago_id. ' ha sido anulado.');	   
-	    return Redirect::route('indexPagos', $un_id);	
+		} catch (\Exception $e) {
+		    DB::rollback();
+        	Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaAnulacionPago, la transaccion ha sido cancelada!');
+
+        	return Redirect::back()->withInput()->withErrors($validation);
+		}    
 	}	
 
     /*************************************************************************************
@@ -317,13 +343,24 @@ class PagosController extends Controller {
      ************************************************************************************/	
 	public function eliminaPagoCheque($pago_id)
 	{
-	    $pago=Pago::find($pago_id);
-	    $pago->delete(); 
 	    
-	    $detalle="Elimmina pago de cheque no contabilizado de la base de datos";
-	    Sity::RegistrarEnBitacora(3, 'pagos', $pago->id, $detalle);
-	    Session::flash('warning', 'Pago '. $pago->trans_no . ' ha sido eliminado permanentemente de la base de datos!');
-	    return Redirect::route('indexPagos',  $pago->un_id);	
+		DB::beginTransaction();
+		try {
+		    $pago=Pago::find($pago_id);
+		    $pago->delete(); 
+		    
+		    $detalle="Elimmina pago de cheque no contabilizado de la base de datos";
+		    Sity::RegistrarEnBitacora(3, 'pagos', $pago->id, $detalle);
+		    Session::flash('warning', 'Pago '. $pago->trans_no . ' ha sido eliminado permanentemente de la base de datos!');
+			DB::commit();		    
+		    return Redirect::route('indexPagos',  $pago->un_id);
+	
+		} catch (\Exception $e) {
+		    DB::rollback();
+        	Session::flash('warning', ' Ocurrio un error en el modulo PagosController.eliminaPagoCheque, la transaccion ha sido cancelada!');
+        	
+        	return Redirect::back()->withInput()->withErrors($validation);
+		}
 	}	
 
     /*************************************************************************************
@@ -331,29 +368,48 @@ class PagosController extends Controller {
 	 ************************************************************************************/	
 	public function procesaChequeRecibido($pago_id)
 	{
-		// Procesa el pago recibido			
-		$dato= Pago::where('pagos.id', $pago_id)
-                    ->select('un_id','monto','id','f_pago')
-                    ->first();
-		//dd($dato->toArray());
 		
-		// encuentra la fecha del periodo contable mas antiguo abierto
-		$periodo= Pcontable::where('cerrado', 0)->orderBy('id', 'asc')->first();
-		//dd($periodo->fecha);  
+		DB::beginTransaction();
+		try {
+			// Procesa el pago recibido			
+			$dato= Pago::where('pagos.id', $pago_id)
+	                    ->select('un_id','monto','id','f_pago')
+	                    ->first();
+			//dd($dato->toArray());
+			
+			// encuentra la fecha del periodo contable mas antiguo abierto
+			$periodo= Pcontable::where('cerrado', 0)->orderBy('id', 'asc')->first();
+			//dd($periodo->fecha);  
 
-		// proceso de contabilizar el pago recibido
-		Sity::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago, $periodo->id, $periodo->periodo);
+            // penaliza todas aquellas unidades cuya orden de cobro se genera los dias primero o diesiceis de cada mes
+            $secs= Secapto::select('d_registra_cmpc')->orderBy('d_registra_cmpc')->distinct()->get();
+            //dd($secs->toArray());
 
-		// Registra el pago como tramitado
-		$dato1 = Pago::find($pago_id);
-		$dato1->entransito = 0;
-	    $dato1->save(); 
+            foreach ($secs as $sec) {
+                Sity::penalizar(Carbon::parse($periodo->fecha), $sec->d_registra_cmpc);
+            }
 
-		// Registra en bitacoras
-		$detalle =	'Pago No '. $dato->id. ', se ha registrado con exito.';  
-		
-        Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
-        Session::flash('success', 'El pago No.' .$dato->id. ' ha sido registrado con éxito.');
-        return Redirect::route('indexPagos',  $dato->un_id);
+			// proceso de contabilizar el pago recibido
+			Sity::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago, $periodo->id, $periodo->periodo);
+
+			// Registra el pago como tramitado
+			$dato1 = Pago::find($pago_id);
+			$dato1->entransito = 0;
+		    $dato1->save(); 
+
+			// Registra en bitacoras
+			$detalle =	'Pago No '. $dato->id. ', se ha registrado con exito.';  
+			
+	        Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
+	    	DB::commit();    
+	        Session::flash('success', 'El pago No.' .$dato->id. ' ha sido registrado con éxito.');
+	        return Redirect::route('indexPagos',  $dato->un_id);
+	
+		} catch (\Exception $e) {
+		    DB::rollback();
+        	Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaChequeRecibido, la transaccion ha sido cancelada!');
+
+        	return Redirect::back()->withInput()->withErrors($validation);
+		}
 	} 
 }

@@ -3,7 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\library\Sity;
 use Input, Session, Redirect, Str, Carbon\Carbon;
-use Validator, View;
+use Validator, View, DB;
 use Jenssegers\Date\Date;
 
 use App\Bitacora;
