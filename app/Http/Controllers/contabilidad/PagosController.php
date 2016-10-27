@@ -23,6 +23,7 @@ use App\Ph;
 use App\Pcontable;
 use App\Banco;
 use App\Ctmayore;
+use App\Secapto;
 
 class PagosController extends Controller {
     
@@ -83,8 +84,8 @@ class PagosController extends Controller {
 	public function store()
 	{
         
-		DB::beginTransaction();
-		try {
+/*		DB::beginTransaction();
+		try {*/
 	        //dd(Input::all());
 	        $input = Input::all();
 
@@ -115,6 +116,9 @@ class PagosController extends Controller {
 			if ($validation->passes())
 			{
 				
+				// antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
+				Sity::penalizarTipo2(Carbon::parse(Input::get('f_pago')), Input::get('un_id'));
+
 			    // calcula el periodo al que corresponde la fecha de pago
 			    $year= Carbon::parse(Input::get('f_pago'))->year;
 			    $month= Carbon::parse(Input::get('f_pago'))->month;
@@ -134,7 +138,7 @@ class PagosController extends Controller {
 				$montoRecibido= round(floatval(Input::get('monto')),2);
 
 				// Procesa el pago recibido	si el tipo de transaccion es cheque
-				if (Input::get('trans_tipo')==1) {
+				if (Input::get('trans_tipo')==1 || Input::get('trans_tipo')==3) {
 					// Solamente registra el pago recibido no lo procesa
 					$dato = new Pago;
 					$dato->banco_id    = Input::get('banco_id');
@@ -153,10 +157,10 @@ class PagosController extends Controller {
 					$detalle =	'Registra pago de cuota de mantenimiento No.'.$dato->id.' con monto de B/.'.$montoRecibido.' no contabiliza';  
 		            
 		            Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
-					//DB::commit();	
+					DB::commit();	
 		            Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado con éxito.');			
 			
-				} elseif (Input::get('trans_tipo')==2) {
+				} else {
 					
 					// Registra el pago recibido
 					$dato = new Pago;
@@ -172,29 +176,25 @@ class PagosController extends Controller {
 				    $dato->user_id 	   = Auth::user()->id; 		    
 				    $dato->save();
 
-		            // antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
-	                Sity::penalizarTipo2(Carbon::parse(Input::get('f_pago')), Input::get('un_id'));
-	                //Sity::penalizarTipo2(Carbon::parse(Input::get('f_pago')), 16, Input::get('un_id'));
-
 					// proceso de contabilizar el pago recibido
 					Sity::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo);
 
 					// Registra en bitacoras
 					$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $dato->monto;  
 		            Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
-					DB::commit();		            
+					//DB::commit();		            
 		            Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado y procesado con éxito.');
 				}
 				return Redirect::route('indexPagos',  Input::get('un_id'));
 			}
 	        return Redirect::back()->withInput()->withErrors($validation);
 		
-		} catch (\Exception $e) {
+/*		} catch (\Exception $e) {
 		    DB::rollback();
         	Session::flash('warning', ' Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada!');
 
         	return Redirect::back()->withInput()->withErrors($validation);
-		}
+		}*/
 	}
 
     /*************************************************************************************
@@ -380,14 +380,6 @@ class PagosController extends Controller {
 			// encuentra la fecha del periodo contable mas antiguo abierto
 			$periodo= Pcontable::where('cerrado', 0)->orderBy('id', 'asc')->first();
 			//dd($periodo->fecha);  
-
-            // penaliza todas aquellas unidades cuya orden de cobro se genera los dias primero o diesiceis de cada mes
-            $secs= Secapto::select('d_registra_cmpc')->orderBy('d_registra_cmpc')->distinct()->get();
-            //dd($secs->toArray());
-
-            foreach ($secs as $sec) {
-                Sity::penalizar(Carbon::parse($periodo->fecha), $sec->d_registra_cmpc);
-            }
 
 			// proceso de contabilizar el pago recibido
 			Sity::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago, $periodo->id, $periodo->periodo);

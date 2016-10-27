@@ -1732,3 +1732,19 @@ Work::with(
   @foreach(json_decode($h->before, true) as $key => $value)
     {{ $key }} - {{ $value }}, 
   @endforeach
+
+  /*************************************************************************************
+   * Template para Transactions
+   ************************************************************************************/
+  DB::beginTransaction();
+  try {
+
+
+  DB::commit();
+
+  } catch (\Exception $e) {
+      DB::rollback();
+        Session::flash('warning', ' Ocurrio un error en el Command penalizar.php, la transaccion ha sido cancelada!');
+
+        return Redirect::back()->withInput()->withErrors($validation);
+  }

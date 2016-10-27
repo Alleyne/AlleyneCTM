@@ -36,8 +36,8 @@ class PcontablesController extends Controller {
   public function store()
   {
 
-    DB::beginTransaction();
-    try {
+/*    DB::beginTransaction();
+    try {*/
       //dd(Input::all());
       $input = Input::all();
       $rules = array(
@@ -83,19 +83,19 @@ class PcontablesController extends Controller {
         $detalle =  'Se crea el primer periodo contable del sistema '.$pdo;
       
         Sity::RegistrarEnBitacora(1, 'pcontables', 1, $detalle);
-        DB::commit();        
+        //DB::commit();        
         Session::flash('success', 'Se crea el primer periodo contable del sistema '.$pdo. ' con éxito.');
 
         return Redirect::route('pcontables.index');
       }
       return Redirect::back()->withInput()->withErrors($validation);
     
-    } catch (\Exception $e) {
+/*    } catch (\Exception $e) {
         DB::rollback();
         Session::flash('warning', ' Ocurrio un error en el modulo PcontablesController.store, la transaccion ha sido cancelada!');
 
         return Redirect::back()->withInput()->withErrors($validation);
-    }
+    }*/
   } 
 
 } // end of class

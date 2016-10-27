@@ -25,13 +25,9 @@
       .contenedor-principal {
         height: 11in;
         width: 8.5in;
-        padding: 0.25in;
+        padding: 0.5in;
         margin-right: auto;
         margin-left: auto;
-      }
-      
-      .p18 {
-        font-size: 18px; 
       }
       
       .p20 {
@@ -100,52 +96,62 @@
       <div class="row">
         <div class="col-md-12">
            <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $un->codigofull }}</strong>, la suma de <strong>B/.{{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trans_tipo }}</strong> no <strong>{{ $pago->trans_no }}</strong> del <strong>{{ $pago->nombre }}</strong> el dia <strong>{{ $pago->f_pago }}</strong>, en concepto de pago por servicios de mantenimiento del {{ $ph->nombre }}.</p>
-           <p>Acontinuacion se deglosa la forma en que se contabilizo su pago:</p>
         </div>
       </div>
       
       <br>
-      
-      <div class="col-md-12">
+      @if ($total > 0)       
         <div class="row">
           <div class="col-md-12">
-              <table class="table table-condensed">
-                  <thead>
-                    <strong><tr>
-                        <th col width="40px">No</th>
-                        <th>Detalle</th>
-                        <th col width="90px" class="text-center">Monto</th>                     
-                    </tr></strong>
-                  </thead>
-                  <tbody>
-                    @foreach ($detalles as $detalle)
-                      <tr>
-                          <td>{{ $detalle->no }}</td>
-                          <td>{{ $detalle->detalle }}</td>
-                          <td col width="90px" align="right">{{ $detalle->monto }}</td>                      
-                      </tr>
-                    @endforeach
-                  </tbody>
-              </table>    
+             <p>Acontinuacion se deglosa la forma en que se contabilizo su pago:</p>
           </div>
-        </div><!-- end row -->
+        </div>
 
-          <div class="row">
-            <div class="col-md-3 col-md-offset-9">
-              <p class="text-right"><strong>Total B/. {{ $total }}</strong></p>
-            </div>
-          </div>
-          
-          <br>
-          
-          <div class="row">
-            <div class="col-md-12">
-              <p class="text-justify">{{ $nota }}</p>
-            </div>
-          </div>          
-      </div>
-      <br>      
+        <div class="row">
+          <div class="col-md-12">
+         
+              <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-condensed">
+                        <thead>
+                          <strong><tr>
+                              <th col width="40px">No</th>
+                              <th>Detalle</th>
+                              <th col width="90px" class="text-center">Monto</th>                     
+                          </tr></strong>
+                        </thead>
+                        <tbody>
+                          @foreach ($detalles as $detalle)
+                            <tr>
+                                <td>{{ $detalle->no }}</td>
+                                <td>{{ $detalle->detalle }}</td>
+                                <td col width="90px" align="right">{{ $detalle->monto }}</td>                      
+                            </tr>
+                          @endforeach
+                        </tbody>
+                    </table>    
+                </div>
+              </div><!-- end row -->
+
+              <div class="row">
+                <div class="col-md-3 col-md-offset-9">
+                  <p class="text-right"><strong>Total B/. {{ $total }}</strong></p>
+                </div>
+              </div>
+              
+              <br>
+          </div>        
+        </div>        
+      @endif       
       
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-justify">{{ $nota }}</p>
+        </div>
+      </div>          
+
+      <br>       
+          
       <HR WIDTH=95% ALIGN=CENTER COLOR="BLACK">
 
       <div class="row">
