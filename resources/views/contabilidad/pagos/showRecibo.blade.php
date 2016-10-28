@@ -95,7 +95,7 @@
       
       <div class="row">
         <div class="col-md-12">
-           <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $un->codigofull }}</strong>, la suma de <strong>B/.{{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trans_tipo }}</strong> no <strong>{{ $pago->trans_no }}</strong> del <strong>{{ $pago->nombre }}</strong> el dia <strong>{{ $pago->f_pago }}</strong>, en concepto de pago por servicios de mantenimiento del {{ $ph->nombre }}.</p>
+           <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $un->codigofull }}</strong>, la suma de <strong>B/. {{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trans_tipo }}</strong> no <strong>{{ $pago->trans_no }}</strong> del <strong>{{ $pago->nombre }}</strong> el dia <strong>{{ $pago->f_pago }}</strong>, en concepto de pago por servicios de mantenimiento del {{ $ph->nombre }}.</p>
         </div>
       </div>
       

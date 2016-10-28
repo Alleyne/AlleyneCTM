@@ -421,8 +421,20 @@ class Sity {
       return $montoRecibido;
     }
 
-    // encuentra la fecha del periodo
-    $f_periodo= Pcontable::find($periodo)->fecha;
+    // verifica si la unidad tiene algun mes pagado por anticipado con descuento que aun no se han consumido
+    $anticipado= Detalledescuento::where('consumido', 0)
+                                 ->where('un_id', $un_id)
+                                 ->orderBy('id', 'desc')->first();
+    // dd($anticipado->toArray());  
+
+    if ($anticipado) {
+      // si encuentra alguno, entonces se toma la fecha como referencia para crear el nuevo mes con descuento    
+      $f_periodo= $anticipado->fecha;
+
+    } else {
+      // si no encuentra ninguno, entoncer utiliza la fecha del periodo en que se hace el pago como referencia para crear el nuevo mes con descuento
+      $f_periodo= Pcontable::find($periodo)->fecha;    
+    }
 
     // encuentra las generales de la unidad
     $un= Un::find($un_id);

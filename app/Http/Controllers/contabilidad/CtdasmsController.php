@@ -14,6 +14,7 @@ use App\Seccione;
 use App\Ph;
 use App\Un;
 use App\Pcontable;
+use App\Detalledescuento;
 
 class CtdasmsController extends Controller {
     
@@ -39,6 +40,18 @@ class CtdasmsController extends Controller {
                       ->select('id','mes_anio','recargo_siono','recargo_pagado','recargo')
                       ->orderBy('fecha')
                       ->get();
+
+    $ants = Detalledescuento::where('un_id', $un_id)
+                      ->where('consumido', 0) 
+                      ->select('id','detalle','consumido', 'importe', 'descuento')
+                      ->orderBy('fecha')
+                      ->get();    
+    
+    $i=0;      
+    foreach ($ants as $ant) {
+      $ants[$i]['montoCuota']= ($ant->importe + $ant->descuento); 
+      $i++;
+    }  
 
     // inicializa los contadores
     $total_importe=0;
@@ -86,13 +99,13 @@ class CtdasmsController extends Controller {
     
     // Encuentra saldo pagados por anticipado
     $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, Null);
-    $total=number_format(($total_importe + $total_recargo), 2);
+    $total = number_format(($total_importe + $total_recargo), 2);
     
-    if ($total==0) {
+    if ($total == 0) {
       $total_adeudado=(number_format(0, 2));
     }
     else {
-      $total_adeudado=number_format($total-$pagos_anticipados, 2);      
+      $total_adeudado = number_format($total-$pagos_anticipados, 2);      
       if ($total_adeudado<0) {
         $total_adeudado='0.00';
       }
@@ -123,6 +136,7 @@ class CtdasmsController extends Controller {
       'fecha'       => Date::today()->format('l\, j \d\e F Y'),
       'total'  => 'B/. ' . $total,
       'pagos_anticipados'  => 'B/. ' . number_format($pagos_anticipados, 2),
+      'anticipado' => $pagos_anticipados,
       'total_adeudado'  => 'B/. ' . number_format($total_adeudado, 2),
     ];
        
@@ -136,7 +150,8 @@ class CtdasmsController extends Controller {
       return view('contabilidad.ctdasms.ecuentasCompleto')
             ->with('data', $data)
             ->with('imps', $imps)
-            ->with('recs', $recs);
+            ->with('recs', $recs)
+            ->with('ants', $ants);
     }
   }
 }
