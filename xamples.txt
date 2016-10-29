@@ -1748,3 +1748,13 @@ Work::with(
 
         return Redirect::back()->withInput()->withErrors($validation);
   }
+
+
+
+          //Obtiene los datos del la Justa Directiva y de todos los bloques registrados
+        //$jd = Jd::with('bloques')->get(); //ok
+        $jd = Jd::where('id', 1)->with('bloques')->get(); //ok  
+
+        //$bloques = Bloque::with('jd')->get(); // ok
+        //$bloques = Bloque::where('id', 1)->with('jd')->get(); // ok
+      dd($jd->toArray());

@@ -20,6 +20,7 @@ Route::get('/', 'WelcomeController@index')->name('frontend');
 //=========================================================//
 
 Route::auth();
+Route::get('logout', 'Auth\LoginController@logout');
 Route::get('/home', 'HomeController@index');
 
 Route::group(['namespace' => 'backend'], function()
@@ -302,4 +303,20 @@ Route::get('/test', function () {
   dd('fecha limite para recargo: ',$f_vence);
   return $f_vence;
 **************************************************/
+});
+
+use App\Seccione;
+Route::get('/query', function () {
+
+//$data= Seccione::find(1)->secapto;
+
+/*$datas= Seccione::find(1)->uns;
+foreach ($datas as $data) {
+	echo $data->codigo;
+}*/
+
+//$data= Seccione::find(1)->ph;
+
+$datas= Seccione::with('uns')->get();
+return [$datas];
 });

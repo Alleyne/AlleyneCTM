@@ -28,25 +28,4 @@ class Seccione extends Model
     {
         return $this->hasOne('App\Secre');
     }
-/*
-    public function seclced()
-    {
-        return $this->hasOne('App\Seclced');
-    }
-
-    public function seclcre()
-    {
-        return $this->hasOne('App\Seclcre');
-    }
-
-    public function ams()
-    {
-        return $this->hasMany('App\Am');
-    }
-
-    public function ess()
-    {
-        return $this->hasMany('App\Es');
-    }*/
-    
 }
