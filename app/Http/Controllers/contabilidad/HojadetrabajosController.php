@@ -474,8 +474,8 @@ class HojadetrabajosController extends Controller {
     ************************************************************************************/ 
     public function cierraPeriodo($pcontable_id, $periodo, $fecha) {
 
-        DB::beginTransaction();
-        try {
+/*        DB::beginTransaction();
+        try {*/
             
             $datos= Un::where('inicializada', 0)->first();
             if ($datos) {
@@ -556,16 +556,16 @@ class HojadetrabajosController extends Controller {
 
             // registra en bitacoras
             Sity::RegistrarEnBitacora(17, 'pcontables', $pcontable_id, $periodo);
-            DB::commit();             
+            //DB::commit();             
             Session::flash('success', 'Periodo '.$periodo.' ha sido cerrado permanentemente!');
 
             return Redirect::route('pcontables.index');
         
-        } catch (\Exception $e) {
+/*        } catch (\Exception $e) {
             DB::rollback();
             Session::flash('warning', ' Ocurrio un error en el modulo HojadetrabajosController.cierraPeriodo, la transaccion ha sido cancelada!');
 
-            return Redirect::back()->withInput()->withErrors($validation);
-        }
+            return Redirect::back();
+        }*/
     }
 } // fin de controller

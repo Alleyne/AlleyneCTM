@@ -1750,11 +1750,82 @@ Work::with(
   }
 
 
+  /*************************************************************************************
+   * ejemplo de eloquent
+   ************************************************************************************/
+    //Obtiene los datos del la Justa Directiva y de todos los bloques registrados
+    //$jd = Jd::with('bloques')->get(); //ok
+    $jd = Jd::where('id', 1)->with('bloques')->get(); //ok  
 
-          //Obtiene los datos del la Justa Directiva y de todos los bloques registrados
-        //$jd = Jd::with('bloques')->get(); //ok
-        $jd = Jd::where('id', 1)->with('bloques')->get(); //ok  
+    //$bloques = Bloque::with('jd')->get(); // ok
+    //$bloques = Bloque::where('id', 1)->with('jd')->get(); // ok
+    dd($jd->toArray());
 
-        //$bloques = Bloque::with('jd')->get(); // ok
-        //$bloques = Bloque::where('id', 1)->with('jd')->get(); // ok
-      dd($jd->toArray());
+  /*************************************************************************************
+   * php artisan tinker
+   ************************************************************************************/
+  php artisan tinker
+
+  namespace App
+  >>> $bloques=Bloque::all()
+  => Illuminate\Database\Eloquent\Collection {#922
+       all: [
+         App\Bloque {#923
+           id: 1,
+           codigo: "T100",
+           nombre: "Bloque Torre 100",
+           descripcion: "Descripción del Bloque Torre 100",
+           imagen_L: "assets/img/bloques/bloq_L1.jpg",
+           imagen_M: "assets/img/bloques/bloq-M1.jpg",
+           imagen_S: "assets/img/bloques/bloq-S1.jpg",
+           jd_id: 1,
+         },
+         App\Bloque {#924
+           id: 2,
+           codigo: "T200",
+           nombre: "Bloque Torre 200",
+           descripcion: "Descripción del Bloque Torre 200",
+           imagen_L: "assets/img/bloques/bloq_L2.jpg",
+           imagen_M: "assets/img/bloques/bloq-M2.jpg",
+           imagen_S: "assets/img/bloques/bloq-S2.jpg",
+           jd_id: 1,
+         },
+       ],
+     }
+
+    >>> $bloques=Bloque::with('jd')->get();
+    => Illuminate\Database\Eloquent\Collection {#933
+         all: [
+           App\Bloque {#930
+             id: 1,
+             codigo: "T100",
+             nombre: "Bloque Torre 100",
+             descripcion: "Descripción del Bloque Torre 100",
+             imagen_L: "assets/img/bloques/bloq_L1.jpg",
+             imagen_M: "assets/img/bloques/bloq-M1.jpg",
+             imagen_S: "assets/img/bloques/bloq-S1.jpg",
+             jd_id: 1,
+             jd: App\Jd {#934
+               id: 1,
+               nombre: "Junta Directiva PH El Marquez",
+               descripcion: "Descripción de la Junta Directiva PH El Marquez",
+               imagen_L: "assets/img/jds/jd_1.jpg",
+               imagen_M: "",
+               imagen_S: "",
+             },
+           },
+           App\Bloque {#918
+             id: 2,
+             codigo: "T200",
+             nombre: "Bloque Torre 200",
+             descripcion: "Descripción del Bloque Torre 200",
+             imagen_L: "assets/img/bloques/bloq_L2.jpg",
+             imagen_M: "assets/img/bloques/bloq-M2.jpg",
+             imagen_S: "assets/img/bloques/bloq-S2.jpg",
+             jd_id: 1,
+             jd: App\Jd {#934},
+           },
+         ],
+       }
+  clear
+  exit
