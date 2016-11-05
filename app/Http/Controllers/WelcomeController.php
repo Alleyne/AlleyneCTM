@@ -1,4 +1,5 @@
 <?php namespace App\Http\Controllers;
+use App\Post;
 
 class WelcomeController extends Controller {
 
@@ -30,7 +31,11 @@ class WelcomeController extends Controller {
 	 */
 	public function index()
 	{
-		return view('frontend.index');
+		$posts = Post::where('mainpage', 1)->orderBy('id', 'desc')
+               ->take(3)
+               ->get();
+
+		return view('templates.frontend.index')->withPosts($posts);
 	}
 
 }

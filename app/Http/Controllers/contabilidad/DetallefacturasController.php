@@ -125,18 +125,14 @@ class DetallefacturasController extends Controller {
 			        return Redirect::back();
 			    	
 			    } elseif (round(floatval($totalfactura),2) > round(floatval($totaldetalles),2)) {
+					$factura->totaldetalle= $totaldetalles;
+					$factura->save();
 			        Session::flash('warning', '<< ATENCION >> El valor total de los detalles es inferior al valor total de la factura. Continue ingresando detalles!');
-			        return Redirect::back();
-
+			    
 			    } elseif (round(floatval($totalfactura),2) == round(floatval($totaldetalles),2)) {
 					$factura->totaldetalle= $totaldetalles;
 					$factura->etapa= 1;
 					$factura->save();		
-			    	
-			    } else {
-					$factura->totaldetalle= $totaldetalles;
-					$factura->etapa= 0;
-					$factura->save();
 			    }
 
 				Sity::RegistrarEnBitacora(1, 'detallefacturas', $dato->id, $det);
@@ -144,6 +140,7 @@ class DetallefacturasController extends Controller {
 		    	DB::commit();				
 				return Redirect::route('detallefacturas.show', $dato->factura_id);
 			}
+	        
 	        Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
 	        return Redirect::back()->withInput()->withErrors($validation);
 		

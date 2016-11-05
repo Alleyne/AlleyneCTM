@@ -8,6 +8,7 @@ use App\library\Sity;
 use App\Http\Helpers\Grupo;
 use Validator;
 use Carbon\Carbon;
+use Date;
 
 use App\Org;
 use App\Factura;
@@ -31,6 +32,13 @@ class DetallepagofacturasController extends Controller {
         $datos = Detallepagofactura::where('factura_id', $factura_id)->get();
         //dd($datos->toArray());		
 	    
+		foreach ($datos as $dato) {
+			if ($dato->fecha) {
+			  $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
+			}        
+		}
+        //dd($datos->toArray());
+
 	    $factura= Factura::find($factura_id);
 		
 		return view('contabilidad.detallepagofacturas.show')
@@ -202,23 +210,28 @@ class DetallepagofacturasController extends Controller {
 		    $dato= Detallepagofactura::find($detallepagofactura_id);
 		    //dd($dato->toArray());
 		    
-		    // convierte la fecha string a carbon/carbon
-		    $f_DetallePagofactura = Carbon::parse($dato->fecha);   
-		    $month= $f_DetallePagofactura->month;    
-		    $year= $f_DetallePagofactura->year;    
-
-		    // determina el periodo al que corresponde la fecha de pago    
+		    // verifica que exista un periodo de acuerdo a la fecha de pago
+		    $year= Carbon::parse($dato->fecha)->year;
+		    $month= Carbon::parse($dato->fecha)->month;
 		    $pdo= Sity::getMonthName($month).'-'.$year;
-		    $periodo= Pcontable::where('periodo', $pdo)
-					->where('cerrado', 0)
-		    		->first();
-		    //dd($periodo);     
 
-		    if (!$periodo) {
-		        Session::flash('warning', '<< ATENCION >> El presente pago no puede ser contabilizado ya que el periodo contable al cual pertenece ha sido cerrado. Borre el detalle de pago de factura y ingrecelo nuevamente con fecha del periodo actualmente abierto.');
-		        return Redirect::back();
+		    // encuentra el periodo mas antiguo abierto
+			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+		    //dd($periodo);
+		    
+		    // solamente se permite registrar pagos de facturas que correspondan al periodo mas antiguo abierto
+		    if ($pdo != $periodo->periodo) {
+	            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo vigente de '.$periodo->periodo);
+        		return Redirect::back();
 		    }
 
+		    // verifica si existe algun detalle de pago anterior al presente que no haya sido contabilizado
+			$exiteAnterior= Detallepagofactura::where('id', '<', $detallepagofactura_id)->where('contabilizado', 0)->first();
+		    if ($exiteAnterior) {
+	            Session::flash('danger', '<< ERROR >> Debe contabilizar los detalles de pago en orden cronologico!');
+        		return Redirect::back();
+		    }
+		    
 		    // encuentra el proveedor de la factura
 		    $factura= Factura::find($dato->factura_id);
 		    
@@ -329,7 +342,7 @@ class DetallepagofacturasController extends Controller {
 		    DB::rollback();
         	Session::flash('warning', ' Ocurrio un error en el modulo Detallepagofactura.contabilizaDetallePagoFactura, la transaccion ha sido cancelada!');
 
-        	return Redirect::back()->withInput()->withErrors($validation);
+        	return Redirect::back();
 		}    
   }
 } 

@@ -1,4 +1,4 @@
-@extends('backend._layouts.default')
+@extends('templates.backend._layouts.default')
 
 @section('main')
 
@@ -73,7 +73,7 @@
 												<td col width="90px">{{ $dato->fecha }}</td>
 												<td col width="60px">{{ $dato->total }}</td>
 								
-												@if (round(floatval($dato->total),2) ==round(floatval($dato->totaldetalle),2))
+												@if (round(floatval($dato->total),2) == round(floatval($dato->totaldetalle),2))
 													<td col width="60px">{{ $dato->totaldetalle }}</td>
 												@else
 													<td col width="60px"><mark>{{ $dato->totaldetalle }}</mark></td>
@@ -150,7 +150,7 @@
 									</tbody>
 								</table>
 								<!-- Incluye la modal box -->
-								@include('backend._partials.modal_confirm')
+								@include('templates.backend._partials.modal_confirm')
 							</div>
 							<!-- end widget content -->
 		

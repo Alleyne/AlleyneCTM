@@ -1,4 +1,4 @@
-@extends('backend._layouts.default')
+@extends('templates.backend._layouts.default')
 
 @section('main')
 
@@ -106,7 +106,7 @@
 									</tbody>
 								</table>
 								<!-- Incluye la modal box -->
-								@include('backend._partials.modal_confirm')
+								@include('templates.backend._partials.modal_confirm')
 							</div>
 							<!-- end widget content -->
 		

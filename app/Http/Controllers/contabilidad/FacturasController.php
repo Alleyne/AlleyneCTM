@@ -32,14 +32,13 @@ class FacturasController extends Controller {
         $datos = Factura::join('orgs', 'orgs.id', '=', 'facturas.org_id')
                 ->select('facturas.id', 'facturas.no', 'facturas.total', 'facturas.totaldetalle', 'facturas.fecha', 'facturas.etapa', 'orgs.nombre')
                 ->get();
-        //dd($datos->toArray());
 
 		foreach ($datos as $dato) {
 			if ($dato->fecha) {
 			  $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
 			}        
 		}
-
+        //dd($datos->toArray());
   		return view('contabilidad.facturas.registrar.index')->with('datos', $datos);     	
 	}	
 
@@ -52,6 +51,12 @@ class FacturasController extends Controller {
 						->where('etapa', 2)
 				        ->select('facturas.id', 'facturas.no', 'facturas.total', 'facturas.totalpagodetalle', 'facturas.fecha', 'facturas.etapa', 'facturas.pagada', 'orgs.nombre')
 				        ->get();
+
+ 		foreach ($datos as $dato) {
+			if ($dato->fecha) {
+			  $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
+			}        
+		}
         //dd($datos->toArray());
 
   		return view('contabilidad.facturas.pagar.index')->with('datos', $datos);     	

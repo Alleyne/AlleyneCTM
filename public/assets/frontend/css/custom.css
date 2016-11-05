@@ -1,1 +1,23 @@
 /* Add here all your css styles (customizations) */
+.tag-margin-bottom-30 {
+    margin-bottom: 1px;
+}
+
+ul.blog-tags a {
+    font-size: 13px;
+    padding: 2px 7px;
+    margin: 0 3px 6px 0;
+    display: inline-block;
+}
+
+hr {
+    margin: 20px 0;
+}
+
+.funny-boxes p a {
+    color: #ffffff;
+}
+
+.btn-u {
+    background: #72c02c;
+}

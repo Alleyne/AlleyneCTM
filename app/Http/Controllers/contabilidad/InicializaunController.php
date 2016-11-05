@@ -82,7 +82,7 @@ class InicializaunController extends Controller {
         
         // convierte la fecha string a carbon/carbon
         $f_periodo= Carbon::parse($periodo->fecha);   
-        //dd($fecha);      
+        //dd($f_periodo);      
         
         // hace una copia de la fecha original para evitar que $f_periodo cambie
         $fecha = clone $f_periodo;
@@ -97,21 +97,21 @@ class InicializaunController extends Controller {
           $blqAdmin= Blqadmin::where('bloque_id', $seccion->bloque_id)->first();
           $secapto= Secapto::where('seccione_id', $seccion->id)->first();
           //dd($secapto->toArray());
-         
-          for ($x= 1; $x <= Input::get('meses'); $x++) {
+          
+          // calcula diferencia en centavos entre el total registrado de todos los meses y el total adeudado
+          for ($y= 1; $y <= $meses; $y++) {
+            $sumaMontoMensual= round($sumaMontoMensual,2)+ round($monto/$meses,2);
+          }
+    
+          $diferencia= round($monto - $sumaMontoMensual,2);
+          //dd($sumaMontoMensual, $diferencia);          
+          
+          for ($x= 1; $x <= $meses; $x++) {
 
             $fecha= $fecha->subMonth();
             $month= $fecha->month;    
             $year= $fecha->year; 
-            $dia= $secapto->d_registra_cmpc==1 ? '01' : '16';
-            
-                // calcula diferencia en centavos entre el total registrado de todos los meses y el total adeudado
-            for ($y= 1; $y <= $meses; $y++) {
-              $sumaMontoMensual= round($sumaMontoMensual,2)+ round($monto/$meses,2);
-            }
-      
-            $diferencia= round($monto-$sumaMontoMensual,2);
-            //dd($sumaMontoMensual, $diferencia);      
+            $dia= $secapto->d_registra_cmpc == 1 ? '01' : '16';
             
             // Registra facturacion mensual de la unidad en estudio en el Ctdiario auxiliar de servicios de mantenimiento
             $dto= new Ctdasm;
@@ -122,14 +122,16 @@ class InicializaunController extends Controller {
             $dto->mes_anio         = Sity::getMonthName($month).'-'.$year;
             $dto->detalle          = 'Cuota de mantenimiento Unidad No ' . Input::get('un_id');
             
-            if ($x==1 && $diferencia>0) {
-              $dto->importe        = round($monto/$meses,2)+abs($diferencia);
+            if ($x==1 && $diferencia>=0) {
+              $dto->importe = round($monto/$meses,2) + abs($diferencia);
+
             } elseif ($x==1 && $diferencia<0) {
-              $dto->importe        = round($monto/$meses,2)-abs($diferencia);
-            } else {
-              $dto->importe        = round($monto/$meses,2);
-            }
+              $dto->importe = round($monto/$meses,2) - abs($diferencia);
             
+            } else {
+              $dto->importe = round($monto/$meses,2);
+            }
+
             $dto->f_vencimiento    = Carbon::createFromDate($year, $month, 1)->endOfMonth();
             $dto->recargo          = 0;
             $dto->recargo_pagado   = 0;

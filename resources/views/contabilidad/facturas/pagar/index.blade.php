@@ -1,4 +1,4 @@
-@extends('backend._layouts.default')
+@extends('templates.backend._layouts.default')
 
 @section('main')
 
@@ -52,29 +52,29 @@
 								<table id="dt_basic" class="table table-hover">
 									<thead>
 										<tr>
-											<th>NUMERO</th>
+											<th col width="25px">NUMERO</th>
 											<th>PROVEEDOR</th>
-											<th>FECHA</th>
-											<th>TOTALFAC</th>
-											<th>TOTALPAGADO</th>
-											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
+											<th col width="85px">FECHA</th>
+											<th col width="20px">TOTALFAC</th>
+											<th col width="20px">TOTALPAGADO</th>
+											<th col width="200px"class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
 										</tr>
 									</thead>
 									<tbody>
 										@foreach ($datos as $dato)
 											<tr>
-												<td col width="40px">{{ $dato->no }}</td>
+												<td>{{ $dato->no }}</td>
 												<td>{{ $dato->nombre }}</td>
-												<td col width="90px">{{ $dato->fecha }}</td>
-												<td col width="60px">{{ $dato->total }}</td>
+												<td>{{ $dato->fecha }}</td>
+												<td>{{ $dato->total }}</td>
 											
 												@if ($dato->total==$dato->totalpagodetalle)
-													<td col width="60px">{{ $dato->totalpagodetalle }}</td>
+													<td>{{ $dato->totalpagodetalle }}</td>
 												@else
-													<td col width="60px"><mark>{{ $dato->totalpagodetalle }}</mark></td>
+													<td><mark>{{ $dato->totalpagodetalle }}</mark></td>
 												@endif
 
-												<td col width="210px" align="right">
+												<td align="right">
 													<ul class="demo-btns">
 														@if ($dato->pagada==0)
 															<li>
@@ -99,7 +99,7 @@
 									</tbody>
 								</table>
 								<!-- Incluye la modal box -->
-								@include('backend._partials.modal_confirm')
+								@extends('templates.backend._partials.modal_confirm')
 							</div>
 							<!-- end widget content -->
 		

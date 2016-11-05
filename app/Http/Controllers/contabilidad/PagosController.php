@@ -84,8 +84,8 @@ class PagosController extends Controller {
 	public function store()
 	{
         
-/*		DB::beginTransaction();
-		try {*/
+		DB::beginTransaction();
+		try {
 	        //dd(Input::all());
 	        $input = Input::all();
 
@@ -182,19 +182,19 @@ class PagosController extends Controller {
 					// Registra en bitacoras
 					$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $dato->monto;  
 		            Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
-					//DB::commit();		            
+					DB::commit();		            
 		            Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado y procesado con éxito.');
 				}
 				return Redirect::route('indexPagos',  Input::get('un_id'));
 			}
 	        return Redirect::back()->withInput()->withErrors($validation);
 		
-/*		} catch (\Exception $e) {
+		} catch (\Exception $e) {
 		    DB::rollback();
         	Session::flash('warning', ' Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada!');
 
         	return Redirect::back()->withInput()->withErrors($validation);
-		}*/
+		}
 	}
 
     /*************************************************************************************

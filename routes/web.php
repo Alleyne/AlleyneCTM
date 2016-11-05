@@ -20,10 +20,10 @@ Route::get('/', 'WelcomeController@index')->name('frontend');
 //=========================================================//
 
 Route::auth();
-Route::get('logout', 'Auth\LoginController@logout');
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/home', 'HomeController@index');
 
-Route::group(['namespace' => 'backend'], function()
+Route::group(['namespace' => 'core'], function()
 {
 	//---------------------------------------------------------//
 	// Funciones del controlador JdsController
@@ -217,6 +217,32 @@ Route::group(['namespace' => 'catalogo'], function()
 Route::group(['namespace' => 'emails'], function()
 {
 	Route::get('/email', 'EmailsController@emailNuevoEcuentas');		
+});
+
+
+Route::group(['namespace' => 'blog'], function()
+{	
+
+	// Categories
+	Route::resource('categories', 'CategoryController', ['except' => ['create']]);
+	Route::resource('tags', 'TagController', ['except' => ['create']]);
+	
+	// Comments
+	Route::post('comments/{post_id}', ['uses' => 'CommentsController@store', 'as' => 'comments.store']);
+	Route::get('comments/{id}/edit', ['uses' => 'CommentsController@edit', 'as' => 'comments.edit']);
+	Route::put('comments/{id}', ['uses' => 'CommentsController@update', 'as' => 'comments.update']);
+	Route::delete('comments/{id}', ['uses' => 'CommentsController@destroy', 'as' => 'comments.destroy']);
+	Route::get('comments/{id}/delete', ['uses' => 'CommentsController@delete', 'as' => 'comments.delete']);
+
+	Route::get('blog/{slug}', ['as' => 'blog.single', 'uses' => 'BlogController@getSingle'])->where('slug', '[\w\d\-\_]+');
+	//Route::get('blog', ['uses' => 'BlogController@getIndex', 'as' => 'blog.index']);
+    Route::get('blog', 'BlogController@getIndex')->name('blog');
+
+    Route::get('contact', 'PagesController@getContact')->name('contact');
+    Route::post('contact', 'PagesController@postContact');
+	Route::get('about', 'PagesController@getAbout')->name('about');
+	Route::get('pages', 'PagesController@getIndex')->name('pages');
+	Route::resource('posts', 'PostController');
 });
 
 //---------------------------------------------------------//

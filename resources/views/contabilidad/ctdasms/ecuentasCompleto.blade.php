@@ -1,4 +1,4 @@
-@extends('backend._layouts.default')
+@extends('templates.backend._layouts.default')
 
 @section('main')
 <div class="row show-grid">

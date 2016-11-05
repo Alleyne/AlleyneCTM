@@ -195,7 +195,7 @@ class Sity {
               $nota = 'Para notificarle que, se descontó  de su cuenta de pagos anticipados un saldo de B/. '.number_format(($importe),2). ' para completar pago de la cuota de mantenimiento de '.$dato->ocobro.' quedando en saldo B/.'.number_format($saldocpa,2);
 
               $user= User::find($prop->user_id);              
-              $user->notify(new emailUsoDeCuentaAnticipados($nota, $user->nombre_completo));
+              //$user->notify(new emailUsoDeCuentaAnticipados($nota, $user->nombre_completo));
             }
 
             // Actualiza el nuevo monto disponible para continuar pagando
@@ -495,19 +495,6 @@ class Sity {
           $dto->pago_id = $pago_id;
           $dto->save();          
 
-          // registra un aumento en la cuenta 1120.00 "Cuentas por cobrar por cuota de mantenimiento" 
-          //Sity::registraEnCuentas($periodo, 'mas', 1, 1, $f_pago, Catalogo::find(1)->nombre.' '.$un->codigo.' '.$mes_anio, $seccion->cuota_mant, $un_id, $pago_id);        
-          // registra un aumento en la cuenta Banco 
-          //Sity::registraEnCuentas($periodo, 'mas', 4, 3, $f_pago, Catalogo::find(3)->nombre, $seccion->cuota_mant, $un_id, $pago_id);    
-          
-          // registra un aumento en "Gastos por cuentas incobrables"
-          //Sity::registraEnCuentas($periodo, 'mas', 6, 13, $f_pago, Catalogo::find(13)->nombre.' '.$un->codigo.' '.$mes_anio, $seccion->descuento, $un_id, $pago_id);    
-          // registra un aumento en la cuenta Banco 
-          //Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$un->codigo.' '.$mes_anio, ($seccion->cuota_mant - $seccion->descuento), $un_id, $pago_id);    
-            
-          // registra un disminucion en la cuenta 1120.00 "Cuentas por cobrar por cuota de mantenimiento" 
-          //Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, Catalogo::find(1)->nombre.' unidad '.$un->codigo.' '.$mes_anio, $seccion->cuota_mant, $un_id, $pago_id);
-          
           // Registra en Detallepago para generar un renglon en el recibo
           Sity::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, ($seccion->cuota_mant- $seccion->descuento), $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
         
@@ -533,26 +520,8 @@ class Sity {
           $dto->pago_id = $pago_id;
           $dto->save();  
 
-          // registra un aumento en la cuenta 1120.00 "Cuentas por cobrar por cuota de mantenimiento" 
-          //Sity::registraEnCuentas($periodo, 'mas', 1, 1, $f_pago, Catalogo::find(1)->nombre.' '.$un->codigo.' '.$mes_anio, $seccion->cuota_mant, $un_id, $pago_id);        
-          // registra un aumento en la cuenta Banco 
-          //Sity::registraEnCuentas($periodo, 'mas', 4, 3, $f_pago, Catalogo::find(3)->nombre, $seccion->cuota_mant, $un_id, $pago_id);    
-
-          // registra un aumento en la cuenta Banco 
-          //Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$un->codigo.' '.$mes_anio, $montoRecibido, $un_id, $pago_id);    
-
-          //-----------------------------------------------------------------
-          // 2. descuenta la diferencia de la cuenta de pagos anticipados
-          //-----------------------------------------------------------------
           // calcula el total a descontar de la cuenta de pagos anticipados necesarios para completar el pago del mes con descuento
           $totalDescontarPa = (($seccion->cuota_mant - $seccion->descuento) - $montoRecibido);
-          // registra una disminucion en la cuenta de Pagos anticipados
-          //Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, Catalogo::find(5)->nombre.' '.$un->codigo.' '.$mes_anio, $totalDescontarPa, $un_id, $pago_id);
-
-          // registra un aumento en "Gastos por cuentas incobrables" 
-          //Sity::registraEnCuentas($periodo, 'mas', 6, 13, $f_pago, Catalogo::find(13)->nombre.' '.$un->codigo.' '.$mes_anio, $seccion->descuento, $un_id, $pago_id);    
-          // registra un disminucion en la cuenta 1120.00 "Cuentas por cobrar por cuota de mantenimiento" 
-          //Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, Catalogo::find(1)->nombre.' '.$un->codigo.' '.$mes_anio, $seccion->cuota_mant, $un_id, $pago_id);
 
           // Registra en Detallepago para generar un renglon en el recibo
           Sity::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, ($seccion->cuota_mant- $seccion->descuento), $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
@@ -582,20 +551,9 @@ class Sity {
           $dto->pago_id = $pago_id;
           $dto->save();  
 
-          // registra un aumento en la cuenta 1120.00 "Cuentas por cobrar por cuota de mantenimiento" 
-          //Sity::registraEnCuentas($periodo, 'mas', 1, 1, $f_pago, Catalogo::find(1)->nombre.' '.$un->codigo.' '.$mes_anio, $seccion->cuota_mant, $un_id, $pago_id);        
-          // registra un aumento en la cuenta Banco 
-          //Sity::registraEnCuentas($periodo, 'mas', 4, 3, $f_pago, Catalogo::find(3)->nombre, $seccion->cuota_mant, $un_id, $pago_id);    
-         
           // calcula el total a descontar de la cuenta de pagos anticipados necesarios para completar el pago del mes con descuento
           $totalDescontarPa = ($seccion->cuota_mant - $seccion->descuento);
-          // registra una disminucion en la cuenta de Pagos anticipados
-          //Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, Catalogo::find(5)->nombre.' '.$un->codigo.' '.$mes_anio, $totalDescontarPa, $un_id, $pago_id);
-          // registra un aumento en "Gastos por cuentas incobrables" 
-          //Sity::registraEnCuentas($periodo, 'mas', 6, 13, $f_pago, Catalogo::find(13)->nombre.' '.$un->codigo.' '.$mes_anio, $seccion->descuento, $un_id, $pago_id);    
-          // registra un aumento en la cuenta 1120.00 "Cuentas por cobrar por cuota de mantenimiento" 
-          //Sity::registraEnCuentas($periodo, 'mas', 1, 1, $f_pago, Catalogo::find(1)->nombre.' '.$un->codigo.' '.$mes_anio, $seccion->cuota_mant, $un_id, $pago_id);        
-          
+   
           // Registra en Detallepago para generar un renglon en el recibo
           Sity::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, ($seccion->cuota_mant- $seccion->descuento), $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
 
@@ -2738,8 +2696,8 @@ public static function migraDatosCtdiariohis($pcontable_id) {
     $data->pcontable_id     = $dato->pcontable_id;
     $data->fecha            = $dato->fecha;
     $data->detalle          = $dato->detalle;
-    $data->debito           = $dato->debito;
-    $data->credito          = $dato->credito;
+    $data->debito           = $dato->debito ? $dato->debito : Null;
+    $data->credito          = $dato->credito ? $dato->credito : Null;
     $data->save(); 
 
     // borra todos los datos del periodo de la tabla ctdiarios
@@ -2786,7 +2744,7 @@ public static function migraDatosCtdiariohis($pcontable_id) {
     foreach ($props as $prop) {
       $user= User::find($prop->id);
       //dd($user);
-      $user->notify(new emailNuevaOcobro($pdo, $user->nombre_completo));      
+      //$user->notify(new emailNuevaOcobro($pdo, $user->nombre_completo));      
     } 
   } // end function
   
@@ -2915,8 +2873,8 @@ public static function migraDatosCtdiariohis($pcontable_id) {
             $diario->pcontable_id  = $periodo->id;
             $diario->fecha   = $cuenta->fecha; 
             $diario->detalle = $cuenta->detalle;
-            $diario->debito  = $cuenta->debito;
-            $diario->credito = $cuenta->credito;
+            $diario->debito  = $cuenta->debito ? $cuenta->debito : Null;
+            $diario->credito = $cuenta->credito ? $cuenta->credito : Null;
             $diario->save();
           
           } else {
@@ -2924,8 +2882,8 @@ public static function migraDatosCtdiariohis($pcontable_id) {
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo->id;
             $diario->detalle = $cuenta->detalle;
-            $diario->debito = $cuenta->debito;
-            $diario->credito = $cuenta->credito;
+            $diario->debito = $cuenta->debito ? $cuenta->debito : Null;
+            $diario->credito = $cuenta->credito ? $cuenta->credito : Null;
             $diario->save();
           }
           $i=1;

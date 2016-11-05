@@ -474,8 +474,8 @@ class HojadetrabajosController extends Controller {
     ************************************************************************************/ 
     public function cierraPeriodo($pcontable_id, $periodo, $fecha) {
 
-/*        DB::beginTransaction();
-        try {*/
+        DB::beginTransaction();
+        try {
             
             $datos= Un::where('inicializada', 0)->first();
             if ($datos) {
@@ -514,13 +514,7 @@ class HojadetrabajosController extends Controller {
                 // facturacion para las secciones que generan las ordenes de cobro los dias 16
                 Sity::facturar(Carbon::createFromDate($year, $month, 16));
 
-                // penaliza todas aquellas unidades cuya orden de cobro se genera los dias primero o diesiceis de cada mes
-                //$secs= Secapto::select('d_registra_cmpc')->orderBy('d_registra_cmpc')->distinct()->get();
-                //dd($secs->toArray());
-
-                //foreach ($secs as $sec) {
-                    Sity::penalizarTipo1($fecha);
-                //}
+                Sity::penalizarTipo1($fecha);
 
                 // Registra en bitacoras
                 $detalle =  'Se crea periodo contable de '.Pcontable::all()->last()->periodo;
@@ -556,16 +550,16 @@ class HojadetrabajosController extends Controller {
 
             // registra en bitacoras
             Sity::RegistrarEnBitacora(17, 'pcontables', $pcontable_id, $periodo);
-            //DB::commit();             
+            DB::commit();             
             Session::flash('success', 'Periodo '.$periodo.' ha sido cerrado permanentemente!');
 
             return Redirect::route('pcontables.index');
         
-/*        } catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             Session::flash('warning', ' Ocurrio un error en el modulo HojadetrabajosController.cierraPeriodo, la transaccion ha sido cancelada!');
 
             return Redirect::back();
-        }*/
+        }
     }
 } // fin de controller

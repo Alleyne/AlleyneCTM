@@ -103,8 +103,8 @@
 								<td align="left">&nbsp;&nbsp;&nbsp; {{ $dato->detalle }}</td>
 							@endif
 							<td>{{ $dato->ref }}</td>
-							<td>{{ $dato->debito }}</td>
-							<td>{{ $dato->credito }}</td>
+							<td>{{ $dato->debito!='0.00' ? $dato->debito : Null }}</td>
+							<td>{{ $dato->credito!='0.00' ? $dato->credito : Null }}</td>
 						</tr>
 					@endforeach
 					<tr>

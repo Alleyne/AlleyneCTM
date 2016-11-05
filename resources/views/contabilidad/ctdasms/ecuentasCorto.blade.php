@@ -1,4 +1,4 @@
-@extends('site._layouts.default_1')
+@extends('templates.frontend._layouts.default_1')
 
 @section('main')
 
