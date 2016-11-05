@@ -195,7 +195,7 @@ class Sity {
               $nota = 'Para notificarle que, se descontó  de su cuenta de pagos anticipados un saldo de B/. '.number_format(($importe),2). ' para completar pago de la cuota de mantenimiento de '.$dato->ocobro.' quedando en saldo B/.'.number_format($saldocpa,2);
 
               $user= User::find($prop->user_id);              
-              //$user->notify(new emailUsoDeCuentaAnticipados($nota, $user->nombre_completo));
+              $user->notify(new emailUsoDeCuentaAnticipados($nota, $user->nombre_completo));
             }
 
             // Actualiza el nuevo monto disponible para continuar pagando
@@ -2744,7 +2744,7 @@ public static function migraDatosCtdiariohis($pcontable_id) {
     foreach ($props as $prop) {
       $user= User::find($prop->id);
       //dd($user);
-      //$user->notify(new emailNuevaOcobro($pdo, $user->nombre_completo));      
+      $user->notify(new emailNuevaOcobro($pdo, $user->nombre_completo));      
     } 
   } // end function
   
