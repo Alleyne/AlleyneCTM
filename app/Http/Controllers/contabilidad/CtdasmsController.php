@@ -132,6 +132,7 @@ class CtdasmsController extends Controller {
       'propcorregimiento' => $prop->user->corregimiento,
       
       'un_id'      => $un->id, 
+      'activa'      => $un->activa,
       'codigo'      => $un->codigofull, 
       'fecha'       => Date::today()->format('l\, j \d\e F Y'),
       'total'  => 'B/. ' . $total,
