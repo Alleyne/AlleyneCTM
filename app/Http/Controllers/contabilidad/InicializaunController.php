@@ -140,7 +140,7 @@ class InicializaunController extends Controller {
             $dto->seccione_id      = $seccion->id;
             $dto->blqadmin_id      = $blqAdmin->id;
             $dto->un_id            = Input::get('un_id');
-            $dto->recargo_siono    = 0;
+            $dto->recargo_siono    = 1;
             $dto->save(); 
           } 
                   

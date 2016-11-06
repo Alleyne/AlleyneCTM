@@ -84,8 +84,8 @@ class PagosController extends Controller {
 	public function store()
 	{
         
-		DB::beginTransaction();
-		try {
+/*		DB::beginTransaction();
+		try {*/
 	        //dd(Input::all());
 	        $input = Input::all();
 
@@ -116,9 +116,6 @@ class PagosController extends Controller {
 			if ($validation->passes())
 			{
 				
-				// antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
-				Sity::penalizarTipo2(Carbon::parse(Input::get('f_pago')), Input::get('un_id'));
-
 			    // calcula el periodo al que corresponde la fecha de pago
 			    $year= Carbon::parse(Input::get('f_pago'))->year;
 			    $month= Carbon::parse(Input::get('f_pago'))->month;
@@ -133,6 +130,9 @@ class PagosController extends Controller {
 		            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo de '.$periodo->periodo);
 	        		return Redirect::back()->withInput()->withErrors($validation);
 			    }
+
+				// antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
+				Sity::penalizarTipo2(Carbon::parse(Input::get('f_pago')), Input::get('un_id'));
 
 				// Almacena el monto de la transaccion
 				$montoRecibido= round(floatval(Input::get('monto')),2);
@@ -189,12 +189,12 @@ class PagosController extends Controller {
 			}
 	        return Redirect::back()->withInput()->withErrors($validation);
 		
-		} catch (\Exception $e) {
+/*		} catch (\Exception $e) {
 		    DB::rollback();
         	Session::flash('warning', ' Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada!');
 
         	return Redirect::back()->withInput()->withErrors($validation);
-		}
+		}*/
 	}
 
     /*************************************************************************************

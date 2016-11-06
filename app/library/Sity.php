@@ -2158,11 +2158,11 @@ public static function penalizarTipo1($fecha)
 public static function penalizarTipo2($f_pago, $un_id)
 {
   // clona $fecha para mantener su valor original
-  $f_limite = clone $f_pago;
+  $fpago = clone $f_pago;
 
   // penaliza individualmente a una determinada unidad
   $datos= Ctdasm::where('un_id', $un_id)
-              ->whereDate('f_vencimiento','<', $f_limite)
+              ->whereDate('f_vencimiento','<', $fpago)
               ->where('pagada', 0)
               ->where('recargo_siono', 0)
               ->get();
@@ -2176,17 +2176,16 @@ public static function penalizarTipo2($f_pago, $un_id)
   if ($datos->count()) {
     foreach ($datos as $dato) {
       // determina a que periodo corresponde la fecha de vencimiento 
-      $f_vencimiento= Carbon::parse($dato->f_vencimiento)->addDay();
-      $month= $f_vencimiento->month;    
-      $year= $f_vencimiento->year;    
+      $month= $fpago->month;    
+      $year= $fpago->year;    
 
       $pdo= Sity::getMonthName($month).'-'.$year;
       $periodo= Pcontable::where('periodo', $pdo)->first()->id;
       //dd($periodo);       
 
-      $dto = Ctdasm::find($dato->id);
-      $dto->recargo_siono= 1;
-      $dto->save();  
+      //$dto = Ctdasm::find($dato->id);
+      //$dto->recargo_siono= 1;
+      //$dto->save();  
 
       // acumula el total de recargos
       $totalRecargos = $totalRecargos + $dato->recargo;
@@ -2197,7 +2196,7 @@ public static function penalizarTipo2($f_pago, $un_id)
             'mas',
             1,
             2, //'1130.00'
-            $f_vencimiento,
+            Carbon::parse($dato->f_vencimiento)->addDay(),
             'Recargo en cuota de mantenimiento por cobrar unidad '.$dato->ocobro,
             $dato->recargo,
             $dato->un_id
@@ -2209,7 +2208,7 @@ public static function penalizarTipo2($f_pago, $un_id)
             'mas',
             4,
             4, //'4130.00'
-            $f_vencimiento,
+            Carbon::parse($dato->f_vencimiento)->addDay(),
             '   Ingreso por recargo en cuota de mantenimiento unidad '.$dato->ocobro,
             $dato->recargo,
             $dato->un_id
@@ -2220,7 +2219,7 @@ public static function penalizarTipo2($f_pago, $un_id)
         // registra en Ctdiario principal
         $dto = new Ctdiario;
         $dto->pcontable_id  = $periodo;
-        $dto->fecha   = $f_vencimiento;
+        $dto->fecha   = Carbon::parse($dato->f_vencimiento)->addDay();
         $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
         $dto->debito  = $dato->recargo; 
         $dto->save(); 
