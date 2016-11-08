@@ -10,18 +10,11 @@
 | kernel and includes session state, CSRF protection, and more.
 |
 */
-//=========================================================//
-// RUTAS QUE CONTROLAN FRONTEND
-//=========================================================//
-Route::get('/', 'WelcomeController@index')->name('frontend');
-
-//=========================================================//
-// RUTAS QUE CONTROLAN EL BACKEND
-//=========================================================//
-
 Route::auth();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('/home', 'HomeController@index');
+
+Route::get('/', 'WelcomeController@index')->name('frontend');
+Route::get('/home', 'HomeController@index')->name('backend');
 
 Route::group(['namespace' => 'core'], function()
 {
@@ -201,7 +194,6 @@ Route::group(['namespace' => 'contabilidad'], function()
 	Route::get('/lim','PruebasController@lim');
 	Route::get('/truncateAll','PruebasController@truncateAll');
 	Route::get('/bbb','PruebasController@bbb');
-
 });	
 
 Route::group(['namespace' => 'catalogo'], function()
@@ -222,9 +214,8 @@ Route::group(['namespace' => 'emails'], function()
 
 Route::group(['namespace' => 'blog'], function()
 {	
-
 	// Categories
-	Route::resource('categories', 'CategoryController', ['except' => ['create']]);
+	Route::resource('categories', 'CategoryController');
 	Route::resource('tags', 'TagController', ['except' => ['create']]);
 	
 	// Comments

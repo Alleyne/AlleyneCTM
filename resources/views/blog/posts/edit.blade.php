@@ -1,4 +1,4 @@
-@extends('templates.frontend._layouts.unify')
+@extends('templates.backend._layouts.smartAdmin')
 
 @section('title', '| Edit Blog Post')
 
@@ -23,19 +23,19 @@
 	<div class="row">
 		{!! Form::model($post, ['route' => ['posts.update', $post->id], 'method' => 'PUT']) !!}
 		<div class="col-md-8">
-			{{ Form::label('title', 'Title:') }}
+			{{ Form::label('title', 'Título:') }}
 			{{ Form::text('title', null, ["class" => 'form-control input-lg']) }}
 
 			{{ Form::label('slug', 'Slug:', ['class' => 'form-spacing-top']) }}
 			{{ Form::text('slug', null, ['class' => 'form-control']) }}
 
-			{{ Form::label('category_id', "Category:", ['class' => 'form-spacing-top']) }}
+			{{ Form::label('category_id', "Categoría:", ['class' => 'form-spacing-top']) }}
 			{{ Form::select('category_id', $categories, null, ['class' => 'form-control']) }}
 
-			{{ Form::label('tags', 'Tags:', ['class' => 'form-spacing-top']) }}
+			{{ Form::label('tags', 'Etiqueta:', ['class' => 'form-spacing-top']) }}
 			{{ Form::select('tags[]', $tags, null, ['class' => 'form-control select2-multi', 'multiple' => 'multiple']) }}
 			
-			{{ Form::label('body', "Body:", ['class' => 'form-spacing-top']) }}
+			{{ Form::label('body', "Cuerpo:", ['class' => 'form-spacing-top']) }}
 			{{ Form::textarea('body', null, ['class' => 'form-control']) }}
 		</div>
 

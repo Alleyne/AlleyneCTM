@@ -15,9 +15,9 @@ class BlogController extends Controller
 		return view('blog.blog.index')->withPosts($posts);
 	}
 
-    public function getSingle($id) {
+    public function getSingle($slug) {
     	// fetch from the DB based on slug
-    	$post = Post::find($id);
+    	$post = Post::where('slug', $slug)->first();
 
     	// return the view and pass in the post object
     	return view('blog.blog.single')->withPost($post);

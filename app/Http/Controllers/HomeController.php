@@ -46,6 +46,6 @@ class HomeController extends Controller
         
         Cache::forever('unsAllkey', Un::all());
 
-        return view('templates.backend.bienvenida_backend');
+        return view('home');
     }
 }

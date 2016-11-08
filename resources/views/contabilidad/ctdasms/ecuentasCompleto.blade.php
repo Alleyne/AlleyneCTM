@@ -1,6 +1,8 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')
+@section('title', '| All Posts')
+
+@section('content')
 <div class="row show-grid">
     <div class="col-xs-12 col-sm-6 col-md-12">        
         <!-- NEW WIDGET START -->

@@ -1,6 +1,8 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')
+@section('title', '| Detalle de usuario')
+
+@section('content')
 
 	<!-- MAIN CONTENT -->
 	<div id="content">
@@ -174,21 +176,11 @@
 @stop
 
 @section('relatedplugins')
-<!-- PAGE RELATED PLUGIN(S) 
-<script src="..."></script>-->
-
-
-
 <script type="text/javascript">
-
-// DO NOT REMOVE : GLOBAL FUNCTIONS!
-
 $(document).ready(function() {
 	
 	pageSetUp();
 	
-	// PAGE RELATED SCRIPTS
-
 	$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
 	$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
 		var children = $(this).parent('li.parent_li').find(' > ul > li');

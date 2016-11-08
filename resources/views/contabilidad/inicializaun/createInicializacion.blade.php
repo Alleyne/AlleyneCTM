@@ -1,6 +1,8 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')<!-- MAIN PANEL -->
+@section('title', '| Inicializar Unidad')
+
+@section('content')
 	<!-- widget grid -->
 	<section id="widget-grid" class="">
 	
@@ -114,37 +116,33 @@
 @stop
 
 @section('relatedplugins')
-<!-- PAGE RELATED PLUGIN(S) -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			pageSetUp();
+			
+			// PAGE RELATED SCRIPTS
+			$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
+			$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
+				var children = $(this).parent('li.parent_li').find(' > ul > li');
+				if (children.is(':visible')) {
+					children.hide('fast');
+					$(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
+				} else {
+					children.show('fast');
+					$(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
+				}
+				e.stopPropagation();
+			});			
+		})
+	</script>
 
-<script type="text/javascript">
-	// DO NOT REMOVE : GLOBAL FUNCTIONS!
-	$(document).ready(function() {
-		pageSetUp();
-		
-		// PAGE RELATED SCRIPTS
-		$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
-		$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
-			var children = $(this).parent('li.parent_li').find(' > ul > li');
-			if (children.is(':visible')) {
-				children.hide('fast');
-				$(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
-			} else {
-				children.show('fast');
-				$(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
-			}
-			e.stopPropagation();
-		});			
-	})
-</script>
-
-<script type="text/javascript">
-  $(document).ready(function(){
-    $("input[type='submit']").attr("disabled", false);
-    $("form").submit(function(){
-      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
-      return true;
-    })
-  })
-</script>
-
+	<script type="text/javascript">
+	  $(document).ready(function(){
+	    $("input[type='submit']").attr("disabled", false);
+	    $("form").submit(function(){
+	      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+	      return true;
+	    })
+	  })
+	</script>
 @stop

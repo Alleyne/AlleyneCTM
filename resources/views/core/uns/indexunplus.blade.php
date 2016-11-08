@@ -1,6 +1,8 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')
+@section('title', '| Unidades')
+
+@section('content')
 	<div class="row"><!-- row -->
 		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			@include('core.uns.index')

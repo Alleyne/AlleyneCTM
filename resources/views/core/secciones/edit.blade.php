@@ -1,6 +1,8 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')<!-- MAIN PANEL -->
+@section('title', '| Editar Seccion')
+
+@section('content')
     <!-- widget grid -->
     <section id="widget-grid" class="">
     
@@ -544,63 +546,58 @@
 @stop
 
 @section('relatedplugins')
-<!-- PAGE RELATED PLUGIN(S) -->
-
 <script type="text/javascript">
-// DO NOT REMOVE : GLOBAL FUNCTIONS!
-$(document).ready(function() {
-    pageSetUp();
-    
-    // PAGE RELATED SCRIPTS
+    $(document).ready(function() {
+        pageSetUp();
+        
+        $('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
+        $('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
+            var children = $(this).parent('li.parent_li').find(' > ul > li');
+            if (children.is(':visible')) {
+                children.hide('fast');
+                $(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
+            } else {
+                children.show('fast');
+                $(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
+            }
+            e.stopPropagation();
+        });            
+        
+        // Spinners
+        $("#spinner1").spinner({
+            min: 1,
+            max: 16,
+            step: 15,
+            start: 1,
+            numberFormat: "C"
+        });   
 
-    $('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
-    $('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
-        var children = $(this).parent('li.parent_li').find(' > ul > li');
-        if (children.is(':visible')) {
-            children.hide('fast');
-            $(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
-        } else {
-            children.show('fast');
-            $(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
-        }
-        e.stopPropagation();
-    });            
-    
-    // Spinners
-    $("#spinner1").spinner({
-        min: 1,
-        max: 16,
-        step: 15,
-        start: 1,
-        numberFormat: "C"
-    });   
-
-    // Spinners
-    $("#spinner2").spinner({
-        min: 0,
-        max: 31,
-        step: 1,
-        start: 1,
-        numberFormat: "C"
-    });  
-    
-    // Spinners
-    $("#spinner3").spinner({
-        min: 0,
-        max: 60,
-        step: 1,
-        start: 1,
-        numberFormat: "C"
-    }); 
-    
-    // Spinners
-    $("#spinner4").spinner({
-        min: 0,
-        max: 1,
-        step: 1,
-        start: 0,
-        numberFormat: "C"
-    }); 
-})
+        // Spinners
+        $("#spinner2").spinner({
+            min: 0,
+            max: 31,
+            step: 1,
+            start: 1,
+            numberFormat: "C"
+        });  
+        
+        // Spinners
+        $("#spinner3").spinner({
+            min: 0,
+            max: 60,
+            step: 1,
+            start: 1,
+            numberFormat: "C"
+        }); 
+        
+        // Spinners
+        $("#spinner4").spinner({
+            min: 0,
+            max: 1,
+            step: 1,
+            start: 0,
+            numberFormat: "C"
+        }); 
+    })
 </script>
 @stop

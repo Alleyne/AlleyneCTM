@@ -1,6 +1,8 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')
+@section('title', '| Hoja de Trabajo')
+
+@section('content')
 	<div class="row">
 	  <div class="col-md-12"><strong><p class="text-center">SityWEB INC.</p></strong></div>
 	  <div class="col-md-12"><strong><p class="text-center">HOJA DE TRABAJO PROYECTADA</p></strong></div>

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-6">                     
         <p>
-            2014 &copy; Unify. ALL Rights Reserved. 
+            2016 &copy; ctmaster.net. ALL Rights Reserved. 
             <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
         </p>
     </div>

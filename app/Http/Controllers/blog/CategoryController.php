@@ -30,6 +30,13 @@ class CategoryController extends Controller
 
     }
 
+    public function create()
+    {
+
+        return view('blog.categories.create');
+
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -48,7 +55,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->save();
 
-        Session::flash('success', 'New Category has been created');
+        Session::flash('success', 'Una nueva categoría ha sido creada!');
 
         return redirect()->route('categories.index');
     }

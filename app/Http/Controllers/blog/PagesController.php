@@ -50,7 +50,7 @@ class PagesController extends Controller {
 			$message->subject($data['subject']);
 		});
 
-		Session::flash('success', 'Your Email was Sent!');
+		Session::flash('success', 'Su Email ha sido enviado!');
 
 		return redirect('/');
 	}

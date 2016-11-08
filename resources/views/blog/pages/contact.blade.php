@@ -1,11 +1,11 @@
 @extends('templates.frontend._layouts.unify')
 
-@section('title', '| Contact')
+@section('title', '| Contacto')
 
 @section('content')
         <div class="row">
             <div class="col-md-12">
-                <h1>Contact Me</h1>
+                <h1>Contactanos</h1>
                 <hr>
                 <form action="{{ url('contact') }}" method="POST">
                     {{ csrf_field() }}

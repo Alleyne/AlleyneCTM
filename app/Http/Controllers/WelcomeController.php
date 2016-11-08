@@ -35,7 +35,7 @@ class WelcomeController extends Controller {
                ->take(3)
                ->get();
 
-		return view('templates.frontend.index')->withPosts($posts);
+		return view('welcome')->withPosts($posts);
 	}
 
 }

@@ -1,4 +1,4 @@
-@extends('templates.frontend._layouts.unify')
+@extends('templates.backend._layouts.smartAdmin')
 
 @section('title', '| All Tags')
 

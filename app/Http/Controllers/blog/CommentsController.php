@@ -41,7 +41,7 @@ class CommentsController extends Controller
 
         $comment->save();
 
-        Session::flash('success', 'Comment was added');
+        Session::flash('success', 'Comentario fue agregado!');
 
         return redirect()->route('blog.single', [$post->slug]);
     }
@@ -75,7 +75,7 @@ class CommentsController extends Controller
         $comment->comment = $request->comment;
         $comment->save();
 
-        Session::flash('success', 'Comment updated');
+        Session::flash('success', 'Comentario fue actualizado!');
 
         return redirect()->route('blog.posts.show', $comment->post->id);
     }
@@ -98,7 +98,7 @@ class CommentsController extends Controller
         $post_id = $comment->post->id;
         $comment->delete();
 
-        Session::flash('success', 'Deleted Comment');
+        Session::flash('success', 'Comentario ha sido borrado!');
 
         return redirect()->route('blog.posts.show', $post_id);
     }

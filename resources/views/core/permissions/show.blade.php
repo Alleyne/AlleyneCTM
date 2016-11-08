@@ -1,6 +1,8 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')
+@section('title', '| Ver permiso')
+
+@section('content')
 
 	<!-- MAIN CONTENT -->
 	<div id="content">
@@ -98,11 +100,8 @@
 // DO NOT REMOVE : GLOBAL FUNCTIONS!
 
 $(document).ready(function() {
-	
 	pageSetUp();
 	
-	// PAGE RELATED SCRIPTS
-
 	$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
 	$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
 		var children = $(this).parent('li.parent_li').find(' > ul > li');
@@ -115,9 +114,6 @@ $(document).ready(function() {
 		}
 		e.stopPropagation();
 	});			
-
 })
-
 </script>
-
 @stop

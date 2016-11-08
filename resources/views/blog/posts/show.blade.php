@@ -1,6 +1,10 @@
-@extends('templates.frontend._layouts.unify')
+@extends('templates.backend._layouts.smartAdmin')
 
 @section('title', '| View Post')
+
+@section('stylesheets')
+	{!! Html::style('css/styles.css') !!}
+@endsection
 
 @section('content')
 
@@ -19,14 +23,14 @@
 			</div>
 
 			<div id="backend-comments" style="margin-top: 50px;">
-				<h3>Comments <small>{{ $post->comments()->count() }} total</small></h3>
+				<h3>Comentarios <small>{{ $post->comments()->count() }} total</small></h3>
 
 				<table class="table">
 					<thead>
 						<tr>
-							<th>Name</th>
+							<th>Nombre</th>
 							<th>Email</th>
-							<th>Comment</th>
+							<th>Comentarios</th>
 							<th width="70px"></th>
 						</tr>
 					</thead>
@@ -56,17 +60,17 @@
 				</dl>
 
 				<dl class="dl-horizontal">
-					<label>Category:</label>
+					<label>Categoría:</label>
 					<p>{{ $post->category->name }}</p>
 				</dl>
 
 				<dl class="dl-horizontal">
-					<label>Created At:</label>
+					<label>Creado el:</label>
 					<p>{{ date('M j, Y h:ia', strtotime($post->created_at)) }}</p>
 				</dl>
 
 				<dl class="dl-horizontal">
-					<label>Last Updated:</label>
+					<label>Editado el:</label>
 					<p>{{ date('M j, Y h:ia', strtotime($post->updated_at)) }}</p>
 				</dl>
 				<hr>
@@ -85,7 +89,7 @@
 
 				<div class="row">
 					<div class="col-md-12">
-						{{ Html::linkRoute('posts.index', '<< See All Posts', array(), ['class' => 'btn btn-default btn-block btn-h1-spacing']) }}
+						{{ Html::linkRoute('posts.index', '<< Ver todos los Artículos', array(), ['class' => 'btn btn-default btn-block btn-h1-spacing']) }}
 					</div>
 				</div>
 

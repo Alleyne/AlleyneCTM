@@ -78,7 +78,7 @@ class PostController extends Controller
 
         $post->tags()->sync($request->tags, false);
 
-        Session::flash('success', 'The blog post was successfully save!');
+        Session::flash('success', 'El artículo ha sido salvado!');
 
         return redirect()->route('posts.show', $post->id);
     }
@@ -165,7 +165,7 @@ class PostController extends Controller
 
 
         // set flash data with success message
-        Session::flash('success', 'This post was successfully saved.');
+        Session::flash('success', 'El artículo ha sido actualizado.');
 
         // redirect with flash data to posts.show
         return redirect()->route('posts.show', $post->id);
@@ -184,7 +184,7 @@ class PostController extends Controller
 
         $post->delete();
 
-        Session::flash('success', 'The post was successfully deleted.');
+        Session::flash('success', 'El artículo ha sido borrado!');
         return redirect()->route('posts.index');
     }
 }

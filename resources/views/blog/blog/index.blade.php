@@ -9,31 +9,29 @@
     	<div class="col-md-9 md-margin-bottom-40">
             <!--Blog Post-->
             @foreach ($posts as $post)
+                <div class="funny-boxes funny-boxes-left-orange">
+                    <div class="col-md-5">
+                        <img class="img-responsive" src="{{asset('/images/' . $post->image)}}" width="303" height="183" alt="">
+                    </div>    
+                    <div class="col-md-7">
+                        <h3>{{ $post->title }}</h3>
+                        <ul class="list-unstyled list-inline blog-info">
+                            <li><i class="fa fa-calendar"></i> {{ date('M j, Y', strtotime($post->created_at)) }}</li>
+                            <li><i class="fa fa-comments"></i> <a href="#">{{ $post->comments()->count() }} comentarios</a></li>
+                            <li><i class="fa fa-book"></i> Categoria: {{ $post->category->name }}</li>
+                        </ul>
+                        <p>{{ substr(strip_tags($post->body), 0, 230) }}{{ strlen(strip_tags($post->body)) > 250 ? '...' : "" }}</p>
+                       <!-- Blog Tags -->
+                        <ul class="list-unstyled blog-tags tag-margin-bottom-30">
+                            @foreach ($post->tags as $tag)
+                                <li><a href="#"><i class="fa fa-tags"></i> {{ $tag->name }}</a></li>
+                            @endforeach
+                        </ul>
+                        <!-- End Blog Tags -->             
 
-            <div class="funny-boxes funny-boxes-left-orange">
-                <div class="col-md-5">
-                    <img class="img-responsive" src="{{asset('/images/' . $post->image)}}" width="303" height="183" alt="">
-                </div>    
-                <div class="col-md-7">
-                    <h3>{{ $post->title }}</h3>
-                    <ul class="list-unstyled list-inline blog-info">
-                        <li><i class="fa fa-calendar"></i> {{ date('M j, Y', strtotime($post->created_at)) }}</li>
-                        <li><i class="fa fa-comments"></i> <a href="#">{{ $post->comments()->count() }} comentarios</a></li>
-                        <li><i class="fa fa-book"></i> Categoria: {{ $post->category->name }}</li>
-                    </ul>
-                    <p>{{ substr(strip_tags($post->body), 0, 230) }}{{ strlen(strip_tags($post->body)) > 250 ? '...' : "" }}</p>
-                   <!-- Blog Tags -->
-                    <ul class="list-unstyled blog-tags tag-margin-bottom-30">
-                        @foreach ($post->tags as $tag)
-                            <li><a href="#"><i class="fa fa-tags"></i> {{ $tag->name }}</a></li>
-                        @endforeach
-                    </ul>
-                    <!-- End Blog Tags -->             
-
-                    <p><a class="btn-u btn-u-small" href="{{ route('blog.single', $post->id) }}"><i class="fa fa-location-arrow"></i> Detalles</a></p>
-                </div>    
-            </div>
-           
+                        <p><a class="btn-u btn-u-small" href="{{ route('blog.single', $post->slug) }}"><i class="fa fa-location-arrow"></i> Detalles</a></p>
+                    </div>    
+                </div>
             @endforeach
             <!--End Blog Post-->        
             

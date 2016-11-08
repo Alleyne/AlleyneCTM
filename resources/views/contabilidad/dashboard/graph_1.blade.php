@@ -1,6 +1,8 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')
+@section('title', '| Dashboard')
+
+@section('content')
 	<!-- MAIN CONTENT -->
 	<div id="content">
 

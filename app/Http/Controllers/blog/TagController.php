@@ -39,7 +39,7 @@ class TagController extends Controller
         $tag->name = $request->name;
         $tag->save();
 
-        Session::flash('success', 'New Tag was successfully created!');
+        Session::flash('success', 'Una nueva etiqueta ha sido creada!');
 
         return redirect()->route('tags.index');
     }
@@ -84,7 +84,7 @@ class TagController extends Controller
         $tag->name = $request->name;
         $tag->save();
 
-        Session::flash('success', 'Successfully saved your new tag!');
+        Session::flash('success', 'La etiqueta ha sido actualizada!');
 
         return redirect()->route('tags.show', $tag->id);
     }
@@ -102,7 +102,7 @@ class TagController extends Controller
 
         $tag->delete();
 
-        Session::flash('success', 'Tag was deleted successfully');
+        Session::flash('success', 'La etiqueta ha sido borrada');
 
         return redirect()->route('tags.index');
     }

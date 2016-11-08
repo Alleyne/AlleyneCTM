@@ -1,6 +1,6 @@
 @extends('templates.frontend._layouts.unify')
 
-@section('title', '| About')
+@section('title', '| Nosotros')
 
 @section('content')
         <div class="row">
