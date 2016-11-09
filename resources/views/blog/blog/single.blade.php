@@ -34,7 +34,7 @@
                 </div>
                 <!--End Blog Post-->        
 
-    			<hr>
+    			<HR WIDTH=85% ALIGN=CENTER COLOR="BLACK">
 
                 <!-- Recent Comments -->                
                 <div class="media">
@@ -72,7 +72,7 @@
 								{{ Form::label('comment', "Comment:") }}
 								{{ Form::textarea('comment', null, ['class' => 'form-control', 'rows' => '5']) }}
 
-								{{ Form::submit('Add Comment', ['class' => 'btn btn-success btn-block', 'style' => 'margin-top:15px;']) }}
+								{{ Form::submit('Agregar Commentario', ['class' => 'btn btn-success btn-block', 'style' => 'margin-top:15px;']) }}
 							</div>
 						</div>
 

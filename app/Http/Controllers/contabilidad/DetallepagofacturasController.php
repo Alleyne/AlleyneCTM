@@ -221,7 +221,7 @@ class DetallepagofacturasController extends Controller {
 		    
 		    // solamente se permite registrar pagos de facturas que correspondan al periodo mas antiguo abierto
 		    if ($pdo != $periodo->periodo) {
-	            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo vigente de '.$periodo->periodo);
+	            Session::flash('danger', '<< ERROR >> Solamente se permite contabilizar pagos que correspondan al periodo vigente de '.$periodo->periodo);
         		return Redirect::back();
 		    }
 

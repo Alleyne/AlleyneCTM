@@ -226,5 +226,15 @@
                 } );
             } );
         } );
+     
+    	$("#fecha").datepicker({
+	        dateFormat: 'yy-mm-dd'
+	    });
+
+	    $("input[type='submit']").attr("disabled", false);
+	    $("form").submit(function(){
+	      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+	      return true;
+	    });
      </script>
 @stop

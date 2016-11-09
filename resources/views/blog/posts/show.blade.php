@@ -10,18 +10,23 @@
 
 	<div class="row">
 		<div class="col-md-8">
+	        <div class="blog-img">
+                <img class="img-responsive" src="{{asset('/images/' . $post->image)}}" alt="">
+            </div>
+            <br>
+
 			<h1>{{ $post->title }}</h1>
 			
 			<p class="lead">{!! $post->body !!}</p>
-
-			<hr>
-			
+	
 			<div class="tags">
 				@foreach ($post->tags as $tag)
 					<span class="label label-default">{{ $tag->name }}</span>
 				@endforeach
 			</div>
 
+			<HR WIDTH=85% ALIGN=CENTER COLOR="RED">
+			
 			<div id="backend-comments" style="margin-top: 50px;">
 				<h3>Comentarios <small>{{ $post->comments()->count() }} total</small></h3>
 

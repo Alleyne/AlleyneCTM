@@ -129,8 +129,6 @@
 $(document).ready(function() {
 	pageSetUp();
 	
-	// PAGE RELATED SCRIPTS
-
 	$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
 	$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
 		var children = $(this).parent('li.parent_li').find(' > ul > li');
@@ -142,7 +140,44 @@ $(document).ready(function() {
 			$(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
 		}
 		e.stopPropagation();
-	});			
+	});
+
+		$('#fecha').datepicker({
+			prevText : '<i class="fa fa-chevron-left"></i>',
+			nextText : '<i class="fa fa-chevron-right"></i>',
+			onSelect : function(selectedDate) {
+				$('#finishdate').datepicker('option', 'minDate', selectedDate);
+			}
+		});
+		
+		$.datepicker.regional['es'] = {
+			closeText: 'Cerrar',
+			prevText: '<Ant',
+			nextText: 'Sig>',
+			currentText: 'Hoy',
+			monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+			dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+			dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+			weekHeader: 'Sm',
+			dateFormat: 'yy/mm/dd',
+			firstDay: 1,
+			isRTL: false,
+			showMonthAfterYear: false,
+			yearSuffix: ''
+			};
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function () {
+			$("#fecha").datepicker();
+		});
+
+
+    $("input[type='submit']").attr("disabled", false);
+    $("form").submit(function(){
+      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+      return true;
+    });
 })
 
 </script>

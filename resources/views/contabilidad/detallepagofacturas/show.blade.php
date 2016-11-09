@@ -1,6 +1,8 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')
+@section('title', '| Detalle de pagos')
+
+@section('content')
 
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
@@ -150,17 +152,19 @@
 		
 						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'detallepagofacturas.store')) }}
 							<fieldset>
-								{{ Form::hidden('factura_id', $factura->id) }}
+
+                				{{ Form::hidden('factura_id', $factura->id) }}                
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Fecha</label>
-                                    <div class="col-md-9">
+                                    <div class="col-md-4">
 										<div class="input-group">
-											<input type="text" class="datepicker" name="fecha" placeholder="Seleccione la fecha del pago de la factura ..." data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+											<input type="text" class="Form-control datepicker" name="fecha" placeholder="Seleccione la fecha del pago de la factura ..." data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 										</div>
                                     	{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
                                     </div>
-                                </div> 
+                                </div>  
+
 								<div class="form-group">
 									<label class="col-md-3 control-label">Detalle</label>
 									<div class="col-md-9">
@@ -204,109 +208,46 @@
 @stop
 
 @section('relatedplugins')
-	<!-- PAGE RELATED PLUGIN(S) -->
-	<!-- <script src="js/plugin/datatables/jquery.dataTables-cust.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
-	
-	<!-- <script src="js/plugin/datatables/ColReorder.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-
-	<!-- <script src="js/plugin/datatables/FixedColumns.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/FixedColumns.min.js') }}"></script>
-
-	<!-- <script src="js/plugin/datatables/ColVis.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColVis.min.js') }}"></script>
-
-	<!-- <script src="js/plugin/datatables/ZeroClipboard.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/ZeroClipboard.js') }}"></script>
-	
-	<!-- <script src="js/plugin/datatables/media/js/TableTools.min.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/media/js/TableTools.min.js') }}"></script>
-	
-	<!-- <script src="js/plugin/datatables/DT_bootstrap.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
-	
-	<script type="text/javascript">
-	// DO NOT REMOVE : GLOBAL FUNCTIONS!
-	$(document).ready(function() {
-		pageSetUp();
-		
-		/*
-		 * BASIC
-		 */
-		$('#dt_basic').dataTable({
-			"sPaginationType" : "bootstrap_full"
-		});
-
-		/* END BASIC */
-
-		/* Add the events etc before DataTables hides a column */
-		$("#datatable_fixed_column thead input").keyup(function() {
-			oTable.fnFilter(this.value, oTable.oApi._fnVisibleToColumnIndex(oTable.fnSettings(), $("thead input").index(this)));
-		});
-
-		$("#datatable_fixed_column thead input").each(function(i) {
-			this.initVal = this.value;
-		});
-		$("#datatable_fixed_column thead input").focus(function() {
-			if (this.className == "search_init") {
-				this.className = "";
-				this.value = "";
-			}
-		});
-		$("#datatable_fixed_column thead input").blur(function(i) {
-			if (this.value == "") {
-				this.className = "search_init";
-				this.value = this.initVal;
-			}
-		});		
-		
-
-		var oTable = $('#datatable_fixed_column').dataTable({
-			"sDom" : "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
-			//"sDom" : "t<'row dt-wrapper'<'col-sm-6'i><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'>>",
-			"oLanguage" : {
-				"sSearch" : "Search all columns:"
-			},
-			"bSortCellsTop" : true
-		});		
-
-		/*
-		 * COL ORDER
-		 */
-		$('#datatable_col_reorder').dataTable({
-			"sPaginationType" : "bootstrap",
-			"sDom" : "R<'dt-top-row'Clf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
-			"fnInitComplete" : function(oSettings, json) {
-				$('.ColVis_Button').addClass('btn btn-default btn-sm').html('Columns <i class="icon-arrow-down"></i>');
-			}
-		});
-		
-		/* END COL ORDER */
-
-		/* TABLE TOOLS */
-		$('#datatable_tabletools').dataTable({
-			"sDom" : "<'dt-top-row'Tlf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
-			"oTableTools" : {
-				"aButtons" : ["copy", "print", {
-					"sExtends" : "collection",
-					"sButtonText" : 'Save <span class="caret" />',
-					"aButtons" : ["csv", "xls", "pdf"]
-				}],
-				"sSwfPath" : "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
-			},
-			"fnInitComplete" : function(oSettings, json) {
-				$(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
-					$(this).addClass('btn-sm btn-default');
-				});
-			}
-		});
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script> -->
+    
+    <script type="text/javascript">
+	    $(document).ready(function() {
+	        pageSetUp();
+	 
+	        $('#dt_basic').dataTable({
+	            "sPaginationType" : "bootstrap_full"
+	        });
+	    })
 
 		$(function () {
 
-		    $(".datepicker").datepicker({
+		    $("#fecha").datepicker({
 		        dateFormat: 'yy-mm-dd'
 		    });
+
+			$.datepicker.regional['es'] = {
+				closeText: 'Cerrar',
+				prevText: '<Ant',
+				nextText: 'Sig>',
+				currentText: 'Hoy',
+				monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+				monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+				dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+				dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+				dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+				weekHeader: 'Sm',
+				dateFormat: 'yy/mm/dd',
+				firstDay: 1,
+				isRTL: false,
+				showMonthAfterYear: false,
+				yearSuffix: ''
+				};
+				$.datepicker.setDefaults($.datepicker.regional['es']);
+				$(function () {
+				$("#fecha").datepicker();
+			});
 
 		    $("#dialog").dialog({
 		        autoOpen: false,
@@ -319,10 +260,17 @@
 		            duration: 1000
 		        }
 		    });
+		    
 		    $("#opener").click(function () {
 		        $("#dialog").dialog("open");
 		    });
+	    
+		    $("input[type='submit']").attr("disabled", false);
+		    $("form").submit(function(){
+		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+		      return true;
+		    });
 		});
-	})
 	</script>
 @stop
+

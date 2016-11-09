@@ -60,13 +60,13 @@
                                             <label class="col-md-3 control-label">Fecha de pago</label>
                                             <div class="col-md-9">
 												<div class="input-group">
-													<input type="text" name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('f_pago') }}>
+													<input type="text" id='f_pago' name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('f_pago') }}>
 													<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 												</div>
                                             	{!! $errors->first('f_pago', '<li style="color:red">:message</li>') !!}</p> 
                                             </div>
                                         </div>  
-								        
+										
 										<div class="form-group">
 											<label class="col-md-3 control-label">Tipo de transaccion</label>
 											<div class="col-md-9">
@@ -149,15 +149,45 @@
 @stop
 
 @section('relatedplugins')
-
-<script type="text/javascript">
-  $(document).ready(function(){
-    $("input[type='submit']").attr("disabled", false);
-    $("form").submit(function(){
-      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
-      return true;
-    })
-  })
-</script>
-
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $("input[type='submit']").attr("disabled", false);
+		    $("form").submit(function(){
+		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+		      return true;
+		    })
+		})
+	
+		$('#f_pago').datepicker({
+			prevText : '<i class="fa fa-chevron-left"></i>',
+			nextText : '<i class="fa fa-chevron-right"></i>',
+			onSelect : function(selectedDate) {
+				$('#finishdate').datepicker('option', 'minDate', selectedDate);
+			}
+		});
+		
+		$.datepicker.regional['es'] = {
+			closeText: 'Cerrar',
+			prevText: '<Ant',
+			nextText: 'Sig>',
+			currentText: 'Hoy',
+			monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+			dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+			dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+			weekHeader: 'Sm',
+			dateFormat: 'yy/mm/dd',
+			firstDay: 1,
+			isRTL: false,
+			showMonthAfterYear: false,
+			yearSuffix: ''
+			};
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function () {
+			$("#fecha").datepicker();
+		});
+	</script>
 @stop

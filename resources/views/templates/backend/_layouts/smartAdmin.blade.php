@@ -85,7 +85,7 @@
       <div id="content">
         <!-- widget grid -->
         <section id="widget-grid" class="">
-          @include('templates.frontend._partials.messages')
+          @include('templates.backend._partials.flash_messages')
           @yield('content') 
         </section>
         <!-- end widget grid -->

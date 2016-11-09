@@ -115,7 +115,7 @@ class PagosController extends Controller {
 
 			if ($validation->passes())
 			{
-				
+
 			    // calcula el periodo al que corresponde la fecha de pago
 			    $year= Carbon::parse(Input::get('f_pago'))->year;
 			    $month= Carbon::parse(Input::get('f_pago'))->month;

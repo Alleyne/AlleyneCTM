@@ -2166,7 +2166,7 @@ public static function penalizarTipo2($f_pago, $un_id)
               ->where('pagada', 0)
               ->where('recargo_siono', 0)
               ->get();
-  //dd($datos->toArray()); 
+  //dd($datos->toArray(), $f_pago, $un_id); 
 
   $i= 1;   
   
@@ -2183,9 +2183,9 @@ public static function penalizarTipo2($f_pago, $un_id)
       $periodo= Pcontable::where('periodo', $pdo)->first()->id;
       //dd($periodo);       
 
-      //$dto = Ctdasm::find($dato->id);
-      //$dto->recargo_siono= 1;
-      //$dto->save();  
+      $dto = Ctdasm::find($dato->id);
+      $dto->recargo_siono= 1;
+      $dto->save();  
 
       // acumula el total de recargos
       $totalRecargos = $totalRecargos + $dato->recargo;

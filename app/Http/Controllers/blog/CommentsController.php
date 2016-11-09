@@ -39,7 +39,7 @@ class CommentsController extends Controller
         $comment->approved = true;
         $comment->post()->associate($post);
 
-        $comment->save();
+        //$comment->save();
 
         Session::flash('success', 'Comentario fue agregado!');
 
