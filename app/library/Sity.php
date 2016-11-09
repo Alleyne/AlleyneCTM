@@ -456,7 +456,7 @@ class Sity {
       // aplica descuento
       
       // calcula el total de dinero a contabilizar 
-      $totalContabilizar= $seccion->m_descuento * ($seccion->cuota_mant-$seccion->descuento);
+      $totalContabilizar= $seccion->m_descuento * ($seccion->cuota_mant - $seccion->descuento);
       
       // registra un aumento en la cuenta Banco 
       Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$un->codigo, $totalContabilizar, $un_id, $pago_id);    
@@ -632,21 +632,21 @@ class Sity {
     $sa= 0;
     
     // encuentra el total de pagos anticipados tomando en cuenta y determinado periodo y los periodo anteriores al mismo
-    if($periodo) {
+    //if($periodo) {
       $tcredito= Ctmayore::where('un_id', $un_id)
-                  ->where('pcontable_id', '<=',$periodo)
+                  ->where('pcontable_id', $periodo)
                   ->where('cuenta', 5)
                   ->sum('credito');
 
       $tdebito= Ctmayore::where('un_id', $un_id)
-                  ->where('pcontable_id', '<=',$periodo)
+                  ->where('pcontable_id',$periodo)
                   ->where('cuenta', 5)
                   ->sum('debito');
       //dd($tcredito, $tdebito);        
       
       $sa= round(floatval($tcredito),2) - round(floatval($tdebito),2);
     
-    } else {
+    /*} else {
       
       //encuentra todos los periodos contables que no este cerrados
       $periodos= Pcontable::where('cerrado', 0)
@@ -668,8 +668,8 @@ class Sity {
         //dd($tcredito, $tdebito);  
         
         $sa= $sa+ round(floatval($tcredito),2) - round(floatval($tdebito),2);
-      }
-    }
+      }*/
+    //}
 
     // si no tiene saldo, iniciliza en cero
     $sa = ($sa) ? $sa : 0;

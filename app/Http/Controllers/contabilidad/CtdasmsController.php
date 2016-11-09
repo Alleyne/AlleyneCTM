@@ -47,9 +47,13 @@ class CtdasmsController extends Controller {
                       ->orderBy('fecha')
                       ->get();    
     
+    $totalAnts=0;
     $i=0;      
     foreach ($ants as $ant) {
       $ants[$i]['montoCuota']= ($ant->importe + $ant->descuento); 
+      
+      // calcula el total pagado en pagos anticipados con descuento
+      $totalAnts= $totalAnts + $ant->importe;
       $i++;
     }  
 
@@ -97,8 +101,17 @@ class CtdasmsController extends Controller {
     $ph = Ph::find($seccion->ph_id);
     // dd($ph->toArray()); 
     
+    // encuentra el periodo mas antiguo abierto
+    $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+
     // Encuentra saldo pagados por anticipado
-    $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, Null);
+    $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, $periodo->id);
+
+    if ($totalAnts > 0) {
+      $pagos_anticipados = $pagos_anticipados - $totalAnts;
+    }
+    //dd($totalAnts);
+
     $total = number_format(($total_importe + $total_recargo), 2);
     
     if ($total == 0) {
@@ -141,7 +154,7 @@ class CtdasmsController extends Controller {
       'total_adeudado'  => 'B/. ' . number_format($total_adeudado, 2),
     ];
        
-    //dd($imps->toArray(),$recs->toArray(),$total_importe,$total_recargo);
+    //dd($imps->toArray(), $recs->toArray(), $total_importe, $total_recargo, $data);
     
     if ($tipo == 'corto') {
       return view('contabilidad.ctdasms.ecuentasCorto')
