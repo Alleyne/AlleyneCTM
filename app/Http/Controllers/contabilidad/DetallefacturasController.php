@@ -44,7 +44,7 @@ class DetallefacturasController extends Controller {
 		// calcula y agrega el total
 		$i=0;		
 		foreach ($datos as $dato) {
-		    $datos[$i]["total"] = number_format((($dato->precio * $dato->cantidad)+$dato->itbms),2);
+		    $datos[$i]["total"] = number_format(($dato->precio + $dato->itbms),2);
 		    $i++;
 		}        
         
@@ -102,8 +102,8 @@ class DetallefacturasController extends Controller {
 				$dato->detalle 	       		= $detallecta->nombre_factura;
 				$dato->precio 	       		= Input::get('precio');
 				$dato->itbms 	       		= Input::get('itbms');
-				$dato->save();	
-				
+			    $dato->save();
+
 				// Registra en bitacoras
 				$det =	'factura_id= '.			$dato->factura_id. ', '.
 						'catalogo_id= '.	    $dato->catalogo_id. ', '.
@@ -117,9 +117,10 @@ class DetallefacturasController extends Controller {
 		 	    $detalles= Detallefactura::where('factura_id', Input::get('factura_id'))->get();		    
 				//dd($detalles->toArray());
 				foreach ($detalles as $detalle) {
-					$totaldetalles=$totaldetalles +($detalle->precio+$detalle->itbms);
+					$totaldetalles = $totaldetalles + ($detalle->precio + $detalle->itbms);
 				}
 				//dd($total);
+			    
 			    if (round(floatval($totalfactura),2) < round(floatval($totaldetalles),2)) {
 			        Session::flash('danger', '<< ERROR >> El valor total de los detalles no puede sobrepasar al valor total de la factura. Intente nuevamente!');
 			        return Redirect::back();
@@ -134,9 +135,10 @@ class DetallefacturasController extends Controller {
 					$factura->etapa= 1;
 					$factura->save();		
 			    }
-
+			    
 				Sity::RegistrarEnBitacora(1, 'detallefacturas', $dato->id, $det);
 				Session::flash('success', 'El detalle de factura No. ' .$dato->id. ' ha sido creado con éxito.');
+		    	
 		    	DB::commit();				
 				return Redirect::route('detallefacturas.show', $dato->factura_id);
 			}

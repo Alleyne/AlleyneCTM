@@ -130,7 +130,7 @@ class Sity {
             // de Pagos anticipados para realizar el pago
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa= $saldocpa -$importe;
+            $saldocpa= $saldocpa - $importe;
 
             // registra una disminucion en la cuenta de Pagos anticipados
             Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, Catalogo::find(5)->nombre.' unidad '.substr($dato->ocobro, 0, 9), $importe, $un_id, $pago_id);
@@ -157,7 +157,7 @@ class Sity {
             // pagos por anticipados para cubrir la deuda, no es necesario emitir un recibo.  
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa= $saldocpa -$importe;
+            $saldocpa= $saldocpa - $importe;
 
             // registra una disminucion en la cuenta de Pagos anticipados
             Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, Catalogo::find(5)->nombre.' unidad '.substr($dato->ocobro, 0, 9), $importe, $un_id, $pago_id);
@@ -277,7 +277,7 @@ class Sity {
           $dato->recargo_pagado = 1;
           $dato->save();                  
     
-          if ($montoRecibido>= $recargo) {
+          if ($montoRecibido >= $recargo) {
             // se recibio suficiente dinero para pagar por lo menos un recargo,
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
             
@@ -293,12 +293,12 @@ class Sity {
             // Actualiza el nuevo monto disponible para continuar pagando
             $montoRecibido = $montoRecibido - $recargo;    
 
-          } elseif ($montoRecibido==0) {
+          } elseif ($montoRecibido == 0) {
             // si el monto recibido es cero, entonces 
             // se depende en su totalidad de la cuenta de Pagos anticipados para realizar el pago
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa= $saldocpa -$recargo;
+            $saldocpa= $saldocpa - $recargo;
 
             // registra una disminucion en la cuenta de Pagos anticipados
             Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, Catalogo::find(5)->nombre.' unidad '.substr($dato->ocobro, 0, 9), $recargo, $un_id, $pago_id);
@@ -320,12 +320,12 @@ class Sity {
             // Actualiza el nuevo monto disponible para continuar pagando
             $montoRecibido = 0;    
 
-          } elseif ($montoRecibido< $recargo) {
+          } elseif ($montoRecibido < $recargo) {
             // si el monto recibido es menor que el recargo a pagar, 
             // quiere decir que se necesita hacer uso del saldo acumulado de la cuenta de Pagos anticipados para poder realizar el pago
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa= $saldocpa -($recargo-$montoRecibido);
+            $saldocpa= $saldocpa - ($recargo-$montoRecibido);
 
             // registra un aumento en la cuenta Banco 
             Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$dato->ocobro, $montoRecibido, $un_id, $pago_id);    
@@ -369,7 +369,7 @@ class Sity {
     $montoRecibido= Sity::verificaDescuento($un_id, $montoRecibido, $pago_id, $periodo, $f_pago);
 
     // si al final de todo el proceso hay un sobrante entonces se registra como Pago anticipado
-    if ($montoRecibido>0) {
+    if ($montoRecibido > 0) {
       // registra pago recibido como un pago anticipado
       Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.Un::find($un_id)->codigo, $montoRecibido, $un_id, $pago_id);
       Sity::registraEnCuentas($periodo, 'mas', 2, 5, $f_pago, Catalogo::find(5)->nombre.' unidad '.Un::find($un_id)->codigo, $montoRecibido, $un_id, $pago_id);
@@ -459,15 +459,15 @@ class Sity {
       $totalContabilizar= $seccion->m_descuento * ($seccion->cuota_mant - $seccion->descuento);
       
       // registra un aumento en la cuenta Banco 
-      Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$un->codigo, $totalContabilizar, $un_id, $pago_id);    
+      //Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$un->codigo, $totalContabilizar, $un_id, $pago_id);    
       
-      // registra una disminucion en la cuenta de Pagos anticipados
-      Sity::registraEnCuentas($periodo, 'mas', 2, 5, $f_pago, Catalogo::find(5)->nombre.' '.$un->codigo, $totalContabilizar, $un_id, $pago_id);
+      // registra un aumento en la cuenta de anticipos comprometidos
+      //Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, Catalogo::find(14)->nombre.' '.$un->codigo, $totalContabilizar, $un_id, $pago_id);
       
       $totalUtilizado = 0;    
 
       // registra en la tabla detalledescuentos el desglose de los meses a los que se les aplicara el descuento
-      for ($x= 1; $x<= $meses; $x++) {
+      for ($x = 1; $x <= $meses; $x++) {
         // genera los datos para el primer renglon o mes que tendra descuento
         $f_periodo= Carbon::parse($f_periodo)->addMonth();
         
@@ -495,6 +495,12 @@ class Sity {
           $dto->pago_id = $pago_id;
           $dto->save();          
 
+          // registra un aumento en la cuenta Banco 
+          Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$un->codigo.' '.$mes_anio.' por adelantado', ($seccion->cuota_mant - $seccion->descuento), $un_id, $pago_id);    
+          
+          // registra un aumento en la cuenta de anticipos comprometidos
+          Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, Catalogo::find(14)->nombre.' '.$un->codigo.' '.$mes_anio, ($seccion->cuota_mant - $seccion->descuento), $un_id, $pago_id);
+
           // Registra en Detallepago para generar un renglon en el recibo
           Sity::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, ($seccion->cuota_mant- $seccion->descuento), $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
         
@@ -505,10 +511,10 @@ class Sity {
         } elseif (($montoRecibido + $saldocpa) >= ($seccion->cuota_mant - $seccion->descuento)) {
           // si la suma del $montorecibido mas el $saldocpas es suficiente para pagar una cuota con descuento,
           // se hace lo siguiente:
+          
           //-----------------------------------------------------------------
           // 1. se consume en su totalidad el montoRecibido
           //-----------------------------------------------------------------
-          
           $dto = new Detalledescuento;
           $dto->un_id = $un_id;
           $dto->fecha = $f_periodo;
@@ -522,7 +528,16 @@ class Sity {
 
           // calcula el total a descontar de la cuenta de pagos anticipados necesarios para completar el pago del mes con descuento
           $totalDescontarPa = (($seccion->cuota_mant - $seccion->descuento) - $montoRecibido);
+      
+          // registra un aumento en la cuenta Banco 
+          Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$un->codigo.' '.$mes_anio.' por adelantado', $montoRecibido, $un_id, $pago_id);    
 
+          // registra una disminucion en la cuenta de Pagos anticipados 
+          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, Catalogo::find(5)->nombre.' '.$un->codigo, $totalDescontarPa, $un_id, $pago_id);    
+          
+          // registra un aumento en la cuenta de anticipos comprometidos
+          Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, Catalogo::find(14)->nombre.' '.$un->codigo.' '.$mes_anio, ($seccion->cuota_mant - $seccion->descuento), $un_id, $pago_id);
+          
           // Registra en Detallepago para generar un renglon en el recibo
           Sity::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, ($seccion->cuota_mant- $seccion->descuento), $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
 
@@ -554,6 +569,12 @@ class Sity {
           // calcula el total a descontar de la cuenta de pagos anticipados necesarios para completar el pago del mes con descuento
           $totalDescontarPa = ($seccion->cuota_mant - $seccion->descuento);
    
+          // registra una disminucion en la cuenta de Pagos anticipados 
+          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, Catalogo::find(5)->nombre.' '.$un->codigo, $totalDescontarPa, $un_id, $pago_id);    
+          
+          // registra un aumento en la cuenta de anticipos comprometidos
+          Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, Catalogo::find(14)->nombre.' '.$un->codigo.' '.$mes_anio, ($seccion->cuota_mant - $seccion->descuento), $un_id, $pago_id);
+
           // Registra en Detallepago para generar un renglon en el recibo
           Sity::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, ($seccion->cuota_mant- $seccion->descuento), $un_id, $pago_id, Sity::getLastNoDetallepago($pago_id), 1);
 
@@ -565,6 +586,7 @@ class Sity {
           $mostrarNota = true;
         } // end second if
       } // end for
+      
       
       if ($mostrarNota) {
         // salva un nuevo registro que representa una linea del recibo
@@ -582,8 +604,9 @@ class Sity {
 
 
 
-      // recalcula sobrante
-      //$montoRecibido= $montoRecibido-(($seccion->cuota_mant-$seccion->descuento)*$meses);
+      // registra un aumento en la cuenta de anticipos comprometidos
+      //Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, Catalogo::find(14)->nombre.' '.$un->codigo, $totalContabilizar, $un_id, $pago_id);
+      
     } // end first if
     
     return $montoRecibido;
@@ -1860,7 +1883,7 @@ public static function facturar($fecha)
         $desc->save();            
       
         // registra una disminucion en la cuenta de Pagos anticipados
-        Sity::registraEnCuentas($periodo->id, 'menos', 2, 5, $fecha, Catalogo::find(5)->nombre.' '.$un->codigo.' '.$desc->mes_anio, $cuota_mant, $un_id, $desc->pago_id);
+        Sity::registraEnCuentas($periodo->id, 'menos', 2, 14, $fecha, Catalogo::find(14)->nombre.' '.$un->codigo.' '.$desc->mes_anio, $cuota_mant, $un_id, $desc->pago_id);
         
         // registra un aumento en "Gastos por cuentas incobrables" 
         Sity::registraEnCuentas($periodo->id, 'mas', 6, 13, $fecha, Catalogo::find(13)->nombre.' '.$un->codigo.' '.$desc->mes_anio, $descuento, $un_id, $desc->pago_id);    
@@ -1872,7 +1895,7 @@ public static function facturar($fecha)
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo->id;
         $diario->fecha   = Carbon::createFromDate($year, $month, 1); 
-        $diario->detalle = Catalogo::find(5)->nombre.' '.$un->codigo.' '.$desc->mes_anio;
+        $diario->detalle = Catalogo::find(14)->nombre.' '.$un->codigo.' '.$desc->mes_anio;
         $diario->debito  = $cuota_mant;
         $diario->credito = Null;
         $diario->save();

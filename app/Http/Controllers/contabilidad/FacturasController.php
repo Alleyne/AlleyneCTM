@@ -16,6 +16,7 @@ use App\Detallefactura;
 use App\Pcontable;
 use App\Bitacora;
 use App\Ctdiario;
+use App\Catalogo;
 
 class FacturasController extends Controller {
     
@@ -233,21 +234,39 @@ class FacturasController extends Controller {
 					$dato->id,
 					$factura->fecha,
 			    	$dato->nombre,
-			    	($dato->precio+$dato->itbms),
+			    	$dato->precio,
 			       	Null,
 			       	$org_id
 			       );
 			
+		 	Sity::registraEnCuentas(
+					$periodo->id,
+					'mas', 
+					6,
+					15,
+					$factura->fecha,
+			    	Catalogo::find(15)->nombre,
+			    	$dato->itbms,
+			       	Null,
+			       	$org_id
+			       );	        
+
 	        // registra en Ctdiario principal
 	        $diario = new Ctdiario;
 	        $diario->pcontable_id  = $periodo->id;
 	        if ($i==1) {
 	        	$diario->fecha   = $factura->fecha;
+	        	$i=0;	        
 	        } 
 	        $diario->detalle = $dato->nombre;
-	        $diario->debito  = ($dato->precio+$dato->itbms);
+	        $diario->debito  = $dato->precio;
 	        $diario->save(); 
-	        $i=0;
+
+	        $diario = new Ctdiario;
+	        $diario->pcontable_id  = $periodo->id;
+	        $diario->detalle = Catalogo::find(15)->nombre;
+	        $diario->debito  = $dato->itbms;
+	        $diario->save(); 
 		}
 		
 		// se anota el total de la factura a credito incluyendo el itbms en

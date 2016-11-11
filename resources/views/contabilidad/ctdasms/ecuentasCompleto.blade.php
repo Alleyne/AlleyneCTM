@@ -123,7 +123,7 @@
                       <div class="row">
                             <div class="col-xs-12">
                               <h3><p class="text-center"><strong>PAZ Y SALVO</strong></p></h3>
-                              <p class="text-left">Gracias por mantener su estado de cuenta al dia.</p>
+                              <p class="text-center">Gracias por mantener su estado de cuenta al dia.</p>
                             </div>
                       </div>
 

@@ -107,11 +107,6 @@ class CtdasmsController extends Controller {
     // Encuentra saldo pagados por anticipado
     $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, $periodo->id);
 
-    if ($totalAnts > 0) {
-      $pagos_anticipados = $pagos_anticipados - $totalAnts;
-    }
-    //dd($totalAnts);
-
     $total = number_format(($total_importe + $total_recargo), 2);
     
     if ($total == 0) {
