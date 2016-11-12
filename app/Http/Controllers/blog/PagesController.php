@@ -9,6 +9,7 @@ use App\Post;
 use Mail;
 use Session;
 
+
 class PagesController extends Controller {
 
 	public function getIndex() {
@@ -44,16 +45,32 @@ class PagesController extends Controller {
 			'bodyMessage' => $request->message
 			);
 
-/*		Mail::send('emails.contact', $data, function($message) use ($data){
-			$message->from($data['email']);
-			$message->to('hello@devmarketer.io');
-			$message->subject($data['subject']);
-		});*/
+		$token = $request->input('g-recaptcha-response');
 
-		Session::flash('success', 'Su Email ha sido enviado!');
+		if ($token) {
+			$client = new Client();
+			$response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+					'form_params' => array(
+						'secret' => '6LfPuwsUAAAAAG_G6mjC7XYxl0aPlJwdBWSV6-GW',
+						'response' => $token
+						)
+				]);
+		
+			$results = json_decode($response->getBody()->getContents());
+			if ($results->success) {
+				Session::flash('success', 'Su Email ha sido enviado!');
+				Mail::send('emails.contact', $data, function($message) use ($data){
+					$message->from($data['email']);
+					$message->to('hello@devmarketer.io');
+					$message->subject($data['subject']);
+				});
 
-		return redirect('/');
-	}
+			} else {
+				Session::flash('error', 'you are probably a roobot!');
+			}	return view('/');
 
-
+		} else {
+			return redirect('/');
+		}
+	} // end function
 }
