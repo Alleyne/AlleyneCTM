@@ -3,6 +3,10 @@
 <?php $titleTag = htmlspecialchars($post->title); ?>
 @section('title', "| $titleTag")
 
+@section('stylesheets')
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+@endsection
+
 @section('content')
 
     <!--=== Content Part ===-->
@@ -71,8 +75,10 @@
 							<div class="col-md-12">
 								{{ Form::label('comment', "Comment:") }}
 								{{ Form::textarea('comment', null, ['class' => 'form-control', 'rows' => '5']) }}
-
-								{{ Form::submit('Agregar Commentario', ['class' => 'btn btn-success btn-block', 'style' => 'margin-top:15px;']) }}
+                                <br>
+                                <div class="g-recaptcha" data-sitekey="6LfPuwsUAAAAADUHG1HdmOh_p2mIi9II9a4vGTyX"></div>
+						
+                                {{ Form::submit('Agregar Commentario', ['class' => 'btn btn-success btn-block', 'style' => 'margin-top:15px;']) }}
 							</div>
 						</div>
 

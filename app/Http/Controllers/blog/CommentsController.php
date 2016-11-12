@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Comment;
 use App\Post;
 use Session;
+use Guzzlehttp\Client;
 
 class CommentsController extends Controller
 {
@@ -30,20 +31,40 @@ class CommentsController extends Controller
             'comment'   =>  'required|min:5|max:2000'
             ));
 
-        $post = Post::find($post_id);
+        $token = $request->input('g-recaptcha-response');
 
-        $comment = new Comment();
-        $comment->name = $request->name;
-        $comment->email = $request->email;
-        $comment->comment = $request->comment;
-        $comment->approved = true;
-        $comment->post()->associate($post);
+        if ($token) {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'form_params' => array(
+                        'secret' => '6LfPuwsUAAAAAG_G6mjC7XYxl0aPlJwdBWSV6-GW',
+                        'response' => $token
+                        )
+                ]);
+        
+            $results = json_decode($response->getBody()->getContents());
+            if ($results->success) {
+                $post = Post::find($post_id);
 
-        //$comment->save();
+                $comment = new Comment();
+                $comment->name = $request->name;
+                $comment->email = $request->email;
+                $comment->comment = $request->comment;
+                $comment->approved = true;
+                $comment->post()->associate($post);
 
-        Session::flash('success', 'Comentario fue agregado!');
+                $comment->save();
+                Session::flash('success', 'Comentario fue agregado!');
+                return redirect()->route('blog.single', [$post->slug]);
+            
+            } else {
+                Session::flash('error', 'you are probably a roobot!');
+                return redirect()->route('blog.single', [$post->slug]);
+            }
 
-        return redirect()->route('blog.single', [$post->slug]);
+        } else {
+            return redirect()->route('blog.single', [$post->slug]);
+        }
     }
 
 

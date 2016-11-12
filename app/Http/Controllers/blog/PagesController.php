@@ -22,7 +22,7 @@ class PagesController extends Controller {
 		$last = 'Curtis';
 
 		$fullname = $first . " " . $last;
-		$email = 'alex@jacurtis.com';
+		$email = 'gabarriosb@gmail.com';
 		$data = [];
 		$data['email'] = $email;
 		$data['fullname'] = $fullname;
@@ -48,7 +48,7 @@ class PagesController extends Controller {
 		$token = $request->input('g-recaptcha-response');
 
 		if ($token) {
-			$client = new Client();
+			$client = new \GuzzleHttp\Client();
 			$response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
 					'form_params' => array(
 						'secret' => '6LfPuwsUAAAAAG_G6mjC7XYxl0aPlJwdBWSV6-GW',
@@ -61,14 +61,15 @@ class PagesController extends Controller {
 				Session::flash('success', 'Su Email ha sido enviado!');
 				Mail::send('emails.contact', $data, function($message) use ($data){
 					$message->from($data['email']);
-					$message->to('hello@devmarketer.io');
+					$message->to('gabarriosb@gmail.com');
 					$message->subject($data['subject']);
 				});
 
 			} else {
 				Session::flash('error', 'you are probably a roobot!');
-			}	return view('/');
-
+				return redirect('/');
+			}
+		
 		} else {
 			return redirect('/');
 		}
