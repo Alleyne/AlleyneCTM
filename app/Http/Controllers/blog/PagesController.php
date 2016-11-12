@@ -64,14 +64,15 @@ class PagesController extends Controller {
 					$message->to('gabarriosb@gmail.com');
 					$message->subject($data['subject']);
 				});
-
+				return redirect()->route('frontend');
+			
 			} else {
 				Session::flash('error', 'you are probably a roobot!');
-				return redirect('/');
+				return redirect()->route('frontend');
 			}
 		
 		} else {
-			return redirect('/');
+			return redirect('frontend');
 		}
 	} // end function
 }
