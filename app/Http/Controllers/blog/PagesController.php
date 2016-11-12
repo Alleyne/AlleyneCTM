@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Post;
 use Mail;
 use Session;
-
+use Guzzlehttp\Client;
 
 class PagesController extends Controller {
 
