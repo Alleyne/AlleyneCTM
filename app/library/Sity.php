@@ -1863,7 +1863,9 @@ public static function facturar($fecha)
       $ocobro= $un->codigo.' '.Sity::getMonthName($month).$day.'-'.$year;
       $descuento_siono= 0;
       $pagada= 0;
-      
+      $extra_siono= 0;
+      $extra = Null;
+
       // antes de crear facturacion para un determinada unidad, se verifica si la misma pago por anticipado 
       // la respectiva orden de cobro
       $desc= Detalledescuento::whereDate('fecha', $fecha->toDateString())
@@ -1877,7 +1879,7 @@ public static function facturar($fecha)
         $descuento= $desc->descuento;
         $descuento_siono= 1;
         $pagada=1;
-        
+
         // registra el descuento como consumido
         $desc->consumido=1;
         $desc->save();            
@@ -1924,6 +1926,21 @@ public static function facturar($fecha)
 
       } 
 
+      // verifica si hay coutas extraordinarias que aplicar
+      if ($secapto->f_iniciaextra) {
+        $f_inicio = Carbon::parse($secapto->f_iniciaextra); // fecha en que inicia el cobro de la cuota extraordinaria
+        $f_final = Carbon::parse($secapto->f_iniciaextra)->addMonths($secapto->extra_meses - 1); // fecha en que termina el cobro de la cuota extraordinaria
+        $f_periodo= Carbon::parse($periodo->fecha);  // fecha del periodo en estudio
+        //dd($f_inicio, $f_final, $f_periodo);
+
+        if ($f_periodo->between($f_inicio, $f_final)) {
+          // si la fecha del periodo en estudio esta entre la fecha de inicio y la fecha final,
+          // quiere decir que hay que aplicar el cobro de la cuota extraordinaria 
+          $extra_siono= 1;
+          $extra = $secapto->extra;
+        }
+      }
+      
       // Registra facturacion mensual de la unidad 
       $dato= new Ctdasm;
       $dato->pcontable_id     = $periodo->id;
@@ -1943,6 +1960,9 @@ public static function facturar($fecha)
       $dato->un_id            = $un_id;
       $dato->pagada           = $pagada;
       $dato->descuento_siono  = $descuento_siono;
+      
+      $dato->extra_siono      = $extra_siono;
+      $dato->extra            = $extra;
       $dato->save(); 
       
       // Acumula el total facturado

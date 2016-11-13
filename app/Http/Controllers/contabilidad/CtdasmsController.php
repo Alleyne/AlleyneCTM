@@ -47,6 +47,13 @@ class CtdasmsController extends Controller {
                       ->orderBy('fecha')
                       ->get();    
     
+    $extras = Ctdasm::where('un_id', $un_id)
+                      ->where('extra_siono', 1) 
+                      ->where('extra_pagada', 0)
+                      ->select('id','mes_anio','extra_siono','extra_pagada','extra')
+                      ->orderBy('fecha')
+                      ->get();    
+
     $totalAnts=0;
     $i=0;      
     foreach ($ants as $ant) {
@@ -60,6 +67,7 @@ class CtdasmsController extends Controller {
     // inicializa los contadores
     $total_importe=0;
     $total_recargo=0;
+    $total_extra=0;
 
     foreach ($imps as $imp) {
       $imp->f_vencimiento= Date::parse($imp->f_vencimiento)->toFormattedDateString();
@@ -76,6 +84,13 @@ class CtdasmsController extends Controller {
         $total_recargo  = $total_recargo + $rec->recargo;  
       }      
     }     
+
+    foreach ($extras as $extra) {
+      // Acumula el total de recargos a pagar
+      if ($extra->extra_siono==1 && $extra->extra_pagada==0) {
+        $total_extra  = $total_extra + $extra->extra;  
+      }      
+    }    
 
     // Obtiene todos los propietarios de una determinada unidad que sean encardados.  
     $prop = Prop::where('un_id', $un_id)
@@ -107,7 +122,7 @@ class CtdasmsController extends Controller {
     // Encuentra saldo pagados por anticipado
     $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, $periodo->id);
 
-    $total = number_format(($total_importe + $total_recargo), 2);
+    $total = number_format(($total_importe + $total_recargo+ $total_extra), 2);
     
     if ($total == 0) {
       $total_adeudado=(number_format(0, 2));
@@ -160,6 +175,7 @@ class CtdasmsController extends Controller {
             ->with('data', $data)
             ->with('imps', $imps)
             ->with('recs', $recs)
+            ->with('extras', $extras)
             ->with('ants', $ants);
     }
   }

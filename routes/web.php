@@ -323,6 +323,7 @@ Route::get('/test', function () {
 });
 
 use App\Seccione;
+use App\User;
 Route::get('/query', function () {
 
 //$data= Seccione::find(1)->secapto;
@@ -334,6 +335,20 @@ foreach ($datas as $data) {
 
 //$data= Seccione::find(1)->ph;
 
-$datas= Seccione::with('uns')->get();
-return [$datas];
+//$datas= Seccione::with('uns')->get();
+//return [$datas];
+
+
+$user = User::find(Auth::user()->id);
+
+//->roles()->get();
+dd($user->roles);
+
+foreach ($roles as $role) {
+	if($role->name==='Admin') {
+		$es = true;
+	}
+}
+
+
 });

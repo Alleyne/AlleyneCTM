@@ -69,7 +69,7 @@
                                             <label class="col-md-4 control-label">Ph</label>
                                             <div class="col-md-8">
                                                 {{ Form::select('ph_id', array('' => 'Selecione un Ph') + $phs, $dato->ph_id, array('class' => 'form-control', 'title' => 'Escoja el Ph al cual pertenece la presente Sección administrativa')) }}
-                                                {!! $errors->first('ph_id', '<span class="label label-important">  *</span>') !!}
+                                                {!! $errors->first('ph_id', '<li style="color:red">:message</li>') !!}
                                             </div>
                                         </div>      
                                        
@@ -174,6 +174,37 @@
                                                 </div>
                                             </div>  
                                         
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">Cuota extra-ordinaria</label>
+                                                <div class="col-md-8">
+                                        
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <input type="text" id='f_iniciaextra' name="f_iniciaextra" placeholder="Fecha en que inicia el cobro de la cuota extraordinaria..." class="form-control datepicker" data-dateformat="yy/mm/dd" value="{{ $dato->secapto->f_iniciaextra }}" }}>
+                                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                        </div>
+                                                        {!! $errors->first('f_iniciaextra', '<li style="color:red">:message</li>') !!}</p> 
+                                                    </div>
+                                                </div> 
+                                            </div>  
+                
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label"></label>
+                                                <div class="col-md-8">
+                                                    <div class="col-md-6">              
+                                                        <input class="form-control spinner-left" id="spinner5" name="extra_meses" value="{{ $dato->secapto->extra_meses }}" type="text">
+                                                        <p class="text-left">Meses en que se divide el pago</p>
+                                                        {!! $errors->first('extra_meses', '<li style="color:red">:message</li>') !!}
+                                                    </div>
+                                                    <div class="col-md-6">              
+                                                        <input class="form-control" name="extra" value="{{ $dato->secapto->extra }}" type="text">
+                                                        <p class="text-left">Monto de la cuota extraordinaria</p>
+                                                        {!! $errors->first('extra', '<li style="color:red">:message</li>') !!}
+                                                    </div>
+                                                </div>
+                                            </div>      
+
                                         @elseif ($dato->tipo==2) <!-- Residencias -->
                                             <legend>Sección tipo residencias</legend>
                                             <div class="form-group">
@@ -598,6 +629,14 @@
             start: 0,
             numberFormat: "C"
         }); 
+        // Spinners
+        $("#spinner5").spinner({
+            min: 0,
+            max: 24,
+            step: 1,
+            start: 1,
+            numberFormat: "C"
+        });     
     })
 </script>
 @stop

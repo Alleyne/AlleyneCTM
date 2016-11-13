@@ -193,9 +193,14 @@ class SeccionesController extends Controller {
 				$t1->recargo               = Input::get('recargo');
 				$t1->descuento             = Input::get('descuento');								
 				$t1->d_registra_cmpc       = Input::get('d_registra_cmpc');
-				$t1->d_vence             = Input::get('d_vence');
+				$t1->d_vence               = Input::get('d_vence');
 				$t1->m_descuento           = Input::get('m_descuento');
 				$t1->area                  = Input::get('area');
+				
+				$t1->f_iniciaextra         = Carbon::parse(Input::get('f_iniciaextra'))->startOfMonth();
+				$t1->extra_meses           = Input::get('extra_meses');
+				$t1->extra                 = Input::get('extra');
+				
 				$t1->seccione_id           = $dato->id;
 				$t1->save();			
 				
@@ -212,9 +217,14 @@ class SeccionesController extends Controller {
 							'recargo= '.   	  	  $t1->recargo. ', '.
 							'descuento= '.   	  $t1->descuento. ', '.
 							'd_registra_cmpc= '.  $t1->d_registra_cmpc. ', '.
-							'd_vence= '.   	  $t1->d_vence. ', '.
+							'd_vence= '.   	 	  $t1->d_vence. ', '.
 							'm_descuento= '.   	  $t1->m_descuento. ', '.
 							'area= '.   	      $t1->area. ', '. 
+							
+							'f_iniciaextra= '.    $t1->f_iniciaextra. ', '.
+							'extra_meses= '.   	  $t1->extra_meses. ', '.
+							'extra= '.   	  	  $t1->extra. ', '.   
+							
 							'seccione_id= '.   	  $t1->seccione_id;			
 			}
 
@@ -320,7 +330,7 @@ class SeccionesController extends Controller {
 							'recargo= '.   	  	  $t4->recargo. ', '.
 							'descuento= '.   	  $t4->descuento. ', '.
 							'd_registra_cmpc= '.  $t4->d_registra_cmpc. ', '.
-							'd_vence= '.   	  $t4->d_vence. ', '.
+							'd_vence= '.   	  	  $t4->d_vence. ', '.
 							'm_descuento= '.   	  $t4->m_descuento. ', '.
 							'area= '.   	      $t4->area. ', '. 
 							'seccione_id= '.   	  $t4->seccione_id;			
@@ -394,7 +404,9 @@ class SeccionesController extends Controller {
         $rules = array(
             'nombre'    	=> 'required',
             'descripcion' 	=> 'required',
+            'ph_id'			=> 'required',
             'd_registra_cmpc' 	=> 'required'
+        	
         );
     
         $messages = [
@@ -429,6 +441,11 @@ class SeccionesController extends Controller {
 				$t1->d_vence       	   	   = Input::get('d_vence');
 				$t1->m_vence       	   	   = Input::get('m_vence');
 				$t1->m_descuento       	   = Input::get('m_descuento');
+				
+				$t1->f_iniciaextra         = Carbon::parse(Input::get('f_iniciaextra'))->startOfMonth();
+				$t1->extra_meses           = Input::get('extra_meses');
+				$t1->extra                 = Input::get('extra');
+				
 				$t1->area                  = Input::get('area');
 				$t1->save();			
 				
@@ -448,6 +465,11 @@ class SeccionesController extends Controller {
 							'd_vence= '.  	  	  $t1->d_vence. ', '.
 							'm_vence= '.  	  	  $t1->m_vence. ', '.
 							'm_descuento= '.  	  $t1->m_descuento. ', '.
+							
+							'f_iniciaextra= '.    $t1->f_iniciaextra. ', '.
+							'extra_meses= '.   	  $t1->extra_meses. ', '.
+							'extra= '.   	  	  $t1->extra. ', '.   
+							
 							'area= '.   	      $t1->area;
 			}
 

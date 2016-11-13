@@ -72,7 +72,7 @@
                         <div class="col-xs-2">
                         </div>
                     </div>
-                    @if (count($imps)==0 && count($recs)==0 && $data['activa']==1)
+                    @if (count($imps)==0 && count($recs)==0 && count($extras)==0 && $data['activa']==1)
                       @if (count($ants)>0)
                         <div class="col-xs-12">
                               <div class="row">
@@ -127,7 +127,7 @@
                             </div>
                       </div>
 
-                    @elseif (count($imps)>0 || count($recs)>0 && $data['activa']==1)
+                    @elseif (count($imps)>0 || count($recs)>0 || count($extras)>0 && $data['activa']==1)
                       <div class="col-xs-12">
                             <div class="row">
                                 <table class="table table-bordered table-striped">
@@ -167,6 +167,22 @@
                                               <td>Debe recargo del mes de <strong>{{ $rec->mes_anio }}</strong></td>
                                               <td></td>                       
                                               <td col width="90px" align="right"><mark>{{ $rec->recargo}}</mark></td>
+                                            </tr>
+                                          @endforeach
+                                        @endif
+                                        
+                                        @if (count($extras)>0)
+                                          <tr>
+                                            <td>==== Cuotas extraordinarios por pagar ====</td>
+                                            <td></td>
+                                            <td></td>                                        
+                                          </tr>                                    
+      
+                                          @foreach ($extras as $extra)
+                                            <tr>
+                                              <td>Debe cuota extraordinaria del mes de <strong>{{ $extra->mes_anio }}</strong></td>
+                                              <td></td>                       
+                                              <td col width="90px" align="right"><mark>{{ $extra->extra}}</mark></td>
                                             </tr>
                                           @endforeach
                                         @endif
