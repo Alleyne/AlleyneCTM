@@ -3,6 +3,10 @@
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\library\Sity;
+use App\library\Npdo;
+use App\library\Fact;
+use App\library\Hojat;
+
 use Input, Session, Redirect, Str, Carbon\Carbon, URL;
 use Validator, View, DB;
 use Debugbar;
@@ -29,7 +33,7 @@ class HojadetrabajosController extends Controller {
         //dd($periodo->id);
         
         // encuentra la data necesaria para confeccionar la hoja de trabajo
-        $datos= Sity::getDataParaHojaDeTrabajo($periodo->id);
+        $datos= Hojat::getDataParaHojaDeTrabajo($periodo->id);
         //dd($datos);
         
         // calcula el total de la columna debito y el de la columna credito en el balance de pruebas
@@ -158,11 +162,11 @@ class HojadetrabajosController extends Controller {
     public function estadoderesultado($pcontable_id) {
         
         // encuentra todas las cuentas de Ingresos de un determinado periodo contable
-        $ingresos= Sity::getDataParaEstadoResultado($pcontable_id, 4);
+        $ingresos= Hojat::getDataParaEstadoResultado($pcontable_id, 4);
         //dd($ingresos);
 
         // encuentra todas las cuentas de Gastos de un determinado periodo contable
-        $gastos= Sity::getDataParaEstadoResultado($pcontable_id, 6);
+        $gastos= Hojat::getDataParaEstadoResultado($pcontable_id, 6);
         //dd($gastos);
                 
         //calcula el total de la columna debito y el de la columna credito
@@ -296,19 +300,19 @@ class HojadetrabajosController extends Controller {
         //---------------------------------
         // SECCION BALANCE GENERAL
         //---------------------------------
-        $activoCorrientes= Sity::getDataParaBalanceGeneral($pcontable_id, 1, 1);
+        $activoCorrientes= Hojat::getDataParaBalanceGeneral($pcontable_id, 1, 1);
         //dd($activoCorrientes);        
         
-        $activoNoCorrientes= Sity::getDataParaBalanceGeneral($pcontable_id, 1, 0);
+        $activoNoCorrientes= Hojat::getDataParaBalanceGeneral($pcontable_id, 1, 0);
         //dd($activoNoCorrientes);        
         
-        $pasivoCorrientes= Sity::getDataParaBalanceGeneral($pcontable_id, 2, 1);
+        $pasivoCorrientes= Hojat::getDataParaBalanceGeneral($pcontable_id, 2, 1);
         //dd($pasivoCorrientes);        
         
-        $pasivoNoCorrientes= Sity::getDataParaBalanceGeneral($pcontable_id, 2, 0);
+        $pasivoNoCorrientes= Hojat::getDataParaBalanceGeneral($pcontable_id, 2, 0);
         //dd($pasivoNoCorrientes);        
  
-        $patrimonios= Sity::getDataParaBalanceGeneral($pcontable_id, 3, Null);
+        $patrimonios= Hojat::getDataParaBalanceGeneral($pcontable_id, 3, Null);
         //dd($patrimonios); 
      
         //calcula el total de cada uno de los tipos de cuentas
@@ -469,14 +473,21 @@ class HojadetrabajosController extends Controller {
                     ->with('periodo', Pcontable::find($periodo)->periodo);
     } 
 
-    /***********************************************************************************
+    /** 
+    *==================================================================================================
     * Cierra definitivamente un determinado periodo contable
-    ************************************************************************************/ 
+    * @param  string     $periodo_id
+    * @param  string     $periodo
+    * @param  string     $fecha
+    * @return void
+    **************************************************************************************************/
     public function cierraPeriodo($pcontable_id, $periodo, $fecha) {
+        //dd($pcontable_id, $periodo, $fecha);
 
         DB::beginTransaction();
         try {
             
+            // verifica que todas las unidades esten debidamente inicializadas
             $datos= Un::where('inicializada', 0)->first();
             if ($datos) {
                 Session::flash('danger', 'Hay algunas unidades que no han sido inicializadas, antes de cerrar el periodo debera inicializar todas las unidades!');
@@ -484,37 +495,35 @@ class HojadetrabajosController extends Controller {
             }
             
             // Construye la fecha del periodo real
-            $year=Carbon::today()->year;
-            $month=Carbon::today()->month;
+            $year= Carbon::today()->year;
+            $month= Carbon::today()->month;
             $periodoReal= Carbon::createFromDate($year, $month, 1);
             
             // calcula cual seria la fecha del nuevo periodo si se llegara a crear
             $fecha= Carbon::parse($fecha);
-            $fechaNuevoPeriodo= clone $fecha;
-            $fechaNuevoPeriodo->addMonth();
+            $fechaNuevoPeriodo= Carbon::parse($fecha)->addMonth();
             
             // verifica si el nuevo periodo ya existe
-            $newPeriodo= Pcontable::find($pcontable_id+1);         
+            $newPeriodo= Pcontable::find($pcontable_id + 1);         
 
             // si la fecha del nuevo periodo no es igual a la fecha del periodo real,
             // entonces se procede a crear el nuevo periodo
             if (($periodoReal->ne($fecha)) && !$newPeriodo) {
                 
                 // si no existe entonces crea un nuevo periodo contable
-                //$fecha= $fecha->addMonth();
-                Sity::periodo($fechaNuevoPeriodo);
-                
+                Npdo::periodo($fechaNuevoPeriodo);
+
                 $year= $fechaNuevoPeriodo->year;
                 $month= $fechaNuevoPeriodo->month;
                 
                 // crea facturacion para el nuevo periodo contable
                 // facturacion para las secciones que generan las ordenes de cobro los dias 1
-                Sity::facturar(Carbon::createFromDate($year, $month, 1));
+                Fact::facturar(Carbon::createFromDate($year, $month, 1));
                 
                 // facturacion para las secciones que generan las ordenes de cobro los dias 16
-                Sity::facturar(Carbon::createFromDate($year, $month, 16));
+                Fact::facturar(Carbon::createFromDate($year, $month, 16));
 
-                Sity::penalizarTipo1($fecha);
+                Hojat::penalizarTipo1($fecha);
 
                 // Registra en bitacoras
                 $detalle =  'Se crea periodo contable de '.Pcontable::all()->last()->periodo;
@@ -526,13 +535,13 @@ class HojadetrabajosController extends Controller {
             $fnext= $fnext->addMonth();
 
             // almacena datos del periodo antes de cerrarlo y las almacena en la tabla Hts (hoja de trabajo historica)
-            Sity::migraDatosHts($pcontable_id);
+            Hojat::migraDatosHts($pcontable_id);
 
             // cierra todas la cuentas nominales o temporales por finalizacion de periodo contable
-            Sity::cierraCuentasTemp($pcontable_id, $fecha);
+            Hojat::cierraCuentasTemp($pcontable_id, $fecha);
             
             // inicializa las cuentas permanentes en periodo posterior
-            Sity::inicializaCuentasPerm($pcontable_id, $fnext);
+            Hojat::inicializaCuentasPerm($pcontable_id, $fnext);
 
             // cierra el periodo contable
             $pc= Pcontable::find($pcontable_id);
@@ -542,11 +551,11 @@ class HojadetrabajosController extends Controller {
             
             // migra los datos de ctmayores a la tabla de datos historicos ctmayorehi y 
             // posteriormente los borra de la tabla ctmayores
-            Sity::migraDatosCtmayorehis($pcontable_id);
+            Hojat::migraDatosCtmayorehis($pcontable_id);
             
             // migra los datos de ctdiarios a la tabla de datos historicos ctdiariohis y 
             // posteriormente los borra de la tabla ctdiarios
-            Sity::migraDatosCtdiariohis($pcontable_id);
+            Hojat::migraDatosCtdiariohis($pcontable_id);
 
             // registra en bitacoras
             Sity::RegistrarEnBitacora(17, 'pcontables', $pcontable_id, $periodo);

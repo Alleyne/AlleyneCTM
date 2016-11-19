@@ -7,6 +7,8 @@ use Redirect, Session, DB;
 use Validator;
 use Carbon\Carbon;
 use App\library\Sity;
+use App\library\Npdo;
+use App\library\Fact;
 
 use App\Pcontable;
 use App\Bitacora;
@@ -36,8 +38,8 @@ class PcontablesController extends Controller {
   public function store()
   {
 
-/*    DB::beginTransaction();
-    try {*/
+    DB::beginTransaction();
+    try {
       //dd(Input::all());
       $input = Input::all();
       $rules = array(
@@ -54,12 +56,13 @@ class PcontablesController extends Controller {
       if ($validation->passes())
       {
         
-        $year= Carbon::parse(Input::get('fecha'))->year;
-        $month= Carbon::parse(Input::get('fecha'))->month;
+        $fecha= Carbon::parse(Input::get('fecha'))->startOfMonth(); // lleva la fecha al primer dia del mes
+        $year= $fecha->year;
+        $month= $fecha->month;
         $pdo= Sity::getMonthName($month).'-'.$year;
         
         // verifica si ya el periodo existe
-        $existePeriodo= Pcontable::where('fecha', Input::get('fecha'))->first();
+        $existePeriodo= Pcontable::whereDate('fecha', $fecha)->first();
         //dd($periodo);
 
         if ($existePeriodo) {
@@ -67,35 +70,36 @@ class PcontablesController extends Controller {
           return Redirect::back();        
         }
         
-        // crea un nuevo periodo contable
-        Sity::periodo(Input::get('fecha'));
+        // 1. crear un nuevo perido contable
+        // 2. inicializa en el libro mayor todas las cuentas temporales activas presentes en el catalogo de cuentas, no registra en el diario principal.
+        // 3. calcula y contabiliza en libros los ingresos esperados en cuotas de mantenimiento regular para todas las secciones cuya ocobro se genera los dias primero o dieciseis de cada mes.
+        // 4. calcula y contabiliza en libros los ingresos esperados en cuotas de mantenimiento extraordinarias para todas las secciones cuya ocobro se genera los dias primero o dieciseis de cada mes.
+        Npdo::periodo($fecha);
         
-        $year= Carbon::parse(Input::get('fecha'))->year;
-        $month= Carbon::parse(Input::get('fecha'))->month;
-
         // crea facturacion para el nuevo periodo contable
         // facturacion para las secciones que generan las ordenes de cobro los dias 1
-        Sity::facturar(Carbon::createFromDate($year, $month, 1));
+        Fact::facturar(Carbon::createFromDate($year, $month, 1));
+        
         // facturacion para las secciones que generan las ordenes de cobro los dias 16
-        Sity::facturar(Carbon::createFromDate($year, $month, 16));
+        Fact::facturar(Carbon::createFromDate($year, $month, 16));
         
         // Registra en bitacoras
         $detalle =  'Se crea el primer periodo contable del sistema '.$pdo;
       
         Sity::RegistrarEnBitacora(1, 'pcontables', 1, $detalle);
-        //DB::commit();        
+        DB::commit();        
         Session::flash('success', 'Se crea el primer periodo contable del sistema '.$pdo. ' con éxito.');
 
         return Redirect::route('pcontables.index');
       }
       return Redirect::back()->withInput()->withErrors($validation);
     
-/*    } catch (\Exception $e) {
+    } catch (\Exception $e) {
         DB::rollback();
         Session::flash('warning', ' Ocurrio un error en el modulo PcontablesController.store, la transaccion ha sido cancelada!');
 
         return Redirect::back()->withInput()->withErrors($validation);
-    }*/
+    }
   } 
 
 } // end of class

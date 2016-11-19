@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\library\Sity;
+use App\library\Pant;
 use Input, Session, Redirect, Str, Carbon\Carbon;
 use Validator, View, DB;
 use Jenssegers\Date\Date;
@@ -18,10 +19,10 @@ use App\Detalledescuento;
 
 class CtdasmsController extends Controller {
     
-    public function __construct()
-    {
-        $this->middleware('hasAccess');    
-    }
+  public function __construct()
+  {
+      $this->middleware('hasAccess');    
+  }
     
   /***********************************************************************************************************
    * Esta funcion gerera el estado de cuentas de una determinada unidad, puede ser en formato corto y largo
@@ -120,7 +121,7 @@ class CtdasmsController extends Controller {
     $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
 
     // Encuentra saldo pagados por anticipado
-    $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, $periodo->id);
+    $pagos_anticipados = Pant::getSaldoCtaPagosAnticipados($un_id, $periodo->id);
 
     $total = number_format(($total_importe + $total_recargo+ $total_extra), 2);
     
@@ -135,7 +136,6 @@ class CtdasmsController extends Controller {
     }
 
     // Prepara datos del encabezado del Estado de cuenta
-   
     $data = [
       'Titulo'    => 'Bienvenido al ctmaster.net',
       'Contenido'   => 'Contenido del email',

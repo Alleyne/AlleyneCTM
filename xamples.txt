@@ -1873,3 +1873,24 @@ Work::with(
 
   antes de submit boton
   <div class="g-recaptcha" data-sitekey="6LfPuwsUAAAAADUHG1HdmOh_p2mIi9II9a4vGTyX"></div>
+
+
+
+  /** 
+  *=============================================================================================
+  * Esta function ...
+  * 
+  * @param  string 
+  * @param  string 
+  * @param  string 
+  * @param  string 
+  * @param  string 
+  * @param  string 
+  * @param  string 
+  * @param  string 
+  * @param  string  
+  * @return void
+  *===========================================================================================*/
+  public static function name($p1, $p2, $fecha) {
+
+  }

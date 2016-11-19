@@ -1,17 +1,7 @@
 <?php namespace App\Http\Controllers\Contabilidad;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-
-use Carbon\Carbon;
-use App\library\Sity;
-use App\Ctdasm;
-use App\Detallepago;
-use App\Pago;
-use App\Ctdiario;
-use App\Pcontable;
-use App\Secapto;
+use App\library\Lim;
 use App\Un;
 
 class PruebasController extends Controller {
@@ -28,7 +18,7 @@ class PruebasController extends Controller {
     {
         Un::where('inicializada', 1)
           ->update(['inicializada' => 0]);  
-        Sity::limpiar();
+        Lim::limpiar();
         
         return 'Escenario limpiado ...';
     }
