@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\library\Lim;
 use App\Un;
+use Session;
 
 class PruebasController extends Controller {
   
@@ -20,7 +21,8 @@ class PruebasController extends Controller {
           ->update(['inicializada' => 0]);  
         Lim::limpiar();
         
-        return 'Escenario limpiado ...';
+        Session::flash('success', 'Las tablas han sido limpiadas!');
+        return redirect()->route('backend');
     }
 
     /*************************************************************************************

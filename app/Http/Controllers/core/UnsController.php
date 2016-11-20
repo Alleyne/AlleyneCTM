@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Redirect, Session;
+use Session;
 use Grupo;
 use Validator;
 use Image;
@@ -104,7 +104,7 @@ class UnsController extends Controller {
 
 		if (is_null($seccion->ph)) {
 			Session::flash('warning', 'Es necesario asignar un Ph a cada Sección, favor utilizar el botón Editar para asignarle un Ph a esta Sección!');
-        	return Redirect::back();
+        	return back();
 		}	    
 
 	    //Obtiene los datos del Bloques 
@@ -239,7 +239,7 @@ class UnsController extends Controller {
 	    }
 	    else {
 			Session::flash('danger', 'La Unidad administrada No. ' .$un_id. ' no existe.');
-			return Redirect::route('indexPlusUns', $dato->seccione_id);	    	
+			return redirect()->route('indexPlusUns', $dato->seccione_id);	    	
 	    }
 	}
  
@@ -336,9 +336,9 @@ class UnsController extends Controller {
 
 			Sity::RegistrarEnBitacora(2, 'uns', $dato->id, $detalle);
 			Session::flash('success', 'La Unidad administrada No. ' .$id. ' ha sido editada con éxito.');
-            return Redirect::route('uns.show',$id);
+      return redirect()->route('uns.show',$id);
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
   	}
 
     /*************************************************************************************
@@ -372,7 +372,7 @@ class UnsController extends Controller {
         
         if ($delpiso>$alpiso) {
 			Session::flash('warning', '"Del piso" no puede ser mayor que "Al piso".');
-			return Redirect::back()->withInput();
+			return back()->withInput();
         }
         
         if (Input::get('tipo')==1 or Input::get('tipo')==2 or Input::get('tipo')==3 or Input::get('tipo')==4) {
@@ -417,9 +417,9 @@ class UnsController extends Controller {
    
 				Sity::RegistrarEnBitacora(1, 'uns', $dato->id, $detalle);*/
 				Session::flash('success', 'La Unidad administrada No. ha sido agregada con éxito.');
-                return Redirect::route('indexsecplus', array(Input::get('bloque_id')));
-            }
-	        return Redirect::back()->withInput()->withErrors($validation);
+        return redirect()->route('indexsecplus', array(Input::get('bloque_id')));
+      }
+	    return back()->withInput()->withErrors($validation);
 		}
 	}
 
@@ -452,6 +452,6 @@ class UnsController extends Controller {
 			Sity::RegistrarEnBitacora(3, 'uns', $dato->id, $detalle);
 			Session::flash('success', 'La Unidad administrada ' .$dato->codigo. ' ha sido borrada permanentemente de la base de datos.');
 		}
-		return Redirect::back();
+		return back();
 	}
 }

@@ -3,7 +3,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Redirect, Session, DB;
+use Session, DB;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
 use Validator;
@@ -122,7 +122,7 @@ class FacturasController extends Controller {
 			    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
 			    if ($pdo != $periodo->periodo) {
 		            Session::flash('danger', '<< ERROR >> Solamente se permite registrar facturas de gastos que correspondan al periodo vigente de '.$periodo->periodo);
-	        		return Redirect::back()->withInput()->withErrors($validation);
+	        		return back()->withInput()->withErrors($validation);
 			    }
 
 				$dato = new Factura;
@@ -136,14 +136,14 @@ class FacturasController extends Controller {
 		    	DB::commit();				
 				Session::flash('success', 'La factura No. ' .$dato->no. ' ha sido creada con éxito.');
 
-				return Redirect::route('facturas.index');		    
+				return redirect()->route('facturas.index');		    
 			}		
 		
 		} catch (\Exception $e) {
 		    DB::rollback();
         	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada!');
 
-        	return Redirect::back()->withInput()->withErrors($validation);
+        	return back()->withInput()->withErrors($validation);
 		}
 
 	}
@@ -159,7 +159,7 @@ class FacturasController extends Controller {
 			$dato = Detallefactura::where('factura_id', $factura_id)->first();		
 			if($dato) {
 				Session::flash('warning', '<< ATENCION >> Esta factura no puede ser borrada porque tiene detalles!');
-				return Redirect::route('facturas.index');
+				return Redirect()->route('facturas.index');
 			}
 			
 			else {
@@ -174,14 +174,14 @@ class FacturasController extends Controller {
 				Sity::RegistrarEnBitacora(3, 'facturas', $dato->id, $detalle);
 				Session::flash('success', 'La factura No' .$dato->no. ' ha sido borrada permanentemente de la base de datos.');
 				DB::commit();				
-				return Redirect::route('facturas.index');
+				return Redirect()->route('facturas.index');
 			}
 
 		} catch (\Exception $e) {
 		    DB::rollback();
         	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.destroy, la transaccion ha sido cancelada!');
 
-        	return Redirect::back()->withInput()->withErrors($validation);
+        	return back()->withInput()->withErrors($validation);
 		}		
 	}
 
@@ -212,7 +212,7 @@ class FacturasController extends Controller {
 
 	    if (!$periodo) {
 	        Session::flash('warning', '<< ATENCION >> La presente factura no puede ser contabilizada ya que el periodo contable al cual pertenece ha sido cerrado. Borre la factura y sus detalles e ingrecela nuevamente con fecha del periodo actualmente abierto.');
-	        return Redirect::back();
+	        return back();
 	    }
 
 	    //Encuentra totos los detalles de un determinada factura
@@ -312,13 +312,13 @@ class FacturasController extends Controller {
 		DB::commit();		
 		Session::flash('success', 'La factura No. ' .$factura->no. ' ha sido cotabilizada.');
 
-		return Redirect::route('facturas.index');
+		return Redirect()->route('facturas.index');
 
 	} catch (\Exception $e) {
 	    DB::rollback();
 		Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.contabilizaDetallesFactura, la transaccion ha sido cancelada!');
 
-		return Redirect::back()->withInput()->withErrors($validation);
+		return back()->withInput()->withErrors($validation);
 	}  
   }
 } 

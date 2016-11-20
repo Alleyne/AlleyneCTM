@@ -4,9 +4,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Redirect, Session, DB;
+use Session, DB;
 use Validator;
-//use Debugbar;
 use Carbon\Carbon;
 
 use App\Ctmayore;
@@ -72,7 +71,7 @@ class AjustesController extends Controller {
             foreach ($ajustes as $ajuste) {
                 if (floatval($ajuste[1])>0 && $ajuste[2]>0 ) {
                     Session::flash('danger', 'No puede ajustar una cuenta por el lado debito y credito al mismo tiempo.');
-                    return Redirect::back();
+                    return back();
                 }
             }
 
@@ -345,15 +344,15 @@ class AjustesController extends Controller {
                 Sity::RegistrarEnBitacora(1, 'facturas', $dato->id, $detalle);*/
                 Session::flash('success', 'El ajuste ha sido creado con éxito.');
                 DB::commit();                
-                return Redirect::route('hojadetrabajos.show', $periodo);    
+                return redirect()->route('hojadetrabajos.show', $periodo);
             }       
-            return Redirect::back()->withInput()->withErrors($validation);
+            return back()->withInput()->withErrors($validation);
         
         } catch (\Exception $e) {
             DB::rollback();
             Session::flash('warning', ' Ocurrio un error en el modulo AjustesController.store, la transaccion ha sido cancelada!');
 
-            return Redirect::back()->withInput()->withErrors($validation);
+            return back()->withInput()->withErrors($validation);
         }
 
     } // fin de function

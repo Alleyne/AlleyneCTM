@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Redirect, Session;
+use Session;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
 use Validator;
@@ -46,7 +46,7 @@ class PhsController extends Controller {
 		}
 	    else {
 			Session::flash('danger', 'El Ph backendistrativo No. ' .$id. ' no existe.');
-			return Redirect::route('phs.index');	    	
+			return redirect()->route('phs.index');	    	
 	    }
 	}
    
@@ -118,9 +118,9 @@ class PhsController extends Controller {
 			Sity::RegistrarEnBitacora(1, 'phs', $dato->id, $detalle);
 			Session::flash('success', 'El Ph administrativo No. ' .$dato->id. ' ha sido creado con éxito.');
 
-			return Redirect::route('phs.index');
+			return redirect()->route('phs.index');
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
 	}
     
     
@@ -184,9 +184,9 @@ class PhsController extends Controller {
 			Sity::RegistrarEnBitacora(2, 'phs', $dato->id, $detalle);
 			Session::flash('success', 'El Ph administrativo No. ' .$id. ' ha sido editado con éxito.');
 			
-			return Redirect::route('phs.index');
+			return redirect()->route('phs.index');
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
   	}
   
   
@@ -229,7 +229,7 @@ class PhsController extends Controller {
 			Sity::RegistrarEnBitacora(3, 'phs', $dato->id, $detalle);
 			Session::flash('success', 'El Ph administrativo ' .$dato->nombre. ' ha sido borrado permanentemente de la base de datos.');
 		}
-		return Redirect::route('phs.index');
+		return redirect()->route('phs.index');
 	}
 
     //=====================================================================================
@@ -256,7 +256,7 @@ class PhsController extends Controller {
         $validation = Validator::make($input, $rules, $messages);
         if ($validation->fails())
         {
-        	return Redirect::back()->withInput()->withErrors($validation);
+        	return back()->withInput()->withErrors($validation);
         }
 
         $file = Input::file('file'); 
@@ -292,11 +292,11 @@ class PhsController extends Controller {
 			
 			Sity::RegistrarEnBitacora(2, 'phs', $id, $detalle);
 			Session::flash('success', 'La imagen se actualizó con éxito.');
-			return Redirect::back()->withInput();
+			return back()->withInput();
 		}
 		else {
         	Session::flash('danger', 'La imagen no se pudo subir.');
-			return Redirect::back()->withInput();
+			return back()->withInput();
 		}
 	}
 } 

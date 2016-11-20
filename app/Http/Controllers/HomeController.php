@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\library\Grupo;
-use Redirect, Session;
+use Session;
 use Cache;
 use App\Un;
 
@@ -37,7 +37,7 @@ class HomeController extends Controller
             Cache::forever('esPropietariokey', Grupo::esPropietario());
         } else {
             Session::flash('warning', '<< ATENCION >> Usuario no pertenece a ningun grupo!');
-            return Redirect::route('frontend');
+            return redirect()->route('frontend');
         }
         
         Cache::forever('userRoleskey', Auth::user()->roles()->get());

@@ -3,7 +3,7 @@ namespace App\Http\Controllers\core;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Input, Redirect, Str;
+use Input;
 use Cache;
 
 use App\Bitacora;
@@ -12,23 +12,22 @@ use App\Accione;
 
 class BitacorasController extends Controller {
     
-    public function __construct()
-    {
-       	$this->middleware('hasAccess');    
-    }
-    
-    /*************************************************************************************
-     * Despliega un grupo de registros en formato de tabla
-     ************************************************************************************/	
+  public function __construct()
+  {
+     	$this->middleware('hasAccess');    
+  }
+  
+  /*************************************************************************************
+   * Despliega un grupo de registros en formato de tabla
+   ************************************************************************************/	
 	public function index()
 	{
-	    $bitacoras = Bitacora::orderBy('id', 'desc')
-	    		   			 ->with('accione')
-	    		   			 ->get();
-	    
-	    //dd($bitacoras->toArray());	
+    $bitacoras = Bitacora::orderBy('id', 'desc')
+    		   			 ->with('accione')
+    		   			 ->get();
+    //dd($bitacoras->toArray());	
 
-		return view('core.bitacoras.index')->with('bitacoras', $bitacoras);	
+	return view('core.bitacoras.index')->with('bitacoras', $bitacoras);	
 	}
 
     /*************************************************************************************

@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Grupo;
 use App\library\Sity;
-use Redirect, Session;
+use Session;
 
 use App\Permission;
 use App\Bitacora;
@@ -92,9 +92,9 @@ class PermissionsController extends Controller
 			
 			//return response()->json(["mensaje" => 'El permiso ' .$dato->name. ' ha sido creado con éxito.']); //api
 			Session::flash('success', 'El permiso ' .$dato->name. ' ha sido creado con éxito.');
-			return Redirect::route('permissions.index');
+			return redirect()->route('permissions.index');
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
 	}
     
     
@@ -143,9 +143,9 @@ class PermissionsController extends Controller
 			
 			//return response()->json(["mensaje" => 'El permiso ' .$id. ' ha sido editado con éxito.']); //api
 			Session::flash('success', 'El permiso ' .$id. ' ha sido editado con éxito.');
-			return Redirect::route('permissions.index');
+			return redirect()->route('permissions.index');
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
   	}
   
   
@@ -164,7 +164,7 @@ class PermissionsController extends Controller
 		
 		if(!empty($permissions)) {
 			Session::flash('success', 'El permiso ' .$dato->name. ' no puede ser borrado porque esta asignadoa a uno mas roles.');
-			return Redirect::route('permissions.index');	
+			return redirect()->route('permissions.index');	
 		}
 		
 		else {
@@ -175,7 +175,7 @@ class PermissionsController extends Controller
 			Sity::RegistrarEnBitacora(3, 'permissions', $dato->id, $detalle);
 			
 			Session::flash('success', 'El permiso ' .$dato->name. ' ha sido borrado permanentemente de la base de datos.');			
-			return Redirect::route('permissions.index');	
+			return redirect()->route('permissions.index');	
 		}
 	}
 }

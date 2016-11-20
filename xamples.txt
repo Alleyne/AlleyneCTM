@@ -109,11 +109,11 @@ foreach ($detallereqs as $detallereq) {
 
   	... codigo aqui
 	Notification::success('La nueva cantidad aprobada es ok.');  	
-	return Redirect::route('VerDetallesDeReqPorAprobar', $req_id);  
+	return redirect()->route('VerDetallesDeReqPorAprobar', $req_id);  
   }
 
 	Notification::success('La nueva cantidad aprobada deberá ser menor que la anterior.'); 
-	return Redirect::back()->withInput();
+	return back()->withInput();
 
 |--------------------------------------------------------------------------	
 |- Ocultar un campo en una vista 
@@ -1746,7 +1746,7 @@ Work::with(
       DB::rollback();
         Session::flash('warning', ' Ocurrio un error en el Command penalizar.php, la transaccion ha sido cancelada!');
 
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
   }
 
 

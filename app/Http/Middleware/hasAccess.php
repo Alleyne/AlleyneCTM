@@ -68,7 +68,7 @@ class hasAccess
             } else {
                 //dd('aquiiii');
                 Session::flash('warning', '--'. $currentAction . '-- Usted no tiene permiso para accesar esta pagina!');
-                return Redirect::back();
+                return back();
             }                      
         
         } else {

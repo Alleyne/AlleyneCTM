@@ -1,5 +1,6 @@
 <?php namespace App\library;
 use DB;
+use Session;
 
 class Lim {
   /****************************************************************************************
@@ -25,7 +26,6 @@ class Lim {
     DB::table('detalledescuentos')->truncate();  
 
     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    return 'Tablas han sido limpiadas!';
   }
 
 

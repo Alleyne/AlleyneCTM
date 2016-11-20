@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Grupo;
 use App\library\Sity;
-use Redirect, Session;
+use Session;
 
 use App\Role;
 use App\Permission;
@@ -90,10 +90,10 @@ class RolesController extends Controller
 			
 			//return response()->json(["mensaje" => 'La Junta Directiva ' .$dato->nombre. ' ha sido creada con éxito.']); //api
 			Session::flash('success', 'El permiso ' .$permisname->name. ' ha sido vinculado al role '. $role->name);
-			//return Redirect::route('permisPorRole');
-			return Redirect::back();
+			//return redirect()->route('permisPorRole');
+			return back();
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
 	}
 
 
@@ -113,6 +113,6 @@ class RolesController extends Controller
 		Sity::RegistrarEnBitacora(11, 'permission-role',1, $detalle);
 		
 		Session::flash('success', 'El permiso ' .$permisname->name. ' ha sido desvinculado del role '. $role->name);
-		return Redirect::route('permisPorRole', $role_id);
+		return redirect()->route('permisPorRole', $role_id);
  	}
 }

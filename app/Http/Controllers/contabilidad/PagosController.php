@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Input;
 use Auth;
 use App\library\Sity;
 use App\library\Npago;
-use Redirect, Session, DB;
+use Session, DB;
 use Grupo;
 use Validator;
 use Carbon\Carbon;
@@ -129,7 +129,7 @@ class PagosController extends Controller {
 			    // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
 			    if ($pdo != $periodo->periodo) {
 	          Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo de '.$periodo->periodo);
-        		return Redirect::back()->withInput()->withErrors($validation);
+        		return back()->withInput()->withErrors($validation);
 			    }
 
 				// antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
@@ -186,15 +186,15 @@ class PagosController extends Controller {
 					DB::commit();		            
 		      Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado y procesado con éxito.');
 				}
-				return Redirect::route('indexPagos',  Input::get('un_id'));
+				return redirect()->route('indexPagos',  Input::get('un_id'));
 			}
-	    return Redirect::back()->withInput()->withErrors($validation);
+	    return back()->withInput()->withErrors($validation);
 		
 /*		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada!');
 
-			return Redirect::back()->withInput()->withErrors($validation);
+			return back()->withInput()->withErrors($validation);
 		}*/
 	}
 
@@ -264,7 +264,7 @@ class PagosController extends Controller {
 
  		if (empty($prop)) {
 			Session::flash('warning', 'Esta Unidad no tiene propietario encargado asignado. Favor asignar un propietario como responsable.');
-			return Redirect::back();
+			return back();
 	  } 
 
     // Encuentra los datos de la sección a la cual pertenece la unidad
@@ -308,7 +308,7 @@ class PagosController extends Controller {
 		    // solamente se pueden anular pagos que pertenezcan al periodo mas antiguo que no este cerrado
 		    if ($pdo) {
 		    	Session::flash('warning', '<< ATENCION >> No se puede anular este pago ya que involucra a uno o mas periodo contables ya cerrados!');
-	    		return Redirect::route('indexPagos',  $un_id);	
+	    		return redirect()->route('indexPagos',  $un_id);	
  		    }	
 			}
 			
@@ -321,20 +321,20 @@ class PagosController extends Controller {
 	    
 	    if ($datos) {
 	    	Session::flash('warning', '<< ATENCION >> No se puede anular el Pago No. '.$pago_id.' ya que exite uno o mas pagos posteriores al mismo. Para poder anular el presente pagos, debera anular todos los pagos posteriores en orden cronologico!');
-    		return Redirect::route('indexPagos', $un_id);	
+    		return redirect()->route('indexPagos', $un_id);	
 			}
 			
 			// procede a anular el pago
-	    Sity::anulaPago($pago_id);
+	    Npago::anulaPago($pago_id);
 			DB::commit();	    	
     	Session::flash('warning', 'Pago '.$pago_id. ' ha sido anulado.');	   
-	    return Redirect::route('indexPagos', $un_id);
+	    return redirect()->route('indexPagos', $un_id);
 		
 		} catch (\Exception $e) {
 	    DB::rollback();
       Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaAnulacionPago, la transaccion ha sido cancelada!');
 
-      return Redirect::back()->withInput()->withErrors($validation);
+      return back()->withInput()->withErrors($validation);
 		}    
 	}	
 
@@ -353,13 +353,13 @@ class PagosController extends Controller {
 			Sity::RegistrarEnBitacora(3, 'pagos', $pago->id, $detalle);
 			Session::flash('warning', 'Pago '. $pago->trans_no . ' ha sido eliminado permanentemente de la base de datos!');
 			DB::commit();		    
-			return Redirect::route('indexPagos',  $pago->un_id);
+			return redirect()->route('indexPagos',  $pago->un_id);
 	
 		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.eliminaPagoCheque, la transaccion ha sido cancelada!');
 
-			return Redirect::back()->withInput()->withErrors($validation);
+			return back()->withInput()->withErrors($validation);
 		}
 	}	
 
@@ -395,12 +395,12 @@ class PagosController extends Controller {
 			Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
 			DB::commit();    
 			Session::flash('success', 'El pago No.' .$dato->id. ' ha sido registrado con éxito.');
-			return Redirect::route('indexPagos',  $dato->un_id);
+			return redirect()->route('indexPagos',  $dato->un_id);
 	
 		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaChequeRecibido, la transaccion ha sido cancelada!');
-			return Redirect::back()->withInput()->withErrors($validation);
+			return back()->withInput()->withErrors($validation);
 		}
 	} 
 }

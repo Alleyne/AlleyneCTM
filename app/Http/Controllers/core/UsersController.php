@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Redirect, Session;
+use Session;
 use Role;
 use Validator;
 use Image;
@@ -45,7 +45,7 @@ class UsersController extends Controller {
 		}
 	    else {
 			Session::flash('danger', 'El Usuario No. ' .$id. ' no existe.');
-			return Redirect::route('backend.users.show');	    	
+			return redirect()->route('backend.users.show');	    	
 	    }
 	}
     
@@ -125,9 +125,9 @@ class UsersController extends Controller {
 			
 			Sity::RegistrarEnBitacora(1, 'users', $user->id, $detalle);
 			Session::flash('success', 'El Usuario con el email ' .Input::get('email'). ' ha sido registrado en la base de datos de Sityweb. Por favor, escriba su email y su clave para ingresar al sistema. Gracias por visitar Sityweb.');
-			return Redirect::route('users.index');
+			return redirect()->route('users.index');
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
 	}*/
 
     /*************************************************************************************
@@ -189,9 +189,9 @@ class UsersController extends Controller {
 			
 			Sity::RegistrarEnBitacora(2, 'users', $dato->id, $detalle);
 			Session::flash('success', 'El Usuario No. ' .$id. ' ha sido editado con éxito.');
-			return Redirect::route('users.index');
+			return redirect()->route('users.index');
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
   	}
   
     /*************************************************************************************
@@ -208,7 +208,7 @@ class UsersController extends Controller {
 		if(!empty($dato)) {
 			
 			Session::flash('warning', 'El Usuario No. ' .$id. ' no se puede borrar porque tiene registros relacionados.');
-			return Redirect::route('admin.users.index');
+			return redirect()->route('admin.users.index');
 		}
 		
 		$dato = Phadmin::find($id);
@@ -227,7 +227,7 @@ class UsersController extends Controller {
 		
 		Sity::RegistrarEnBitacora(3, 'phadmins', $dato->id, $detalle);
 		Session::flash('success', 'El Administrador de Phs ' .$dato->nombre. ' ha sido borrado permanentemente de la base de datos.');
-		return Redirect::route('users.index');
+		return redirect()->route('users.index');
 	}
 
     //=====================================================================================
@@ -254,7 +254,7 @@ class UsersController extends Controller {
         $validation = Validator::make($input, $rules, $messages);
         if ($validation->fails())
         {
-        	return Redirect::back()->withInput()->withErrors($validation);
+        	return back()->withInput()->withErrors($validation);
         }
 
         $file = Input::file('file'); 
@@ -290,11 +290,11 @@ class UsersController extends Controller {
 			
 			Sity::RegistrarEnBitacora(2, 'users', $id, $detalle);
 			Session::flash('success', 'La imagen se actualizó con éxito.');
-			return Redirect::back()->withInput();
+			return back()->withInput();
 		}
 		else {
         	Session::flash('danger', 'La imagen no se pudo subir.');
-			return Redirect::back()->withInput();
+			return back()->withInput();
 		}
 	}
 }

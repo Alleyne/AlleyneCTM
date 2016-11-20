@@ -3,7 +3,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Redirect, Session, DB;
+use Session, DB;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
 use Validator;
@@ -71,14 +71,14 @@ class DetallefacturasController extends Controller {
 	        //dd(Input::all());
 	        $input = Input::all();
 	        $rules = array(
-	            'factura_id'		=> 'required',
-	            'catalogo_id'  		=> 'Required',
-	            'precio'    		=> 'required|Numeric|min:0.01',
-	            'itbms'    			=> 'required|Numeric|min:0',
+            'factura_id'		=> 'required',
+            'catalogo_id'  		=> 'Required',
+            'precio'    		=> 'required|Numeric|min:0.01',
+            'itbms'    			=> 'required|Numeric|min:0',
 	        );
 	    
 	        $messages = [
-	            'required'		=> 'Informacion requerida!',
+	          'required'		=> 'Informacion requerida!',
 	        	'numeric'		=> 'Solo se admiten valores numericos!',
 	        	'min'			=> 'El precio del servicio debe ser mayor que cero!'
 	        ];        
@@ -89,8 +89,8 @@ class DetallefacturasController extends Controller {
 			{
 				
 				// encuentra el valor total en la factura			
-	        	$factura= Factura::find(Input::get('factura_id'));
-	        	$totalfactura= $factura->total;
+      	$factura= Factura::find(Input::get('factura_id'));
+      	$totalfactura= $factura->total;
 
 	        	// encuentra las generales de la cuenta
 				$detallecta= Catalogo::find(Input::get('catalogo_id'));
@@ -106,10 +106,10 @@ class DetallefacturasController extends Controller {
 
 				// Registra en bitacoras
 				$det =	'factura_id= '.			$dato->factura_id. ', '.
-						'catalogo_id= '.	    $dato->catalogo_id. ', '.
-						'detalle= '.   			$detallecta->nombre_factura. ', '.
-						'precio= '.   			$dato->precio. ', '.
-						'itbms= '.   			$dato->itbms;
+								'catalogo_id= '.	    $dato->catalogo_id. ', '.
+								'detalle= '.   			$detallecta->nombre_factura. ', '.
+								'precio= '.   			$dato->precio. ', '.
+								'itbms= '.   			$dato->itbms;
 
 				$totaldetalles=0;
 
@@ -123,34 +123,33 @@ class DetallefacturasController extends Controller {
 			    
 			    if (round(floatval($totalfactura),2) < round(floatval($totaldetalles),2)) {
 			        Session::flash('danger', '<< ERROR >> El valor total de los detalles no puede sobrepasar al valor total de la factura. Intente nuevamente!');
-			        return Redirect::back();
+			        return back();
 			    	
 			    } elseif (round(floatval($totalfactura),2) > round(floatval($totaldetalles),2)) {
-					$factura->totaldetalle= $totaldetalles;
-					$factura->save();
-			        Session::flash('warning', '<< ATENCION >> El valor total de los detalles es inferior al valor total de la factura. Continue ingresando detalles!');
+						$factura->totaldetalle= $totaldetalles;
+						$factura->save();
+				    Session::flash('warning', '<< ATENCION >> El valor total de los detalles es inferior al valor total de la factura. Continue ingresando detalles!');
 			    
 			    } elseif (round(floatval($totalfactura),2) == round(floatval($totaldetalles),2)) {
-					$factura->totaldetalle= $totaldetalles;
-					$factura->etapa= 1;
-					$factura->save();		
+						$factura->totaldetalle= $totaldetalles;
+						$factura->etapa= 1;
+						$factura->save();		
 			    }
 			    
 				Sity::RegistrarEnBitacora(1, 'detallefacturas', $dato->id, $det);
 				Session::flash('success', 'El detalle de factura No. ' .$dato->id. ' ha sido creado con éxito.');
-		    	
-		    	DB::commit();				
-				return Redirect::route('detallefacturas.show', $dato->factura_id);
+		    DB::commit();				
+				return redirect()->route('detallefacturas.show', $dato->factura_id);
 			}
 	        
-	        Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
-	        return Redirect::back()->withInput()->withErrors($validation);
+      Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
+      return back()->withInput()->withErrors($validation);
 		
 		} catch (\Exception $e) {
-		    DB::rollback();
-        	Session::flash('warning', ' Ocurrio un error en el modulo DetallefacturasController.store, la transaccion ha sido cancelada!');
+			DB::rollback();
+			Session::flash('warning', ' Ocurrio un error en el modulo DetallefacturasController.store, la transaccion ha sido cancelada!');
 
-        	return Redirect::back()->withInput()->withErrors($validation);
+			return back()->withInput()->withErrors($validation);
 		}
 	}
     
@@ -198,13 +197,13 @@ class DetallefacturasController extends Controller {
 			Sity::RegistrarEnBitacora(3, 'detallefacturas', $dato->id, $det);
 			Session::flash('success', 'El detalle "' .$dato->detalle .'" ha sido borrado permanentemente de la base de datos.');
 			DB::commit();
-			return Redirect::route('detallefacturas.show', $dato->factura_id);
+			return redirect()->route('detallefacturas.show', $dato->factura_id);
 		
 		} catch (\Exception $e) {
 		    DB::rollback();
         	Session::flash('warning', ' Ocurrio un error en el modulo DetallefacturasController.destroy, la transaccion ha sido cancelada!');
 
-        	return Redirect::back()->withInput()->withErrors($validation);
+        	return back()->withInput()->withErrors($validation);
 		}
 	}
 } 

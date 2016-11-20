@@ -3,7 +3,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Redirect, Session, DB;
+use Session, DB;
 use Validator;
 use Carbon\Carbon;
 use App\library\Sity;
@@ -25,11 +25,11 @@ class PcontablesController extends Controller {
    ************************************************************************************/	
 	public function index()
 	{
-        //Obtiene todos los Periodos contables.
-        $datos = Pcontable::All();
-        //dd($datos->toArray());
-  		
-  		return view('contabilidad.pcontables.index')->with('datos', $datos);     	
+    //Obtiene todos los Periodos contables.
+    $datos = Pcontable::All();
+    //dd($datos->toArray());
+
+    return view('contabilidad.pcontables.index')->with('datos', $datos);     	
 	}	
 
   /*************************************************************************************
@@ -67,7 +67,7 @@ class PcontablesController extends Controller {
 
         if ($existePeriodo) {
           Session::flash('warning', 'Periodo '.$existePeriodo->periodo.' ya existe no pueden haber duplicados.');
-          return Redirect::back();        
+          return back();        
         }
         
         // 1. crear un nuevo perido contable
@@ -90,15 +90,15 @@ class PcontablesController extends Controller {
         DB::commit();        
         Session::flash('success', 'Se crea el primer periodo contable del sistema '.$pdo. ' con éxito.');
 
-        return Redirect::route('pcontables.index');
+        return redirect()->route('pcontables.index');
       }
-      return Redirect::back()->withInput()->withErrors($validation);
+      return back()->withInput()->withErrors($validation);
     
     } catch (\Exception $e) {
         DB::rollback();
         Session::flash('warning', ' Ocurrio un error en el modulo PcontablesController.store, la transaccion ha sido cancelada!');
 
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
     }
   } 
 

@@ -1,10 +1,9 @@
 <?php namespace App\Http\Controllers\Contabilidad;
 
 use App\Http\Controllers\Controller;
-use App\library\Sity;
 use App\library\Pant;
-use Input, Session, Redirect, Str, Carbon\Carbon;
-use Validator, View, DB;
+use Input, Session, Carbon\Carbon;
+use Validator, DB;
 use Jenssegers\Date\Date;
 
 use App\Bitacora;
@@ -102,7 +101,7 @@ class CtdasmsController extends Controller {
 
     if(is_null($prop))  {
       Session::flash('warning', 'La Unidad No. '. $un_id . ' selecciona no tiene propietario encargado asignado...');
-        return Redirect::back();
+      return back();
     } 
                   
     // Encuentra los datos de la unidad

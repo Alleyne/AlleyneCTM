@@ -1,14 +1,10 @@
 <?php namespace App\Http\Controllers\contabilidad;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Charts;
-use App\Http\Requests;
 use App\Ctdasm;
-use DB;
 
 class DashboardController extends Controller
 {
-    
     public function __construct()
     {
        	$this->middleware('hasAccess');    

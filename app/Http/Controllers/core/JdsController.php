@@ -5,22 +5,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Grupo;
 use App\library\Sity;
-use Redirect, Session;
-use Debugbar;
+use Session;
 
 use App\Jd;
 use App\Bitacora;
 
 class JdsController extends Controller
 {
-    public function __construct()
-    {
-       	$this->middleware('hasAccess');    
-    }
+  public function __construct()
+  {
+     	$this->middleware('hasAccess');    
+  }
     
-    /*************************************************************************************
-     * Despliega un grupo de registros en formato de tabla
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Despliega un grupo de registros en formato de tabla
+   ************************************************************************************/	
 	public function index()
 	{
 		//Encuentra todas las juntas directivas registradas 
@@ -31,55 +30,54 @@ class JdsController extends Controller
  		return view('core.jds.index')->with('datos', $datos);
 	}	
 
-    /*************************************************************************************
-     * Despliega el registro especificado en formato formulario sólo lectura
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Despliega el registro especificado en formato formulario sólo lectura
+   ************************************************************************************/	
 	public function show($id)
 	{
-	    $dato = Jd::find($id);
-	    if(!empty($dato)) {
-			//return response()->json($dato);  //api
-			return view('core.jds.show')->with('dato', $dato);
-		}
-	    else {
-			//return response()->json(["mensaje" => "Junta directiva no existe!"]); //api			
-			Session::flash('danger', 'La Junta Directiva No. ' .$id. ' no existe.');
-			
-			//return redirect()->route('jds.index');    	
-	    	//return redirect()->action('JdsController@show', ['id' => 1]);
-	    	return redirect()->action('JdsController@index');
-	    }
+    $dato = Jd::find($id);
+    if(!empty($dato)) {
+		//return response()->json($dato);  //api
+		return view('core.jds.show')->with('dato', $dato);
+		
+		} else {
+		//return response()->json(["mensaje" => "Junta directiva no existe!"]); //api			
+		Session::flash('danger', 'La Junta Directiva No. ' .$id. ' no existe.');
+		
+		//return redirect()->route('jds.index');    	
+		//return redirect()->action('JdsController@show', ['id' => 1]);
+		return redirect()->action('JdsController@index');
+    }
 	}
    
-   /*************************************************************************************
-     * Despliega formulario para crear un nuevo registro
-     ************************************************************************************/	
+	/*************************************************************************************
+   * Despliega formulario para crear un nuevo registro
+   ************************************************************************************/	
 	public function create()
 	{
-        return view('core.jds.create');
+    return view('core.jds.create');
 	}     
     
-    /*************************************************************************************
-     * Almacena un nuevo registro en la base de datos
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Almacena un nuevo registro en la base de datos
+   ************************************************************************************/	
 	public function store()
 	{
-        //dd(Input::all());
-        $input = Input::all();
-        $rules = array(
-            'nombre'    	=> 'required'
-        );
-    
-        $messages = [
-            'required' => 'El campo :attribute es requerido!',
-            'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
-        ];        
-            
-        $validation = \Validator::make($input, $rules, $messages);      	
+    //dd(Input::all());
+    $input = Input::all();
+    $rules = array(
+        'nombre'    	=> 'required'
+    );
+
+    $messages = [
+        'required' => 'El campo :attribute es requerido!',
+        'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+    ];        
+        
+    $validation = \Validator::make($input, $rules, $messages);      	
 
 		if ($validation->passes())
 		{
-			
 			$dato = new Jd;
 			$dato->nombre       = Input::get('nombre');
 			$dato->descripcion  = Input::get('descripcion');
@@ -96,38 +94,37 @@ class JdsController extends Controller
 			
 			//return response()->json(["mensaje" => 'La Junta Directiva ' .$dato->nombre. ' ha sido creada con éxito.']); //api
 			Session::flash('success', 'La Junta Directiva ' .$dato->nombre. ' ha sido creada con éxito.');
-			return Redirect::route('jds.index');
+			return redirect()->route('jds.index');
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+    return back()->withInput()->withErrors($validation);
 	}
     
-    
-    /*************************************************************************************
-     * Despliega el registro especificado en formato formulario para edición
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Despliega el registro especificado en formato formulario para edición
+   ************************************************************************************/	
 	public function edit($id)
 	{
 		return view('core.jds.edit')->with('dato', Jd::find($id));
 	}
 
 
-    /*************************************************************************************
-     * Actualiza registro
-     ************************************************************************************/
+  /*************************************************************************************
+   * Actualiza registro
+   ************************************************************************************/
 	public function update($id)
 	{
-        //dd(Input::get());
-        $input = Input::all();
-        $rules = array(
-            'nombre' => 'required'
-        );
-    
-        $messages = [
-            'required' => 'El campo :attribute es requerido!',
-            'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
-        ];        
-            
-        $validation = \Validator::make($input, $rules, $messages);      	
+    //dd(Input::get());
+    $input = Input::all();
+    $rules = array(
+        'nombre' => 'required'
+    );
+
+    $messages = [
+        'required' => 'El campo :attribute es requerido!',
+        'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+    ];        
+        
+    $validation = \Validator::make($input, $rules, $messages);      	
 
 		if ($validation->passes())
 		{
@@ -143,10 +140,10 @@ class JdsController extends Controller
 			
 			//return response()->json(["mensaje" => 'La Junta Directiva ' .$id. ' ha sido editada con éxito.']); //api
 			Session::flash('success', 'La Junta Directiva ' .$id. ' ha sido editada con éxito.');
-			return Redirect::route('jds.index');
+			return redirect()->route('jds.index');
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
-  	}
+    return back()->withInput()->withErrors($validation);
+  }
   
   
     /*************************************************************************************
@@ -172,13 +169,13 @@ class JdsController extends Controller
 
 		if(!empty($bloques)) {
 			Session::flash('success', 'La Junta Directiva ' .$dato->nombre. ' no puede ser borrada porque tiene uno o más bloques asignadoa a la misma.');
-			return Redirect::route('admin.jds.index');	
+			return redirect()->route('admin.jds.index');	
 		}
 		
 		elseif (!empty($users)) {
 			//return response()->json(["mensaje" => 'La Junta Directiva ' .$dato->nombre. ' no puede ser borrada porque tiene uno o más periodos asignados a la misma.']); //api
 			Session::flash('success', 'La Junta Directiva ' .$dato->nombre. ' no puede ser borrada porque tiene uno o más periodos asignadoa a la misma.');
-			return Redirect::route('admin.jds.index');	
+			return redirect()->route('admin.jds.index');	
 		}
 
 		else {
@@ -190,7 +187,7 @@ class JdsController extends Controller
 			
 			//return response()->json(["mensaje" => 'La Junta Directiva ' .$dato->nombre. ' ha sido borrada permanentemente de la base de datos.']); //api
 			Session::flash('success', 'La Junta Directiva ' .$dato->nombre. ' ha sido borrada permanentemente de la base de datos.');			
-			return Redirect::route('admin.jds.index');	
+			return redirect()->route('admin.jds.index');	
 		}
 	}
 }

@@ -603,7 +603,7 @@ class Hojat {
             $data[$i]["saldo_credito"]= "";       
           }
         } else {
-          return 'Error: tipo de cuenta invalido en function Sity::getDataParaBalanceGeneral()';
+          return 'Error: tipo de cuenta invalido en function Hojat::getDataParaEstadoResultado()';
         }  
       } 
       $i++;    
@@ -648,7 +648,7 @@ class Hojat {
               ->select('cuenta')
               ->get();
     } else {
-      return 'Error: tipo de cuenta invalido en function Sity::getDataParaBalanceGeneral()';
+      return 'Error: tipo de cuenta invalido en function Hojat::getDataParaBalanceGeneral()';
     }   
     
     $cuentas=$cuentas->unique('cuenta');

@@ -3,7 +3,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Redirect, Session;
+use Session;
 use App\library\Sity;
 use URL;
 use Cache;
@@ -35,7 +35,7 @@ class CatalogosController extends Controller {
 		}
 	    else {
 			Session::flash('danger', 'View no existe!');
-			return Redirect::back();	    	
+			return back();	    	
 	    }
 	}
 
@@ -52,97 +52,99 @@ class CatalogosController extends Controller {
      ************************************************************************************/	
 	public function store()
 	{
-        //dd(Input::all());
-        $input = Input::all();
-        $codigo=Input::get('codigo');
-        //dd($codigo[0], Input::get('id'));
+    //dd(Input::all());
+    $input = Input::all();
+    $codigo=Input::get('codigo');
+    //dd($codigo[0], Input::get('id'));
+    
+    if (Input::get('codigo')==1 || Input::get('codigo')==2) {
+      $rules = array(
+				'nombre'    => 'required',
+				'codigo'    => 'required|between:7,7',
+				'corriente_siono'    => 'required'
+      );
+    
+    } elseif (Input::get('codigo')==6) {
+      $rules = array(
+				'nombre'    => 'required',
+				'codigo'    => 'required|between:7,7',
+				'nombre_factura'    => 'required'
+      );    
+    
+    } else {
+			$rules = array(
+				'nombre'    => 'required',
+				'codigo'    => 'required|between:7,7'
+			);
+    }
+    
+    $messages = [
+        'required' => 'El campo :attribute es requerido!',
+        'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+    ];        
         
-        if (Input::get('codigo')==1 || Input::get('codigo')==2) {
-	        $rules = array(
-	            'nombre'    => 'required',
-	        	'codigo'    => 'required|between:7,7',
-	    		'corriente_siono'    => 'required'
-	        );
-        
-        } elseif (Input::get('codigo')==6) {
-	        $rules = array(
-	            'nombre'    => 'required',
-	        	'codigo'    => 'required|between:7,7',
-	    		'nombre_factura'    => 'required'
-	        );    
-        
-        } else {
- 	        $rules = array(
-	            'nombre'    => 'required',
-	        	'codigo'    => 'required|between:7,7'
-	        );
-        }
-        
-        $messages = [
-            'required' => 'El campo :attribute es requerido!',
-            'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
-        ];        
-            
-        $validation = \Validator::make($input, $rules, $messages);      	
+    	
+
+    $validation = \Validator::make($input, $rules, $messages);      	
 
 		if ($validation->passes())
 		{
 			
-	        $exist= Catalogo::where('codigo', $codigo)->first();
-	        if ($exist) {
+			$exist= Catalogo::where('codigo', $codigo)->first();
+			
+			if ($exist) {
 				Session::flash('danger', 'La cuenta '.$codigo.' ya existe, no puede haber duplicados.');
-	        	return Redirect::back()->withInput();	
-	        }				
-	        elseif ($codigo[0]!=Input::get('id')) {
+				return back()->withInput();	
+			}				
+			elseif ($codigo[0]!=Input::get('id')) {
 				Session::flash('danger', 'La cuenta '.$codigo.' debe comenzar con '.Input::get('id'));
-	        	return Redirect::back()->withInput();	
-	        }	
+				return back()->withInput();	
+			}	
 
 			$dato = new Catalogo;
 
-	        if ($codigo[0]=='1' || $codigo[0]=='2') {
-				$dato->nombre       	   = Input::get('nombre');
-				$dato->codigo		       = Input::get('codigo');
-				$dato->tipo			  	   = Input::get('id');
-				$dato->corriente_siono 	   = Input::get('corriente_siono');
-				$dato->save();	
-				
-				// Registra en bitacoras
-				$detalle =	'nombre= '.		     $dato->nombre. ', '.
-							'codigo= '.   		 $dato->codigo. ', '.
-	    					'corriente_siono= '. $dato->corriente_siono. ', '.
-	    					'tipo= '.		     $dato->tipo;
+			if ($codigo[0]=='1' || $codigo[0]=='2') {
+			$dato->nombre       	   = Input::get('nombre');
+			$dato->codigo		       = Input::get('codigo');
+			$dato->tipo			  	   = Input::get('id');
+			$dato->corriente_siono 	   = Input::get('corriente_siono');
+			$dato->save();	
 
-	        } elseif ($codigo[0]=='3' || $codigo[0]=='4') {
-				$dato->nombre       	   = Input::get('nombre');
+			// Registra en bitacoras
+			$detalle =	'nombre= '.		     $dato->nombre. ', '.
+									'codigo= '.   		 $dato->codigo. ', '.
+									'corriente_siono= '. $dato->corriente_siono. ', '.
+									'tipo= '.		     $dato->tipo;
+
+			} elseif ($codigo[0]=='3' || $codigo[0]=='4') {
+				$dato->nombre       	 = Input::get('nombre');
 				$dato->codigo		       = Input::get('codigo');
 				$dato->tipo			  	   = Input::get('id');
 				$dato->save();	
-				
+
 				// Registra en bitacoras
 				$detalle =	'nombre= '.		    $dato->nombre. ', '.
-							'codigo= '.   		$dato->codigo. ', '.
-	    					'tipo= '.		    $dato->tipo;
+										'codigo= '.   		$dato->codigo. ', '.
+										'tipo= '.		    $dato->tipo;
 
-	        } elseif ($codigo[0]=='6') {
+			} elseif ($codigo[0]=='6') {
 				$dato->nombre       	   = Input::get('nombre');
 				$dato->codigo		       = Input::get('codigo');
 				$dato->tipo			  	   = Input::get('id');
 				$dato->nombre_factura  	   = Input::get('nombre_factura');
 				$dato->save();	
-				
+
 				// Registra en bitacoras
 				$detalle =	'nombre= '.		    $dato->nombre. ', '.
-							'codigo= '.   		$dato->codigo. ', '.
-	    					'nombre_factura= '.	$dato->nombre_factura. ', '.
-	        				'tipo= '.		    $dato->tipo;
-	        }
+										'codigo= '.   		$dato->codigo. ', '.
+										'nombre_factura= '.	$dato->nombre_factura. ', '.
+										'tipo= '.		    $dato->tipo;
+			}
 
 			Sity::RegistrarEnBitacora(12, 'cuentas', $dato->id, $detalle);
 			Session::flash('success', 'La cuenta -'.$dato->nombre.'- ha sido creada con éxito.');
-			return Redirect::route('catalogos.index');
+			return redirect()->route('catalogos.index');
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+	  return back()->withInput()->withErrors($validation);
 	}
-
 }

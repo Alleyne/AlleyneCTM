@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Grupo;
 use App\library\Sity;
-use Redirect, Session;
+use Session;
 
 use App\Org;
 use App\Catalogo;
@@ -91,9 +91,9 @@ class OrgsController extends Controller
  			Sity::RegistrarEnBitacora(10, 'ksubcuenta_org',1, $detalle);
 			
 			Session::flash('success', 'La subcuenta ' .$kcuentasname->nombre_factura. ' ha sido vinculada a el proveedor '. $org->nombre);
-			return Redirect::back();
+			return back();
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
 	}
 
 
@@ -113,6 +113,6 @@ class OrgsController extends Controller
 		Sity::RegistrarEnBitacora(11, 'kresultadocta_org',1, $detalle);
 		
 		Session::flash('success', 'La subcuenta ' .$kcuenta->nombre. ' ha sido desvinculada del proveedor '. $org->nombre);
-		return Redirect::route('catalogosPorOrg', $org_id);
+		return redirect()->route('catalogosPorOrg', $org_id);
  	}
 }

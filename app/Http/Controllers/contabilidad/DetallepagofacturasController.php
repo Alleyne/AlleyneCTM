@@ -3,7 +3,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Redirect, Session, DB;
+use Session, DB;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
 use Validator;
@@ -29,17 +29,17 @@ class DetallepagofacturasController extends Controller {
      ************************************************************************************/	
 	public function show($factura_id)
 	{
-        $datos = Detallepagofactura::where('factura_id', $factura_id)->get();
-        //dd($datos->toArray());		
+    $datos = Detallepagofactura::where('factura_id', $factura_id)->get();
+    //dd($datos->toArray());		
 	    
 		foreach ($datos as $dato) {
 			if ($dato->fecha) {
 			  $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
 			}        
 		}
-        //dd($datos->toArray());
+    //dd($datos->toArray());
 
-	    $factura= Factura::find($factura_id);
+    $factura= Factura::find($factura_id);
 		
 		return view('contabilidad.detallepagofacturas.show')
 				->with('factura', $factura)
@@ -84,7 +84,7 @@ class DetallepagofacturasController extends Controller {
 			    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
 			    if (Carbon::parse($periodo->fecha)->gt(Carbon::parse(Input::get('fecha')))) {
 		            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pago de facturas de gastos cuya fecha se mayor o igual al periodo vigente de '.$periodo->periodo);
-	        		return Redirect::back()->withInput()->withErrors($validation);
+	        		return back()->withInput()->withErrors($validation);
 			    }
 
 				// encuentra el monto total de la factura			
@@ -94,8 +94,8 @@ class DetallepagofacturasController extends Controller {
 				
 			    // verifica que el monto del nuevo detalle no sobrepase al monto total de la factura
 			    if (Input::get('monto')>$totalfactura) {
-					Session::flash('danger', '<< Error >>: No se pudo agregar el nuevo detalle ya que su monto sobrepasa al monto total de la factura!');
-					return Redirect::route('detallepagofacturas.show', $factura->id);
+						Session::flash('danger', '<< Error >>: No se pudo agregar el nuevo detalle ya que su monto sobrepasa al monto total de la factura!');
+						return redirect()->route('detallepagofacturas.show', $factura->id);
 			    } 
 
 			    // cuenta la cantidad de detalles en la factura
@@ -126,7 +126,7 @@ class DetallepagofacturasController extends Controller {
 				    // verifica que el monto total de los detalle incluyendo al nuevo no sobrepase al monto total de la factura
 				    if ($totaldetalles > $totalfactura) {
 						Session::flash('danger', '<< Error >>: No se pudo agregar el nuevo detalle ya con su monto sobrepasaria al monto total de la factura!');
-						return Redirect::route('detallepagofacturas.show', $factura->id);
+						return redirect()->route('detallepagofacturas.show', $factura->id);
 				   
 				    } else {
 						// salva el nuevo detalle
@@ -147,17 +147,16 @@ class DetallepagofacturasController extends Controller {
 				//Sity::RegistrarEnBitacora(1, 'detallepagofacturas', $dato->id, Input::all());
 				Session::flash('success', 'El detalle de factura No. ' .$dato->id. ' ha sido creado con éxito.');
 				DB::commit();				
-				return Redirect::route('detallepagofacturas.show', $dato->factura_id);
+				return redirect()->route('detallepagofacturas.show', $dato->factura_id);
 			}
 
-	        Session::flash('warning', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
-	        return Redirect::back()->withInput()->withErrors($validation);
+		Session::flash('warning', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
+		return back()->withInput()->withErrors($validation);
 		
 		} catch (\Exception $e) {
-		    DB::rollback();
-        	Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturaController.store, la transaccion ha sido cancelada!');
-
-        	return Redirect::back()->withInput()->withErrors($validation);
+			DB::rollback();
+			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturaController.store, la transaccion ha sido cancelada!');
+			return back()->withInput()->withErrors($validation);
 		}
 	}
     
@@ -181,20 +180,19 @@ class DetallepagofacturasController extends Controller {
 					'factura_id= '. 		$dato->factura_id;*/
 			
 		    // actualiza el totalpagodetalle en la tabla facturas
-		    $factura= Factura::find($dato->factura_id);
+		  $factura= Factura::find($dato->factura_id);
 			$factura->totalpagodetalle= $factura->totalpagodetalle - $dato->monto;
 			$factura->save();		
 			
 			//Sity::RegistrarEnBitacora(3, 'detallefacturas', $dato->id, $det);
 			DB::commit();			
 			Session::flash('success', 'El detalle de factura "' .$dato->detalle .'" con monto de B/.'. $dato->monto.' ha sido borrado permanentemente de la base de datos.');
-			return Redirect::route('detallepagofacturas.show', $dato->factura_id);
+			return redirect()->route('detallepagofacturas.show', $dato->factura_id);
 		
 		} catch (\Exception $e) {
-		    DB::rollback();
-        	Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturasController.destroy, la transaccion ha sido cancelada!');
-
-        	return Redirect::back()->withInput()->withErrors($validation);
+			DB::rollback();
+			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturasController.destroy, la transaccion ha sido cancelada!');
+			return back()->withInput()->withErrors($validation);
 		}
 	}
 
@@ -221,15 +219,15 @@ class DetallepagofacturasController extends Controller {
 		    
 		    // solamente se permite registrar pagos de facturas que correspondan al periodo mas antiguo abierto
 		    if ($pdo != $periodo->periodo) {
-	            Session::flash('danger', '<< ERROR >> Solamente se permite contabilizar pagos que correspondan al periodo vigente de '.$periodo->periodo);
-        		return Redirect::back();
+					Session::flash('danger', '<< ERROR >> Solamente se permite contabilizar pagos que correspondan al periodo vigente de '.$periodo->periodo);
+					return back();
 		    }
 
 		    // verifica si existe algun detalle de pago anterior al presente que no haya sido contabilizado
 			$exiteAnterior= Detallepagofactura::where('id', '<', $detallepagofactura_id)->where('contabilizado', 0)->first();
 		    if ($exiteAnterior) {
 	            Session::flash('danger', '<< ERROR >> Debe contabilizar los detalles de pago en orden cronologico!');
-        		return Redirect::back();
+        		return back();
 		    }
 		    
 		    // encuentra el proveedor de la factura
@@ -336,13 +334,13 @@ class DetallepagofacturasController extends Controller {
 			DB::commit();			
 			Session::flash('success', 'Detalle de pago de factura No. ' .$factura->no. ' ha sido cotabilizado.');
 
-			return Redirect::route('detallepagofacturas.show', $factura->id);
+			return Redirect()->route('detallepagofacturas.show', $factura->id);
 		
 		} catch (\Exception $e) {
 		    DB::rollback();
         	Session::flash('warning', ' Ocurrio un error en el modulo Detallepagofactura.contabilizaDetallePagoFactura, la transaccion ha sido cancelada!');
 
-        	return Redirect::back();
+        	return back();
 		}    
   }
 } 

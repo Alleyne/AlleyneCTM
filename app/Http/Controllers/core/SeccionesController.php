@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Redirect, Session;
+use Session;
 use Grupo;
 use Validator;
 use Image;
@@ -50,11 +50,11 @@ class SeccionesController extends Controller {
  		//verifica que el bloque tenga por lo menos un administrador encargado
  		if ($blqadmins==0) {
 			Session::flash('warning', 'Es obligatorio que cada bloque tenga por lo menos un administrador encargado o responsable del mismo. Favor vincular por lo menos un adminstrador ecargado o responsable!');
-			return Redirect::route('indexblqadmin', $bloque_id);
+			return redirect()->route('indexblqadmin', $bloque_id);
  		}
  		elseif ($blqadmins>1) {
 			Session::flash('warning', 'Un bloque puede tener uno o muchos administradores pero solamente uno puede ser encargado o responsable del mismo. Este bloque tiene mas de uno!.');
-			return Redirect::route('indexblqadmin', $bloque_id);
+			return redirect()->route('indexblqadmin', $bloque_id);
  		}
 	    
 
@@ -99,7 +99,7 @@ class SeccionesController extends Controller {
 
 		if (is_null($sec->ph)) {
 			Session::flash('warning', 'Es necesario asignar un Ph a cada Sección, favor utilizar el botón Editar para asignarle un Ph a esta Sección!');
-        	return Redirect::back();
+        	return back();
 		}
 		
 		if ($sec->tipo==1) {
@@ -354,9 +354,9 @@ class SeccionesController extends Controller {
 
 			Sity::RegistrarEnBitacora(1, 'secciones', $dato->id, $detalle);
 			Session::flash('success', 'La Sección administrativa ' .$dato->nombre. ' ha sido creada con éxito.');
-			return Redirect::route('indexsecplus', Input::get('bloque_id'));
+			return redirect()->route('indexsecplus', Input::get('bloque_id'));
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+    return back()->withInput()->withErrors($validation);
 	}
 
     /*************************************************************************************
@@ -589,9 +589,9 @@ class SeccionesController extends Controller {
 
 			Sity::RegistrarEnBitacora(2, 'secciones', $dato->id, $detalle);
 			Session::flash('success', 'La Sección administrativa ' . $dato->nombre . ' ha sido editada con éxito.');
-			return Redirect::route('indexsecplus', Input::get('bloque_id'));
+			return redirect()->route('indexsecplus', Input::get('bloque_id'));
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
   	}
 
     /*************************************************************************************
@@ -654,6 +654,6 @@ class SeccionesController extends Controller {
 			Session::flash('success', 'La Sección administrativa ' .$dato->nombre. ' ha sido borrada permanentemente de la base de datos.');		
 		}
 	
-		return Redirect::back();
+		return back();
 	}
 }

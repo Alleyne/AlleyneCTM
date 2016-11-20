@@ -7,9 +7,8 @@ use App\library\Npdo;
 use App\library\Fact;
 use App\library\Hojat;
 
-use Input, Session, Redirect, Str, Carbon\Carbon, URL;
-use Validator, View, DB;
-use Debugbar;
+use Input, Session, Carbon\Carbon;
+use Validator, DB;
 
 use App\Ctmayore;
 use App\Catalogo;
@@ -491,7 +490,7 @@ class HojadetrabajosController extends Controller {
             $datos= Un::where('inicializada', 0)->first();
             if ($datos) {
                 Session::flash('danger', 'Hay algunas unidades que no han sido inicializadas, antes de cerrar el periodo debera inicializar todas las unidades!');
-                //return Redirect::route('pcontables.index');
+                //return redirect()->route('pcontables.index');
             }
             
             // Construye la fecha del periodo real
@@ -562,13 +561,13 @@ class HojadetrabajosController extends Controller {
             DB::commit();             
             Session::flash('success', 'Periodo '.$periodo.' ha sido cerrado permanentemente!');
 
-            return Redirect::route('pcontables.index');
+            return redirect()->route('pcontables.index');
         
         } catch (\Exception $e) {
             DB::rollback();
             Session::flash('warning', ' Ocurrio un error en el modulo HojadetrabajosController.cierraPeriodo, la transaccion ha sido cancelada!');
 
-            return Redirect::back();
+            return back();
         }
     }
 } // fin de controller

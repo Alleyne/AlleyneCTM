@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Redirect, Session;
+use Session;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
 use Validator;
@@ -35,17 +35,17 @@ class BloquesController extends Controller {
 		    //Obtiene los datos del la Justa Directiva y de todos los bloques registrados
 		    $jd = Jd::first();
 		    $bloques = Bloque::All();
-			//dd($jd->toArray(), $bloques->toArray());
+				//dd($jd->toArray(), $bloques->toArray());
 	    } else {
 		    //Obtiene los datos del la Justa Directiva	    
 		    $jd = Jd::first();
 		    
 		    //Obtiene los bloques que pertenecen a un determinado blqadmin	    
 			$bloques = Bloque::join('blqadmins', 'blqadmins.bloque_id', '=', 'bloques.id')
-			  		 ->where('blqadmins.user_id', Auth::user()->id)
-				 	 ->select('bloques.id','bloques.nombre')
-				 	 ->get();
-	    	//dd($jd->toArray(), $bloques->toArray());
+				 ->where('blqadmins.user_id', Auth::user()->id)
+				 ->select('bloques.id','bloques.nombre')
+				 ->get();
+				//dd($jd->toArray(), $bloques->toArray());
 	    }
 	    
 	    return view('core.bloques.indexblqplus')->with('jd', $jd)
@@ -63,26 +63,26 @@ class BloquesController extends Controller {
 	 ************************************************************************************/	
 	public function showblqplus($bloque_id)
 	{
-	    //dd($bloque_id);
-	    //Obtiene los datos del la Justa Directiva con el respectivo bloques_id	    
-	    $bloque = Bloque::find($bloque_id);
-	    $jd = Jd::find($bloque->jd_id);		
+		//dd($bloque_id);
+		//Obtiene los datos del la Justa Directiva con el respectivo bloques_id	    
+		$bloque = Bloque::find($bloque_id);
+		$jd = Jd::find($bloque->jd_id);		
 		$blqadmins=Blqadmin::join('users', 'users.id', '=', 'blqadmins.user_id')
-		  		->where('blqadmins.bloque_id', '=', $bloque->id)
-			 	->get();
+												->where('blqadmins.bloque_id', '=', $bloque->id)
+												->get();
 		//dd($jd->toArray(), $bloque->toArray(), $blqadmins->toArray());
-	    
-	    return view('core.bloques.showblqplus')->with('jd', $jd)
-	    										  ->with('bloque', $bloque)
-												  ->with('blqadmins', $blqadmins);
-    
-	    /*----------------------------------------------------------------------------------
-	    api setup 
-	   	$datos = Jd::find($jd_id)->load(['bloques' => function ($query) use ($bloque_id) {
-		    $query->where('id', $bloque_id);
+
+		return view('core.bloques.showblqplus')->with('jd', $jd)
+																					->with('bloque', $bloque)
+																					->with('blqadmins', $blqadmins);
+
+		/*----------------------------------------------------------------------------------
+		api setup 
+		$datos = Jd::find($jd_id)->load(['bloques' => function ($query) use ($bloque_id) {
+		$query->where('id', $bloque_id);
 		}]);
-        return response()->json($datos->toArray());
-        -----------------------------------------------------------------------------------*/
+		return response()->json($datos->toArray());
+		-----------------------------------------------------------------------------------*/
 	}
 
 	/*************************************************************************************
@@ -120,8 +120,8 @@ class BloquesController extends Controller {
 			$dato->nombre         = Input::get('nombre');
 			$dato->codigo         = strtoupper(Input::get('codigo'));
 			$dato->descripcion    = Input::get('descripcion');
-		    $dato->jd_id 	  	  = Input::get('jd_id'); 
-		    $dato->save(); 
+	    $dato->jd_id 	  	  = Input::get('jd_id'); 
+	    $dato->save(); 
 			
 			// agrega un administrador temporal
 			$blqadmin = new Blqadmin;
@@ -144,10 +144,10 @@ class BloquesController extends Controller {
 			
 			Sity::RegistrarEnBitacora(1, 'bloques', $dato->id, $detalle);
 			Session::flash('success', 'El Bloque administrativo ' .$dato->nombre. ' ha sido creado con éxito.');
-		    return Redirect::route('indexblqplus', Input::get('jd_id'));
+		  return redirect()->route('indexblqplus', Input::get('jd_id'));
 		}
 
-        return Redirect::back()->withInput()->withErrors($validation);
+    return back()->withInput()->withErrors($validation);
 	}
 
     /*************************************************************************
@@ -193,9 +193,9 @@ class BloquesController extends Controller {
 			Sity::RegistrarEnBitacora(2, 'bloques', $dato->id, $detalle);
 			Session::flash('success', 'El Bloque administrativo No. ' .$id. ' ha sido editado con éxito.');
 		    
-			return Redirect::route('indexblqplus', $dato->jd_id);
+			return redirect()->route('indexblqplus', $dato->jd_id);
 		}
-	    return Redirect::back()->withInput()->withErrors($validation);
+	    return back()->withInput()->withErrors($validation);
 	}
 
     /*************************************************************************************
@@ -218,13 +218,13 @@ class BloquesController extends Controller {
 							   	   ->first();		
 		
 		if(!empty($users)) {
-			Session::flash('success', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos un administrador vinculado al mismo.');
-			return Redirect::back();
+			Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos un administrador vinculado al mismo.');
+			return back();
 		}
 		
 		elseif(!empty($secciones)) {
-			Session::flash('success', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos una sección asignada al mismo.');
-			return Redirect::back();
+			Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos una sección asignada al mismo.');
+			return back();
 		}
 		
 		else {
@@ -236,7 +236,7 @@ class BloquesController extends Controller {
 			
 			Sity::RegistrarEnBitacora(3, 'bloques', $bloque->id, $detalle);
 			Session::flash('success', 'El Bloque administrativo ' .$bloque->nombre. ' ha sido borrado permanentemente de la base de datos.');			
-			return Redirect::back();
+			return back();
 		}
 	}
 
@@ -260,7 +260,7 @@ class BloquesController extends Controller {
         $validation = Validator::make($input, $rules, $messages);
         if ($validation->fails())
         {
-        	return Redirect::back()->withInput()->withErrors($validation);
+        	return back()->withInput()->withErrors($validation);
         }
 
         $file = Input::file('file'); 
@@ -296,11 +296,11 @@ class BloquesController extends Controller {
 			
 			Sity::RegistrarEnBitacora(2, 'bloques', $id, $detalle);
 			Session::flash('success', 'La imagen se actualizó con éxito.');
-			return Redirect::back()->withInput();
+			return back()->withInput();
 		}
 		else {
-        	Session::flash('danger', 'La imagen no se pudo subir.');
-			return Redirect::back()->withInput();
+      Session::flash('danger', 'La imagen no se pudo subir.');
+			return back()->withInput();
 		}
 	}
 

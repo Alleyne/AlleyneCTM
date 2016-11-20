@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Redirect, Session;
+use Session;
 use Grupo;
 use Validator;
 use Image;
@@ -137,10 +137,10 @@ class BlqadminsController extends Controller {
 			// Registra en bitacoras			
 			Sity::RegistrarEnBitacora(8, 'blqadmins', $dato->id, $detalle);
 			Session::flash('success', $detalle);
-			return Redirect::route('indexblqadmin', array(Input::get('bloque_id')));
+			return redirect()->route('indexblqadmin', array(Input::get('bloque_id')));
 		}
 		Session::flash('warning', 'Se encontraron errores en su formulario, inténtelo nuevamente!');
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
 	}
     
      /*************************************************************************************
@@ -174,6 +174,6 @@ class BlqadminsController extends Controller {
 		// Registra en bitacoras			
 		Sity::RegistrarEnBitacora(9, 'blqadmins', $dato->id, $detalle);
 		Session::flash('success', $detalle);
-		return Redirect::route('indexblqadmin', $dato->bloque->id);	
+		return redirect()->route('indexblqadmin', $dato->bloque->id);	
 	}
 } 

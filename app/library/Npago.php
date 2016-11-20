@@ -1,5 +1,6 @@
 <?php namespace App\library;
 
+use Carbon\Carbon;
 use Jenssegers\Date\Date;
 use App\library\Sity;
 use App\library\Pant;
@@ -14,6 +15,7 @@ use App\Ctdiario;
 use App\Detallepago;
 use App\Pcontable;
 use App\Ctmayore;
+use App\Pago;
 
 class Npago {
 
@@ -689,11 +691,11 @@ class Npago {
   /** 
   *=============================================================================================
   * Anula un pago
-  * @param  integer $pago_id        
+  * @param  string $pago_id   "2"     
   * @return void
   *===========================================================================================*/
    public static function anulaPago($pago_id) {
-    dd('npago 695...',$pago_id);
+    //dd($pago_id);
     
     // anula el pago en la tabla pagos
     $pago=Pago::find($pago_id);

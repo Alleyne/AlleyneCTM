@@ -2,7 +2,7 @@
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Redirect, Session, Cache, DB;
+use Session, Cache, DB;
 use Carbon\Carbon;
 use App\library\Sity;
 
@@ -44,13 +44,13 @@ class InicializaunController extends Controller {
 
       if (Input::get('meses')>0 && Input::get('monto')==0) {
         Session::flash('danger', '<< ERROR >> Esta tratando de inicializar la unidad con '.Input::get('meses').' meses y monto total adeudado igual a cero!');     
-        return Redirect::back()->withInput();
+        return back()->withInput();
       }
       
       $pdo= Pcontable::find(1);
       if (!$pdo) {
         Session::flash('danger', '<< ERROR >> Antes de inicializar una unidad usted debera crear el primer periodo contable!');     
-        return Redirect::back()->withInput();
+        return back()->withInput();
       } 
       
       $rules = array(
@@ -225,13 +225,13 @@ class InicializaunController extends Controller {
         
         return redirect(Cache::get('indexunallkey'));
       }
-      return Redirect::back()->withInput()->withErrors($validation);
+      return back()->withInput()->withErrors($validation);
     
     } catch (\Exception $e) {
         DB::rollback();
         Session::flash('warning', ' Ocurrio un error en el modulo InicializaunController.storeinicializacion, la transaccion ha sido cancelada!');
 
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
     }
   }    
 } 

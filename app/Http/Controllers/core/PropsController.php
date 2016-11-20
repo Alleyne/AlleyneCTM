@@ -3,7 +3,7 @@ namespace App\Http\Controllers\core;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Redirect, Session;
+use Session;
 use App\library\Sity;
 use Grupo;
 use Validator;
@@ -124,9 +124,9 @@ class PropsController extends Controller {
 			// Registra en bitacoras			
 			Sity::RegistrarEnBitacora(6, 'props', $dato_2->id, $detalle);
 			Session::flash('success', $detalle);
-			return Redirect::route('indexprops', array(Input::get('un_id'), Input::get('seccione_id'), Input::get('goback')));
+			return redirect()->route('indexprops', array(Input::get('un_id'), Input::get('seccione_id'), Input::get('goback')));
 		}
-        return Redirect::back()->withInput()->withErrors($validation);
+        return back()->withInput()->withErrors($validation);
 	}
 
     /*************************************************************************************
@@ -164,6 +164,6 @@ class PropsController extends Controller {
 
 		
 		Sity::RegistrarEnBitacora(7, 'props', $dato->id, $detalle);
-		return Redirect::route('indexprops', array($un->id, $un->seccione_id));
+		return redirect()->route('indexprops', array($un->id, $un->seccione_id));
 	}
 } 
