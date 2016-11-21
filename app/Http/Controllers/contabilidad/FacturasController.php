@@ -191,8 +191,9 @@ class FacturasController extends Controller {
    *****************************************************************************************/
   public static function contabilizaDetallesFactura($factura_id)
   {
-	DB::beginTransaction();
-	try {
+		DB::beginTransaction();
+		try {
+	    
 	    //Encuentra el proveedor de la factura
 	    $factura= Factura::find($factura_id);
 	    $org_id= $factura->org_id;
@@ -206,8 +207,8 @@ class FacturasController extends Controller {
 	    // determina el periodo al que corresponde la fecha de pago    
 	    $pdo= Sity::getMonthName($month).'-'.$year;
 	    $periodo= Pcontable::where('periodo', $pdo)
-				->where('cerrado', 0)
-	    		->first();
+												->where('cerrado', 0)
+												->first();
 	    //dd($periodo); 
 
 	    if (!$periodo) {
@@ -221,67 +222,67 @@ class FacturasController extends Controller {
 	            ->select('detallefacturas.precio','detallefacturas.itbms','catalogos.nombre','catalogos.id','catalogos.codigo')
 	            ->get();
 	    //dd($datos->toArray());
-		
-		// se anota el monto de cada uno de los gastos de la factura con su respectivo codigo de gasto
-		// ctmayores
-		//$fecha= Carbon::today();
-		$i=1;
-		foreach ($datos as $dato) {
-		 	Sity::registraEnCuentas(
-					$periodo->id,
-					'mas', 
-					6,
-					$dato->id,
-					$factura->fecha,
-			    	$dato->nombre,
-			    	$dato->precio,
-			       	Null,
-			       	$org_id
-			       );
 			
+			// se anota el monto de cada uno de los gastos de la factura con su respectivo codigo de gasto
+			// ctmayores
+			//$fecha= Carbon::today();
+			$i=1;
+			foreach ($datos as $dato) {
+			 	Sity::registraEnCuentas(
+						$periodo->id,
+						'mas', 
+						6,
+						$dato->id,
+						$factura->fecha,
+						$dato->nombre,
+						$dato->precio,
+						Null,
+						$org_id
+						);
+				
+			 	Sity::registraEnCuentas(
+						$periodo->id,
+						'mas', 
+						6,
+						15,
+						$factura->fecha,
+						Catalogo::find(15)->nombre.', factura No. '.$factura->no.', proveedor No. '.$org_id,
+						$dato->itbms,
+						Null,
+						$org_id
+						);	        
+
+		        // registra en Ctdiario principal
+		        $diario = new Ctdiario;
+		        $diario->pcontable_id  = $periodo->id;
+		        if ($i==1) {
+		        	$diario->fecha   = $factura->fecha;
+		        	$i=0;	        
+		        } 
+		        $diario->detalle = $dato->nombre;
+		        $diario->debito  = $dato->precio;
+		        $diario->save(); 
+
+		        $diario = new Ctdiario;
+		        $diario->pcontable_id  = $periodo->id;
+		        $diario->detalle = Catalogo::find(15)->nombre;
+		        $diario->debito  = $dato->itbms;
+		        $diario->save(); 
+			}
+			
+			// se anota el total de la factura a credito incluyendo el itbms en
+			// libro Mayor Auxiliar de Cuentas por Pagar
 		 	Sity::registraEnCuentas(
 					$periodo->id,
-					'mas', 
+					'mas',
+					2, 
 					6,
-					15,
 					$factura->fecha,
-			    	Catalogo::find(15)->nombre,
-			    	$dato->itbms,
-			       	Null,
-			       	$org_id
-			       );	        
-
-	        // registra en Ctdiario principal
-	        $diario = new Ctdiario;
-	        $diario->pcontable_id  = $periodo->id;
-	        if ($i==1) {
-	        	$diario->fecha   = $factura->fecha;
-	        	$i=0;	        
-	        } 
-	        $diario->detalle = $dato->nombre;
-	        $diario->debito  = $dato->precio;
-	        $diario->save(); 
-
-	        $diario = new Ctdiario;
-	        $diario->pcontable_id  = $periodo->id;
-	        $diario->detalle = Catalogo::find(15)->nombre;
-	        $diario->debito  = $dato->itbms;
-	        $diario->save(); 
-		}
-		
-		// se anota el total de la factura a credito incluyendo el itbms en
-		// libro Mayor Auxiliar de Cuentas por Pagar
-	 	Sity::registraEnCuentas(
-				$periodo->id,
-				'mas',
-				2, 
-				6,
-				$factura->fecha,
-		    	'   Cuentas por pagar a proveedores. Factura No. '.$factura->no,
-		    	$factura->total,
-		       	Null,
-		       	$org_id
-		       );
+					'   Cuentas por pagar a proveedores. Factura No. '.$factura->no.', Proveedor No. '.$org_id,
+					$factura->total,
+					Null,
+					$org_id
+					);
 
 	    // registra en Ctdiario principal
 	    $diario = new Ctdiario;
@@ -296,29 +297,27 @@ class FacturasController extends Controller {
 	    $diario->detalle = 'Para registrar factura No. '.$factura->no;
 	    $diario->save(); 
 
-		// cambia la factura de etapa pagar			
-		$factura= Factura::find($factura_id);
-		$factura->etapa= 2;
-		$factura->save();	
-	  
-		// Registra en bitacoras
-		$detalle =	'Contabiliza factura '.$factura_id. ', '.
-					'pcontable_id= '.$pdo.', '.
-					'no= '.$factura->no.', '.
-					'org_id= '.$factura->org_id.', '.
-					'fecha= '.$factura->fecha;
+			// cambia la factura de etapa pagar			
+			$factura= Factura::find($factura_id);
+			$factura->etapa= 2;
+			$factura->save();	
+		  
+			// Registra en bitacoras
+			$detalle =	'Contabiliza factura '.$factura_id. ', '.
+						'pcontable_id= '.$pdo.', '.
+						'no= '.$factura->no.', '.
+						'org_id= '.$factura->org_id.', '.
+						'fecha= '.$factura->fecha;
 
-		Sity::RegistrarEnBitacora(15, 'facturas', $factura_id, $detalle);
-		DB::commit();		
-		Session::flash('success', 'La factura No. ' .$factura->no. ' ha sido cotabilizada.');
+			Sity::RegistrarEnBitacora(15, 'facturas', $factura_id, $detalle);
+			DB::commit();		
+			Session::flash('success', 'La factura No. ' .$factura->no. ' ha sido cotabilizada.');
+			return Redirect()->route('facturas.index');
 
-		return Redirect()->route('facturas.index');
-
-	} catch (\Exception $e) {
-	    DB::rollback();
-		Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.contabilizaDetallesFactura, la transaccion ha sido cancelada!');
-
-		return back()->withInput()->withErrors($validation);
-	}  
-  }
+		} catch (\Exception $e) {
+		    DB::rollback();
+			Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.contabilizaDetallesFactura, la transaccion ha sido cancelada!');
+			return back()->withInput()->withErrors($validation);
+		}  
+	}
 } 

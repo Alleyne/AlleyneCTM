@@ -213,7 +213,7 @@ class InicializaunController extends Controller {
           $dato->save(); 
           
           Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $f_periodo, 'Anticipado por inicializacion del sistema '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
-          Sity::registraEnCuentas($periodo->id, 'mas', 2, 5, $f_periodo, Catalogo::find(5)->nombre.' unidad '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
+          Sity::registraEnCuentas($periodo->id, 'mas', 2, 5, $f_periodo, Catalogo::find(5)->nombre.' unidad '.Un::find(Input::get('un_id'))->codigo.' '.$periodo->periodo, Input::get('anticipados'), Input::get('un_id'));
         } 
 
         // Registra en bitacoras

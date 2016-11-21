@@ -46,112 +46,111 @@ class DetallepagofacturasController extends Controller {
 				->with('datos', $datos);     	
 	}	
 
-    /*************************************************************************************
-     * Almacena un nuevo registro en la base de datos
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Almacena un nuevo registro en la base de datos
+   ************************************************************************************/	
 	public function store()
 	{
         
 		DB::beginTransaction();
 		try {
 
-	        //dd(Input::all());
-	        $input = Input::all();
+			//dd(Input::all());
+			$input = Input::all();
 
-	        $rules = array(
-	            'factura_id'		=> 'required',
-	            'fecha'    			=> 'required|Date',
-	            'detalle'    		=> 'Required',
-	            'monto'    			=> 'required|Numeric|min:0.01'
-	        );
-	    
-	        $messages = [
-	            'required'		=> 'Informacion requerida!',
-	        	'numeric'		=> 'Solo se admiten valores numericos!',
-	        	'date'			=> 'Fecha invalida!',
-	        	'min'			=> 'Se requiere un valor mayor que cero!'
-	        ];        
-	            
-	        $validation = \Validator::make($input, $rules, $messages);      	
+			$rules = array(
+			    'factura_id'		=> 'required',
+			    'fecha'    			=> 'required|Date',
+			    'detalle'    		=> 'Required',
+			    'monto'    			=> 'required|Numeric|min:0.01'
+			);
 
+			$messages = [
+			  'required'	=> 'Informacion requerida!',
+				'numeric'		=> 'Solo se admiten valores numericos!',
+				'date'			=> 'Fecha invalida!',
+				'min'				=> 'Se requiere un valor mayor que cero!'
+			];        
+			    
+			$validation = \Validator::make($input, $rules, $messages);      	
 			if ($validation->passes())
 			{
 				
-			    // encuentra el periodo mas antiguo abierto
+			  // encuentra el periodo mas antiguo abierto
 				$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
-			    //dd($periodo);
-			    
-			    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
-			    if (Carbon::parse($periodo->fecha)->gt(Carbon::parse(Input::get('fecha')))) {
-		            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pago de facturas de gastos cuya fecha se mayor o igual al periodo vigente de '.$periodo->periodo);
-	        		return back()->withInput()->withErrors($validation);
-			    }
+			  //dd($periodo);
+		    
+		    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+		    if (Carbon::parse($periodo->fecha)->gt(Carbon::parse(Input::get('fecha')))) {
+					Session::flash('danger', '<< ERROR >> Solamente se permite registrar pago de facturas de gastos cuya fecha se mayor o igual al periodo vigente de '.$periodo->periodo);
+					return back()->withInput()->withErrors($validation);
+		    }
 
 				// encuentra el monto total de la factura			
-	        	$factura= Factura::find(Input::get('factura_id'));
-	        	$totalfactura=round(floatval($factura->total),2);
+				$factura= Factura::find(Input::get('factura_id'));
+				$totalfactura=round(floatval($factura->total),2);
 				//dd($totalfactura);			
-				
-			    // verifica que el monto del nuevo detalle no sobrepase al monto total de la factura
-			    if (Input::get('monto')>$totalfactura) {
-						Session::flash('danger', '<< Error >>: No se pudo agregar el nuevo detalle ya que su monto sobrepasa al monto total de la factura!');
-						return redirect()->route('detallepagofacturas.show', $factura->id);
-			    } 
+			
+		    // verifica que el monto del nuevo detalle no sobrepase al monto total de la factura
+		    if (Input::get('monto')>$totalfactura) {
+					Session::flash('danger', '<< Error >>: No se pudo agregar el nuevo detalle ya que su monto sobrepasa al monto total de la factura!');
+					return redirect()->route('detallepagofacturas.show', $factura->id);
+		    } 
 
-			    // cuenta la cantidad de detalles en la factura
-		 	    $cantDetalles= Detallepagofactura::where('factura_id', Input::get('factura_id'))->count('id');
-		 	    
-		 	    // si no existen detalles en la factura y el monto total de la factura es igual al monto del nuevo detalle
-		 	    // entonces se trata de un pago completo
-		 	    if ($cantDetalles==0 && ($totalfactura == Input::get('monto'))) {
+		    // cuenta la cantidad de detalles en la factura
+	 	    $cantDetalles= Detallepagofactura::where('factura_id', Input::get('factura_id'))->count('id');
+	 	    
+	 	    // si no existen detalles en la factura y el monto total de la factura es igual al monto del nuevo detalle
+	 	    // entonces se trata de un pago completo
+	 	    if ($cantDetalles==0 && ($totalfactura == Input::get('monto'))) {
 					// salva el nuevo detalle
 					$dato = new Detallepagofactura;
-					$dato->factura_id       	= Input::get('factura_id');
+					$dato->factura_id     = Input::get('factura_id');
 					$dato->fecha 	   			= Input::get('fecha');
-					$dato->detalle 	       		= Input::get('detalle');
-					$dato->monto 	       		= Input::get('monto');
+					$dato->detalle 	      = Input::get('detalle');
+					$dato->monto 	       	= Input::get('monto');
 					$dato->pagotipo				= 1;
 					$dato->save();	
 					
 					// actualiza el monto de los detalles en la factura
 					$factura->totalpagodetalle= Input::get('monto');
 					$factura->save();
-		 	    
-		 	    } else {	// se trata de un pago parcial
-				    // calcula el monto total de los detalles de la presente factura mas el monto del nuevo detalle
-			 	    $totaldetalles= Detallepagofactura::where('factura_id', Input::get('factura_id'))->sum('monto');		    
+	 	    
+	 	    } else {	// se trata de un pago parcial
+			    // calcula el monto total de los detalles de la presente factura mas el monto del nuevo detalle
+		 	    $totaldetalles= Detallepagofactura::where('factura_id', Input::get('factura_id'))->sum('monto');		    
 					$totaldetalles=round(floatval($totaldetalles + Input::get('monto')),2);
 					//dd($totaldetalles);
 
-				    // verifica que el monto total de los detalle incluyendo al nuevo no sobrepase al monto total de la factura
-				    if ($totaldetalles > $totalfactura) {
-						Session::flash('danger', '<< Error >>: No se pudo agregar el nuevo detalle ya con su monto sobrepasaria al monto total de la factura!');
-						return redirect()->route('detallepagofacturas.show', $factura->id);
-				   
-				    } else {
-						// salva el nuevo detalle
-						$dato = new Detallepagofactura;
-						$dato->factura_id       	= Input::get('factura_id');
-						$dato->fecha 	   			= Input::get('fecha');
-						$dato->detalle 	       		= Input::get('detalle');
-						$dato->monto 	       		= Input::get('monto');
-						$dato->pagotipo				= 0;
-						$dato->save();	
-				    
-						// actualiza el monto de los detalles en la factura
-						$factura->totalpagodetalle= $totaldetalles;
-						$factura->save();
-				    }
-		 	    }
-		 	    
+			    // verifica que el monto total de los detalle incluyendo al nuevo no sobrepase al monto total de la factura
+			    if ($totaldetalles > $totalfactura) {
+					Session::flash('danger', '<< Error >>: No se pudo agregar el nuevo detalle ya con su monto sobrepasaria al monto total de la factura!');
+					return redirect()->route('detallepagofacturas.show', $factura->id);
+			   
+			    } else {
+					// salva el nuevo detalle
+					$dato = new Detallepagofactura;
+					$dato->factura_id    	= Input::get('factura_id');
+					$dato->fecha 	   			= Input::get('fecha');
+					$dato->detalle 	      = Input::get('detalle');
+					$dato->monto 	       	= Input::get('monto');
+					$dato->pagotipo				= 0;
+					$dato->save();	
+			    
+					// actualiza el monto de los detalles en la factura
+					$factura->totalpagodetalle= $totaldetalles;
+					$factura->save();
+			    }
+	 	    }
+	 	    
 				//Sity::RegistrarEnBitacora(1, 'detallepagofacturas', $dato->id, Input::all());
 				Session::flash('success', 'El detalle de factura No. ' .$dato->id. ' ha sido creado con éxito.');
 				DB::commit();				
 				return redirect()->route('detallepagofacturas.show', $dato->factura_id);
 			}
 
-		Session::flash('warning', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
-		return back()->withInput()->withErrors($validation);
+			Session::flash('warning', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
+			return back()->withInput()->withErrors($validation);
 		
 		} catch (\Exception $e) {
 			DB::rollback();
