@@ -31,17 +31,19 @@ class Hojat {
       $datos= self::getDataParaHojaDeTrabajo($pcontable_id);
       //dd($datos);
       
+      $pdo= Pcontable::find($pcontable_id)->periodo;
+
       $i=1;
       foreach($datos as $dato) {
         if ($dato['tipo']==1) {
           // registra en la tabla ctmayores
           $data = new Ctmayore;
-          $data->pcontable_id     = $pcontable_id+1;
+          $data->pcontable_id     = $pcontable_id + 1;
           $data->tipo             = $dato['tipo'];
           $data->cuenta           = $dato['cuenta'];
           $data->codigo           = $dato['codigo'];
           $data->fecha            = $fecha;
-          $data->detalle          = $dato['cta_nombre'];
+          $data->detalle          = $dato['cta_nombre'].' '.$pdo;
           $data->debito           = $dato['saldoAjustado_debito'];
           $data->credito          = $dato['saldoAjustado_credito'];
           $data->save();
@@ -49,9 +51,9 @@ class Hojat {
           if ($i==1) {
             // registra en Ctdiario principal
             $data = new Ctdiario;
-            $data->pcontable_id  = $pcontable_id+1;
+            $data->pcontable_id  = $pcontable_id + 1;
             $data->fecha         = $fecha;
-            $data->detalle = $dato['cta_nombre'];
+            $data->detalle = $dato['cta_nombre'].' '.$pdo;
             $data->debito  = $dato['saldoAjustado_debito'];
             $data->credito = Null;
             $data->save();
@@ -59,8 +61,8 @@ class Hojat {
           } else {
             // registra en Ctdiario principal
             $data = new Ctdiario;
-            $data->pcontable_id  = $pcontable_id+1;
-            $data->detalle = $dato['cta_nombre'];
+            $data->pcontable_id  = $pcontable_id + 1;
+            $data->detalle = $dato['cta_nombre'].' '.$pdo;
             $data->debito  = $dato['saldoAjustado_debito'];
             $data->credito = Null;
             $data->save();
@@ -74,12 +76,12 @@ class Hojat {
           
           // registra en la tabla ctmayores
           $data = new Ctmayore;
-          $data->pcontable_id     = $pcontable_id+1;
+          $data->pcontable_id     = $pcontable_id + 1;
           $data->tipo             = $dato['tipo'];
           $data->cuenta           = $dato['cuenta'];
           $data->codigo           = $dato['codigo'];
           $data->fecha            = $fecha;
-          $data->detalle          = $dato['cta_nombre'];
+          $data->detalle          = $dato['cta_nombre'].' '.$pdo;
           $data->debito           = $dato['saldoAjustado_debito'];
           $data->credito          = $dato['saldoAjustado_credito'];
           $data->un_id            = 0;
@@ -87,8 +89,8 @@ class Hojat {
           
           // registra en Ctdiario principal
           $data = new Ctdiario;
-          $data->pcontable_id  = $pcontable_id+1;
-          $data->detalle = $dato['cta_nombre'];
+          $data->pcontable_id  = $pcontable_id + 1;
+          $data->detalle = $dato['cta_nombre'].' '.$pdo;
           $data->debito  =  Null;
           $data->credito = $dato['saldoAjustado_credito'];
           $data->save();  
@@ -98,11 +100,11 @@ class Hojat {
     // inicializacion especial de la cuenta 5  2010.00 "Anticipos o avances recibidos de propietarios (Pasivo diferido)"
 
     // Encuentra todas las cuentas cuenta 5  2010.00 activas en ctmayores para un determinado periodo
-    $cuentas=Ctmayore::where('pcontable_id', $pcontable_id)->where('cuenta', 5)->get();
+    $cuentas= Ctmayore::where('pcontable_id', $pcontable_id)->where('cuenta', 5)->get();
     //dd($cuentas->toArray());
     
-    $uns=$cuentas->unique('un_id');
-    //dd($uns->toArray());
+    $uns= $cuentas->unique('un_id');
+    dd($uns->toArray());
       
     // procesa cada una de las unidades con saldo en la cuenta 5 2010.00 encontradas
     foreach ($uns as $un) {
@@ -111,14 +113,16 @@ class Hojat {
       $saldocpa= Pant::getSaldoCtaPagosAnticipados($un->un_id, $pcontable_id);
       //dd($saldocpa);
       
+      $detalle= Catalogo::find(5)->nombre.', '.Un::find($un->un_id)->codigo;
+      
       // registra en la tabla ctmayores
       $data = new Ctmayore;
-      $data->pcontable_id     = $pcontable_id+1;
+      $data->pcontable_id     = $pcontable_id + 1;
       $data->tipo             = $un->tipo;
       $data->cuenta           = $un->cuenta;
       $data->codigo           = $un->codigo;
       $data->fecha            = $fecha;
-      $data->detalle          = Catalogo::find(5)->nombre.', '.Un::find($un->un_id)->codigo;
+      $data->detalle          = $detalle;
       $data->debito           = 0;
       $data->credito          = $saldocpa;
       $data->un_id            = $un->un_id;
@@ -126,8 +130,8 @@ class Hojat {
 
       // registra en Ctdiario principal
       $data = new Ctdiario;
-      $data->pcontable_id  = $pcontable_id+1;
-      $data->detalle = Catalogo::find(5)->nombre.', '.Un::find($un->un_id)->codigo;
+      $data->pcontable_id  = $pcontable_id + 1;
+      $data->detalle = $detalle;
       $data->debito  =  Null;
       $data->credito = $saldocpa;
       $data->save();  
@@ -135,7 +139,7 @@ class Hojat {
   
   // registra la utilidad en el diario del periodo posterior
   $data = new Ctdiario;
-  $data->pcontable_id     = $pcontable_id+1;
+  $data->pcontable_id     = $pcontable_id + 1;
   $data->detalle          = 'Para registrar aperturas de cuentas permanentes y utilidad neta del periodo anterior '.Pcontable::find($pcontable_id)->periodo;
   $data->save(); 
   } 

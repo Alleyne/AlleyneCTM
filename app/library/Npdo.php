@@ -152,7 +152,7 @@ class Npdo {
     // registra en Ctdiario principal
     $dato = new Ctdiario;
     $dato->pcontable_id = $periodo_id;
-    $dato->detalle = 'Para registrar resumen de ingresos por cuotas de mantenimiento regular de '.$periodo.'- ocobro dia '.$dia;
+    $dato->detalle = 'Para registrar resumen de ingresos por cuotas de mantenimiento regular de '.$periodo.'- OC dia '.$dia;
     $dato->save(); 
   
     // Registra facturacion mensual de la unidad en cuenta 'Cuota de mantenimiento por cobrar' 1120.00
@@ -162,7 +162,7 @@ class Npdo {
             1,      // cuenta id
             1,      // '1120.00',
             $fecha,   // fecha
-            'Resumen de Cuota de mantenimiento regular por cobrar '.$periodo, // detalle
+            'Resumen de Cuota de mantenimiento regular por cobrar '.$periodo.'- OC dia '.$dia, // detalle
             $totalIngresos // monto
           );
 
@@ -173,7 +173,7 @@ class Npdo {
             4,        // cuenta id
             3,        //'4120.00'
             $fecha,   // fecha
-            'Resumen de Ingreso por cuota de mantenimiento regular'.$periodo, // detalle
+            'Resumen de Ingreso por cuota de mantenimiento regular'.$periodo.'- OC dia '.$dia, // detalle
             $totalIngresos // monto
           );
   }
@@ -241,7 +241,7 @@ class Npdo {
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo_id;
-      $dato->detalle      = 'Para registrar resumen de ingresos por cuotas extraordinaria de '.$periodo.'- ocobro dia '.$dia;
+      $dato->detalle      = 'Para registrar resumen de ingresos por cuotas extraordinaria de '.$periodo.'- OC dia '.$dia;
       $dato->save(); 
     
       // Registra facturacion mensual de la unidad en cuenta 'Cuota de mantenimiento extraordinaria por cobrar'
@@ -251,7 +251,7 @@ class Npdo {
               1,      // cuenta id
               16,     // '1110.00'
               $fecha,   // fecha
-              'Resumen de Cuota de mantenimiento extraordinarias por cobrar '.$periodo, // detalle
+              'Resumen de Cuota de mantenimiento extraordinarias por cobrar '.$periodo.'- OC dia '.$dia, // detalle
               $totalExtraordinaria // monto
             );
 
@@ -262,7 +262,7 @@ class Npdo {
               4,        // cuenta id
               17,       // '4120.00'
               $fecha,   // fecha
-              'Resumen de Ingreso por cuota de mantenimiento extraordinarias '.$periodo, // detalle
+              'Resumen de Ingreso por cuota de mantenimiento extraordinarias '.$periodo.'- OC dia '.$dia, // detalle
               $totalExtraordinaria // monto
             );
     } // end if

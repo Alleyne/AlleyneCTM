@@ -104,7 +104,7 @@ class Npago {
       //dd($saldocpa);
 
       // registra pago recibido como un pago anticipado
-      Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.Un::find($un_id)->codigo, $sobrante, $un_id, $pago_id);
+      Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Anticipado '.' '.Un::find($un_id)->codigo, $sobrante, $un_id, $pago_id);
       Sity::registraEnCuentas($periodo, 'mas', 2, 5, $f_pago, Catalogo::find(5)->nombre.' unidad '.Un::find($un_id)->codigo, $sobrante, $un_id, $pago_id);
 
       // salva un nuevo registro que representa una linea del recibo
@@ -162,7 +162,7 @@ class Npago {
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
             // registra un aumento en la cuenta Banco 
-            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$dato->ocobro, $importe, $un_id, $pago_id);    
+            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Cuota mantenimiento regular '.' '.$dato->ocobro, $importe, $un_id, $pago_id);    
           
             // registra un disminucion en la cuenta 1120.00 "Cuentas por cobrar por cuota de mantenimiento" 
             Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, Catalogo::find(1)->nombre.' unidad '.$dato->ocobro, $importe, $un_id, $pago_id, Null, $dato->id);
@@ -257,7 +257,7 @@ class Npago {
             $saldocpa = $saldocpa-($importe - $montoRecibido);
 
             // registra un aumento en la cuenta Banco 
-            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$dato->ocobro, $montoRecibido, $un_id, $pago_id);    
+            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Cuota mantenimiento regular '.$dato->ocobro, $montoRecibido, $un_id, $pago_id);    
           
             // registra un disminucion en la cuenta 1120.00 "Cuentas por cobrar por cuota de mantenimiento" 
             Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, Catalogo::find(1)->nombre.' unidad '.$dato->ocobro, $montoRecibido, $un_id, $pago_id, Null, $dato->id);
@@ -337,7 +337,7 @@ class Npago {
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
             
             // registra un aumento en la cuenta 1010.00 "Cuentas por cobrar por recargo en cuotas de mantenimiento" 
-            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$dato->ocobro, $recargo, $un_id, $pago_id);
+            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Recargo '.$dato->ocobro, $recargo, $un_id, $pago_id);
 
             // registra un disminucion en la cuenta 1130.00 "Cuentas por cobrar por recargo en cuota de mantenimiento" 
             Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, Catalogo::find(2)->nombre.' unidad '.$dato->ocobro, $recargo, $un_id, $pago_id, Null, $dato->id);
@@ -383,7 +383,7 @@ class Npago {
             $saldocpa= $saldocpa - ($recargo-$montoRecibido);
 
             // registra un aumento en la cuenta Banco 
-            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$dato->ocobro, $montoRecibido, $un_id, $pago_id);    
+            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Recargo '.$dato->ocobro, $montoRecibido, $un_id, $pago_id);    
           
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar" 
             Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, Catalogo::find(2)->nombre.' unidad  '.$dato->ocobro, $montoRecibido, $un_id, $pago_id, Null, $dato->id);
@@ -463,7 +463,7 @@ class Npago {
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
             // registra un aumento en la cuenta Banco 
-            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$dato->ocobro, $importe, $un_id, $pago_id);    
+            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Cuota extraordinaria '.$dato->ocobro, $importe, $un_id, $pago_id);    
           
             // registra un disminucion en la cuenta 1110.00 "Cuotas de mantenimiento extraordinarias por cobrar" 
             Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, Catalogo::find(16)->nombre.' unidad '.$dato->ocobro, $importe, $un_id, $pago_id, Null, $dato->id);
@@ -568,7 +568,7 @@ class Npago {
             $saldocpa = $saldocpa-($importe - $montoRecibido);
 
             // registra un aumento en la cuenta Banco 
-            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, Catalogo::find(8)->nombre.' '.$dato->ocobro, $montoRecibido, $un_id, $pago_id);    
+            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Cuota extraordinaria '.$dato->ocobro, $montoRecibido, $un_id, $pago_id);    
           
             // registra un disminucion en la cuenta 1110.00 "Cuotas de mantenimiento extraordinarias por cobrar" 
             Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, Catalogo::find(16)->nombre.' unidad '.$dato->ocobro, $montoRecibido, $un_id, $pago_id, Null, $dato->id);

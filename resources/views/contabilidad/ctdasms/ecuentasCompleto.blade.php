@@ -115,7 +115,7 @@
                         <HR WIDTH=100% ALIGN=CENTER COLOR="BLACK">
                         <div class="row">
                               <div class="col-xs-10 col-md-offset-1">
-                                <p class="text-justify">Estimado propietario, su cuenta de pagos por anticipados refleja un saldo a su favor de B/. <strong>{{ $data['pagos_anticipados'] }}</strong>. Este saldo lo padra utilizar para completar futuros pagos. Gracias por mantener sus pagos al dia.</p>
+                                <p class="text-justify">Estimado propietario, su cuenta de pagos por anticipados refleja un saldo a su favor de B/. <strong>{{ $data['pagos_anticipados'] }}</strong>. Este saldo lo podrá utilizar para completar futuros pagos. Gracias por mantener sus pagos al dia.</p>
                               </div>
                         </div>
                       @endif
@@ -231,7 +231,7 @@
                         <HR WIDTH=100% ALIGN=CENTER COLOR="BLACK">
                         <div class="row">
                               <div class="col-xs-10 col-md-offset-1">
-                                <p class="text-justify">Estimado propietario, su cuenta de pagos por anticipados refleja un saldo a su favor de B/. <strong>{{ $data['pagos_anticipados'] }}</strong>. Este saldo lo padra utilizar para completar futuros pagos. Gracias por mantener sus pagos al dia.</p>
+                                <p class="text-justify">Estimado propietario, su cuenta de pagos por anticipados refleja un saldo a su favor de B/. <strong>{{ $data['pagos_anticipados'] }}</strong>. Este saldo lo podrá utilizar para completar futuros pagos. Gracias por mantener sus pagos al dia.</p>
                               </div>
                         </div>
                       @endif

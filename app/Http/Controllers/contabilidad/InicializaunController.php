@@ -195,7 +195,7 @@ class InicializaunController extends Controller {
           $dato = new Ctdiario;
           $dato->pcontable_id  = $periodo->id;
           $dato->fecha         = $f_periodo;
-          $dato->detalle       = Catalogo::find(8)->nombre;
+          $dato->detalle       = 'Pago anticipado por inicializacion del sistema';
           $dato->debito        = Input::get('anticipados');
           $dato->save(); 
 
@@ -212,7 +212,7 @@ class InicializaunController extends Controller {
           $dato->detalle = 'Para registrar pago anticipados por inicializacion, '.$un->codigo;
           $dato->save(); 
           
-          Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $f_periodo, Catalogo::find(8)->nombre.' '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
+          Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $f_periodo, 'Anticipado por inicializacion del sistema '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
           Sity::registraEnCuentas($periodo->id, 'mas', 2, 5, $f_periodo, Catalogo::find(5)->nombre.' unidad '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
         } 
 

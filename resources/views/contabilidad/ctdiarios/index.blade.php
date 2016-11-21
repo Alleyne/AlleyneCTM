@@ -79,8 +79,8 @@
 				<table class="mytable" width="100%" border="0" cellspacing="1" cellpadding="0">
 					<tr bgcolor="#CCCCCC">
 						<th width="10%">Fecha</th>
-						<th width="68%" align="left">Cuenta</th>
-						<th width="6%">Ref</th>
+						<th width="69" align="left">Cuenta</th>
+						<th width="5%">Ref</th>
 						<th width="8%">D&eacute;bito</th>
 						<th width="8%">Cr&eacute;dito</th>
 					</tr>

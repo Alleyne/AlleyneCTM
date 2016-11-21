@@ -49,12 +49,12 @@ class Fact {
     // dd($secaptos->toArray());
     
     foreach ($secaptos as $secapto) {
-      $extra_siono= 0;
+      $extra_siono = 0;
       $extra = Null;
 
       // Encuentra el administrador encargado del bloque al cual pertenece la seccion
       $blqadmin= Sity::findBlqadmin($secapto->seccione->bloque_id);
-      //dd($blqadmin);
+      // dd($blqadmin);
 
       // verifica si hay cuotas extraordinarias que aplicar a la seccion
       if ($secapto->f_iniciaextra) {
@@ -72,7 +72,7 @@ class Fact {
       // Encuentra todas las unidades que pertenecen a la seccion 
       $uns= Un::where('seccione_id', $secapto->seccione_id)
               ->where('activa', 1)->get();
-      //dd($uns->toArray());
+      // dd($uns->toArray());
 
       // Por cada apartamento que exista registra su cuota de mantenimiento por cobrar en el ctdiario auxiliar
       foreach ($uns as $un) {
@@ -86,9 +86,9 @@ class Fact {
 
         // antes de crear facturacion para un determinada unidad, se verifica si la misma pagó por anticipado 
         // la respectiva orden de cobro. Si la orden de cobro ha sido pagada por anticipada, procede a contabilizarla
-        $desc= Detalledescuento::whereDate('fecha', $fecha)
-                               ->where('un_id', $un->id)->first();
-        
+        $desc= Detalledescuento::where('fecha', $fecha->toDateString())
+                               ->where('un_id', $un_id)->first();
+
         if ($desc) {
           // si encuentra descuento en la presente orden de cobro, entonces cambia los parametros
           // para que registren el descuento
@@ -103,7 +103,7 @@ class Fact {
           
           //dd($fecha, $un, $periodo_id, $desc);        
           // contabiliza el pago anticipado en libros
-          Desc::contabilizaPagoConDescuento($fecha, $un, $periodo_id, $desc);
+          Desc::contabilizaPagoConDescuento($fecha, $un, $periodo->id, $desc);
         } 
         
         // Registra facturacion mensual de la unidad 

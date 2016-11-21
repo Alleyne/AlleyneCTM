@@ -351,4 +351,12 @@ foreach ($roles as $role) {
 }
 
 
+
+
+});
+
+Route::get('/desc', function () {
+	$desc= Detalledescuento::whereDate('fecha', $fecha)
+	                       ->where('un_id', 1)->first();
+	dd($desc);
 });

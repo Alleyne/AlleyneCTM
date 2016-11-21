@@ -255,11 +255,11 @@ class DetallepagofacturasController extends Controller {
 					2,
 					6,
 					$dato->fecha,
-			    	'Registra pago '. $pagotipo. ' de la factura N0.'. $factura->no,
-			    	$dato->monto,
-			       	Null,
-			       	$org->id
-			       );
+		    	'Pago '.$pagotipo.', factura No. '.$factura->no.', Proveedor No. '.$factura->org_id.', '.$periodo->periodo,
+		    	$dato->monto,
+					Null,
+					$org->id
+					);
 			
 		    // registra en Ctdiario principal
 		    $diario = new Ctdiario;
@@ -276,23 +276,22 @@ class DetallepagofacturasController extends Controller {
 					1, 
 					8,
 					$dato->fecha,
-			    	'   Banco No. 1',
-			    	$dato->monto,
-			       	Null,
-			       	$org->id
-			       );
+					'Pago '.$pagotipo.', factura No. '.$factura->no.', Proveedor No. '.$factura->org_id.', '.$periodo->periodo,					$dato->monto,
+					Null,
+					$org->id
+					);
 
 		    // registra en Ctdiario principal
 		    $diario = new Ctdiario;
 		    $diario->pcontable_id  = $periodo->id;
-		    $diario->detalle = '   Banco No. 1';
+		    $diario->detalle = 'Pago '.$pagotipo.' factura No.'. $factura->no;
 		    $diario->credito = $dato->monto;
 		    $diario->save(); 
 		    
 		    // registra en Ctdiario principal
 		    $diario = new Ctdiario;
 		    $diario->pcontable_id  = $periodo->id;
-		    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura No.'. $factura->no;
+		    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura No.'. $factura->no.' '.$periodo->periodo;
 		    $diario->save(); 
 
 			// registra el detalle de pago de factura como contabilizado	
@@ -324,11 +323,11 @@ class DetallepagofacturasController extends Controller {
 
 			// Registra en bitacoras
 			$detalle =	'Registra pago '.$pagotipo. 
-						' de la factura '.$factura->no. 
-						' de '. $org->nombre. 
-						' por la suma de '.$dato->monto. 
-						', periodo contable '.$periodo->periodo.
-						', fecha= '.$dato->fecha;
+									' de la factura '.$factura->no. 
+									' de '. $org->nombre. 
+									' por la suma de '.$dato->monto. 
+									', periodo contable '.$periodo->periodo.
+									', fecha= '.$dato->fecha;
 
 			Sity::RegistrarEnBitacora(18, 'facturas', $factura->id, $detalle);
 			DB::commit();			
@@ -337,10 +336,9 @@ class DetallepagofacturasController extends Controller {
 			return Redirect()->route('detallepagofacturas.show', $factura->id);
 		
 		} catch (\Exception $e) {
-		    DB::rollback();
-        	Session::flash('warning', ' Ocurrio un error en el modulo Detallepagofactura.contabilizaDetallePagoFactura, la transaccion ha sido cancelada!');
-
-        	return back();
+			DB::rollback();
+			Session::flash('warning', ' Ocurrio un error en el modulo Detallepagofactura.contabilizaDetallePagoFactura, la transaccion ha sido cancelada!');
+			return back();
 		}    
   }
 } 
