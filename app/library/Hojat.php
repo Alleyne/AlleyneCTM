@@ -104,7 +104,7 @@ class Hojat {
     //dd($cuentas->toArray());
     
     $uns= $cuentas->unique('un_id');
-    dd($uns->toArray());
+    //dd($uns->toArray());
       
     // procesa cada una de las unidades con saldo en la cuenta 5 2010.00 encontradas
     foreach ($uns as $un) {
