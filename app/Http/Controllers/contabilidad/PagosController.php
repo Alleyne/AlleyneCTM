@@ -85,8 +85,8 @@ class PagosController extends Controller {
 	public function store()
 	{
         
-/*		DB::beginTransaction();
-		try {*/
+		DB::beginTransaction();
+		try {
       //dd(Input::all());
       $input = Input::all();
 
@@ -103,8 +103,8 @@ class PagosController extends Controller {
       );
   
     	$messages = [
-          'required'		=> 'Informacion requerida!',
-          'before'		=> 'La fecha del pago debe ser anterior o igual a fecha del dia de hoy!',
+        'required'		=> 'Informacion requerida!',
+        'before'		=> 'La fecha del pago debe ser anterior o igual a fecha del dia de hoy!',
       	'digits_between'=> 'El numero de la transaccion debe tener de uno a diez digitos!',
       	'numeric'		=> 'Solo se admiten valores numericos!',
       	'date'			=> 'Fecha invalida!',
@@ -158,7 +158,7 @@ class PagosController extends Controller {
 					$detalle =	'Registra pago de cuota de mantenimiento No.'.$dato->id.' con monto de B/.'.$montoRecibido.' no contabiliza';  
 		            
 		      Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
-					//DB::commit();	
+					DB::commit();	
 		      Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado con éxito.');			
 			
 				} else {
@@ -190,12 +190,12 @@ class PagosController extends Controller {
 			}
 	    return back()->withInput()->withErrors($validation);
 		
-/*		} catch (\Exception $e) {
+		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada!');
 
 			return back()->withInput()->withErrors($validation);
-		}*/
+		}
 	}
 
     /*************************************************************************************

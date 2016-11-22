@@ -45,7 +45,7 @@
 					@endforeach
 				</select>
 
-				{{ Form::label('featured_img', 'Subir imagen del artículo) }}
+				{{ Form::label('featured_img', 'Subir imagen del artículo') }}
 				{{ Form::file('featured_img') }}
 
 				{{ Form::label('body', "Post Body:") }}

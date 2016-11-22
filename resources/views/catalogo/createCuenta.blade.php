@@ -62,7 +62,7 @@
 													    'class' => 'form-control',
 													    'id' => 'codigo',
 													    'placeholder' => 'Escriba el código de la cuenta. Ejempo escriba 01.00 para crear la cuenta XX01.00',
-														'autocomplete' => 'off',
+															'autocomplete' => 'off',
 													))
 												}} 
 												{!! $errors->first('codigo', '<li style="color:red">:message</li>') !!}
