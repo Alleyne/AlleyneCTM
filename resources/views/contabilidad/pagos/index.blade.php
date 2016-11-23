@@ -3,6 +3,7 @@
 @section('title', '| All Posts')
 
 @section('content')
+
 <div class="row show-grid">
     <div class="col-xs-12 col-sm-6 col-md-12">        
         <!-- NEW WIDGET START -->
@@ -58,10 +59,10 @@
                             @foreach ($datos as $dato)
                                 <tr>
                                     <td col width="60px"><strong>{{ $dato->id }}</strong></td>
-                                    <td col width="100px" align="left">{{ $dato->trans_tipo }}</td>
+                                    <td col width="100px" align="left">{{ $dato->trantipo->nombre }}</td>
                                     <td col width="70px"><strong>{{ $dato->trans_no }}</strong></td>
-                                    <td>{{ $dato->nombre }}</td>
-                                    <td col width="90px" align="left">{{ $dato->f_pago }}</td>
+                                    <td>{{ $dato->banco->nombre }}</td>
+                                    <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_pago)->format('M j\\, Y') }}</td>
                                     <td col width="90px" align="right">{{ $dato->monto }}</td>
                                     
                                     @if (Cache::get('esAdminkey'))

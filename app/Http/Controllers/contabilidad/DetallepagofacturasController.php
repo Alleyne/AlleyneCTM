@@ -154,7 +154,7 @@ class DetallepagofacturasController extends Controller {
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturaController.store, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturaController.store, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back()->withInput()->withErrors($validation);
 		}
 	}
@@ -190,7 +190,7 @@ class DetallepagofacturasController extends Controller {
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturasController.destroy, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back()->withInput()->withErrors($validation);
 		}
 	}
@@ -336,7 +336,7 @@ class DetallepagofacturasController extends Controller {
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo Detallepagofactura.contabilizaDetallePagoFactura, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrio un error en el modulo Detallepagofactura.contabilizaDetallePagoFactura, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back();
 		}    
   }

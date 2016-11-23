@@ -9,7 +9,6 @@ use Session, DB;
 use Grupo;
 use Validator;
 use Carbon\Carbon;
-use Debugbar;
 use Jenssegers\Date\Date;
 
 use App\Bitacora;
@@ -25,63 +24,52 @@ use App\Pcontable;
 use App\Banco;
 use App\Ctmayore;
 use App\Secapto;
+use App\Trantipo;
 
 class PagosController extends Controller {
     
-    public function __construct()
-    {
-       	$this->middleware('hasAccess');    
-    }
-    
-    /*************************************************************************************
-     * Despliega todos los pagos que pertenecen a una determinada Unidad.
-     ************************************************************************************/	
+  public function __construct()
+  {
+    $this->middleware('hasAccess');    
+  }
+  
+  /*************************************************************************************
+   * Despliega todos los pagos que pertenecen a una determinada Unidad.
+   ************************************************************************************/	
 	public function indexPagos($un_id)
 	{
- 		//Encuentra todos lo registros de pago 
-		$datos = Pago::where('un_id', $un_id)
-					 ->join('bancos', 'bancos.id', '=', 'pagos.banco_id')
-           ->select('pagos.entransito','pagos.id','bancos.nombre','pagos.f_pago','pagos.monto','pagos.un_id','pagos.anulado','pagos.trans_tipo','pagos.trans_no')
-           ->get();
-	    
-    Carbon::setLocale('es');	    
-    $i=0;
 
-    foreach ($datos as $dato) {
-      $dato->f_pago=Carbon::createFromFormat('Y-m-d', $dato->f_pago)->format('M j\\, Y');
-      if ($dato->trans_tipo==1) {
-      	$dato->trans_tipo='Cheque';
-      } elseif ($dato->trans_tipo==2) {
-      	$dato->trans_tipo='Transferencia';
-      }
-      $i++;
-    }    
-
+		$datos = Pago::where('un_id', $un_id)->get();
 		//dd($datos->toArray());
-		return \View::make('contabilidad.pagos.index')
-					->with('datos', $datos)
-					->with('un_id', $un_id);   	
+		
+		return view('contabilidad.pagos.index')
+					->with('un_id', $un_id)
+					->with('datos', $datos);
 	}	
 
-    /*************************************************************************************
+  /*************************************************************************************
 	 * Despliega formulario para crear un nuevo registro
 	 ************************************************************************************/	
 	public function createPago($un_id)
 	{
-    //dd('aqui');
     
-    //Obtiene todas las instituciones bancarias actualmente registrada en la base de datos.
+    // obtiene todas las instituciones bancarias actualmente registrada
     $bancos= Banco::orderBy('nombre')->pluck('nombre', 'id')->all();
 		//dd($bancos);	    
-	    
-    return \View::make('contabilidad.pagos.createPago')        			
+    
+    // obtiene todos los diferentes tipos de pagos
+    $trantipos= Trantipo::orderBy('nombre')->pluck('nombre', 'id')->all();
+		//dd($trantipos);	    
+    
+    return view('contabilidad.pagos.createPago')        			
 					->with('bancos', $bancos)
+					->with('trantipos', $trantipos)
 					->with('un_id', $un_id);    	
 	} 
 
-    /*************************************************************************************
-     * Almacena un nuevo registro en la base de datos
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Almacena un nuevo registro en la base de datos
+   ************************************************************************************/	
 	public function store()
 	{
         
@@ -90,29 +78,22 @@ class PagosController extends Controller {
       //dd(Input::all());
       $input = Input::all();
 
-      $f_final=Carbon::today()->addDay(1);
+      $f_final= Carbon::today()->addDay(1);
 
       $rules = array(
-          'banco_id'   => 'required|not_in:0',
-          'trans_tipo' => 'required|not_in:0',
-          'trans_no'   => 'Required|Numeric|digits_between:1,10|min:1',
-          'monto'   	 => 'required|Numeric|min:0.01',
-          'f_pago'   	 => 'required|Date|Before:' . $f_final,
-          'descripcion'=> 'required',
-          'un_id'		 => 'required'            
+          'banco_id'   	=> 'required|not_in:0',
+          'trantipo_id' => 'required|not_in:0',
+          'transno'   	=> 'Required|Numeric|digits_between:1,10|min:1',
+          'monto'   	 	=> 'required|Numeric|min:0.01',
+          'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
+          'descripcion'	=> 'required',
+          'un_id'		 		=> 'required'            
       );
   
-    	$messages = [
-        'required'		=> 'Informacion requerida!',
-        'before'		=> 'La fecha del pago debe ser anterior o igual a fecha del dia de hoy!',
-      	'digits_between'=> 'El numero de la transaccion debe tener de uno a diez digitos!',
-      	'numeric'		=> 'Solo se admiten valores numericos!',
-      	'date'			=> 'Fecha invalida!',
-      	'min'			=> 'El monto del pago debe ser mayor que cero!'
-      ];         
+        
       //dd($rules, $messages);
       
-      $validation = \Validator::make($input, $rules, $messages);      	
+      $validation = \Validator::make($input, $rules);      	
 
 			if ($validation->passes())
 			{
@@ -124,31 +105,31 @@ class PagosController extends Controller {
 			    
 			  // encuentra el periodo mas antiguo abierto
 				$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
-			    //dd($pdo, $periodo->periodo);
-			    
-			    // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
-			    if ($pdo != $periodo->periodo) {
-	          Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo de '.$periodo->periodo);
-        		return back()->withInput()->withErrors($validation);
-			    }
+		    //dd($pdo, $periodo->periodo);
+		    
+		    // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
+		    if ($pdo != $periodo->periodo) {
+          Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo de '.$periodo->periodo);
+      		return back()->withInput()->withErrors($validation);
+		    }
 
 				// antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
-				Npago::penalizarTipo2(Carbon::parse(Input::get('f_pago')), Input::get('un_id'));
+				Npago::penalizarTipo2(Carbon::parse(Input::get('f_pago')), Input::get('un_id'), $periodo->id);
 
 				// Almacena el monto de la transaccion
 				$montoRecibido= round(floatval(Input::get('monto')),2);
 
 				// Procesa el pago recibido	si el tipo de transaccion es cheque
-				if (Input::get('trans_tipo')==1 || Input::get('trans_tipo')==3) {
+				if (Input::get('trantipo_id') == 1 || Input::get('trantipo_id') == 3) {
 					// Solamente registra el pago recibido no lo procesa
 					$dato = new Pago;
 					$dato->banco_id    = Input::get('banco_id');
-					$dato->trans_tipo  = Input::get('trans_tipo');
-				  $dato->trans_no    = Input::get('trans_no'); 
+					$dato->trantipo_id = Input::get('trantipo_id');
+				  $dato->trans_no    = Input::get('transno'); 
 					$dato->monto       = $montoRecibido;
 					$dato->f_pago      = Input::get('f_pago');
 					$dato->descripcion = Input::get('descripcion');
-				  $dato->fecha 	   = Carbon::today(); 		    
+				  $dato->fecha 	   	 = Carbon::today(); 		    
 					$dato->entransito  = 1;
 					$dato->un_id       = Input::get('un_id');
 			    $dato->user_id 	   = Auth::user()->id; 		    
@@ -166,8 +147,8 @@ class PagosController extends Controller {
 					// Registra el pago recibido
 					$dato = new Pago;
 					$dato->banco_id    = Input::get('banco_id');
-					$dato->trans_tipo  = Input::get('trans_tipo');
-				  $dato->trans_no    = Input::get('trans_no'); 
+					$dato->trantipo_id = Input::get('trantipo_id');
+				  $dato->trans_no    = Input::get('transno'); 
 					$dato->monto       = $montoRecibido;
 					$dato->f_pago      = Input::get('f_pago');
 					$dato->descripcion = Input::get('descripcion');
@@ -192,97 +173,47 @@ class PagosController extends Controller {
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada!');
-
+			Session::flash('warning', 'Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back()->withInput()->withErrors($validation);
 		}
 	}
 
-    /*************************************************************************************
-     * Despliega todos los pagos que pertenecen a una determinada Unidad.
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Despliega todos los pagos que pertenecen a una determinada Unidad.
+   ************************************************************************************/	
 	public function showRecibo($pago_id)
 	{
- 		
- 		//Encuentra todos los datos del pago
-		$pago = Pago::where('pagos.id', $pago_id)
-					->join('bancos', 'bancos.id', '=', 'pagos.banco_id')
-          ->select('pagos.id','pagos.anulado','bancos.nombre','pagos.f_pago','pagos.monto','pagos.un_id','pagos.trans_no','pagos.trans_tipo', 'pagos.f_pago')
-          ->first();
+ 		// encuentra las generales de pago
+		$pago = Pago::find($pago_id);
     //dd($pago);
 
-    // formatea la fecha de pago en la coleccion $pago
-    $pago['f_pago']= Date::parse($pago->f_pago)->format('l\, j F Y');
-		$pago['idpaded'] = sprintf("%06d", $pago->id);
-    	
-  	// determina que tipo de pago es y se lo agrega a la coleccion $pago
-  	if ($pago->trans_tipo== 1) {
-		$pago['trans_tipo']= "Cheque";
-  	} elseif ($pago->trans_tipo== 2) {
-		$pago['trans_tipo']= "Transferencia";
-  	} elseif ($pago->trans_tipo== 3) {
-		$pago['trans_tipo']= "ACH";
-  	} elseif ($pago->trans_tipo== 4) {
-		$pago['trans_tipo']= "Banca en linea";
-  	} elseif ($pago->trans_tipo== 5) {
-		$pago['trans_tipo']= "Efectivo";
-  	}
-  	//dd($pago->toArray());
+ 		// encuentra todos los detalles del pago, excluye el renglon de notas
+    $detalles= $pago->detallepagos()->where('no','!=',0)->get();
+
+		// calcula el total	pagado
+		$total= $pago->detallepagos()->sum('monto');		
+
+ 		// determina si existe alguna nota en detalles de pagos
+    $nota= $pago->detallepagos()->where('no',0)->first();
+		$nota= $nota->detalle;
+		//dd($nota);    
+    
+ 		// determina si la unidad tiene algun propietario encargado
+ 		$prop= $pago->un->props()->where('encargado', '1')->first();
+ 		//dd($prop->toArray());
+		//dd($prop->user->nombre_completo);
  		
- 		//Encuentra todos los detalles del pago
-		$detalles = Detallepago::where('pago_id', $pago_id)
-                	    	   ->where('no','!=',0)
-                	    	   ->get();
-
-		// calcula el total	pagado    
-		$total=0;	    
-    foreach ($detalles as $detalle) {
-			$total  = $total + $detalle->monto;  
-    }       
-		$total=number_format($total, 2);
-		//dd($detalle->toArray());
-		
- 		//Determina si hubo aumento o disminucion el cuenta de pagos por anticipados
-		$dato = Detallepago::where('pago_id', $pago_id)
-                	    	->where('no','=',0)
-                	    	->first();
-    if (!empty($dato)) {
-    	$nota= $dato->detalle;
-    } else {
-			$nota="";
-		}  
-    // Encuentra los datos de la unidad
-    $un = Un::find($pago->un_id);
-    //dd($un->toArray());
-
-    // Obtiene todos los propietarios de una determinada unidad que sean encardados.  
-    $prop = Prop::where('un_id', $un->id)
-                ->where('encargado', '1')
-                ->with('user')
-                ->first();
-    //dd($prop->toArray()); 
-
  		if (empty($prop)) {
 			Session::flash('warning', 'Esta Unidad no tiene propietario encargado asignado. Favor asignar un propietario como responsable.');
 			return back();
 	  } 
 
-    // Encuentra los datos de la sección a la cual pertenece la unidad
-    $seccion = Seccione::find($un->seccione_id);
-    //dd($seccion->toArray());
-    
-    // Encuentra los datos del Ph al que pertenece la unidad
-    $ph = Ph::find($seccion->ph_id);
-    //dd($ph->toArray()); 
-
 		return view('contabilidad.pagos.showRecibo')
 					->with('pago', $pago)
-					->with('detalles', $detalles)
-					->with('un', $un)
 					->with('prop', $prop)
 					->with('total', $total)
-					->with('nota', $nota)
-					->with('ph', $ph);   	
+					->with('detalles', $detalles)
+					->with('nota', $nota);
 	}	
 
   /*************************************************************************************
@@ -332,15 +263,15 @@ class PagosController extends Controller {
 		
 		} catch (\Exception $e) {
 	    DB::rollback();
-      Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaAnulacionPago, la transaccion ha sido cancelada!');
+      Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaAnulacionPago, la transaccion ha sido cancelada! '.$e->getMessage());
 
       return back()->withInput()->withErrors($validation);
 		}    
 	}	
 
-    /*************************************************************************************
-     * Anula pago
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Anula pago
+   ************************************************************************************/	
 	public function eliminaPagoCheque($pago_id)
 	{
 	    
@@ -357,7 +288,7 @@ class PagosController extends Controller {
 	
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.eliminaPagoCheque, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.eliminaPagoCheque, la transaccion ha sido cancelada! '.$e->getMessage());
 
 			return back()->withInput()->withErrors($validation);
 		}
@@ -399,7 +330,7 @@ class PagosController extends Controller {
 	
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaChequeRecibido, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaChequeRecibido, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back()->withInput()->withErrors($validation);
 		}
 	} 

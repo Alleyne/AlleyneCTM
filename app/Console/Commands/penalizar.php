@@ -54,7 +54,7 @@ class penalizar extends Command
 
         } catch (\Exception $e) {
             DB::rollback();
-            Session::flash('warning', ' Ocurrio un error en el Command penalizar.php, la transaccion ha sido cancelada!');
+            Session::flash('warning', ' Ocurrio un error en el Command penalizar.php, la transaccion ha sido cancelada! '.$e->getMessage());
         }
     }
 

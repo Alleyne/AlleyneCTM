@@ -324,6 +324,8 @@ Route::get('/test', function () {
 
 use App\Seccione;
 use App\User;
+use App\Pago;
+
 Route::get('/query', function () {
 
 //$data= Seccione::find(1)->secapto;
@@ -339,7 +341,7 @@ foreach ($datas as $data) {
 //return [$datas];
 
 
-$user = User::find(Auth::user()->id);
+/*$user = User::find(Auth::user()->id);
 
 //->roles()->get();
 dd($user->roles);
@@ -348,6 +350,19 @@ foreach ($roles as $role) {
 	if($role->name==='Admin') {
 		$es = true;
 	}
-}
-});
+}*/
 
+	//Encuentra todos lo registros de pago 
+/*	$datos = Pago::where('un_id', $un_id)
+				 ->join('bancos', 'bancos.id', '=', 'pagos.banco_id')
+         ->select('pagos.entransito','pagos.id','bancos.nombre','pagos.f_pago','pagos.monto','pagos.un_id','pagos.anulado','pagos.trans_tipo','pagos.trans_no')
+         ->get();*/
+	
+	//Encuentra todos lo registros de pago 
+	//$datos = Pago::where('un_id', 1)->get();
+	$dato = Pago::where('un_id', 1)->first();
+	//dd($datos->toArray());
+	
+	dd($dato->banco->nombre, $dato->un->codigo, $dato->trantipo->nombre);
+	//dd($dato->un->codigo);
+});

@@ -15,4 +15,20 @@ class Pago extends Model
   {
    return $this->hasMany('App\Ctdasm');    
   }   
+  
+  public function banco()
+  {
+      return $this->belongsTo('App\Banco');
+  }
+
+  public function un()
+  {
+      return $this->belongsTo('App\Un');
+  }
+  
+  public function trantipo()
+  {
+      return $this->belongsTo('App\Trantipo');
+  }
+
 }

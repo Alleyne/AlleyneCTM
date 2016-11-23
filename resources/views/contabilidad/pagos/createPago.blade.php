@@ -2,7 +2,12 @@
 
 @section('title', '| Crear pago')
 
+@section('stylesheets')
+	{!! Html::style('css/parsley.css') !!}
+@endsection
+
 @section('content')
+	
 	<!-- widget grid -->
 	<section id="widget-grid" class="">
 	
@@ -43,50 +48,51 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'pagos.store')) }}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'pagos.store', 'data-parsley-validate' => '')) }}		
 									<fieldset>
-	 									{{ csrf_field() }}
+
 	 									{{ Form::hidden('un_id', $un_id) }}
                                        
 										<div class="form-group">
 											<label class="col-md-3 control-label">Banco</label>
 											<div class="col-md-9">
-												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control']) }}
-												{!! $errors->first('banco_id', '<li style="color:red">:message</li>') !!}
+												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control', 'required' => '']) }}
 											</div>
 										</div>	
 
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">Fecha de pago</label>
-                                            <div class="col-md-9">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Fecha de pago</label>
+                        <div class="col-md-9">
 												<div class="input-group">
-													<input type="text" id='f_pago' name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('f_pago') }}>
+													<input type="text" id="f_pago" name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" required="" value={{ old('f_pago') }}>
 													<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 												</div>
-                                            	{!! $errors->first('f_pago', '<li style="color:red">:message</li>') !!}</p> 
-                                            </div>
-                                        </div>  
+	                      </div>
+	                  </div>  
 										
 										<div class="form-group">
 											<label class="col-md-3 control-label">Tipo de transaccion</label>
 											<div class="col-md-9">
-											{{ Form::select('trans_tipo', ['Seleccione el Tipo de Transaccion ...', 'Cheque', 'Transferencia', 'ACH', 'Banca en línea', 'Efectivo'], 0, ['class' => 'form-control']) }}
-											{!! $errors->first('trans_tipo', '<li style="color:red">:message</li>') !!}
+												{{ Form::select('trantipo_id', ['' => 'Seleccione el Tipo de Transaccion ...'] + $trantipos, 0, ['class' => 'form-control', 'required' => '']) }}
 											</div>
 										</div>	
 
 										<div class="form-group">
 											<label class="col-md-3 control-label">Transaccion No.</label>
 											<div class="col-md-9">
-												{{ Form::text('trans_no', old('trans_no'),
+												{{ Form::text('transno', old('transno'),
 													array(
 													    'class' => 'form-control',
-													    'id' => 'trans_no',
+													    'id' => 'transno',
 													    'placeholder' => 'Escriba el numero de la transaccion...',
-														'autocomplete' => 'off'
+															'autocomplete' => 'off',
+															'required' => '',
+															'data-parsley-type'=>'digits',
+															'minlength '=>'1',
+															'maxlength '=>'10',
+															'data-parsley-error-message'=>'mi mensaje para el campo trans no'
 													))
 												}} 
-												{!! $errors->first('trans_no', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 										
@@ -98,10 +104,11 @@
 													    'class' => 'form-control',
 													    'id' => 'monto',
 													    'placeholder' => 'Escriba el monto recibido ...',
-														'autocomplete' => 'off'
+															'autocomplete' => 'off',
+															'required' => '',
+															'data-parsley-pattern'=>'^[0-9]*\.[0-9]{2}$'
 													))
 												}} 
-												{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 
@@ -112,9 +119,9 @@
 										        	array(
 										        		'class' => 'form-control',
 										        		'title' => 'Escriba la descripcion',
-										        		'rows' => '3'
+										        		'rows' => '3',
+										        		'required' => ''
 										        	)) }}
-										        {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}   
 											</div>
 										</div>				
 									</fieldset>
@@ -135,22 +142,15 @@
 		</div>
 	
 		<!-- end row -->
-	
-		<!-- row -->
-	
-		<div class="row">
-	
-		</div>
-	
-		<!-- end row -->
-	
+		
 	</section>
 	<!-- end widget grid -->
 @stop
 
 @section('relatedplugins')
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-	
+	{!! Html::script('js/parsley.min.js') !!}
+
 	<script type="text/javascript">
 		$(document).ready(function(){
 		    $("input[type='submit']").attr("disabled", false);

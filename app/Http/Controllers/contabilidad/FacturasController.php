@@ -141,7 +141,7 @@ class FacturasController extends Controller {
 		
 		} catch (\Exception $e) {
 		    DB::rollback();
-        	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada!');
+        	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada! '.$e->getMessage());
 
         	return back()->withInput()->withErrors($validation);
 		}
@@ -179,7 +179,7 @@ class FacturasController extends Controller {
 
 		} catch (\Exception $e) {
 		    DB::rollback();
-        	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.destroy, la transaccion ha sido cancelada!');
+        	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
 
         	return back()->withInput()->withErrors($validation);
 		}		
@@ -316,7 +316,7 @@ class FacturasController extends Controller {
 
 		} catch (\Exception $e) {
 		    DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.contabilizaDetallesFactura, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.contabilizaDetallesFactura, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back()->withInput()->withErrors($validation);
 		}  
 	}

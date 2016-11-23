@@ -54,7 +54,7 @@
       <div class="row"><!-- row -->
           <div class="col-xs-9">
               <address>
-                <strong>{{ $ph->nombre }}</strong><br>
+                <strong>{{ $pago->un->seccione->ph->nombre }}</strong><br>
                 795 Via Espana, Pueblo Nuevo<br>
                 Panama<br>
                 <abbr title="Telefono">P:</abbr> (507) 456-7890
@@ -79,7 +79,7 @@
           <div class="col-xs-7">
               <div>
                   <h4><strong>RECIBO DE PAGO</strong></h4>
-                  <h5><strong>No. {{ $pago->idpaded }} </strong></h5>
+                  <h5><strong>No. {{ sprintf("%06d", $pago->id) }} </strong></h5>
               </div>
           </div>
           
@@ -95,7 +95,7 @@
       
       <div class="row">
         <div class="col-md-12">
-           <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $un->codigofull }}</strong>, la suma de <strong>B/. {{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trans_tipo }}</strong> no <strong>{{ $pago->trans_no }}</strong> del <strong>{{ $pago->nombre }}</strong> el dia <strong>{{ $pago->f_pago }}</strong>, en concepto de pago por servicios de mantenimiento del {{ $ph->nombre }}.</p>
+           <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $pago->un->codigofull }}</strong>, la suma de <strong>B/. {{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trantipo->nombre }}</strong> no <strong>{{ $pago->trans_no }}</strong> del <strong>{{ $pago->nombre }}</strong> el dia <strong>{{ Date::parse($pago->f_pago)->format('l\, j F Y') }}</strong>, en concepto de pago por servicios de mantenimiento del {{ $pago->un->seccione->ph->nombre }}.</p>
         </div>
       </div>
       
@@ -144,12 +144,13 @@
         </div>        
       @endif       
       
-      <div class="row">
-        <div class="col-md-12">
-          <p class="text-justify">{{ $nota }}</p>
-        </div>
-      </div>          
-
+      @if ($nota)
+        <div class="row">
+          <div class="col-md-12">
+            <p class="text-justify">{{ $nota }}</p>
+          </div>
+        </div>          
+      @endif
       <br>       
           
       <HR WIDTH=95% ALIGN=CENTER COLOR="BLACK">

@@ -19,9 +19,6 @@
 		<!-- SPARKLINES
 		<script src="{{ URL::asset('assets/backend/js/plugin/sparkline/jquery.sparkline.min.js') }}"></script> -->
 		
-		<!-- JQUERY VALIDATE -->
-		<script src="{{ URL::asset('assets/backend/js/plugin/jquery-validate/jquery.validate.min.js') }}"></script>
-		
 		<!-- JQUERY MASKED INPUT
 		<script src="{{ URL::asset('assets/backend/js/plugin/masked-input/jquery.maskedinput.min.js') }}"></script> -->
 		

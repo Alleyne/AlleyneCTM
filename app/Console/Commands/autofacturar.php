@@ -141,7 +141,7 @@ class autofacturar extends Command
         
         } catch (\Exception $e) {
             DB::rollback();
-            Session::flash('warning', ' Ocurrio un error en el Command autofacturar.php, la transaccion ha sido cancelada!');
+            Session::flash('warning', ' Ocurrio un error en el Command autofacturar.php, la transaccion ha sido cancelada! '.$e->getMessage());
         }
     }
 }

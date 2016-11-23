@@ -7,31 +7,32 @@ use Session;
 
 class CatalogosController extends Controller {
     
-    public function __construct()
-    {
-       	$this->middleware('hasAccess');    
-    }
-    
-    /*************************************************************************************
-     * Despliega el registro especificado en formato formulario sólo lectura
-     ************************************************************************************/	
+  public function __construct()
+  {
+     	$this->middleware('hasAccess');    
+  }
+  
+  /*************************************************************************************
+   * Despliega el registro especificado en formato formulario sólo lectura
+   ************************************************************************************/	
 	public function index()
 	{
 
-	    $datos = Catalogo::where('activa', 1)->orderBy('codigo')->get();
-	    //dd($datos->toArray());
-	    if($datos) {
+    $datos = Catalogo::where('activa', 1)->orderBy('codigo')->get();
+    //dd($datos->toArray());
+    
+    if($datos) {
 			return view('catalogo.index')->with('datos', $datos);
-		}
-	    else {
+		
+		} else {
 			Session::flash('danger', 'View no existe!');
 			return back();	    	
-	    }
+    }
 	}
 
-    /*************************************************************************************
-     * Despliega formulario para crear un nuevo registro
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Despliega formulario para crear un nuevo registro
+   ************************************************************************************/	
 	public function createCuenta($id)
 	{
 		return view('catalogo.createCuenta')->with('id', $id);
@@ -72,15 +73,14 @@ class CatalogosController extends Controller {
 		
 		if ($exist) {
 			Session::flash('danger', 'La cuenta '.$codigo.' ya existe, no puede haber duplicados.');
-			return back()->withInput();	
-		}				
-		elseif ($codigo[0] != $request->input('id')) {
+			return back()->withInput();
+
+		} elseif ($codigo[0] != $request->input('id')) {
 			Session::flash('danger', 'La cuenta '.$codigo.' debe comenzar con '.$request->input('id'));
 			return back()->withInput();	
 		}	
 
 		$dato = new Catalogo;
-
 		if ($codigo[0]=='1' || $codigo[0]=='2') {
 		$dato->nombre       	 = $request->input('nombre');
 		$dato->codigo		       = $request->input('codigo');
