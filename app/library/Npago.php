@@ -451,7 +451,7 @@ class Npago {
     if ($datos) {
       foreach ($datos as $dato) {
         $importe= round(floatval($dato->extra),2);               
-        
+
         if (($montoRecibido + $saldocpa) >= $importe) {
           // hay suficiente dinero para pagar por lo menos una cuota extraordinaria
           // por lo tanto, registra la cuota extraordinaria como pagada

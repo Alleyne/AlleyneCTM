@@ -47,26 +47,29 @@ class UnsController extends Controller {
 		$i=0;		
 		
 		foreach ($datos as $dato) {
-			$estatus1 = Ctdasm::where('un_id', $dato->id)
-							 ->where('pagada', 0)
-							 ->first();
+			$ctdasm= Ctdasm::where('un_id', $dato->id)->get(); 			
+			$estatus1 = $ctdasm->where('pagada', 0)
+													->first();
 
-			$estatus2 = Ctdasm::where('un_id', $dato->id)
-							 ->Where('recargo_siono', 1)
-							 ->Where('recargo_pagado', 0)							 
-							 ->first();
+			$estatus2 = $ctdasm->Where('recargo_siono', 1)
+													->Where('recargo_pagado', 0)
+													->first();
 			
-		    if(!is_null($estatus1) || !is_null($estatus2)) {
+			$estatus3 = $ctdasm->where('extra_siono', 1)
+							 						->where('extra_pagada', 0)
+							 						->first();
+
+		  if(!is_null($estatus1) || !is_null($estatus2) || !is_null($estatus3)) {
 		    	$datos[$i]['estatus']='Moroso';
 			}
-		    elseif(is_null($estatus1) && is_null($estatus2)) {
-		    	$datos[$i]['estatus']='Paz y salvo';
-		    }
-    
-		    $props=Prop::where('un_id', $dato->id)
-		    		   ->join('users','users.id','=','props.user_id')
-		    		   ->select('cedula','nombre_completo')
-		    		   ->get();
+	    elseif(is_null($estatus1) && is_null($estatus2) && is_null($estatus3)) {
+	    	$datos[$i]['estatus']='Paz y salvo';
+	    }
+  
+	    $props=Prop::where('un_id', $dato->id)
+	    		   ->join('users','users.id','=','props.user_id')
+	    		   ->select('cedula','nombre_completo')
+	    		   ->get();
 			//dd($props->toArray());			
 
 			$propietarios="";

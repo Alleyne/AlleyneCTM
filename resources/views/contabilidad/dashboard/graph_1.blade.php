@@ -616,7 +616,7 @@
 		            type: 'bar'
 		        },
 		        title: {
-		            text: 'PROPIETARIOS MAS MOROSOS A LA FECHA'
+		            text: 'PROPIETARIOS MOROSOS A LA FECHA'
 		        },
 		        xAxis: {
 		            categories: [{!! $categorias !!}]
@@ -651,60 +651,44 @@
 		$(function () {
 		    Highcharts.chart('ingresos', {
 		        chart: {
-		            type: 'areaspline'
+		            type: 'column'
 		        },
 		        title: {
-		            text: 'Average fruit consumption during one week'
-		        },
-		        legend: {
-		            layout: 'vertical',
-		            align: 'left',
-		            verticalAlign: 'top',
-		            x: 150,
-		            y: 100,
-		            floating: true,
-		            borderWidth: 1,
-		            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+		            text: 'ESTATUS DE INGRESOS Y PAGOS'
 		        },
 		        xAxis: {
-		            categories: [{!! $pdo !!}],
-		            plotBands: [{ // visualize the weekend
-		                from: 1,
-		                to: 1,
-		                color: 'rgba(68, 170, 213, .2)'
-		            }]
+		            categories: [{!! $pdo !!}]
 		        },
 		        yAxis: {
+		            min: 0,
 		            title: {
-		                text: 'Fruit units'
+		                text: 'PH El Marquez'
 		            }
 		        },
 		        tooltip: {
-		            shared: true,
-		            valueSuffix: ' units'
-		        },
-		        credits: {
-		            enabled: false
+		            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+		            shared: true
 		        },
 		        plotOptions: {
-		            areaspline: {
-		                fillOpacity: 0.5
+		            column: {
+		                stacking: 'percent'
 		            }
 		        },
 		        series: [{
-		            name: 'Cuotas regulares',
-		            data: [{{ $regulares }}]
+		            name: 'Ingresos por cobrar',
+		            data: [{{ $totalIngresoPorCobrar }}]
 		        }, {
-		            name: 'Recargos',
-		            data: [{{ $recargos }}]
+		            name: 'Recargos pagodos',
+		            data: [{{ $pagRecargos }}]
 		        }, {
-		            name: 'Cuotas extraordinarias',
-		            data: [{{ $extraordinarias }}]        
+		            name: 'Cuotas extraordinarias pagadas',
+		            data: [{{ $pagExtraordinarias }}]
+		        }, {
+		            name: 'Cuotas regulares pagadas',
+		            data: [{{ $pagRegulares }}]
 		        }]
 		    });
 		});
-
-
 
 	</script>
 @endsection 
