@@ -64,7 +64,7 @@
                         <label class="col-md-3 control-label">Fecha de pago</label>
                         <div class="col-md-9">
 												<div class="input-group">
-													<input type="text" id="f_pago" name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" required="" value={{ old('f_pago') }}>
+													<input type="text" id="f_pago" name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" required="" value="{{ old('f_pago') }}">
 													<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 												</div>
 	                      </div>

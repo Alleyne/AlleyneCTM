@@ -184,7 +184,6 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         'Jenssegers\Date\DateServiceProvider',
-        ConsoleTVs\Charts\ChartsServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
     ],
 
@@ -242,7 +241,6 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Date' => Jenssegers\Date\Date::class,
         'Purifier'  => Mews\Purifier\Facades\Purifier::class,
-        'Charts' => ConsoleTVs\Charts\Charts::class
     ],
 
 ];

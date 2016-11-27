@@ -195,7 +195,11 @@ class PagosController extends Controller {
 
  		// determina si existe alguna nota en detalles de pagos
     $nota= $pago->detallepagos()->where('no',0)->first();
-		$nota= $nota->detalle;
+		if ($nota) {
+			$nota= $nota->detalle;
+		} else {
+			$nota= "";
+		}
 		//dd($nota);    
     
  		// determina si la unidad tiene algun propietario encargado
