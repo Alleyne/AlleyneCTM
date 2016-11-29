@@ -67,7 +67,60 @@
 			<!-- end row -->
 
 			<!-- row -->
+			<div class="row">
 
+				<!-- NEW WIDGET START -->
+				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+					<!-- Widget ID (each widget will need unique ID)-->
+					<div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+						<!-- widget options:
+						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+						data-widget-colorbutton="false"
+						data-widget-editbutton="false"
+						data-widget-togglebutton="false"
+						data-widget-deletebutton="false"
+						data-widget-fullscreenbutton="false"
+						data-widget-custombutton="false"
+						data-widget-collapsed="true"
+						data-widget-sortable="false"
+
+						-->
+						<header>
+							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
+							<h2>Ingresos vs descuentos por pagos anticipados</h2>
+						</header>
+
+						<!-- widget div-->
+						<div>
+
+							<!-- widget edit box -->
+							<div class="jarviswidget-editbox">
+								<!-- This area used as dropdown edit box -->
+								<input type="text">
+							</div>
+							<!-- end widget edit box -->
+
+							<!-- widget content -->
+							<div class="widget-body no-padding">
+									<div id="ingreso_descuento" style="min-width: 310px; margin: 0 auto"></div>
+							</div>
+							<!-- end widget content -->
+
+						</div>
+						<!-- end widget div -->
+
+					</div>
+					<!-- end widget -->
+
+				</article>
+				<!-- WIDGET END -->
+
+			</div>
+
+			<!-- end row -->
+			
 			<!-- row -->
 			<div class="row">
 
@@ -108,8 +161,7 @@
 							<!-- widget content -->
 							<div class="widget-body no-padding">
 
-
-        					<div id="morosos" style="min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+        				<div id="morosos" style="min-width: 310px; max-width: 800px; margin: 0 auto"></div>
 
 							</div>
 							<!-- end widget content -->
@@ -167,8 +219,6 @@
 							<!-- widget content -->
 							<div class="widget-body no-padding">
 
-
-
 							</div>
 							<!-- end widget content -->
 
@@ -211,143 +261,6 @@
 
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-
-
-
-							</div>
-							<!-- end widget content -->
-
-						</div>
-						<!-- end widget div -->
-
-					</div>
-					<!-- end widget -->
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-5" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Year Graph</h2>
-
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-
-								<div id="year-graph" class="chart no-padding"></div>
-
-							</div>
-							<!-- end widget content -->
-
-						</div>
-						<!-- end widget div -->
-
-					</div>
-					<!-- end widget -->
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-7" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Time Graph</h2>
-
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-
-								<div id="time-graph" class="chart no-padding"></div>
-
-							</div>
-							<!-- end widget content -->
-
-						</div>
-						<!-- end widget div -->
-
-					</div>
-					<!-- end widget -->
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-9" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>No Grid Graph</h2>
-
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-
-								<div id="nogrid-graph" class="chart no-padding"></div>
 
 							</div>
 							<!-- end widget content -->
@@ -398,8 +311,6 @@
 							<!-- widget content -->
 							<div class="widget-body no-padding">
 
-								<div id="bar-graph" class="chart no-padding"></div>
-
 							</div>
 							<!-- end widget content -->
 
@@ -444,141 +355,6 @@
 							<div class="widget-body no-padding">
 
 								<div id="stacked-bar-graph" class="chart no-padding"></div>
-
-							</div>
-							<!-- end widget content -->
-
-						</div>
-						<!-- end widget div -->
-
-					</div>
-					<!-- end widget -->
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-6" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Donut Graph</h2>
-
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-
-								<div id="donut-graph" class="chart no-padding"></div>
-
-							</div>
-							<!-- end widget content -->
-
-						</div>
-						<!-- end widget div -->
-
-					</div>
-					<!-- end widget -->
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-8" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Line Graph A </h2>
-
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-
-								<div id="graph-B" class="chart no-padding"></div>
-
-							</div>
-							<!-- end widget content -->
-
-						</div>
-						<!-- end widget div -->
-
-					</div>
-					<!-- end widget -->
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-10" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Line Graph B </h2>
-
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-
-								<div id="non-continu-graph" class="chart no-padding"></div>
 
 							</div>
 							<!-- end widget content -->
@@ -686,6 +462,59 @@
 		        }, {
 		            name: 'Cuotas regulares pagadas',
 		            data: [{{ $pagRegulares }}]
+		        }]
+		    });
+		});
+
+		$(function () {
+		    Highcharts.chart('ingreso_descuento', {
+		        chart: {
+		            type: 'area'
+		        },
+		        title: {
+		            text: 'Ingresos esperados vs descuentos otorgados'
+		        },
+		        subtitle: {
+		            text: 'ctmaster.net'
+		        },
+		        xAxis: {
+		            categories: [{!! $pdo !!}],
+		            tickmarkPlacement: 'on',
+		            title: {
+		                enabled: false
+		            }
+		        },
+		        yAxis: {
+		            title: {
+		                text: 'Balboas'
+		            },
+		            labels: {
+		                formatter: function () {
+		                    return this.value;
+		                }
+		            }
+		        },
+		        tooltip: {
+		            split: true,
+		            valueSuffix: ' balboas'
+		        },
+		        plotOptions: {
+		            area: {
+		                stacking: 'normal',
+		                lineColor: '#666666',
+		                lineWidth: 1,
+		                marker: {
+		                    lineWidth: 1,
+		                    lineColor: '#666666'
+		                }
+		            }
+		        },
+		        series: [{
+		            name: 'Ingresos esperados',
+		            data: [{{ $totalIngreso }}]
+		        }, {
+		            name: 'Descuentos otorgados',
+		            data: [{{ $descuentos }}]
 		        }]
 		    });
 		});

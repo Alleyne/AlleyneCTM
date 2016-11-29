@@ -86,9 +86,12 @@ class DashboardController extends Controller
         //----------------------------------------------------------------------
           // calcula el total de descuentos otorgados por pagos anticipados
           $totalEspDescuentos = $ctdasm->where('descuento_siono', 1)->sum('descuento');  
-          
-         // calcula el total de ingresos por cuotas regulares
-          $totalEspRegulares = $ctdasm->sum('importe') - $totalEspDescuentos;   
+
+         // calcula el total de ingresos por cuotas regulares sin descuento incluido
+          $totalEspRegularesSD = $ctdasm->sum('importe');   
+         
+         // calcula el total de ingresos por cuotas regulares con descuento incluido
+          $totalEspRegularesCD = $ctdasm->sum('importe') - $totalEspDescuentos;   
 
           // calcula el total de recargos
           $totalEspRecargos = $recargos->where('recargo_siono', 1)->sum('recargo');  
@@ -96,8 +99,12 @@ class DashboardController extends Controller
           // calcula el total de cuotas extraordinarias
           $totalEspExtraordinarias = $ctdasm->where('extra_siono', 1)->sum('extra');  
           
-          $totalIngresoEsperado= $totalEspRegulares + $totalEspRecargos + $totalEspExtraordinarias;
-          //dd($totalEspRegulares, $totalEspRecargos, $totalEspExtraordinarias);
+          // calcula el total de ingresos esperado con descuento por cobrar
+          $totalIngresoEsperadoCD= $totalEspRegularesCD + $totalEspRecargos + $totalEspExtraordinarias;
+          
+          // calcula el total de ingresos esperado sin descuento
+          //$totalIngresoEsperadoSD= $totalEspRegularesSD + $totalEspRecargos + $totalEspExtraordinarias;
+          $totalIngresoEsperadoSD= $totalEspRegularesSD;
 
         //----------------------------------------------------------------------
         // calula el total de pagos recibidos a la fecha
@@ -115,22 +122,29 @@ class DashboardController extends Controller
           
           $pdo[]= $periodo->periodo;            
           $pagRegulares[]= $totalPagRegulares;
+          $descuentos[]= $totalEspDescuentos;
           $pagRecargos[]= $totalPagRecargos;
           $pagExtraordinarias[]= $totalPagExtraordinarias;
-          $totalIngresoPorCobrar[]= $totalIngresoEsperado - ($totalPagRegulares + $totalPagRecargos + $totalPagExtraordinarias);
-          //dd($pdo, $pagRegulares, $pagRecargos, $pagExtraordinarias, $totalIngresoPorCobrar);
+          $totalIngresoPorCobrarCD[]= $totalIngresoEsperadoCD - ($totalPagRegulares + $totalPagRecargos + $totalPagExtraordinarias);
+          $totalIngresoPorCobrarSD[]= $totalIngresoEsperadoSD;
       }
-      //dd($totalEspRegulares, $totalEspRecargos, $totalEspExtraordinarias);
-      //dd($pdo, $pagRegulares, $pagRecargos, $pagExtraordinarias, $totalIngresoPorCobrar);
       
       // formatea los datos antes de ser enviados a la grafica
       $pdo = '"'.implode('", "', $pdo).'"';  
       $pagRegulares = implode(", ", $pagRegulares);
+      $descuentos = implode(", ", $descuentos);
       $pagRecargos = implode(", ", $pagRecargos);
       $pagExtraordinarias = implode(", ", $pagExtraordinarias);  
-      $totalIngresoPorCobrar = implode(", ", $totalIngresoPorCobrar); 
-      //dd($pdo, $pagRegulares, $pagRecargos, $pagExtraordinarias, $totalIngresoPorCobrar);
+      $totalIngresoPorCobrarCD = implode(", ", $totalIngresoPorCobrarCD); 
+      $totalIngresoPorCobrarSD = implode(", ", $totalIngresoPorCobrarSD); 
     
+    /*
+    |--------------------------------------------------------------------------------
+    | 
+    |--------------------------------------------------------------------------------
+    */
+
+
     return view('contabilidad.dashboard.graph_1', [
                               'data_1' => $data_1,
                               'data_2' => $data_2,
@@ -138,9 +152,11 @@ class DashboardController extends Controller
                               'categorias' => $categorias,                                                      
                               'pdo' => $pdo,
                               'pagRegulares' => $pagRegulares,
+                              'descuentos' => $descuentos,
                               'pagRecargos' => $pagRecargos,
                               'pagExtraordinarias' => $pagExtraordinarias,
-                              'totalIngresoPorCobrar' => $totalIngresoPorCobrar                                                        
+                              'totalIngresoPorCobrar' => $totalIngresoPorCobrarCD,                                                        
+                              'totalIngreso' => $totalIngresoPorCobrarSD   
                             ]);
   } 
 } // end of class

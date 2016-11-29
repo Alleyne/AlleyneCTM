@@ -16,7 +16,6 @@ use App\Detallepago;
 use App\Pcontable;
 use App\Ctmayore;
 use App\Pago;
-use Log;
 
 class Npago {
 
@@ -450,17 +449,13 @@ class Npago {
     // dd($saldocpa);
     
     $montoRecibido= round(floatval($montoRecibido),2);
-    $i=0;
+
     if ($datos) {
       foreach ($datos as $dato) {
 
         $importe= round(floatval($dato->extra),2);               
 
         if (($montoRecibido + $saldocpa) >= $importe) {
-          Log::info($montoRecibido + $saldocpa);
-          Log::info($i);
-          $i++;
-          
           // hay suficiente dinero para pagar por lo menos una cuota extraordinaria
           // por lo tanto, registra la cuota extraordinaria como pagada
           $dto = ctdasm::find($dato->id);
