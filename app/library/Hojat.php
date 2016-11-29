@@ -624,6 +624,38 @@ class Hojat {
 
   /** 
   *=============================================================================================
+  * Calcula el total en la cuenta de Ingresos o Gastos segun sea el caso
+  * @param  string    $periodo  "4"
+  * @param  integer   $tipo     4
+  * @return void
+  *===========================================================================================*/
+  public static function getTotalesParaEstadoResultado($periodo, $tipo) {
+    //dd($periodo, $tipo);
+
+    // Encuentra todas las cuentas activas en ctmayores para un determinado periodo
+    $ctmayores= Ctmayore::where('pcontable_id', $periodo)
+                    ->where('tipo', $tipo)
+                    ->get();
+    //dd($ctmayores->toArray());
+    
+    // calcula el saldo debito de todas las cuentas de ingresos o gastos
+    $totalDebito= $ctmayores->sum('debito');
+    $totalCredito= $ctmayores->sum('credito');
+    //dd($totalDebito, $totalCredito);
+      
+    if ($tipo==6) {
+      $total= floatval($totalDebito) - floatval($totalCredito);
+
+    } elseif ($tipo==4) {
+      $total= floatval($totalCredito) - floatval($totalDebito);
+    }  
+
+    return $total;
+  }
+
+
+  /** 
+  *=============================================================================================
    * Arma un arreglo con la informacion de las cuentas tipo activos o pasivos, corriente o 
    * no corrientes necesaria para confeccionar el Balance general de un determinado periodo contable
   * @param  string   $periodo           "4"

@@ -1,9 +1,11 @@
 <?php namespace App\Http\Controllers\contabilidad;
 use App\Http\Controllers\Controller;
-//use Charts;
+use App\library\Hojat;
+
 use App\Ctdasm;
 use App\Pcontable;
 use App\Un;
+
 use DB; 
 use Carbon\Carbon;
 
@@ -140,11 +142,14 @@ class DashboardController extends Controller
     
     /*
     |--------------------------------------------------------------------------------
-    | 
+    | Procesa los datos necesarios para la grafica de Ingresos vs Gastos para el periodo actual
     |--------------------------------------------------------------------------------
     */
-
-
+    $periodo= Pcontable::all()->last()->id;
+    $totalIngresos= Hojat::getTotalesParaEstadoResultado($periodo, 4);
+    $totalGastos= Hojat::getTotalesParaEstadoResultado($periodo, 6);
+    //dd($totalIngresos, $totalGastos);
+    
     return view('contabilidad.dashboard.graph_1', [
                               'data_1' => $data_1,
                               'data_2' => $data_2,
@@ -156,7 +161,9 @@ class DashboardController extends Controller
                               'pagRecargos' => $pagRecargos,
                               'pagExtraordinarias' => $pagExtraordinarias,
                               'totalIngresoPorCobrar' => $totalIngresoPorCobrarCD,                                                        
-                              'totalIngreso' => $totalIngresoPorCobrarSD   
+                              'totalIngreso' => $totalIngresoPorCobrarSD,   
+                              'totalIngresos'=> $totalIngresos,
+                              'totalGastos'=> $totalGastos
                             ]);
   } 
 } // end of class
