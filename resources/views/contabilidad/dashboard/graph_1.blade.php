@@ -32,7 +32,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Sales Graph</h2>
+							<h2>Ingresos vs pagos</h2>
 
 
 						</header>
@@ -91,7 +91,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Line Graph C</h2>
+							<h2>Morosos</h2>
 
 						</header>
 
@@ -654,7 +654,7 @@
 		            type: 'column'
 		        },
 		        title: {
-		            text: 'ESTATUS DE INGRESOS Y PAGOS'
+		            text: 'ESTATUS DE INGRESOS VS PAGOS RECIBIDOS'
 		        },
 		        xAxis: {
 		            categories: [{!! $pdo !!}]
@@ -678,7 +678,7 @@
 		            name: 'Ingresos por cobrar',
 		            data: [{{ $totalIngresoPorCobrar }}]
 		        }, {
-		            name: 'Recargos pagodos',
+		            name: 'Recargos pagados',
 		            data: [{{ $pagRecargos }}]
 		        }, {
 		            name: 'Cuotas extraordinarias pagadas',

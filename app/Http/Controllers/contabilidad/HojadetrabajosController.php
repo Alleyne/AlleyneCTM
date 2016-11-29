@@ -475,9 +475,9 @@ class HojadetrabajosController extends Controller {
     /** 
     *==================================================================================================
     * Cierra definitivamente un determinado periodo contable
-    * @param  string     $periodo_id
-    * @param  string     $periodo
-    * @param  string     $fecha
+    * @param  string     $periodo_id    "3"
+    * @param  string     $periodo       "Mar-2016"
+    * @param  string     $fecha         "2016-03-01"
     * @return void
     **************************************************************************************************/
     public function cierraPeriodo($pcontable_id, $periodo, $fecha) {
@@ -522,7 +522,7 @@ class HojadetrabajosController extends Controller {
                 // facturacion para las secciones que generan las ordenes de cobro los dias 16
                 Fact::facturar(Carbon::createFromDate($year, $month, 16));
 
-                Hojat::penalizarTipo1($fecha);
+                Hojat::penalizarTipo1($fecha, $pcontable_id);
 
                 // Registra en bitacoras
                 $detalle =  'Se crea periodo contable de '.Pcontable::all()->last()->periodo;

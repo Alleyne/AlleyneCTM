@@ -18,11 +18,11 @@ class Desc {
   /** 
   *==================================================================================================
   * Verifica si se trata de un pago anticipado con el proposito de obtener descuento
-  * @param  string  $un_id
-  * @param  integer $montoRecibido
-  * @param  integer $pago_id  
-  * @param  integer $periodo  
-  * @param  string  $f_pago
+  * @param  string      $un_id          "7"
+  * @param  decimal     $montoRecibido  0.5
+  * @param  integer     $pago_id        18 
+  * @param  integer     $periodo        1  
+  * @param  string      $f_pago         "2016-01-30"
   * @return void
   **************************************************************************************************/
   public static function verificaDescuento($un_id, $montoRecibido, $pago_id, $periodo, $f_pago) {
@@ -46,7 +46,7 @@ class Desc {
     // verifica si tiene algun recargo por pagar
     $dato = Ctdasm::where('pcontable_id','<', $periodo)
                    ->where('un_id', $un_id)
-                   ->where('f_vencimiento','<', $f_pago)
+                   ->whereDate('f_vencimiento','<', $f_pago)
                    ->where('recargo_siono', 1)
                    ->where('recargo_pagado', 0)
                    ->where('pagada', 1)

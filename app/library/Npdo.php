@@ -18,10 +18,12 @@ class Npdo {
   /** 
   *=============================================================================================
   * Esta function crea un nuevo periodo contable
-  * @param  date/Carbon $fecha yyyy/mm/01
+  * @param  date/Carbon $fecha +"date": "2016-04-01 00:00:00.000000"
   * @return void
   *********************************************************************************************/
   public static function periodo($fecha) {
+    //dd($fecha);
+
     $year= $fecha->year;
     $month= $fecha->month;
     

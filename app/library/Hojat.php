@@ -1002,15 +1002,17 @@ class Hojat {
   /** 
   *=============================================================================================
   * Esta function penaliza en grupo al cierre de periodo
-  * @param  string $fecha   - fecha de inicio de periodo
+  * @param  carbon/date $fecha          "2016-03-01 00:00:00.000000"    - fecha de inicio de periodo
+  * @param  string      $pcontable_id   "3"                      - periodo a cerrar
   * @return void
   *===========================================================================================*/
-  public static function penalizarTipo1($fecha)
-  {
+  public static function penalizarTipo1($fecha, $pcontable_id) {
+    //dd($fecha, $pcontable_id);
+    
     // clona $fecha para mantener su valor original
     $f_limite = clone $fecha;
      
-    // encuentra todas las fechas de vencimiento que existen dentro de un periodo
+    // encuentra todas las fechas de vencimiento
     $vfechas= Ctdasm::whereDate('f_vencimiento','<', $f_limite->endOfMonth()->toDateString())
                 ->where('pagada', 0)
                 ->where('recargo_siono', 0)
@@ -1018,21 +1020,11 @@ class Hojat {
                 ->orderBy('f_vencimiento')              
                 ->distinct()
                 ->get();
-    //dd($vfechas->toArray());
+    //dd($fecha, $vfechas->toArray(), $f_limite->endOfMonth()->toDateString(), $pcontable_id);
     
     // si encuentra alguna fecha, quiere decir que hay unidades a penalizar        
     if ($vfechas->count()>0) {
       foreach ($vfechas as $vfecha) {
-        
-        // determina a que periodo corresponde la fecha de vencimiento 
-        $f_vencimiento= Carbon::parse($vfecha->f_vencimiento);
-        $month= $f_vencimiento->month;    
-        $year= $f_vencimiento->year;    
-      
-        $pdo= Sity::getMonthName($month).'-'.$year;
-        $periodo= Pcontable::where('periodo', $pdo)->first()->id;
-        //dd($periodo);
-
         // encuentra todas aquella unidades que no han sido pagadas y que tienen fecha de pago vencida
         $datos= Ctdasm::where('f_vencimiento', $vfecha->f_vencimiento)
                     ->where('pagada', 0)
@@ -1056,7 +1048,7 @@ class Hojat {
             
             // registra 'Recargo por cobrar en cuota de mantenimiento' 1130.00
             Sity::registraEnCuentas(
-                  $periodo,
+                  $pcontable_id,
                   'mas',
                   1,
                   2, //'1130.00',
@@ -1068,7 +1060,7 @@ class Hojat {
 
             // registra 'Ingreso por cuota de mantenimiento' 4130.00
             Sity::registraEnCuentas(
-                  $periodo,
+                  $pcontable_id,
                   'mas',
                   4,
                   4, //'4130.00',
@@ -1082,7 +1074,7 @@ class Hojat {
             if ($i==1) {
               // registra en Ctdiario principal
               $dto = new Ctdiario;
-              $dto->pcontable_id  = $periodo;
+              $dto->pcontable_id  = $pcontable_id;
               $dto->fecha   = $f_limite->endOfMonth()->toDateString();
               $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
               $dto->debito  = $dato->recargo; 
@@ -1091,7 +1083,7 @@ class Hojat {
             } else {
                 // registra en Ctdiario principal
                 $dto = new Ctdiario;
-                $dto->pcontable_id  = $periodo;
+                $dto->pcontable_id  = $pcontable_id;
                 $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
                 $dto->debito  = $dato->recargo;
                 $dto->save(); 
@@ -1101,14 +1093,14 @@ class Hojat {
           
           // registra en Ctdiario principal
           $dto = new Ctdiario;
-          $dto->pcontable_id = $periodo;
+          $dto->pcontable_id = $pcontable_id;
           $dto->detalle = '   '.Catalogo::find(4)->nombre;
           $dto->credito  = $totalRecargos;
           $dto->save(); 
 
           // registra en Ctdiario principal
           $dto = new Ctdiario;
-          $dto->pcontable_id = $periodo;
+          $dto->pcontable_id = $pcontable_id;
           $dto->detalle = 'Para registrar resumen de recargos en cuotas de mantenimiento por cobrar vencidas a '.Date::parse($dato->f_vencimiento)->toFormattedDateString();
           $dto->save();     
          

@@ -99,8 +99,9 @@ class PagosController extends Controller {
 			{
 
 		    // calcula el periodo al que corresponde la fecha de pago
-		    $year= Carbon::parse(Input::get('f_pago'))->year;
-		    $month= Carbon::parse(Input::get('f_pago'))->month;
+		    $f_pago= Carbon::parse(Input::get('f_pago'));
+		    $year= $f_pago->year;
+		    $month= $f_pago->month;
 		    $pdo= Sity::getMonthName($month).'-'.$year;    
 			    
 			  // encuentra el periodo mas antiguo abierto
@@ -114,7 +115,7 @@ class PagosController extends Controller {
 		    }
 
 				// antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
-				Npago::penalizarTipo2(Carbon::parse(Input::get('f_pago')), Input::get('un_id'), $periodo->id);
+				Npago::penalizarTipo2(Input::get('f_pago'), Input::get('un_id'), $periodo->id);
 
 				// Almacena el monto de la transaccion
 				$montoRecibido= round(floatval(Input::get('monto')),2);
@@ -191,7 +192,7 @@ class PagosController extends Controller {
     $detalles= $pago->detallepagos()->where('no','!=',0)->get();
 
 		// calcula el total	pagado
-		$total= $pago->detallepagos()->sum('monto');		
+		$total= $pago->detallepagos()->where('no','!=',0)->sum('monto');		
 
  		// determina si existe alguna nota en detalles de pagos
     $nota= $pago->detallepagos()->where('no',0)->first();

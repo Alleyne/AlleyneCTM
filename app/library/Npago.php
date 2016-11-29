@@ -16,18 +16,19 @@ use App\Detallepago;
 use App\Pcontable;
 use App\Ctmayore;
 use App\Pago;
+use Log;
 
 class Npago {
 
   /** 
   *=============================================================================================
   * Esta function comienza el proceso de contabilizar los pagos recibidos
-  * @param  string  $un_id          "1"
-  * @param  decimal $montoRecibido  100.25
-  * @param  integer $pago_id        14
-  * @param  string  $f_pago         "2016/03/03" 
-  * @param  integer $periodo        3
-  * @param  string  $pdo            "Mar-2016" 
+  * @param  string        $un_id          "1"
+  * @param  decimal       $montoRecibido  100.25
+  * @param  integer       $pago_id        14
+  * @param  string        $f_pago         "2016-01-30"
+  * @param  integer       $periodo        3
+  * @param  string        $pdo            "Mar-2016" 
   * @return void
   *===========================================================================================*/
   public static function iniciaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $pdo) {
@@ -77,11 +78,10 @@ class Npago {
   * @param  string  $un_id         "1"
   * @param  decimal $montoRecibido 100.25 
   * @param  integer $pago_id       15      
-  * @param  string  $f_pago        "2016/03/03"  
+  * @param  string  $f_pago        "2016-01-30"  
   * @return void
   *===========================================================================================*/
-  public static function procesaPago($periodo, $un_id, $montoRecibido, $pago_id, $f_pago)
-  {
+  public static function procesaPago($periodo, $un_id, $montoRecibido, $pago_id, $f_pago) {
     //dd($periodo, $un_id, $montoRecibido, $pago_id, $f_pago);
 
     //Prioridad no 1, verifica si hay cuotas regulares pendiente por pagar.
@@ -90,7 +90,8 @@ class Npago {
     
     //Prioridad no 2, verifica si hay recargos pendiente por pagar.
     $sobrante = self::cobraRecargos($periodo, $un_id, $sobrante, $pago_id, $f_pago);
-
+    //dd($sobrante);
+    
     //Prioridad no 3, verifica si hay cuotas extraordinarias por pagar.
     $sobrante = self::cobraCuotaExtraordinaria($periodo, $un_id, $sobrante, $pago_id, $f_pago);
     
@@ -122,11 +123,11 @@ class Npago {
   /** 
   *=============================================================================================
   * Este proceso se encarga de cobrar todas las facturaciones posibles dependiendo del monto disponible.
-  * @param  integer $periodo        3
-  * @param  string  $un_id          "1"
-  * @param  decimal $montoRecibido  100.25
-  * @param  integer $pago_id        16
-  * @param  string  $f_pago         "2016/03/03"  
+  * @param  integer     $periodo        3
+  * @param  string      $un_id          "1"
+  * @param  decimal     $montoRecibido  100.25
+  * @param  integer     $pago_id        16
+  * @param  string      $f_pago         "2016-01-30"  
   * @return void
   *===========================================================================================*/
   public static function cobraFacturas($periodo, $un_id, $montoRecibido, $pago_id, $f_pago) { 
@@ -296,23 +297,22 @@ class Npago {
   /** 
   *=============================================================================================
   * Este proceso se encarga de cobrar todos los recargos posibles dependiendo del monto disponible.
-  * @param  string $periodo
-  * @param  string $un_id
-  * @param  string $montoRecibido
-  * @param  string $pago_id
-  * @param  date   $f_pago  
+  * @param  integer       $periodo        1
+  * @param  string        $un_id          "7"
+  * @param  decimal       $montoRecibido  0.5
+  * @param  integer       $pago_id        10
+  * @param  string        $f_pago         "2016-01-30"          
   * @return void
   *===========================================================================================*/
-  public static function cobraRecargos($periodo, $un_id, $montoRecibido, $pago_id, $f_pago)
-  {   
+  public static function cobraRecargos($periodo, $un_id, $montoRecibido, $pago_id, $f_pago) { 
     //dd($periodo, $un_id, $montoRecibido, $pago_id, $f_pago);
+    
     // Encuentra todos los recargos por pagar
     $datos = Ctdasm::where('pcontable_id','<=', $periodo)
                    ->where('un_id', $un_id)
                    ->whereDate('f_vencimiento','<', $f_pago)
                    ->where('recargo_siono', 1)
                    ->where('recargo_pagado', 0)
-                   ->where('pagada', 1)
                    ->get();
     //dd($datos->toArray());
     
@@ -425,11 +425,11 @@ class Npago {
   /** 
   *=============================================================================================
   * Este proceso se encarga de cobrar todas las cuotas extraordinarias posibles dependiendo del monto disponible.
-  * @param  integer $periodo        3
-  * @param  string  $un_id          "1"
-  * @param  decimal $montoRecibido  100.25
-  * @param  integer $pago_id        16
-  * @param  string  $f_pago         "2016/03/03"  
+  * @param  integer     $periodo        3
+  * @param  string      $un_id          "1"
+  * @param  decimal     $montoRecibido  100.25
+  * @param  integer     $pago_id        16
+  * @param  string      $f_pago         "2016-01-30"  
   * @return void
   *===========================================================================================*/
   public static function cobraCuotaExtraordinaria($periodo, $un_id, $montoRecibido, $pago_id, $f_pago) { 
@@ -446,18 +446,26 @@ class Npago {
     
     // encuentra el saldo de la cuenta de Pagos anticipados antes del ejercicio
     $saldocpa= Pant::getSaldoCtaPagosAnticipados($un_id, $periodo);    
+    $saldocpa= round(floatval($saldocpa),2);
     // dd($saldocpa);
     
+    $montoRecibido= round(floatval($montoRecibido),2);
+    $i=0;
     if ($datos) {
       foreach ($datos as $dato) {
+
         $importe= round(floatval($dato->extra),2);               
 
         if (($montoRecibido + $saldocpa) >= $importe) {
+          Log::info($montoRecibido + $saldocpa);
+          Log::info($i);
+          $i++;
+          
           // hay suficiente dinero para pagar por lo menos una cuota extraordinaria
           // por lo tanto, registra la cuota extraordinaria como pagada
-          $dato->extra_pagada= 1;
-          $dato->save();            
-
+          $dto = ctdasm::find($dato->id);
+          $dto->extra_pagada= 1;
+          $dto->save();  
           if ($montoRecibido >= $importe) {
             // se recibio suficiente dinero para pagar por lo menos una cuota extraordinaria,
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
@@ -472,7 +480,7 @@ class Npago {
             Self::registraDetallepago($periodo, $dato->ocobro, 'Paga cuota extraordinaria de '. $dato->mes_anio, $dato->id, $importe, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
 
             // Actualiza el nuevo monto disponible para continuar pagando
-            $montoRecibido= $montoRecibido- $importe;
+            $montoRecibido= $montoRecibido - $importe;
 
           } elseif ($montoRecibido == 0 && $pago_id) {
             // si el monto recibido es cero y existe un pago, entonces se depende en su totalidad de la cuenta
@@ -495,67 +503,6 @@ class Npago {
             $dto->tipo = 3;
             $dto->pago_id = $pago_id;
             $dto->save();
-
-            // Actualiza el nuevo monto disponible para continuar pagando
-            $montoRecibido = 0;    
-
-          } elseif ($montoRecibido == Null && $pago_id == Null) {
-            // si $montoRecibido y $pago_id son nulos, quiere decir que el sistema acaba de crear un nuevo periodo contable,
-            // ejecuto la facturacion y esta tratando de utilizar la cuenta de pagos adelantados para cubrir por lo menos una cuota
-            // de mantenimiento o recargo. En ese caso se emite una nota al propietario donde se le informa que se hizo uso de su cuenta de 
-            // pagos por anticipados para cubrir la deuda, no es necesario emitir un recibo.  
-
-            // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa= $saldocpa - $importe;
-
-            // registra una disminucion en la cuenta de Pagos anticipados
-            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, Catalogo::find(5)->nombre.' unidad '.substr($dato->ocobro, 0, 9), $importe, $un_id, $pago_id);
-            Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, Catalogo::find(16)->nombre.' unidad '.$dato->ocobro, $importe, $un_id, $pago_id, Null, $dato->id);
-            //dd($saldocpa, $sobrante);
-       
-            // salva un nuevo registro que representa una linea del recibo
-            $dto = new Detallepago;
-            $dto->pcontable_id = $periodo;
-            $dto->detalle = 'Estimado propietario, se desconto de su cuenta de pagos anticipado un saldo de B/. '.number_format(($importe),2). ' para completar pago de la cuota extraordinaria '.$dato->ocobro.' quedando en saldo B/.'.number_format($saldocpa,2);
-            $dto->monto = $importe;
-            $dto->un_id = $un_id;
-            $dto->tipo = 3;
-            $dto->pago_id = $pago_id;
-            $dto->save();
-
-            // registra en el diario
-            $diario = new Ctdiario;
-            $diario->pcontable_id  = $periodo;
-            $diario->fecha   = $f_pago; 
-            $diario->detalle = Catalogo::find(5)->nombre.' unidad '.substr($dato->ocobro, 0, 9);
-            $diario->debito  = $importe;
-            $diario->credito = Null;
-            $diario->save();
-          
-            // registra en el diario
-            $diario = new Ctdiario;
-            $diario->pcontable_id  = $periodo->id;
-            $diario->detalle = Catalogo::find(16)->nombre.' unidad '.$dato->ocobro;
-            $diario->debito = Null;
-            $diario->credito = $importe;
-            $diario->save();
-
-            // registra en Ctdiario principal
-            $diario = new Ctdiario;
-            $diario->pcontable_id  = $periodo->id;
-            $diario->detalle = 'Para registrar cobro de couta extraordinaria, unidad '.$dato->ocobro;
-            $diario->save();
-
-            // se envia notificacion via email, para eso encuentra todos los propietarios encargados de la unidad
-            $props= Prop::where('un_id', $un_id)->where('encargado', 1)->get();
-            
-            // notifica a cada uno
-            foreach ($props as $prop) {
-              $nota = 'Para notificarle que, se descontó  de su cuenta de pagos anticipados un saldo de B/. '.number_format(($importe),2). ' para completar pago de la cuota extraordinaria de '.$dato->ocobro.' quedando en saldo B/.'.number_format($saldocpa,2);
-
-              $user= User::find($prop->user_id);              
-              $user->notify(new emailUsoDeCuentaAnticipados($nota, $user->nombre_completo));
-            }
 
             // Actualiza el nuevo monto disponible para continuar pagando
             $montoRecibido = 0;    
@@ -592,14 +539,12 @@ class Npago {
 
             // Actualiza el nuevo monto disponible para continuar pagando
             $montoRecibido = 0;    
-
-          } else {
-            return '<< ERROR >> en function cobraFacturas()';
-          }
-        } 
-      }   // end foreach      
-    } 
+          } 
+        } // end if
+      } // end foreach 
+    } // end if
     
+    //dd('Npago 600');
     //return round(floatval($montoRecibido),2);    
     return $montoRecibido; 
   }  // end function
@@ -824,8 +769,9 @@ class Npago {
   /** 
   *=============================================================================================
   * Esta function penaliza individual por fecha de pago
-  * @param  date/carbon $f_pago  +"date": "2016-02-04 00:00:00.000000"  - fecha en que se efectuo el pago  
-  * @param  string      $un_id   "1"                                    - unidad que se desea penalizar individualmente
+  * @param  string      $f_pago  "2016-02-04"  - fecha en que se efectuo el pago  
+  * @param  string      $un_id        "1"      - unidad que se desea penalizar individualmente
+  * @param  integer     $periodo_id   "1"      - periodo mas antiguo abierto
   * @return void
   *===========================================================================================*/
   public static function penalizarTipo2($f_pago, $un_id, $periodo_id) {
@@ -837,7 +783,7 @@ class Npago {
                 ->where('pagada', 0)
                 ->where('recargo_siono', 0)
                 ->get();
-    //dd($datos->toArray(), $f_pago, $un_id); 
+    //dd($datos->toArray(), $f_pago, $un_id, $periodo_id); 
 
     $i= 1;   
     
@@ -881,7 +827,7 @@ class Npago {
         if ($i==1) {
           // registra en Ctdiario principal
           $dto = new Ctdiario;
-          $dto->pcontable_id  = $periodo_id;
+          $dto->pcontable_id = $periodo_id;
           $dto->fecha   = Carbon::parse($dato->f_vencimiento)->addDay();
           $dto->detalle = Catalogo::find(2)->nombre.' unidad '.$dato->ocobro;
           $dto->debito  = $dato->recargo; 
@@ -902,7 +848,7 @@ class Npago {
       $dto = new Ctdiario;
       $dto->pcontable_id = $periodo_id;
       $dto->detalle = '   '.Catalogo::find(4)->nombre;
-      $dto->credito  = $totalRecargos;
+      $dto->credito = $totalRecargos;
       $dto->save(); 
 
       // registra en Ctdiario principal
