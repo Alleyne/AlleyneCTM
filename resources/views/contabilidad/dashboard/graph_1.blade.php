@@ -144,7 +144,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Ingresos vs descuentos por pagos anticipados</h2>
+							<h2>Descuentos por pagos anticipados</h2>
 						</header>
 
 						<!-- widget div-->
@@ -159,7 +159,7 @@
 
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-									<div id="ingreso_descuento" style="min-width: 310px; margin: 0 auto"></div>
+									<div id="descuentos" style="min-width: 310px; height: 250px; margin: 0 auto"></div>
 							</div>
 							<!-- end widget content -->
 
@@ -199,7 +199,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Hostorico Ingresos vs Gastos</h2>
+							<h2>Analisis Historico</h2>
 						</header>
 
 						<!-- widget div-->
@@ -503,7 +503,7 @@
 		        },
 		        series: [{
 		            name: 'Ingresos por cobrar',
-		            data: [{{ $totalIngresoPorCobrar }}]
+		            data: [{{ $totalIngresoPorCobrarCD }}]
 		        }, {
 		            name: 'Recargos pagados',
 		            data: [{{ $pagRecargos }}]
@@ -518,12 +518,12 @@
 		});
 
 		$(function () {
-		    Highcharts.chart('ingreso_descuento', {
+		    Highcharts.chart('descuentos', {
 		        chart: {
 		            type: 'area'
 		        },
 		        title: {
-		            text: 'Ingresos esperados vs descuentos otorgados'
+		            text: 'DESCUENTOS OTORGADOS POR PAGOS ANTICIPADOS'
 		        },
 		        subtitle: {
 		            text: 'ctmaster.net'
@@ -561,9 +561,6 @@
 		            }
 		        },
 		        series: [{
-/*		            name: 'Ingresos esperados',
-		            data: [{{ $totalIngreso }}]
-		        }, {*/
 		            name: 'Descuentos otorgados',
 		            data: [{{ $descuentos }}]
 		        }]
@@ -603,10 +600,10 @@
 	                colorByPoint: true,
 	                data: [{
 	                    name: 'Ingresos',
-	                    y: {{ $totalIngresos }}
+	                    y: {{ $ER_totalIngresos }}
 	                }, {
 	                    name: 'Gastos',
-	                    y: {{ $totalGastos }},
+	                    y: {{ $ER_totalGastos }},
 	                    sliced: true,
 	                    selected: true
 	                }]
@@ -619,7 +616,7 @@
 		$(function () {
 		    Highcharts.chart('historicos', {
 		        title: {
-		            text: 'Valores historicos por periodo contable',
+		            text: 'ANALISIS HISTORICOS POR PERIODO CONTABLE',
 		            x: -20 //center
 		        },
 		        subtitle: {
@@ -627,8 +624,7 @@
 		            x: -20
 		        },
 		        xAxis: {
-		            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-		                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+		            categories: [{!! $pdo !!}]
 		        },
 		        yAxis: {
 		            title: {
@@ -644,23 +640,32 @@
 		            valueSuffix: ''
 		        },
 		        legend: {
-		            layout: 'vertical',
-		            align: 'right',
-		            verticalAlign: 'middle',
+		            layout: 'horizontal',
+		            align: 'center',
+		            verticalAlign: 'bottom',
 		            borderWidth: 0
 		        },
 		        series: [{
-		            name: 'Ingresos',
-		            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+		            name: 'Ingreso esp',
+		            data: [{{ $totalIngresoEsperadoSD }}]
 		        }, {
-		            name: 'Gastos',
-		            data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+		            name: 'Ingreso esp - desc',
+		            data: [{{ $totalIngresoEsperadoCD }}]
+		        }, {
+		            name: 'Cuotas reg',
+		            data: [{{ $espRegularesSD }}]
+		        }, {
+		            name: 'Cuotas reg - desc',
+		            data: [{{ $espRegularesCD }}]
+		        }, {
+		            name: 'Cuotas extras',
+		            data: [{{ $espExtraordinarias }}]
 		        }, {
 		            name: 'Recargos',
-		            data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+		            data: [{{ $espRecargos }}]
 		        }, {
 		            name: 'Descuentos',
-		            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+		            data: [{{ $descuentos }}]
 		        }]
 		    });
 		});

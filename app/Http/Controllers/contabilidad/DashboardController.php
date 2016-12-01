@@ -44,27 +44,35 @@ class DashboardController extends Controller
       $uns= $uns->where('deuda', '>', 0)->sortByDesc('deuda');
       //dd($uns->toArray()); 
 
-      foreach ($uns as $un) {
-          $ctdasm= Ctdasm::where('un_id', $un->id)->get();
-          $importe= $ctdasm->where('pagada', 0)->sum('importe');
-          $recargo= $ctdasm->where('recargo_siono', 1)->where('recargo_pagado', 0)->sum('recargo');
-          $extra= $ctdasm->where('extra_siono', 1)->where('extra_pagada', 0)->sum('extra');
-          
-          $data_1[]= $importe;
-          $data_2[]= $recargo;
-          $data_3[]= $extra;
-          
-          $propietario= $un->props()->where('encargado', 1)->first();
-          $propietario= $propietario->user->nombre_completo; 
-          $categorias[]= $propietario.' '.$un->codigo;
-      }
-      //dd($uns->toArray()); 
+      if ($uns->count()) {
+        foreach ($uns as $un) {
+            $ctdasm= Ctdasm::where('un_id', $un->id)->get();
+            $importe= $ctdasm->where('pagada', 0)->sum('importe');
+            $recargo= $ctdasm->where('recargo_siono', 1)->where('recargo_pagado', 0)->sum('recargo');
+            $extra= $ctdasm->where('extra_siono', 1)->where('extra_pagada', 0)->sum('extra');
+            
+            $data_1[]= $importe;
+            $data_2[]= $recargo;
+            $data_3[]= $extra;
+            
+            $propietario= $un->props()->where('encargado', 1)->first();
+            $propietario= $propietario->user->nombre_completo; 
+            $categorias[]= $propietario.' '.$un->codigo;
+        }
+        //dd($uns->toArray()); 
+        
+        // formatea los arrays
+        $data_1 = implode(", ", $data_1);
+        $data_2 = implode(", ", $data_2);
+        $data_3 = implode(", ", $data_3);
+        $categorias = '"'.implode('", "', $categorias).'"'; 
       
-      // formatea los arrays
-      $data_1 = implode(", ", $data_1);
-      $data_2 = implode(", ", $data_2);
-      $data_3 = implode(", ", $data_3);
-      $categorias = '"'.implode('", "', $categorias).'"';    
+      } else {
+        $data_1 = Null;
+        $data_2 = Null;
+        $data_3 = Null;
+        $categorias = Null; 
+      }
 
     /*
     |--------------------------------------------------------------------------------
@@ -77,68 +85,94 @@ class DashboardController extends Controller
       //dd($periodos->toArray());
 
       foreach ($periodos as $periodo) {
-        $f_inicio= Carbon::parse($periodo->fecha);
-        $f_final= Carbon::parse($periodo->fecha)->endOfMonth()->toDateString();
+        //$f_inicio= Carbon::parse($periodo->fecha);
+        //$f_final= Carbon::parse($periodo->fecha)->endOfMonth();
         
+        $f_inicio= new Carbon($periodo->fecha);
+        $f_final= new Carbon($periodo->fecha);
+        $f_final= $f_final->endOfMonth();
+
         $ctdasm= Ctdasm::where('pcontable_id', $periodo->id)->get();
-        $recargos= Ctdasm::whereDate('f_vencimiento', '>=', $f_inicio)->whereDate('f_vencimiento', '<=', $f_final)->get();
-        //dd($recargos);
+        $recargos= Ctdasm::whereBetween('f_vencimiento',[$f_inicio, $f_final])->get();
+        
         //----------------------------------------------------------------------
         // calcula el total ingresos esperado por cada periodo contable
         //----------------------------------------------------------------------
           // calcula el total de descuentos otorgados por pagos anticipados
-          $totalEspDescuentos = $ctdasm->where('descuento_siono', 1)->sum('descuento');  
+          $_totalDescuentos = $ctdasm->where('descuento_siono', 1)->sum('descuento');  
 
-         // calcula el total de ingresos por cuotas regulares sin descuento incluido
-          $totalEspRegularesSD = $ctdasm->sum('importe');   
-         
-         // calcula el total de ingresos por cuotas regulares con descuento incluido
-          $totalEspRegularesCD = $ctdasm->sum('importe') - $totalEspDescuentos;   
+          // calcula el total de ingresos por cuotas regulares sin descuento incluido
+          $_totalEspRegularesSD = $ctdasm->sum('importe');   
+   
+          // calcula el total de ingresos por cuotas regulares con descuento incluido
+          $_totalEspRegularesCD = $_totalEspRegularesSD - $_totalDescuentos;   
 
           // calcula el total de recargos
-          $totalEspRecargos = $recargos->where('recargo_siono', 1)->sum('recargo');  
-          
+          $_totalEspRecargos = $recargos->where('recargo_siono', 1)->sum('recargo');
+
           // calcula el total de cuotas extraordinarias
-          $totalEspExtraordinarias = $ctdasm->where('extra_siono', 1)->sum('extra');  
+          $_totalEspExtraordinarias = $ctdasm->where('extra_siono', 1)->sum('extra');  
           
-          // calcula el total de ingresos esperado con descuento por cobrar
-          $totalIngresoEsperadoCD= $totalEspRegularesCD + $totalEspRecargos + $totalEspExtraordinarias;
           
           // calcula el total de ingresos esperado sin descuento
-          //$totalIngresoEsperadoSD= $totalEspRegularesSD + $totalEspRecargos + $totalEspExtraordinarias;
-          $totalIngresoEsperadoSD= $totalEspRegularesSD;
+          $_totalIngresoEsperadoSD= $_totalEspRegularesSD + $_totalEspRecargos + $_totalEspExtraordinarias;
+
+          // calcula el total de ingresos esperado con descuento
+          $_totalIngresoEsperadoCD= $_totalEspRegularesCD + $_totalEspRecargos + $_totalEspExtraordinarias;
 
         //----------------------------------------------------------------------
-        // calula el total de pagos recibidos a la fecha
+        // calcula el total de pagos recibidos a la fecha
         //----------------------------------------------------------------------
           // calcula el total de ingresos por coutas regulares
-          $totalPagRegulares= $ctdasm->where('pagada', 1)->sum('importe') - $totalEspDescuentos;    
+          $_totalPagRegulares= $ctdasm->where('pagada', 1)->sum('importe') - $_totalDescuentos;    
           
           // calcula el total de recargos
-          $totalPagRecargos= $recargos->where('recargo_pagado', 1)->sum('recargo');  
+          $_totalPagRecargos= $recargos->where('recargo_pagado', 1)->sum('recargo');  
           
           // calcula el total de cuotas extraordinarias
-          $totalPagExtraordinarias= $ctdasm->where('extra_pagada', 1)->sum('extra');  
+          $_totalPagExtraordinarias= $ctdasm->where('extra_pagada', 1)->sum('extra');  
 
-          $totalIngresoPagados= $totalPagRegulares + $totalPagRecargos + $totalPagExtraordinarias;
+          
+          // calcula el total de ingresos pagados
+          $_totalIngresoPagados= $_totalPagRegulares + $_totalPagRecargos + $_totalPagExtraordinarias;
+          
           
           $pdo[]= $periodo->periodo;            
-          $pagRegulares[]= $totalPagRegulares;
-          $descuentos[]= $totalEspDescuentos;
-          $pagRecargos[]= $totalPagRecargos;
-          $pagExtraordinarias[]= $totalPagExtraordinarias;
-          $totalIngresoPorCobrarCD[]= $totalIngresoEsperadoCD - ($totalPagRegulares + $totalPagRecargos + $totalPagExtraordinarias);
-          $totalIngresoPorCobrarSD[]= $totalIngresoEsperadoSD;
+          $totalDescuentos[]= $_totalDescuentos;          
+          
+          $totalEspRegularesSD[]= $_totalEspRegularesSD;
+          $totalEspRegularesCD[]= $_totalEspRegularesCD;
+          $totalEspRecargos[]= $_totalEspRecargos;
+          $totalEspExtraordinarias[]= $_totalEspExtraordinarias;          
+          
+          $totalPagRegulares[]= $_totalPagRegulares;
+          $totalPagRecargos[]= $_totalPagRecargos;
+          $totalPagExtraordinarias[]= $_totalPagExtraordinarias;
+          
+          $totalIngresoEsperadoSD[]= $_totalIngresoEsperadoSD;
+          $totalIngresoEsperadoCD[]= $_totalIngresoEsperadoCD;
+          
+          $totalIngresoPorCobrarCD[]= $_totalIngresoEsperadoCD - ($_totalPagRegulares + $_totalPagRecargos + $_totalPagExtraordinarias);
       }
+      //dd($totalEspRegularesSD);
       
       // formatea los datos antes de ser enviados a la grafica
       $pdo = '"'.implode('", "', $pdo).'"';  
-      $pagRegulares = implode(", ", $pagRegulares);
-      $descuentos = implode(", ", $descuentos);
-      $pagRecargos = implode(", ", $pagRecargos);
-      $pagExtraordinarias = implode(", ", $pagExtraordinarias);  
+      $descuentos = implode(", ", $totalDescuentos);      
+      
+      $espRegularesSD = implode(", ", $totalEspRegularesSD);
+      $espRegularesCD = implode(", ", $totalEspRegularesCD);
+      $espRecargos = implode(", ", $totalEspRecargos);
+      $espExtraordinarias = implode(", ", $totalEspExtraordinarias);
+      
+      $pagRegulares = implode(", ", $totalPagRegulares);
+      $pagRecargos = implode(", ", $totalPagRecargos);
+      $pagExtraordinarias = implode(", ", $totalPagExtraordinarias);  
+      
+      $totalIngresoEsperadoSD  = implode(", ", $totalIngresoEsperadoSD); 
+      $totalIngresoEsperadoCD  = implode(", ", $totalIngresoEsperadoCD); 
+      
       $totalIngresoPorCobrarCD = implode(", ", $totalIngresoPorCobrarCD); 
-      $totalIngresoPorCobrarSD = implode(", ", $totalIngresoPorCobrarSD); 
     
     /*
     |--------------------------------------------------------------------------------
@@ -146,8 +180,8 @@ class DashboardController extends Controller
     |--------------------------------------------------------------------------------
     */
     $periodo= Pcontable::all()->last()->id;
-    $totalIngresos= Hojat::getTotalesParaEstadoResultado($periodo, 4);
-    $totalGastos= Hojat::getTotalesParaEstadoResultado($periodo, 6);
+    $ER_totalIngresos= Hojat::getTotalesParaEstadoResultado($periodo, 4);
+    $ER_totalGastos= Hojat::getTotalesParaEstadoResultado($periodo, 6);
     //dd($totalIngresos, $totalGastos);
     
     return view('contabilidad.dashboard.graph_1', [
@@ -155,15 +189,26 @@ class DashboardController extends Controller
                               'data_2' => $data_2,
                               'data_3' => $data_3,
                               'categorias' => $categorias,                                                      
+                              
                               'pdo' => $pdo,
+                              'descuentos' => $descuentos,                              
+
+                              'espRegularesSD' => $espRegularesSD,
+                              'espRegularesCD' => $espRegularesCD,
+                              'espRecargos' => $espRecargos,
+                              'espExtraordinarias' => $espExtraordinarias,
+
                               'pagRegulares' => $pagRegulares,
-                              'descuentos' => $descuentos,
                               'pagRecargos' => $pagRecargos,
                               'pagExtraordinarias' => $pagExtraordinarias,
-                              'totalIngresoPorCobrar' => $totalIngresoPorCobrarCD,                                                        
-                              'totalIngreso' => $totalIngresoPorCobrarSD,   
-                              'totalIngresos'=> $totalIngresos,
-                              'totalGastos'=> $totalGastos
+                             
+                              'totalIngresoEsperadoSD' => $totalIngresoEsperadoSD,
+                              'totalIngresoEsperadoCD' => $totalIngresoEsperadoCD,
+                              
+                              'totalIngresoPorCobrarCD' => $totalIngresoPorCobrarCD,                                  
+                              
+                              'ER_totalIngresos'=> $ER_totalIngresos,
+                              'ER_totalGastos'=> $ER_totalGastos
                             ]);
   } 
 } // end of class

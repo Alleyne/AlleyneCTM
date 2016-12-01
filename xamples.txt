@@ -1896,13 +1896,28 @@ Work::with(
   }
 
   /*************************************************************************************
-   * using whereDate
+   * using eloquent whereDate
    ************************************************************************************/
   $q->whereDate('created_at', '=', Carbon::today()->toDateString());
   whereDate('date','=','2016-07-14')
+
+  /*************************************************************************************
+   * using eloquent whereBetween
+   ************************************************************************************/  
+  $f_inicio= Carbon::parse($periodo->fecha);
+  $f_final= Carbon::parse($periodo->fecha)->endOfMonth();
+  
+  $f_inicio= new Carbon($periodo->fecha);
+  $f_final= new Carbon($periodo->fecha);
+  $f_final= $f_final->endOfMonth();
+
+  $recargos= Ctdasm::whereBetween('f_vencimiento',[$f_inicio, $f_final])->get();
 
   /*************************************************************************************
    * log information to console
    ************************************************************************************/
   use Log;
   Log::info($montoRecibido + $saldocpa);
+  Log::info('This is some useful information.');
+  Log::warning('Something could be going wrong.');
+  Log::error('Something is really going wrong.');
