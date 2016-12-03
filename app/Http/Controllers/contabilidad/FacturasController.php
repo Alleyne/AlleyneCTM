@@ -30,17 +30,18 @@ class FacturasController extends Controller {
      ************************************************************************************/	
 	public function index()
 	{
-        $datos = Factura::join('orgs', 'orgs.id', '=', 'facturas.org_id')
-                ->select('facturas.id', 'facturas.no', 'facturas.total', 'facturas.totaldetalle', 'facturas.fecha', 'facturas.etapa', 'orgs.nombre')
-                ->get();
+    $datos = Factura::join('orgs', 'orgs.id', '=', 'facturas.org_id')
+            ->select('facturas.id', 'facturas.no', 'facturas.total', 'facturas.totaldetalle', 'facturas.fecha', 'facturas.etapa', 'orgs.nombre')
+            ->get();
 
 		foreach ($datos as $dato) {
 			if ($dato->fecha) {
 			  $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
 			}        
 		}
-        //dd($datos->toArray());
-  		return view('contabilidad.facturas.registrar.index')->with('datos', $datos);     	
+    dd($datos->toArray());
+		
+		return view('contabilidad.facturas.registrar.index')->with('datos', $datos);     	
 	}	
 
     /*************************************************************************************

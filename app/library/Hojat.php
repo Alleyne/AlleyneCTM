@@ -629,7 +629,7 @@ class Hojat {
   * @param  integer   $tipo     4
   * @return void
   *===========================================================================================*/
-  public static function getTotalesParaEstadoResultado($periodo, $tipo) {
+/*  public static function getTotalesParaEstadoResultado($periodo, $tipo) {
     //dd($periodo, $tipo);
 
     // Encuentra todas las cuentas activas en ctmayores para un determinado periodo
@@ -651,8 +651,7 @@ class Hojat {
     }  
 
     return $total;
-  }
-
+  }*/
 
   /** 
   *=============================================================================================

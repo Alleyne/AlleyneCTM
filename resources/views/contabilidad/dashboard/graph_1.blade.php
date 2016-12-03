@@ -252,7 +252,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Ingresos vs Gastos periodo actual</h2>
+							<h2>Utilidad del periodo actual</h2>
 
 						</header>
 
@@ -268,7 +268,7 @@
 
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-        				<div id="ingreso_gasto" style="min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+        				<div id="utilidad" style="min-width: 310px; max-width: 800px; margin: 0 auto"></div>
 
 							</div>
 							<!-- end widget content -->
@@ -345,7 +345,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Bar Graph </h2>
+							<h2>Ingresos vs Gastos </h2>
 
 						</header>
 
@@ -362,6 +362,8 @@
 							<!-- widget content -->
 							<div class="widget-body no-padding">
 
+								<div id="ingreso_vs_gasto" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+							
 							</div>
 							<!-- end widget content -->
 
@@ -572,7 +574,7 @@
 	    $(document).ready(function () {
 
 	        // Build the chart
-	        Highcharts.chart('ingreso_gasto', {
+	        Highcharts.chart('utilidad', {
 	            chart: {
 	                plotBackgroundColor: null,
 	                plotBorderWidth: null,
@@ -580,10 +582,10 @@
 	                type: 'pie'
 	            },
 	            title: {
-	                text: 'Ingresos del presente periodo vs Gastos'
+	                text: 'Utilidad del presente periodo'
 	            },
 	            tooltip: {
-	                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+									pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>'
 	            },
 	            plotOptions: {
 	                pie: {
@@ -666,9 +668,59 @@
 		        }, {
 		            name: 'Descuentos',
 		            data: [{{ $descuentos }}]
+						}, {
+		            name: 'Gastos',
+		            data: [{{ $totalGastos }}]
 		        }]
 		    });
 		});
+
+		$(function () {
+		    $(document).ready(function () {
+
+		        // Build the chart
+		        Highcharts.chart('ingreso_vs_gasto', {
+		            chart: {
+		                plotBackgroundColor: null,
+		                plotBorderWidth: null,
+		                plotShadow: false,
+		                type: 'pie'
+		            },
+		            title: {
+		                text: 'Ingresos vs gastos del periodo actual'
+		            },
+		            tooltip: {
+									pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>'
+		            },
+		            plotOptions: {
+		                pie: {
+		                    allowPointSelect: true,
+		                    cursor: 'pointer',
+		                    dataLabels: {
+		                        enabled: false
+		                    },
+		                    showInLegend: true
+		                }
+		            },
+		            series: [{
+		                name: 'Brands',
+		                colorByPoint: true,
+		                data: [{
+		                    name: 'Ingresos',
+		                    y: {{ $ER_totalIngresos }},
+		                    sliced: true,
+		                    selected: true
+		                }, {
+		                    name: 'Itbms',
+		                    y: {{ $itbms }}
+		                },
+		                {!! $data !!}
+		                ]
+		            }]
+		        });
+		    });
+		});
+
 
 	</script>
 @endsection 

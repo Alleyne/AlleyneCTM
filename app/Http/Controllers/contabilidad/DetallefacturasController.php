@@ -101,8 +101,8 @@ class DetallefacturasController extends Controller {
 				$dato->catalogo_id 	   		= Input::get('catalogo_id');
 				$dato->detalle 	       		= $detallecta->nombre_factura;
 				$dato->precio 	       		= Input::get('precio');
-				$dato->itbms 	       		= Input::get('itbms');
-			    $dato->save();
+				$dato->itbms 	       			= Input::get('itbms');
+			  $dato->save();
 
 				// Registra en bitacoras
 				$det =	'factura_id= '.			$dato->factura_id. ', '.
@@ -113,8 +113,8 @@ class DetallefacturasController extends Controller {
 
 				$totaldetalles=0;
 
-			    //calcula el total de detallefacturas para la presente factura
-		 	    $detalles= Detallefactura::where('factura_id', Input::get('factura_id'))->get();		    
+			  //calcula el total de detallefacturas para la presente factura
+		 	  $detalles= Detallefactura::where('factura_id', Input::get('factura_id'))->get();		    
 				//dd($detalles->toArray());
 				foreach ($detalles as $detalle) {
 					$totaldetalles = $totaldetalles + ($detalle->precio + $detalle->itbms);

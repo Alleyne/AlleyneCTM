@@ -1,13 +1,13 @@
 <?php namespace App\Http\Controllers\contabilidad;
 use App\Http\Controllers\Controller;
 use App\library\Hojat;
+use Carbon\Carbon;
 
 use App\Ctdasm;
 use App\Pcontable;
 use App\Un;
-
-use DB; 
-use Carbon\Carbon;
+use App\Ctmayore;
+use App\Catalogo;
 
 class DashboardController extends Controller
 {
@@ -136,7 +136,14 @@ class DashboardController extends Controller
           // calcula el total de ingresos pagados
           $_totalIngresoPagados= $_totalPagRegulares + $_totalPagRecargos + $_totalPagExtraordinarias;
           
-          
+          //----------------------------------------------------------------------
+          // calcula el total de gastos efectuados a la fecha
+          //----------------------------------------------------------------------          
+          // crea una colleccion con todas las cuenta de gastos 
+          $ctmayores= Ctmayore::where('pcontable_id', $periodo->id)->where('tipo', 6)->get();
+          $_totalGastos= $ctmayores->sum('debito') - $ctmayores->sum('credito');
+  
+          // almacena los datos en arreglos por periodo contable
           $pdo[]= $periodo->periodo;            
           $totalDescuentos[]= $_totalDescuentos;          
           
@@ -153,9 +160,10 @@ class DashboardController extends Controller
           $totalIngresoEsperadoCD[]= $_totalIngresoEsperadoCD;
           
           $totalIngresoPorCobrarCD[]= $_totalIngresoEsperadoCD - ($_totalPagRegulares + $_totalPagRecargos + $_totalPagExtraordinarias);
+          
+          $totalGastos[]= $_totalGastos;
       }
-      //dd($totalEspRegularesSD);
-      
+
       // formatea los datos antes de ser enviados a la grafica
       $pdo = '"'.implode('", "', $pdo).'"';  
       $descuentos = implode(", ", $totalDescuentos);      
@@ -169,46 +177,90 @@ class DashboardController extends Controller
       $pagRecargos = implode(", ", $totalPagRecargos);
       $pagExtraordinarias = implode(", ", $totalPagExtraordinarias);  
       
-      $totalIngresoEsperadoSD  = implode(", ", $totalIngresoEsperadoSD); 
-      $totalIngresoEsperadoCD  = implode(", ", $totalIngresoEsperadoCD); 
+      $totalIngresoEsperadoSD = implode(", ", $totalIngresoEsperadoSD); 
+      $totalIngresoEsperadoCD = implode(", ", $totalIngresoEsperadoCD); 
       
       $totalIngresoPorCobrarCD = implode(", ", $totalIngresoPorCobrarCD); 
+      
+      $totalGastos = implode(", ", $totalGastos);     
+
+    /*
+    |------------------------------------------------------------------------------------------
+    | Procesa los datos necesarios para la grafica de Ingreso vs Gastos para el periodo actual
+    |------------------------------------------------------------------------------------------
+    */
+    // encuentra el periodo mas antiguo abierto
+    $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first()->id;
+    
+    // calcula el total de ingresos del periodo
+    $ingresos= Ctmayore::where('pcontable_id', $periodo)->where('tipo', 4)->get();
+    $totalIngresos= $ingresos->sum('credito') - $ingresos->sum('debito');
+    //dd($totalIngresos);
+
+    // crea una colleccion con todas las cuenta de gastos 
+    $ctmayores= Ctmayore::where('pcontable_id', $periodo)->where('tipo', 6)->get();
+    
+    // calcula el total de itbms del periodo    
+    $itbms= $ctmayores->where('cuenta', 15);
+    $totalItbms= $itbms->sum('debito') - $itbms->sum('credito');
+    // dd($totalItbms);
+    
+    // calcula el total de gastos del periodo excluyendo la cuenta de itbms
+    $gastos= $ctmayores->where('cuenta','!=', 15);
+    
+    // excluye todos los registro que el campo debito y credito sea igual a cero
+    $gastos = $gastos->reject(function($gasto) {
+      return $gasto->debito == "0.00" && $gasto->credito == "0.00"; 
+    });
+    
+    $gastostotales= $gastos->sum('debito') - $gastos->sum('credito');
+    //dd($totalGastos);
+    
+    $data="";
+    foreach ($gastos as $gasto) {
+      $data = $data.'{name: "'.Catalogo::find($gasto->cuenta)->nombre.'", y: '.$gasto->debito.'},';
+    }
+    $data= rtrim($data, ',');
+    // dd($data);
     
     /*
     |--------------------------------------------------------------------------------
-    | Procesa los datos necesarios para la grafica de Ingresos vs Gastos para el periodo actual
+    | Procesa los datos necesarios para la grafica de Utilidad Ingresos vs Gastos para el periodo actual
     |--------------------------------------------------------------------------------
     */
-    $periodo= Pcontable::all()->last()->id;
-    $ER_totalIngresos= Hojat::getTotalesParaEstadoResultado($periodo, 4);
-    $ER_totalGastos= Hojat::getTotalesParaEstadoResultado($periodo, 6);
+    $ER_totalGastos= $gastostotales + $totalItbms;
+    $ER_totalIngresos= $totalIngresos - ($gastostotales + $totalItbms);
     //dd($totalIngresos, $totalGastos);
-    
+
     return view('contabilidad.dashboard.graph_1', [
-                              'data_1' => $data_1,
-                              'data_2' => $data_2,
-                              'data_3' => $data_3,
-                              'categorias' => $categorias,                                                      
-                              
-                              'pdo' => $pdo,
-                              'descuentos' => $descuentos,                              
+                                                    'data_1' => $data_1,
+                                                    'data_2' => $data_2,
+                                                    'data_3' => $data_3,
+                                                    'categorias' => $categorias,                                                      
+                                                    
+                                                    'pdo' => $pdo,
+                                                    'descuentos' => $descuentos,                              
 
-                              'espRegularesSD' => $espRegularesSD,
-                              'espRegularesCD' => $espRegularesCD,
-                              'espRecargos' => $espRecargos,
-                              'espExtraordinarias' => $espExtraordinarias,
+                                                    'espRegularesSD' => $espRegularesSD,
+                                                    'espRegularesCD' => $espRegularesCD,
+                                                    'espRecargos' => $espRecargos,
+                                                    'espExtraordinarias' => $espExtraordinarias,
 
-                              'pagRegulares' => $pagRegulares,
-                              'pagRecargos' => $pagRecargos,
-                              'pagExtraordinarias' => $pagExtraordinarias,
-                             
-                              'totalIngresoEsperadoSD' => $totalIngresoEsperadoSD,
-                              'totalIngresoEsperadoCD' => $totalIngresoEsperadoCD,
-                              
-                              'totalIngresoPorCobrarCD' => $totalIngresoPorCobrarCD,                                  
-                              
-                              'ER_totalIngresos'=> $ER_totalIngresos,
-                              'ER_totalGastos'=> $ER_totalGastos
-                            ]);
+                                                    'pagRegulares' => $pagRegulares,
+                                                    'pagRecargos' => $pagRecargos,
+                                                    'pagExtraordinarias' => $pagExtraordinarias,
+                                                   
+                                                    'totalIngresoEsperadoSD' => $totalIngresoEsperadoSD,
+                                                    'totalIngresoEsperadoCD' => $totalIngresoEsperadoCD,
+                                                    
+                                                    'totalIngresoPorCobrarCD' => $totalIngresoPorCobrarCD,                                  
+                                                    
+                                                    'totalGastos' => $totalGastos,                                  
+
+                                                    'ER_totalIngresos' => $ER_totalIngresos,
+                                                    'ER_totalGastos' => $ER_totalGastos,
+                                                    'itbms' => $totalItbms,
+                                                    'data' => $data
+                                                  ]);
   } 
 } // end of class

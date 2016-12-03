@@ -1139,6 +1139,9 @@ Work::with(
       }        
     }
 
+    $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
+    dd($dato->fecha);
+    "mar 9, 2016"
 
     /*
     |------------------------------------------------------------------------------------
@@ -1166,9 +1169,9 @@ Work::with(
     $task = Task::find(1);
     $user = $task->user;
 
-      //Obtiene todos los bloques de una determinada junta directiva
-      $datos = Jd::find($jd_id)->bloques;
-      dd($datos->toArray());
+    //Obtiene todos los bloques de una determinada junta directiva
+    $datos = Jd::find($jd_id)->bloques;
+    dd($datos->toArray());
 
     /*
     |------------------------------------------------------------------------------------
@@ -1270,9 +1273,9 @@ Work::with(
     $dato->descuento_siono  = $checkDescuento['descuento_siono'];
 
 
-     /****************************************************************************************
-     * Function para hacer busquedas search
-     *****************************************************************************************/
+    /****************************************************************************************
+    * Function para hacer busquedas search
+    *****************************************************************************************/
     public function postSearch() {
     $search = '%'.Input::get('search').'%';
 
@@ -1874,8 +1877,6 @@ Work::with(
   antes de submit boton
   <div class="g-recaptcha" data-sitekey="6LfPuwsUAAAAADUHG1HdmOh_p2mIi9II9a4vGTyX"></div>
 
-
-
   /** 
   *=============================================================================================
   * Esta function ...
@@ -1901,6 +1902,7 @@ Work::with(
   $q->whereDate('created_at', '=', Carbon::today()->toDateString());
   whereDate('date','=','2016-07-14')
 
+
   /*************************************************************************************
    * using eloquent whereBetween
    ************************************************************************************/  
@@ -1913,6 +1915,7 @@ Work::with(
 
   $recargos= Ctdasm::whereBetween('f_vencimiento',[$f_inicio, $f_final])->get();
 
+
   /*************************************************************************************
    * log information to console
    ************************************************************************************/
@@ -1921,3 +1924,11 @@ Work::with(
   Log::info('This is some useful information.');
   Log::warning('Something could be going wrong.');
   Log::error('Something is really going wrong.');
+
+
+  /*************************************************************************************
+   * fix error when using eloquent groupBy method
+   ************************************************************************************/
+  you need to disable strict mode, in config/database.php under your mysql connection set 'strict' => false,.
+  Strict mode is on by default in laravel 5.3, with strict mode you can't use select *,
+  you'll have to use aggregate functions or select only fields defined in GROUP BY.

@@ -13,4 +13,8 @@ class Ctdasm extends Model
     public function pago() {
     	return $this->belongsTo('App\Pago');
     }   
+	  
+/*	  private function getFVencimientoValue() {
+	    return date('m/d/Y', strtotime($this->attributes['start_date']));
+	  }*/
 }

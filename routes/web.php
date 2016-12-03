@@ -360,9 +360,15 @@ foreach ($roles as $role) {
 	
 	//Encuentra todos lo registros de pago 
 	//$datos = Pago::where('un_id', 1)->get();
-	$dato = Pago::where('un_id', 1)->first();
+	//$dato = Pago::where('un_id', 1)->first();
 	//dd($datos->toArray());
 	
-	dd($dato->banco->nombre, $dato->un->codigo, $dato->trantipo->nombre);
+	//dd($dato->banco->nombre, $dato->un->codigo, $dato->trantipo->nombre);
 	//dd($dato->un->codigo);
+
+$datos = DB::table('ctdasms')
+                ->groupBy('pcontable_id')
+                ->having('pcontable_id', '>', 1)
+                ->get();
+dd($datos->toArray());
 });
