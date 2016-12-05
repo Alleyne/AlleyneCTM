@@ -199,7 +199,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Analisis Historico</h2>
+							<h2>Analisis Comparativo</h2>
 						</header>
 
 						<!-- widget div-->
@@ -524,7 +524,7 @@
 		$(function () {
 		    Highcharts.chart('descuentos', {
 		        chart: {
-		            type: 'area'
+		            type: 'areaspline'
 		        },
 		        title: {
 		            text: 'DESCUENTOS OTORGADOS POR PAGOS ANTICIPADOS'
@@ -572,7 +572,6 @@
 		});
 
 		$(function () {
-
 	    $(document).ready(function () {
 
 	        // Build the chart
@@ -617,10 +616,80 @@
 		});
 
 
-		$(function () {
+$(function () {
+    Highcharts.chart('historicos', {
+        chart: {
+            type: 'areaspline'
+        },
+        title: {
+            text: 'ANALISIS COMPARATIVO POR PERIODO CONTABLE'
+        },
+		        legend: {
+		            layout: 'horizontal',
+		            align: 'center',
+		            verticalAlign: 'bottom',
+		            borderWidth: 0
+		        },
+        xAxis: {
+            categories: [{!! $pdo !!}],
+            plotBands: [{ // visualize the weekend
+                from: 'Ene-2016',
+                to: 'Feb-2016',
+                color: 'rgba(68, 170, 213, .2)'
+            }]
+        },
+        yAxis: {
+            title: {
+                text: 'Balboas (B/.)'
+            }
+        },
+        tooltip: {
+        },
+        credits: {
+            enabled: false
+        },
+        plotOptions: {
+            areaspline: {
+                fillOpacity: 0.4
+            }
+        },
+        series: [{
+            name: 'Ingreso esp',
+            data: [{{ $totalIngresoEsperadoSD }}]
+        }, {
+            name: 'Ingreso esp -desc',
+            data: [{{ $totalIngresoEsperadoCD }}]
+        }, {
+            name: 'Ingreso recibido',
+            data: [{{ $totalPagado }}]
+        }, {
+            name: 'Cuotas reg',
+            data: [{{ $espRegularesSD }}]
+        }, {
+            name: 'Cuotas reg -desc',
+            data: [{{ $espRegularesCD }}]
+        }, {
+            name: 'Cuotas extras',
+            data: [{{ $espExtraordinarias }}]
+        }, {
+            name: 'Recargos',
+            data: [{{ $espRecargos }}]
+        }, {
+            name: 'Descuentos',
+            data: [{{ $descuentos }}]
+				}, {
+            name: 'Gastos',
+            data: [{{ $totalGastos }}]
+        }]
+
+
+    });
+});
+
+/*		$(function () {
 		    Highcharts.chart('historicos', {
 		        title: {
-		            text: 'ANALISIS HISTORICOS POR PERIODO CONTABLE',
+		            text: 'ANALISIS COMPARATIVO POR PERIODO CONTABLE',
 		            x: -20 //center
 		        },
 		        subtitle: {
@@ -675,7 +744,7 @@
 		            data: [{{ $totalGastos }}]
 		        }]
 		    });
-		});
+		});*/
 
 		$(function () {
 		    $(document).ready(function () {

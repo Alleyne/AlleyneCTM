@@ -102,13 +102,15 @@ class DashboardController extends Controller
           $totalEspRecargos[]= $_totalEspRecargos;
           $totalEspExtraordinarias[]= $_totalEspExtraordinarias;          
           
+          $totalIngresoEsperadoSD[]= $_totalIngresoEsperadoSD;
+          $totalIngresoEsperadoCD[]= $_totalIngresoEsperadoCD;         
+
           $totalPagRegulares[]= $_totalPagRegulares;
           $totalPagRecargos[]= $_totalPagRecargos;
           $totalPagExtraordinarias[]= $_totalPagExtraordinarias;
           
-          $totalIngresoEsperadoSD[]= $_totalIngresoEsperadoSD;
-          $totalIngresoEsperadoCD[]= $_totalIngresoEsperadoCD;
-          
+          $totalPagado[]= $_totalPagRegulares + $_totalPagRecargos + $_totalPagExtraordinarias;
+
           $totalIngresoPorCobrarCD[]= $_totalIngresoEsperadoCD - ($_totalPagRegulares + $_totalPagRecargos + $_totalPagExtraordinarias);
           
           $totalGastos[]= $_totalGastos;
@@ -123,13 +125,15 @@ class DashboardController extends Controller
       $espRecargos = implode(", ", $totalEspRecargos);
       $espExtraordinarias = implode(", ", $totalEspExtraordinarias);
       
+      $totalIngresoEsperadoSD = implode(", ", $totalIngresoEsperadoSD); 
+      $totalIngresoEsperadoCD = implode(", ", $totalIngresoEsperadoCD);       
+      
       $pagRegulares = implode(", ", $totalPagRegulares);
       $pagRecargos = implode(", ", $totalPagRecargos);
       $pagExtraordinarias = implode(", ", $totalPagExtraordinarias);  
       
-      $totalIngresoEsperadoSD = implode(", ", $totalIngresoEsperadoSD); 
-      $totalIngresoEsperadoCD = implode(", ", $totalIngresoEsperadoCD); 
-      
+      $totalPagado = implode(", ", $totalPagado); 
+
       $totalIngresoPorCobrarCD = implode(", ", $totalIngresoPorCobrarCD); 
       
       $totalGastos = implode(", ", $totalGastos);     
@@ -192,13 +196,15 @@ class DashboardController extends Controller
                                                     'espRegularesCD' => $espRegularesCD,
                                                     'espRecargos' => $espRecargos,
                                                     'espExtraordinarias' => $espExtraordinarias,
-
+                                                    
+                                                    'totalIngresoEsperadoSD' => $totalIngresoEsperadoSD,
+                                                    'totalIngresoEsperadoCD' => $totalIngresoEsperadoCD,
+                                                    
                                                     'pagRegulares' => $pagRegulares,
                                                     'pagRecargos' => $pagRecargos,
                                                     'pagExtraordinarias' => $pagExtraordinarias,
-                                                   
-                                                    'totalIngresoEsperadoSD' => $totalIngresoEsperadoSD,
-                                                    'totalIngresoEsperadoCD' => $totalIngresoEsperadoCD,
+                                                    
+                                                    'totalPagado' => $totalPagado,                                  
                                                     
                                                     'totalIngresoPorCobrarCD' => $totalIngresoPorCobrarCD,                                  
                                                     
