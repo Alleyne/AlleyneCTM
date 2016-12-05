@@ -2,6 +2,18 @@
 
 @section('title', '| Front End')
 
+@section('slider')
+    <!--=== Slider ===-->
+<div class="slider-inner">
+    <div class="slider-inner">
+        <div id="da-slider" class="da-slider">
+
+        </div>
+    </div><!--/slider-->
+</div>
+    <!--=== End Slider ===--> 
+@stop
+
 @section('content')
 
     <div class="headline"><h2>Propietarios morosos a la fecha</h2></div>

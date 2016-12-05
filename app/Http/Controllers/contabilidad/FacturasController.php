@@ -51,7 +51,7 @@ class FacturasController extends Controller {
 	    // encuentra todas las facturas que han sido contabilizadas
 	    $datos = Factura::where('etapa', 2)->get();
 			
-			// formatea la fecha
+			// formatea la fecha para cada uno de los renglones de la collection
 			$datos = $datos->each(function ($dato, $key) {
 				return $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
 			});
@@ -87,15 +87,15 @@ class FacturasController extends Controller {
 	        $f_final=Carbon::today()->addDay(1);
 	        
 	        $rules = array(
-	            'org_id'		=> 'required',
-	            'no'    		=> 'Required|Numeric|digits_between:1,10|min:1',
+            'org_id'		=> 'required',
+            'no'    		=> 'Required|Numeric|digits_between:1,10|min:1',
 	        	'total'    		=> 'required|Numeric|min:0.01',
 	        	'fecha'    		=> 'required|Date|Before:' . $f_final
 	        );
 	    
 	        $messages = [
-	            'required'		=> 'Informacion requerida!',
-	            'before'		=> 'La fecha de la factura debe ser anterior o igual a fecha del dia de hoy!',
+            'required'		=> 'Informacion requerida!',
+            'before'		=> 'La fecha de la factura debe ser anterior o igual a fecha del dia de hoy!',
 	        	'digits_between'=> 'El numero de la factura debe tener de uno a diez digitos!',
 	        	'numeric'		=> 'Solo se admiten valores numericos!',
 	        	'date'			=> 'Fecha invalida!',
@@ -107,20 +107,20 @@ class FacturasController extends Controller {
 			if ($validation->passes())
 			{
 				
-			    // verifica que exista un periodo de acuerdo a la fecha de pago
-			    $year= Carbon::parse(Input::get('fecha'))->year;
-			    $month= Carbon::parse(Input::get('fecha'))->month;
-			    $pdo= Sity::getMonthName($month).'-'.$year;    
+		    // verifica que exista un periodo de acuerdo a la fecha de pago
+		    $year= Carbon::parse(Input::get('fecha'))->year;
+		    $month= Carbon::parse(Input::get('fecha'))->month;
+		    $pdo= Sity::getMonthName($month).'-'.$year;    
 
 			    // encuentra el periodo mas antiguo abierto
 				$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
 			    //dd($periodo);
 			    
-			    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
-			    if ($pdo != $periodo->periodo) {
-		            Session::flash('danger', '<< ERROR >> Solamente se permite registrar facturas de gastos que correspondan al periodo vigente de '.$periodo->periodo);
-	        		return back()->withInput()->withErrors($validation);
-			    }
+		    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+		    if ($pdo != $periodo->periodo) {
+          Session::flash('danger', '<< ERROR >> Solamente se permite registrar facturas de gastos que correspondan al periodo vigente de '.$periodo->periodo);
+      		return back()->withInput()->withErrors($validation);
+		    }
 
 				$dato = new Factura;
 				$dato->org_id       	= Input::get('org_id');
@@ -130,7 +130,7 @@ class FacturasController extends Controller {
 				$dato->save();	
   
 				Sity::RegistrarEnBitacora(1, 'facturas', $dato->id, $dato->tojson());
-		    	DB::commit();				
+		    DB::commit();				
 				Session::flash('success', 'La factura No. ' .$dato->no. ' ha sido creada con éxito.');
 
 				return redirect()->route('facturas.index');		    
@@ -138,9 +138,8 @@ class FacturasController extends Controller {
 		
 		} catch (\Exception $e) {
 		    DB::rollback();
-        	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-
-        	return back()->withInput()->withErrors($validation);
+      	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+      	return back()->withInput()->withErrors($validation);
 		}
 
 	}
@@ -176,9 +175,9 @@ class FacturasController extends Controller {
 
 		} catch (\Exception $e) {
 		    DB::rollback();
-        	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
+      	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
 
-        	return back()->withInput()->withErrors($validation);
+      	return back()->withInput()->withErrors($validation);
 		}		
 	}
 
@@ -213,7 +212,7 @@ class FacturasController extends Controller {
 	        return back();
 	    }
 
-	    //Encuentra totos los detalles de un determinada factura
+	    //Encuentra todos los detalles de una determinada factura
 	    $datos= Detallefactura::where('factura_id', $factura_id)
 	            ->join('catalogos', 'catalogos.id', '=', 'detallefacturas.catalogo_id')
 	            ->select('detallefacturas.precio','detallefacturas.itbms','catalogos.nombre','catalogos.id','catalogos.codigo')
@@ -221,8 +220,6 @@ class FacturasController extends Controller {
 	    //dd($datos->toArray());
 			
 			// se anota el monto de cada uno de los gastos de la factura con su respectivo codigo de gasto
-			// ctmayores
-			//$fecha= Carbon::today();
 			$i=1;
 			foreach ($datos as $dato) {
 			 	Sity::registraEnCuentas(
@@ -301,10 +298,10 @@ class FacturasController extends Controller {
 		  
 			// Registra en bitacoras
 			$detalle =	'Contabiliza factura '.$factura_id. ', '.
-						'pcontable_id= '.$pdo.', '.
-						'no= '.$factura->no.', '.
-						'org_id= '.$factura->org_id.', '.
-						'fecha= '.$factura->fecha;
+									'pcontable_id= '.$pdo.', '.
+									'no= '.$factura->no.', '.
+									'org_id= '.$factura->org_id.', '.
+									'fecha= '.$factura->fecha;
 
 			Sity::RegistrarEnBitacora(15, 'facturas', $factura_id, $detalle);
 			DB::commit();		
@@ -312,7 +309,7 @@ class FacturasController extends Controller {
 			return Redirect()->route('facturas.index');
 
 		} catch (\Exception $e) {
-		    DB::rollback();
+		  DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.contabilizaDetallesFactura, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back()->withInput()->withErrors($validation);
 		}  

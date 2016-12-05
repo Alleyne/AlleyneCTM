@@ -25,19 +25,19 @@
             <div class="posts">
                 <div class="headline"><h2>Recent Blog Entries</h2></div>
                 <dl class="dl-horizontal">
-                    <dt><a href="#"><img src="{{asset('assets/frontend/img/sliders/elastislide/6.jpg')}}" alt="" /></a></dt>
+                    <dt><a href="#"><img src="" alt="" /></a></dt>
                     <dd>
                         <p><a href="#">Anim moon officia Unify is an incredibly beautiful responsive Bootstrap Template</a></p> 
                     </dd>
                 </dl>
                 <dl class="dl-horizontal">
-                <dt><a href="#"><img src="{{asset('assets/frontend/img/sliders/elastislide/10.jpg')}}" alt="" /></a></dt>
+                <dt><a href="#"><img src="" alt="" /></a></dt>
                     <dd>
                         <p><a href="#">Anim moon officia Unify is an incredibly beautiful responsive Bootstrap Template</a></p> 
                     </dd>
                 </dl>
                 <dl class="dl-horizontal">
-                <dt><a href="#"><img src="{{asset('assets/frontend/img/sliders/elastislide/11.jpg')}}" alt="" /></a></dt>
+                <dt><a href="#"><img src="" alt="" /></a></dt>
                     <dd>
                         <p><a href="#">Anim moon officia Unify is an incredibly beautiful responsive Bootstrap Template</a></p> 
                     </dd>

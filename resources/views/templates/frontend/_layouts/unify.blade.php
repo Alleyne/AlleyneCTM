@@ -29,20 +29,13 @@
       </div>
       <!--=== End Header ===--> 
       
-      <!--=== Slider ===-->  
-         <!--@include('templates.frontend._partials.slider')          
-      <!--=== End Slider ===-->
       <!--=== Slider ===-->
-      <div class="slider-inner">
-          <div id="da-slider" class="da-slider">
-          </div>
-      </div><!--/slider-->
-      <!--=== End Slider ===-->   
+      @yield('slider')   
+      <!--=== End Slider ===-->  
       
       <!--=== Content Part ===-->
       <div class="container content">   
         @include('templates.frontend._partials.messages')
-
         @yield('content')      
       </div><!--/container-->   
       <!--=== End Content Part ===-->
