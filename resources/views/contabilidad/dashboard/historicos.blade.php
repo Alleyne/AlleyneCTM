@@ -252,7 +252,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Utilidad del periodo actual</h2>
+							<h2>Ingresos vs gastos del periodo vigente </h2>
 
 						</header>
 
@@ -345,7 +345,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Ingresos vs Gastos </h2>
+							<h2>Gastos del perido vigente </h2>
 
 						</header>
 
@@ -362,7 +362,7 @@
 							<!-- widget content -->
 							<div class="widget-body no-padding">
 
-								<div id="ingreso_vs_gasto" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+								<div id="gastos" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 							
 							</div>
 							<!-- end widget content -->
@@ -441,6 +441,7 @@
 	<script type="text/javascript">
 		$(function () {
 		    Highcharts.chart('morosos', {
+		        colors: ['#90ed7d', '#434348', '#f7a35c', '#7cb5ec'],
 		        chart: {
 		            type: 'bar'
 		        },
@@ -448,7 +449,7 @@
 		            text: 'PROPIETARIOS MOROSOS A LA FECHA'
 		        },
 		        xAxis: {
-		            categories: [{!! $categorias !!}]
+		            categories: [{!! $data['categorias'] !!}]
 		        },
 		        yAxis: {
 		            min: 0,
@@ -466,19 +467,20 @@
 		        },
 		        series: [{
 		            name: 'Debe Cuota Extraordinaria',
-		            data: [{{ $data_3 }}]
+		            data: [{{ $data['data_3'] }}]
 		        }, {
 		            name: 'Debe Recargos',
-		            data: [{{ $data_2 }}]
+		            data: [{{ $data['data_2'] }}]
 		        }, {
 		            name: 'Debe Cuota Regular',
-		            data: [{{ $data_1 }}]
+		            data: [{{ $data['data_1'] }}]
 		        }]
 		    });
 		});
-	
+
 		$(function () {
 		    Highcharts.chart('ingresos', {
+		        colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c'],
 		        chart: {
 		            type: 'column'
 		        },
@@ -582,7 +584,7 @@
 	                type: 'pie'
 	            },
 	            title: {
-	                text: 'Utilidad del presente periodo'
+	                text: 'Ingresos vs gastos del periodo vigente'
 	            },
 	            tooltip: {
 									pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>'
@@ -679,7 +681,7 @@
 		    $(document).ready(function () {
 
 		        // Build the chart
-		        Highcharts.chart('ingreso_vs_gasto', {
+		        Highcharts.chart('gastos', {
 		            chart: {
 		                plotBackgroundColor: null,
 		                plotBorderWidth: null,
@@ -687,7 +689,7 @@
 		                type: 'pie'
 		            },
 		            title: {
-		                text: 'Ingresos vs gastos del periodo actual'
+		                text: 'Gastos del periodo vigente'
 		            },
 		            tooltip: {
 									pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>'
@@ -706,21 +708,15 @@
 		                name: 'Brands',
 		                colorByPoint: true,
 		                data: [{
-		                    name: 'Ingresos',
-		                    y: {{ $ER_totalIngresos }},
-		                    sliced: true,
-		                    selected: true
-		                }, {
 		                    name: 'Itbms',
 		                    y: {{ $itbms }}
 		                },
-		                {!! $data !!}
+		                {!! $gastos !!}
 		                ]
 		            }]
 		        });
 		    });
 		});
-
-
+	
 	</script>
 @endsection 

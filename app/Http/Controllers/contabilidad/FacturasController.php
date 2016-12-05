@@ -28,38 +28,34 @@ class FacturasController extends Controller {
     /*************************************************************************************
      * Despliega un grupo de registros en formato de tabla
      ************************************************************************************/	
-	public function index()
-	{
-    $datos = Factura::join('orgs', 'orgs.id', '=', 'facturas.org_id')
-            ->select('facturas.id', 'facturas.no', 'facturas.total', 'facturas.totaldetalle', 'facturas.fecha', 'facturas.etapa', 'orgs.nombre')
-            ->get();
+		public function index()
+		{
+	    // encuentra todas las facturas que aun no han sido contabilizadas
+	    $datos = Factura::where('etapa','!=', 2)->get();
+			
+			// formatea la fecha
+			$datos = $datos->each(function ($dato, $key) {
+				return $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
+			});
+	    //dd($datos->toArray());
 
-		foreach ($datos as $dato) {
-			if ($dato->fecha) {
-			  $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
-			}        
-		}
-    dd($datos->toArray());
-		
-		return view('contabilidad.facturas.registrar.index')->with('datos', $datos);     	
-	}	
+			return view('contabilidad.facturas.registrar.index')->with('datos', $datos);     	
+		}	
 
     /*************************************************************************************
      * Despliega un grupo de registros en formato de tabla
      ************************************************************************************/	
 	public function pagarfacturas()
 	{
-        $datos = Factura::join('orgs', 'orgs.id', '=', 'facturas.org_id')
-						->where('etapa', 2)
-				        ->select('facturas.id', 'facturas.no', 'facturas.total', 'facturas.totalpagodetalle', 'facturas.fecha', 'facturas.etapa', 'facturas.pagada', 'orgs.nombre')
-				        ->get();
-
- 		foreach ($datos as $dato) {
-			if ($dato->fecha) {
-			  $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
-			}        
-		}
-        //dd($datos->toArray());
+        
+	    // encuentra todas las facturas que han sido contabilizadas
+	    $datos = Factura::where('etapa', 2)->get();
+			
+			// formatea la fecha
+			$datos = $datos->each(function ($dato, $key) {
+				return $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
+			});
+	    //dd($datos->toArray());
 
   		return view('contabilidad.facturas.pagar.index')->with('datos', $datos);     	
 	}
@@ -69,12 +65,12 @@ class FacturasController extends Controller {
      ************************************************************************************/	
 	public function create()
 	{
-        //Encuentra todos los proveedores registrados
-		$proveedores = Org::orderBy('nombre')->pluck('nombre', 'id')->all();
-	    //dd($proveedores);
+    //Encuentra todos los proveedores registrados
+		$proveedores = Org::orderBy('nombre')->pluck('nombre', 'id')->All();
+	  //dd($proveedores);
         
-        return view('contabilidad.facturas.registrar.create')
-        		->with('proveedores', $proveedores);
+    return view('contabilidad.facturas.registrar.create')
+    		->with('proveedores', $proveedores);
 	}     
     
     /*************************************************************************************

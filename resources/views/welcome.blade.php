@@ -4,7 +4,15 @@
 
 @section('content')
 
-	<div class="row blog-page">    
+    <div class="headline"><h2>Propietarios morosos a la fecha</h2></div>
+    <div class="row margin-bottom-20">
+        <div class="col-md-12 col-sm-12">
+            <div id="morosos" style="min-width: 310px; max-width: 1000px; margin: 0 auto"></div>
+        </div>
+    </div>
+    
+    <div class="headline"><h2>Articulos recientes</h2></div>
+    <div class="row blog-page">    
         <!-- Left Sidebar -->
     	<div class="col-md-10 col-md-offset-1 md-margin-bottom-40">
             <!--Blog Post-->
@@ -31,3 +39,51 @@
         <!-- End Left Sidebar -->
     </div><!--/row-->  
 @stop
+
+@section('scripts')
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            Highcharts.chart('morosos', {
+                colors: ['#90ed7d', '#434348', '#f7a35c', '#7cb5ec'],
+                chart: {
+                    type: 'bar'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [{!! $data['categorias'] !!}]
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Morosidad (dolares)'
+                    }
+                },
+                legend: {
+                    reversed: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                series: [{
+                    name: 'Debe Cuota Extraordinaria',
+                    data: [{{ $data['data_3'] }}]
+                }, {
+                    name: 'Debe Recargos',
+                    data: [{{ $data['data_2'] }}]
+                }, {
+                    name: 'Debe Cuota Regular',
+                    data: [{{ $data['data_1'] }}]
+                }]
+            });
+        });
+
+    </script>
+@endsection 

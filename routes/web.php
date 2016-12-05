@@ -187,7 +187,7 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador DashboardController
 	//---------------------------------------------------------// 		
-  Route::get('dashboard/graph_1/{pcontable_id}', 'DashboardController@graph_1')->name('graph_1');
+  Route::get('dashboard/historicos', 'DashboardController@historicos')->name('historicos');
 
 	
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION

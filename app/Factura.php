@@ -15,4 +15,9 @@ class Factura extends Model
     {
   	 return $this->hasMany('App\Detallepagofactura');    
     }
+
+    public function org()
+    {
+      return $this->belongsTo('App\Org');
+    }
 }

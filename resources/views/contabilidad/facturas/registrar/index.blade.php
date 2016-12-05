@@ -70,7 +70,7 @@
 									@foreach ($datos as $dato)
 										<tr>
 											<td col width="40px">{{ $dato->id }}</td>
-											<td>{{ $dato->nombre }}</td>
+											<td>{{ $dato->org->nombre }}</td>
 											<td col width="40px">{{ $dato->no }}</td>
 											<td col width="90px">{{ $dato->fecha }}</td>
 											<td col width="60px">{{ $dato->total }}</td>
