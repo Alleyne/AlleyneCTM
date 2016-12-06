@@ -182,7 +182,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Gastos incurridos en el periodo vigente Total: B/. {{ number_format($totalGastos,2) }} </h2>
+							<h2>Gastos incurridos en el periodo vigente Total: B/. {{ number_format($ER_totalGastos,2) }} </h2>
 
 						</header>
 

@@ -237,7 +237,8 @@ class DashboardController extends Controller
       $f_final= new Carbon($periodo->fecha);
       $f_final= $f_final->endOfMonth();
 
-      $ctdasm= Ctdasm::where('pcontable_id', $periodo->id)->get();
+      //$ctdasm= Ctdasm::where('pcontable_id', $periodo->id)->get();
+      $ctdasm= Ctdasm::All();
       $recargos= Ctdasm::whereBetween('f_vencimiento',[$f_inicio, $f_final])->get();
       
       //----------------------------------------------------------------------
@@ -247,23 +248,23 @@ class DashboardController extends Controller
         $_totalDescuentos = $ctdasm->where('descuento_siono', 1)->sum('descuento');  
 
         // calcula el total de ingresos por cuotas regulares sin descuento incluido
-        $_totalEspRegularesSD = $ctdasm->sum('importe');   
+        //$_totalEspRegularesSD = $ctdasm->sum('importe');   
  
         // calcula el total de ingresos por cuotas regulares con descuento incluido
-        $_totalEspRegularesCD = $_totalEspRegularesSD - $_totalDescuentos;   
+        //$_totalEspRegularesCD = $_totalEspRegularesSD - $_totalDescuentos;   
 
         // calcula el total de recargos
-        $_totalEspRecargos = $recargos->where('recargo_siono', 1)->sum('recargo');
+        //$_totalEspRecargos = $recargos->where('recargo_siono', 1)->sum('recargo');
 
         // calcula el total de cuotas extraordinarias
-        $_totalEspExtraordinarias = $ctdasm->where('extra_siono', 1)->sum('extra');  
+        //$_totalEspExtraordinarias = $ctdasm->where('extra_siono', 1)->sum('extra');  
         
         
         // calcula el total de ingresos esperado sin descuento
-        $_totalIngresoEsperadoSD= $_totalEspRegularesSD + $_totalEspRecargos + $_totalEspExtraordinarias;
+        //$_totalIngresoEsperadoSD= $_totalEspRegularesSD + $_totalEspRecargos + $_totalEspExtraordinarias;
 
         // calcula el total de ingresos esperado con descuento
-        $_totalIngresoEsperadoCD= $_totalEspRegularesCD + $_totalEspRecargos + $_totalEspExtraordinarias;
+        //$_totalIngresoEsperadoCD= $_totalEspRegularesCD + $_totalEspRecargos + $_totalEspExtraordinarias;
 
       //----------------------------------------------------------------------
       // calcula el total de pagos recibidos a la fecha
@@ -345,13 +346,13 @@ class DashboardController extends Controller
                                                     'data' => $data,
                                                     'descuentos' => $_totalDescuentos,                              
 
-                                                    'espRegularesSD' => $_totalEspRegularesSD,
-                                                    'espRegularesCD' => $_totalEspRegularesCD,
-                                                    'espRecargos' => $_totalEspRecargos,
-                                                    'espExtraordinarias' => $_totalEspExtraordinarias,
+                                                    //'espRegularesSD' => $_totalEspRegularesSD,
+                                                    //'espRegularesCD' => $_totalEspRegularesCD,
+                                                    //'espRecargos' => $_totalEspRecargos,
+                                                    //'espExtraordinarias' => $_totalEspExtraordinarias,
                                                     
-                                                    'totalIngresoEsperadoSD' => $_totalEspRegularesSD,
-                                                    'totalIngresoEsperadoCD' => $_totalEspRegularesCD,
+                                                    //'totalIngresoEsperadoSD' => $_totalEspRegularesSD,
+                                                    //'totalIngresoEsperadoCD' => $_totalEspRegularesCD,
                                                     
                                                     'pagRegulares' => $_totalPagRegulares,
                                                     'pagRecargos' => $_totalPagRecargos,
