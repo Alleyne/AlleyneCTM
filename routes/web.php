@@ -187,8 +187,8 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador DashboardController
 	//---------------------------------------------------------// 		
-  Route::get('dashboard/historicos', 'DashboardController@historicos')->name('historicos');
-
+  Route::get('dashboard/historico', 'DashboardController@historico')->name('historico');
+  Route::get('dashboard/vigente', 'DashboardController@vigente')->name('vigente');
 	
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');

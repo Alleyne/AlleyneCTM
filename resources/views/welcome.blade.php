@@ -16,7 +16,8 @@
 
 @section('content')
 
-    <div class="headline"><h2>Propietarios morosos a la fecha</h2></div>
+    <div class="headline"><h2>Propietarios Morosos a la fecha. Total adeudado B/. {{ number_format($data['totalAdeudado'],2) }}</h2>
+</div>
     <div class="row margin-bottom-20">
         <div class="col-md-12 col-sm-12">
             <div id="morosos" style="min-width: 310px; max-width: 1000px; margin: 0 auto"></div>
@@ -86,13 +87,13 @@
                 },
                 series: [{
                     name: 'Debe Cuota Extraordinaria',
-                    data: [{{ $data['data_3'] }}]
+                    data: [{{ $data['ctaExtra'] }}]
                 }, {
                     name: 'Debe Recargos',
-                    data: [{{ $data['data_2'] }}]
+                    data: [{{ $data['recargo'] }}]
                 }, {
                     name: 'Debe Cuota Regular',
-                    data: [{{ $data['data_1'] }}]
+                    data: [{{ $data['ctaRegular'] }}]
                 }]
             });
         });

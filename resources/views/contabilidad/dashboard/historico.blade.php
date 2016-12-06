@@ -32,7 +32,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Morosos</h2>
+							<h2>Propietarios Morosos a la fecha. Total adeudado B/. {{ number_format($data['totalAdeudado'],2) }}</h2>
 
 						</header>
 
@@ -89,7 +89,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Ingresos vs pagos</h2>
+							<h2>Estatus de Ingresos por cobrar vs Pagos recibidos</h2>
 						</header>
 
 						<!-- widget div-->
@@ -252,7 +252,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Ingresos vs gastos del periodo vigente </h2>
+							<h2> </h2>
 
 						</header>
 
@@ -268,7 +268,6 @@
 
 							<!-- widget content -->
 							<div class="widget-body no-padding">
-        				<div id="utilidad" style="min-width: 310px; max-width: 800px; margin: 0 auto"></div>
 
 							</div>
 							<!-- end widget content -->
@@ -296,7 +295,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Normal Bar Graph</h2>
+							<h2> </h2>
 
 						</header>
 
@@ -345,7 +344,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Gastos del perido vigente </h2>
+							<h2> </h2>
 
 						</header>
 
@@ -390,7 +389,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Stacked Bar Graph </h2>
+							<h2> </h2>
 
 						</header>
 
@@ -446,7 +445,7 @@
 		            type: 'bar'
 		        },
 		        title: {
-		            text: 'PROPIETARIOS MOROSOS A LA FECHA'
+		            text: ''
 		        },
 		        xAxis: {
 		            categories: [{!! $data['categorias'] !!}]
@@ -467,13 +466,13 @@
 		        },
 		        series: [{
 		            name: 'Debe Cuota Extraordinaria',
-		            data: [{{ $data['data_3'] }}]
+		            data: [{{ $data['ctaExtra'] }}]
 		        }, {
 		            name: 'Debe Recargos',
-		            data: [{{ $data['data_2'] }}]
+		            data: [{{ $data['recargo'] }}]
 		        }, {
 		            name: 'Debe Cuota Regular',
-		            data: [{{ $data['data_1'] }}]
+		            data: [{{ $data['ctaRegular'] }}]
 		        }]
 		    });
 		});
@@ -485,7 +484,7 @@
 		            type: 'column'
 		        },
 		        title: {
-		            text: 'ESTATUS DE INGRESOS VS PAGOS RECIBIDOS'
+		            text: '~'
 		        },
 		        xAxis: {
 		            categories: [{!! $pdo !!}]
@@ -572,163 +571,56 @@
 		});
 
 		$(function () {
-	    $(document).ready(function () {
-
-	        // Build the chart
-	        Highcharts.chart('utilidad', {
-	            chart: {
-	                plotBackgroundColor: null,
-	                plotBorderWidth: null,
-	                plotShadow: false,
-	                type: 'pie'
-	            },
-	            title: {
-	                text: 'Ingresos vs gastos del periodo vigente'
-	            },
-	            tooltip: {
-									pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>'
-	            },
-	            plotOptions: {
-	                pie: {
-	                    allowPointSelect: true,
-	                    cursor: 'pointer',
-	                    dataLabels: {
-	                        enabled: false
-	                    },
-	                    showInLegend: true
-	                }
-	            },
-	            series: [{
-	                name: 'Brands',
-	                colorByPoint: true,
-	                data: [{
-	                    name: 'Ingresos',
-	                    y: {{ $ER_totalIngresos }}
-	                }, {
-	                    name: 'Gastos',
-	                    y: {{ $ER_totalGastos }},
-	                    sliced: true,
-	                    selected: true
-	                }]
-	            }]
-	        });
-	    });
-		});
-
-
-$(function () {
-    Highcharts.chart('historicos', {
-        chart: {
-            type: 'areaspline'
-        },
-        title: {
-            text: 'ANALISIS COMPARATIVO POR PERIODO CONTABLE'
-        },
-		        legend: {
-		            layout: 'horizontal',
-		            align: 'center',
-		            verticalAlign: 'bottom',
-		            borderWidth: 0
-		        },
-        xAxis: {
-            categories: [{!! $pdo !!}],
-            plotBands: [{ // visualize the weekend
-                from: 'Ene-2016',
-                to: 'Feb-2016',
-                color: 'rgba(68, 170, 213, .2)'
-            }]
-        },
-        yAxis: {
-            title: {
-                text: 'Balboas (B/.)'
-            }
-        },
-        tooltip: {
-        },
-        credits: {
-            enabled: false
-        },
-        plotOptions: {
-            areaspline: {
-                fillOpacity: 0.4
-            }
-        },
-        series: [{
-            name: 'Ingreso esp',
-            data: [{{ $totalIngresoEsperadoSD }}]
-        }, {
-            name: 'Ingreso esp -desc',
-            data: [{{ $totalIngresoEsperadoCD }}]
-        }, {
-            name: 'Ingreso recibido',
-            data: [{{ $totalPagado }}]
-        }, {
-            name: 'Cuotas reg',
-            data: [{{ $espRegularesSD }}]
-        }, {
-            name: 'Cuotas reg -desc',
-            data: [{{ $espRegularesCD }}]
-        }, {
-            name: 'Cuotas extras',
-            data: [{{ $espExtraordinarias }}]
-        }, {
-            name: 'Recargos',
-            data: [{{ $espRecargos }}]
-        }, {
-            name: 'Descuentos',
-            data: [{{ $descuentos }}]
-				}, {
-            name: 'Gastos',
-            data: [{{ $totalGastos }}]
-        }]
-
-
-    });
-});
-
-/*		$(function () {
 		    Highcharts.chart('historicos', {
+		        chart: {
+		            type: 'areaspline'
+		        },
 		        title: {
-		            text: 'ANALISIS COMPARATIVO POR PERIODO CONTABLE',
-		            x: -20 //center
+		            text: 'ANALISIS COMPARATIVO POR PERIODO CONTABLE'
 		        },
-		        subtitle: {
-		            text: 'ctmaster.net',
-		            x: -20
-		        },
+				        legend: {
+				            layout: 'horizontal',
+				            align: 'center',
+				            verticalAlign: 'bottom',
+				            borderWidth: 0
+				        },
 		        xAxis: {
-		            categories: [{!! $pdo !!}]
+		            categories: [{!! $pdo !!}],
+		            plotBands: [{ // visualize the weekend
+		                from: 'Ene-2016',
+		                to: 'Feb-2016',
+		                color: 'rgba(68, 170, 213, .2)'
+		            }]
 		        },
 		        yAxis: {
 		            title: {
 		                text: 'Balboas (B/.)'
-		            },
-		            plotLines: [{
-		                value: 0,
-		                width: 1,
-		                color: '#808080'
-		            }]
+		            }
 		        },
 		        tooltip: {
-		            valueSuffix: ''
 		        },
-		        legend: {
-		            layout: 'horizontal',
-		            align: 'center',
-		            verticalAlign: 'bottom',
-		            borderWidth: 0
+		        credits: {
+		            enabled: false
+		        },
+		        plotOptions: {
+		            areaspline: {
+		                fillOpacity: 0.4
+		            }
 		        },
 		        series: [{
 		            name: 'Ingreso esp',
 		            data: [{{ $totalIngresoEsperadoSD }}]
 		        }, {
-		            name: 'Ingreso esp - desc',
+		            name: 'Ingreso esp -desc',
 		            data: [{{ $totalIngresoEsperadoCD }}]
+		        }, {
+		            name: 'Ingreso recibido',
+		            data: [{{ $totalPagado }}]
 		        }, {
 		            name: 'Cuotas reg',
 		            data: [{{ $espRegularesSD }}]
 		        }, {
-		            name: 'Cuotas reg - desc',
+		            name: 'Cuotas reg -desc',
 		            data: [{{ $espRegularesCD }}]
 		        }, {
 		            name: 'Cuotas extras',
@@ -743,49 +635,10 @@ $(function () {
 		            name: 'Gastos',
 		            data: [{{ $totalGastos }}]
 		        }]
-		    });
-		});*/
 
-		$(function () {
-		    $(document).ready(function () {
 
-		        // Build the chart
-		        Highcharts.chart('gastos', {
-		            chart: {
-		                plotBackgroundColor: null,
-		                plotBorderWidth: null,
-		                plotShadow: false,
-		                type: 'pie'
-		            },
-		            title: {
-		                text: 'Gastos del periodo vigente'
-		            },
-		            tooltip: {
-									pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>'
-		            },
-		            plotOptions: {
-		                pie: {
-		                    allowPointSelect: true,
-		                    cursor: 'pointer',
-		                    dataLabels: {
-		                        enabled: false
-		                    },
-		                    showInLegend: true
-		                }
-		            },
-		            series: [{
-		                name: 'Brands',
-		                colorByPoint: true,
-		                data: [{
-		                    name: 'Itbms',
-		                    y: {{ $itbms }}
-		                },
-		                {!! $gastos !!}
-		                ]
-		            }]
-		        });
 		    });
 		});
-	
+
 	</script>
 @endsection 

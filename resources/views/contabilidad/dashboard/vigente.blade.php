@@ -32,7 +32,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Morosos</h2>
+							<h2>Propietarios Morosos a la fecha. Total adeudado B/. {{ number_format($data['totalAdeudado'],2) }}</h2>
 
 						</header>
 
@@ -65,170 +65,7 @@
 
 			</div>
 			<!-- end row -->
-
-			<!-- row -->
-			<div class="row">
-
-				<!-- NEW WIDGET START -->
-				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Ingresos vs pagos</h2>
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-								<input type="text">
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-									<div id="ingresos" style="min-width: 310px; margin: 0 auto"></div>
-							</div>
-							<!-- end widget content -->
-
-						</div>
-						<!-- end widget div -->
-
-					</div>
-					<!-- end widget -->
-
-				</article>
-				<!-- WIDGET END -->
-
-			</div>
-
-			<!-- end row -->
-
-			<!-- row -->
-			<div class="row">
-
-				<!-- NEW WIDGET START -->
-				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Descuentos por pagos anticipados</h2>
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-								<input type="text">
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-									<div id="descuentos" style="min-width: 310px; height: 250px; margin: 0 auto"></div>
-							</div>
-							<!-- end widget content -->
-
-						</div>
-						<!-- end widget div -->
-
-					</div>
-					<!-- end widget -->
-
-				</article>
-				<!-- WIDGET END -->
-
-			</div>
-
-			<!-- end row -->
 			
-			<!-- row -->
-			<div class="row">
-
-				<!-- NEW WIDGET START -->
-				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Analisis Historico</h2>
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-								<input type="text">
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-									<div id="historicos" style="min-width: 310px; margin: 0 auto"></div>
-							</div>
-							<!-- end widget content -->
-
-						</div>
-						<!-- end widget div -->
-
-					</div>
-					<!-- end widget -->
-
-				</article>
-				<!-- WIDGET END -->
-
-			</div>			
-
 			<!-- row -->
 			<div class="row">
 
@@ -252,7 +89,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Utilidad del periodo actual</h2>
+							<h2>Ingresos vs gastos del periodo vigente </h2>
 
 						</header>
 
@@ -296,7 +133,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Normal Bar Graph</h2>
+							<h2></h2>
 
 						</header>
 
@@ -345,7 +182,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Ingresos vs Gastos </h2>
+							<h2>Gastos incurridos en el periodo vigente Total: B/. {{ number_format($totalGastos,2) }} </h2>
 
 						</header>
 
@@ -362,7 +199,7 @@
 							<!-- widget content -->
 							<div class="widget-body no-padding">
 
-								<div id="ingreso_vs_gasto" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+								<div id="gastos" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 							
 							</div>
 							<!-- end widget content -->
@@ -390,7 +227,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Stacked Bar Graph </h2>
+							<h2></h2>
 
 						</header>
 
@@ -446,7 +283,7 @@
 		            type: 'bar'
 		        },
 		        title: {
-		            text: 'PROPIETARIOS MOROSOS A LA FECHA'
+		            text: ''
 		        },
 		        xAxis: {
 		            categories: [{!! $data['categorias'] !!}]
@@ -467,16 +304,101 @@
 		        },
 		        series: [{
 		            name: 'Debe Cuota Extraordinaria',
-		            data: [{{ $data['data_3'] }}]
+		            data: [{{ $data['ctaExtra'] }}]
 		        }, {
 		            name: 'Debe Recargos',
-		            data: [{{ $data['data_2'] }}]
+		            data: [{{ $data['recargo'] }}]
 		        }, {
 		            name: 'Debe Cuota Regular',
-		            data: [{{ $data['data_1'] }}]
+		            data: [{{ $data['ctaRegular'] }}]
 		        }]
 		    });
 		});
+		
+		$(function () {
+	    $(document).ready(function () {
 
+	        // Build the chart
+	        Highcharts.chart('utilidad', {
+	            chart: {
+	                plotBackgroundColor: null,
+	                plotBorderWidth: null,
+	                plotShadow: false,
+	                type: 'pie'
+	            },
+	            title: {
+	                text: 'Ingresos recibidos vs gastos efectuados'
+	            },
+	            tooltip: {
+									pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>'
+	            },
+	            plotOptions: {
+	                pie: {
+	                    allowPointSelect: true,
+	                    cursor: 'pointer',
+	                    dataLabels: {
+	                        enabled: false
+	                    },
+	                    showInLegend: true
+	                }
+	            },
+	            series: [{
+	                name: 'Brands',
+	                colorByPoint: true,
+	                data: [{
+	                    name: 'Total de Ingresos disponibles a la fecha',
+	                    y: {{ $totalIngresosDisponible }}
+	                }, {
+	                    name: 'Total de Gastos efectuados',
+	                    y: {{ $ER_totalGastos }},
+	                    sliced: true,
+	                    selected: true
+	                }]
+	            }]
+	        });
+	    });
+		});
+
+		$(function () {
+		    $(document).ready(function () {
+
+		        // Build the chart
+		        Highcharts.chart('gastos', {
+		            chart: {
+		                plotBackgroundColor: null,
+		                plotBorderWidth: null,
+		                plotShadow: false,
+		                type: 'pie'
+		            },
+		            title: {
+		                text: ''
+		            },
+		            tooltip: {
+									pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>'
+		            },
+		            plotOptions: {
+		                pie: {
+		                    allowPointSelect: true,
+		                    cursor: 'pointer',
+		                    dataLabels: {
+		                        enabled: false
+		                    },
+		                    showInLegend: true
+		                }
+		            },
+		            series: [{
+		                name: 'Brands',
+		                colorByPoint: true,
+		                data: [{
+		                    name: 'Itbms',
+		                    y: {{ $itbms }}
+		                },
+		                {!! $gastos !!}
+		                ]
+		            }]
+		        });
+		    });
+		});
+	
 	</script>
 @endsection 

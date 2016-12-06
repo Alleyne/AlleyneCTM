@@ -19,8 +19,8 @@ class DashboardController extends Controller
   /*************************************************************************************
    * Procesa la data necesaria para desplegar la grafica de propietarios mosoros en Front end
    ************************************************************************************/  
-  public function historicos() {
-    //dd($pcontable_id);
+  public function historico() {
+    // encuentra la data para la grafica de morosos
     $data= Graph::getDataGraphMorosos();
     //dd($data);
 
@@ -186,7 +186,7 @@ class DashboardController extends Controller
     $ER_totalIngresos= $totalIngresos - ($gastostotales + $totalItbms);
     //dd($totalIngresos, $totalGastos);
 
-    return view('contabilidad.dashboard.historicos', [
+    return view('contabilidad.dashboard.historico', [
 
                                                     'data' => $data,
                                                     'pdo' => $pdo,
@@ -210,6 +210,157 @@ class DashboardController extends Controller
                                                     
                                                     'totalGastos' => $totalGastos,                                  
 
+                                                    'ER_totalIngresos' => $ER_totalIngresos,
+                                                    'ER_totalGastos' => $ER_totalGastos,
+                                                    'itbms' => $totalItbms,
+                                                    'gastos' => $gastos
+                                                  ]); 
+  } // end function
+
+  /*************************************************************************************
+   * Procesa la data necesaria para desplegar la grafica de propietarios mosoros en Front end
+   ************************************************************************************/  
+  public function vigente() {
+    // encuentra la data para la grafica de morosos
+    $data= Graph::getDataGraphMorosos();
+    //dd($data);
+
+    /*
+    |--------------------------------------------------------------------------------
+    | Procesa todos los datos necesarios para la grafica Ingresos vs pagos recibidos
+    |--------------------------------------------------------------------------------
+    */
+      // encuentra el periodo mas antiguo abierto
+      $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+
+      $f_inicio= new Carbon($periodo->fecha);
+      $f_final= new Carbon($periodo->fecha);
+      $f_final= $f_final->endOfMonth();
+
+      $ctdasm= Ctdasm::where('pcontable_id', $periodo->id)->get();
+      $recargos= Ctdasm::whereBetween('f_vencimiento',[$f_inicio, $f_final])->get();
+      
+      //----------------------------------------------------------------------
+      // calcula el total ingresos esperado para el periodo vigente
+      //----------------------------------------------------------------------
+        // calcula el total de descuentos otorgados por pagos anticipados
+        $_totalDescuentos = $ctdasm->where('descuento_siono', 1)->sum('descuento');  
+
+        // calcula el total de ingresos por cuotas regulares sin descuento incluido
+        $_totalEspRegularesSD = $ctdasm->sum('importe');   
+ 
+        // calcula el total de ingresos por cuotas regulares con descuento incluido
+        $_totalEspRegularesCD = $_totalEspRegularesSD - $_totalDescuentos;   
+
+        // calcula el total de recargos
+        $_totalEspRecargos = $recargos->where('recargo_siono', 1)->sum('recargo');
+
+        // calcula el total de cuotas extraordinarias
+        $_totalEspExtraordinarias = $ctdasm->where('extra_siono', 1)->sum('extra');  
+        
+        
+        // calcula el total de ingresos esperado sin descuento
+        $_totalIngresoEsperadoSD= $_totalEspRegularesSD + $_totalEspRecargos + $_totalEspExtraordinarias;
+
+        // calcula el total de ingresos esperado con descuento
+        $_totalIngresoEsperadoCD= $_totalEspRegularesCD + $_totalEspRecargos + $_totalEspExtraordinarias;
+
+      //----------------------------------------------------------------------
+      // calcula el total de pagos recibidos a la fecha
+      //----------------------------------------------------------------------
+        // calcula el total de ingresos por coutas regulares
+        $_totalPagRegulares= $ctdasm->where('pagada', 1)->sum('importe') - $_totalDescuentos;    
+        
+        // calcula el total de recargos
+        $_totalPagRecargos= $recargos->where('recargo_pagado', 1)->sum('recargo');  
+        
+        // calcula el total de cuotas extraordinarias
+        $_totalPagExtraordinarias= $ctdasm->where('extra_pagada', 1)->sum('extra');  
+
+        
+        // calcula el total de ingresos pagados por los propietarios
+        $_totalIngresoPagados= $_totalPagRegulares + $_totalPagRecargos + $_totalPagExtraordinarias;
+        
+
+        //----------------------------------------------------------------------
+        // calcula el total de gastos efectuados a la fecha
+        //----------------------------------------------------------------------          
+        // crea una colleccion con todas las cuenta de gastos 
+        $ctmayores= Ctmayore::where('pcontable_id', $periodo->id)->where('tipo', 6)->get();
+        $_totalGastos= $ctmayores->sum('debito') - $ctmayores->sum('credito');
+  
+    /*
+    |------------------------------------------------------------------------------------------
+    | Procesa los datos necesarios para la grafica de Ingreso vs Gastos para el periodo actual
+    |------------------------------------------------------------------------------------------
+    */
+    
+    // calcula el total de ingresos del periodo
+    $ingresos= Ctmayore::where('pcontable_id', $periodo->id)->where('tipo', 4)->get();
+    $totalIngresos= $ingresos->sum('credito') - $ingresos->sum('debito');
+    //dd($totalIngresos);
+
+    // crea una colleccion con todas las cuenta de gastos 
+    $ctmayores= Ctmayore::where('pcontable_id', $periodo->id)->where('tipo', 6)->get();
+    
+    // calcula el total de itbms del periodo    
+    $itbms= $ctmayores->where('cuenta', 15);
+    $totalItbms= $itbms->sum('debito') - $itbms->sum('credito');
+    // dd($totalItbms);
+    
+    // calcula el total de gastos del periodo excluyendo la cuenta de itbms
+    $gastos= $ctmayores->where('cuenta','!=', 15);
+    
+    // excluye todos los registro que el campo debito y credito sea igual a cero
+    $gastos = $gastos->reject(function($gasto) {
+      return $gasto->debito == "0.00" && $gasto->credito == "0.00"; 
+    });
+    
+    $gastostotales= $gastos->sum('debito') - $gastos->sum('credito');
+    //dd($totalGastos);
+    
+    $datos="";
+    foreach ($gastos as $gasto) {
+      $datos = $datos.'{name: "'.Catalogo::find($gasto->cuenta)->nombre.'", y: '.$gasto->debito.'},';
+    }
+    $gastos= rtrim($datos, ',');
+    // dd($gastos);
+    
+    /*
+    |--------------------------------------------------------------------------------
+    | Procesa los datos necesarios para la grafica de Utilidad Ingresos vs Gastos para el periodo actual
+    |--------------------------------------------------------------------------------
+    */
+    $ER_totalGastos= $gastostotales + $totalItbms;
+    $ER_totalIngresos= $totalIngresos - ($gastostotales + $totalItbms);
+    //dd($totalIngresos, $totalGastos);
+
+    // total de ingresos disponibles para utilizar
+    $totalIngresosDisponible= $_totalIngresoPagados - $gastostotales;  
+    //dd($totalIngresosDisponible);
+
+    return view('contabilidad.dashboard.vigente', [
+
+                                                    'pdo' => $periodo->perido,
+                                                    'data' => $data,
+                                                    'descuentos' => $_totalDescuentos,                              
+
+                                                    'espRegularesSD' => $_totalEspRegularesSD,
+                                                    'espRegularesCD' => $_totalEspRegularesCD,
+                                                    'espRecargos' => $_totalEspRecargos,
+                                                    'espExtraordinarias' => $_totalEspExtraordinarias,
+                                                    
+                                                    'totalIngresoEsperadoSD' => $_totalEspRegularesSD,
+                                                    'totalIngresoEsperadoCD' => $_totalEspRegularesCD,
+                                                    
+                                                    'pagRegulares' => $_totalPagRegulares,
+                                                    'pagRecargos' => $_totalPagRecargos,
+                                                    'pagExtraordinarias' => $_totalPagExtraordinarias,
+                                                    
+                                                    'totalPagado' => $_totalIngresoPagados,                                  
+                                                    'totalGastos' => $gastostotales,                                  
+                                                    'totalIngresosDisponible' => $totalIngresosDisponible, 
+                                                    
                                                     'ER_totalIngresos' => $ER_totalIngresos,
                                                     'ER_totalGastos' => $ER_totalGastos,
                                                     'itbms' => $totalItbms,

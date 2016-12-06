@@ -52,9 +52,16 @@
 		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Organizaciones</span></a>
 	</li>
 	<li>
-		<a href="{{ URL::route('historicos') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Dashboard</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Dashboard</span></a>
+		<ul>
+			<li>
+				<a href="{{ URL::route('vigente') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Vigente</span></a>
+			</li>
+			<li>
+				<a href="{{ URL::route('historico') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Historico</span></a>
+			</li>
+		</ul>
 	</li>
-	
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Blog</span></a>
 		<ul>
