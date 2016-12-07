@@ -9,7 +9,7 @@ class Prop extends Model
     protected $table = 'props';
     public $timestamps = false;    
     
-    public function uns() {
+    public function un() {
         return $this->belongsTo('App\Un');
     }
 

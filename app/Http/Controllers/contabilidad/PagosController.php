@@ -34,7 +34,7 @@ class PagosController extends Controller {
   }
   
   /*************************************************************************************
-   * Despliega todos los pagos que pertenecen a una determinada Unidad.
+   * Despliega todos los pagos que pertenecen a una determinada Unidad en el backend.
    ************************************************************************************/	
 	public function indexPagos($un_id)
 	{
@@ -46,6 +46,21 @@ class PagosController extends Controller {
 					->with('un_id', $un_id)
 					->with('datos', $datos);
 	}	
+
+  /*************************************************************************************
+   * Despliega todos los pagos que pertenecen a una determinada Unidad en el frontend.
+   ************************************************************************************/	
+	public function indexPagosfrontend($un_id, $codigo)
+	{
+
+		$datos = Pago::where('un_id', $un_id)->get();
+		//dd($datos->toArray());
+		
+		return view('contabilidad.pagos.indexPagosfrontend')
+					->with('un_id', $un_id)
+					->with('codigo', $codigo)
+					->with('datos', $datos);
+	}
 
   /*************************************************************************************
 	 * Despliega formulario para crear un nuevo registro

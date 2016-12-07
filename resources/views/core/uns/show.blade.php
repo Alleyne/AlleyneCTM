@@ -264,7 +264,7 @@
 						  	<a href="{{ URL::route('indexPagos', $dato->id) }}"><img src="{{asset('assets/backend/img/rpago.png') }}" alt="" style="width:110px;height:110px;border:0;"></a>
 						  </div>
 						  <div class="col-md-6">
-						  	<a href="{{ URL::route('ecuentas', array($dato->id, 'completo')) }}"><img src="{{asset('assets/backend/img/ecuentas.png') }}" alt="" style="width:82px;height:82px;border:0;"></a>
+						  	<a href="{{ URL::route('ecuentas', array($dato->id, 'backend')) }}"><img src="{{asset('assets/backend/img/ecuentas.png') }}" alt="" style="width:82px;height:82px;border:0;"></a>
 						  </div>
 						
 						</div>

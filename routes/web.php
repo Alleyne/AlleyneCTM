@@ -116,8 +116,9 @@ Route::group(['namespace' => 'contabilidad'], function()
   Route::get('indexPagos/{un_id}', 'PagosController@indexPagos')->name('indexPagos');
   Route::get('createPago/{un_id}', 'PagosController@createPago')->name('createPago');
   Route::get('showRecibo/{pago_id}', 'PagosController@showRecibo')->name('showRecibo');
-  Route::get('procesaAnulacionPago/{pago_id}, {un_id}', 'PagosController@procesaAnulacionPago')->name('procesaAnulacionPago');
+  Route::get('procesaAnulacionPago/{pago_id},{un_id}', 'PagosController@procesaAnulacionPago')->name('procesaAnulacionPago');
   Route::get('eliminaPagoCheque/{pago_id}', 'PagosController@eliminaPagoCheque')->name('eliminaPagoCheque');
+	Route::get('indexPagosfrontend/{un_id},{codigo}', 'PagosController@indexPagosfrontend')->name('indexPagosfrontend');
 	Route::resource('pagos', 'PagosController');
 		
 	//---------------------------------------------------------//
@@ -143,6 +144,7 @@ Route::group(['namespace' => 'contabilidad'], function()
 	// Funciones del controlador CtdasmsController
 	//---------------------------------------------------------// 	
   Route::get('ecuentas/{un_id}, {tipo}', 'CtdasmsController@ecuentas')->name('ecuentas');
+  Route::get('ecuentas/{un_id}', 'CtdasmsController@ecuentasfrontend')->name('ecuentasfrontend');	
 	Route::resource('ctdasms', 'CtdasmsController');		
 
 	//---------------------------------------------------------//
@@ -231,7 +233,7 @@ Route::group(['namespace' => 'blog'], function()
 
   Route::get('contact', 'PagesController@getContact')->name('contact');
   Route::post('contact', 'PagesController@postContact');
-	Route::get('about', 'PagesController@getAbout')->name('about');
+	Route::get('directivos', 'PagesController@getDirectivos')->name('directivos');
 	Route::get('pages', 'PagesController@getIndex')->name('pages');
 	Route::resource('posts', 'PostController');
 });
@@ -366,9 +368,25 @@ foreach ($roles as $role) {
 	//dd($dato->banco->nombre, $dato->un->codigo, $dato->trantipo->nombre);
 	//dd($dato->un->codigo);
 
-$datos = DB::table('ctdasms')
+/*$datos = DB::table('ctdasms')
                 ->groupBy('pcontable_id')
                 ->having('pcontable_id', '>', 1)
                 ->get();
-dd($datos->toArray());
+dd($datos->toArray());*/
+
+		$es = false;
+		if (Auth::check()) 
+  		{
+		    // encuentra todos los roles del usuario logueado
+			$roles = Auth::user()->roles;
+		     dd($roles->toArray());
+
+			foreach ($roles as $role) {
+		    	if($role->name==='Propietario') {
+		    		$es = true;
+		    	}
+			}
+		}
+		return $es;	
+
 });

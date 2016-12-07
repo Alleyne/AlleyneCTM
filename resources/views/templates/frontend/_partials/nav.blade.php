@@ -13,49 +13,55 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse navbar-responsive-collapse">
         <ul class="nav navbar-nav">
-            <!-- Home -->
-            <li class="dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                    Home
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="{{ URL::route('frontend') }}">Home</a></li>
-                </ul>
-            </li>
-            <!-- End Home -->
-
-            <!-- Portfolio -->
-            <li class="dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                    About Us
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="{{ URL::route('about') }}">About Us</a></li>
-                </ul>
-            </li>
-            <!-- Ens Portfolio -->
-
-            <!-- Blog -->
+            <!-- Inicio -->
             <li class="dropdown active">
-                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                    Blog
+                <a href="{{ URL::route('frontend') }}" class="dropdown-toggle">
+                    Inicio
                 </a>
-                <ul class="dropdown-menu">
-                    <li><a href="{{ URL::route('blog') }}">Blogs</a></li>
-                </ul>
             </li>
-            <!-- End Blog -->
+            <!-- End Inicio -->
 
-            <!-- Contacts -->
+            <!-- Articulos -->
             <li class="dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                    Contacts
+                <a href="{{ URL::route('blog') }}" class="dropdown-toggle">
+                    Ver Articulos
                 </a>
-                <ul class="dropdown-menu">
-                    <li><a href="{{ URL::route('contact') }}">Contact Us</a></li>
-                </ul>
+            </li>
+            <!-- End Articulos -->
+            
+            <!-- Reportes -->            
+            @if (Auth::check())
+                @foreach (Auth::user()->roles as $role)
+                    @if($role->name==='Propietarios' )
+                        <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Reportes</a>
+                            <ul class="dropdown-menu">  
+                                @foreach (Auth::user()->props as $un)
+                                    <li><a href="{{ URL::route('ecuentas', array($un->un_id, 'frontend')) }}">Estado de cuentas {{ $un->un->codigo }}</a></li>
+                                    <li><a href="{{ URL::route('indexPagosfrontend', array($un->un_id, $un->un->codigo)) }}">Recibos {{ $un->un->codigo }}</a></li>                                
+                                    <li>&nbsp;</li>                                
+                                @endforeach
+                            </ul>            
+                        </li>                              
+                    @endif
+                @endforeach
+            @endif
+            <!-- End Reportes -->
+
+            <!-- Junta Directiva -->
+            <li class="dropdown">
+                <a href="{{ URL::route('directivos') }}" class="dropdown-toggle">
+                    Directivos
+                </a>
+            </li>
+            <!-- End Junta Directiva -->
+
+            <!-- Contactar -->
+            <li class="dropdown">
+                <a href="{{ URL::route('contact') }}" class="dropdown-toggle">
+                    Contactar
+                </a>
             </li>                    
-            <!-- End Contacts -->
+            <!-- End Contactar -->
 
             <!-- Search Block -->
             <li>

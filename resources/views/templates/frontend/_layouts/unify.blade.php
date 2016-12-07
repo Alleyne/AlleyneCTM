@@ -36,6 +36,7 @@
       <!--=== Content Part ===-->
       <div class="container content">   
         @include('templates.frontend._partials.messages')
+        @include('templates.frontend._partials.flash_messages')
         @yield('content')      
       </div><!--/container-->   
       <!--=== End Content Part ===-->

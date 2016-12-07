@@ -1,6 +1,7 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')<!-- MAIN PANEL -->
+@section('content')
+<!-- MAIN PANEL -->
 	<!-- widget grid -->
 	<section id="widget-grid" class="">
 	
@@ -45,7 +46,7 @@
 							<div class="widget-body">
 								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'permissions.store')) }}		
 									<fieldset>
-										{{ csrf_field() !!}
+										{{ csrf_field() }}
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">

@@ -61,8 +61,8 @@ class User extends Authenticatable
         return $this->hasMany('App\Bitacora');
     }    
 
-    public function prop()
+    public function props()
     {
-        return $this->hasOne('App\Prop');
+        return $this->hasMany('App\Prop');
     }
 }

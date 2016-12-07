@@ -1,6 +1,6 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')
+@section('content')
 
 		<!-- widget grid -->
 		<section id="widget-grid" class="">

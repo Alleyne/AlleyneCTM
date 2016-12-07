@@ -17,7 +17,7 @@ class PagesController extends Controller {
 		return view('blog.pages.welcome')->withPosts($posts);
 	}
 
-	public function getAbout() {
+	public function getDirectivos() {
 		$first = 'Alex';
 		$last = 'Curtis';
 
@@ -26,7 +26,7 @@ class PagesController extends Controller {
 		$data = [];
 		$data['email'] = $email;
 		$data['fullname'] = $fullname;
-		return view('blog.pages.about')->withData($data);
+		return view('blog.pages.directivos')->withData($data);
 	}
 
 	public function getContact() {

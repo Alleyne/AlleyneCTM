@@ -80,7 +80,7 @@ class Grupo {
 		if (Auth::check()) 
   		{
 		    // encuentra todos los roles del usuario logueado
-			$roles = Auth::user()->roles()->get();
+			$roles = Auth::user()->roles;
 		    // dd($roles->toArray());
 
 			foreach ($roles as $role) {
@@ -103,11 +103,11 @@ class Grupo {
 		if (Auth::check()) 
   		{
 		    // encuentra todos los roles del usuario logueado
-			$roles = Auth::user()->roles()->get();
-		    // dd($roles->toArray());
+			$roles = Auth::user()->roles;
+		  //dd($roles->toArray());
 
 			foreach ($roles as $role) {
-		    	if($role->name==='Propietario') {
+		    	if($role->name==='Propietarios') {
 		    		$es = true;
 		    	}
 			}
@@ -126,7 +126,7 @@ class Grupo {
 		if (Auth::check()) 
   		{
 		    // encuentra todos los roles del usuario logueado
-			$roles = Auth::user()->roles()->orderBy('name')->get();
+			$roles = Auth::user()->roles;
 		    // dd($roles->toArray());
 
 			foreach ($roles as $role) {

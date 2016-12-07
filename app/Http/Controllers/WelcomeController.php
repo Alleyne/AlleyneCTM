@@ -1,5 +1,5 @@
 <?php namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\library\Graph;
 use App\Post;
 
@@ -33,6 +33,16 @@ class WelcomeController extends Controller {
 	 */
 	public function index()
 	{
+		
+		/* if (Auth::check()) {
+      foreach (Auth::user()->roles as $role) {
+        if($role->name==='Propietarios') {
+        	foreach (Auth::user()->props as $un)
+        		dd($un->toArray(), $un->un->codigo);
+        }
+      }
+    }*/
+
 		// encuentra la data para la grafica de propietarios morosos a la fecha
 		$data= Graph::getDataGraphMorosos();
 		

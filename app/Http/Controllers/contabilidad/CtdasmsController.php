@@ -165,12 +165,17 @@ class CtdasmsController extends Controller {
        
     //dd($imps->toArray(), $recs->toArray(), $total_importe, $total_recargo, $data);
     
-    if ($tipo == 'corto') {
-      return view('contabilidad.ctdasms.ecuentasCorto')
-              ->with('data', $data);
+    if ($tipo == 'frontend') {
+      return view('contabilidad.ctdasms.ecuentasFrontend')
+            ->with('data', $data)
+            ->with('imps', $imps)
+            ->with('recs', $recs)
+            ->with('extras', $extras)
+            ->with('ants', $ants);
     }
-    elseif ($tipo == 'completo') {
-      return view('contabilidad.ctdasms.ecuentasCompleto')
+    
+    elseif ($tipo == 'backend') {
+      return view('contabilidad.ctdasms.ecuentasBackend')
             ->with('data', $data)
             ->with('imps', $imps)
             ->with('recs', $recs)

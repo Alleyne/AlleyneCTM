@@ -13,14 +13,14 @@ use App\Bitacora;
 
 class RolesController extends Controller
 {
-    public function __construct()
-    {
-       	$this->middleware('hasAccess');    
-    }
-    
-    /*************************************************************************************
-     * Despliega un grupo de registros en formato de tabla
-     ************************************************************************************/	
+  public function __construct()
+  {
+     	$this->middleware('hasAccess');    
+  }
+  
+  /*************************************************************************************
+   * Despliega un grupo de registros en formato de tabla
+   ************************************************************************************/	
 	public function index()
 	{
 		//Encuentra todos los roles registrados 
@@ -31,9 +31,9 @@ class RolesController extends Controller
  		return view('core.roles.index')->with('datos', $datos);
 	}   
 
-    /*************************************************************************************
-     * Despliega un grupo de registros en formato de tabla
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Despliega un grupo de registros en formato de tabla
+   ************************************************************************************/	
 	public function permisPorRole($role_id)
 	{
 		//Encuentra todos los permisos registrados 

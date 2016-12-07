@@ -40,7 +40,7 @@ class HomeController extends Controller
             return redirect()->route('frontend');
         }
         
-        Cache::forever('userRoleskey', Auth::user()->roles()->get());
+        Cache::forever('userRoleskey', Auth::user()->roles);
  
         Cache::forever('userFullNamekey', Auth::user()->first_name .' '.Auth::user()->last_name);
         
