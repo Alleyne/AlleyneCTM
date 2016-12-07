@@ -77,171 +77,169 @@
         @if (count($imps)==0 && count($recs)==0 && count($extras)==0 && $data['activa']==1)
           @if (count($ants)>0)
             <div class="col-xs-12">
-                  <div class="row">
-                      <table class="table table-bordered table-striped">
-                          <thead>
-                              <strong><tr>
-                                  <th>Detalle</th>
-                                  <th class="text-center">Importe</th>                    
-                                  <th class="text-center">Descuento</th>
-                                  <th class="text-center">Total</th>
-                              </tr></strong>
-                          </thead>
-                          <tbody>
-                              @if (count($ants)>0)
-                                <tr>
-                                  <td>==== Pagos anticipados con descuento ====</td>
-                                  <td></td>
-                                  <td></td>                                        
-                                  <td></td> 
-                                </tr>                                    
+              <div class="row">
+                  <table class="table table-bordered table-striped">
+                      <thead>
+                          <strong><tr>
+                              <th>Detalle</th>
+                              <th class="text-center">Importe</th>                    
+                              <th class="text-center">Descuento</th>
+                              <th class="text-center">Total</th>
+                          </tr></strong>
+                      </thead>
+                      <tbody>
+                          @if (count($ants)>0)
+                            <tr>
+                              <td>==== Pagos anticipados con descuento ====</td>
+                              <td></td>
+                              <td></td>                                        
+                              <td></td> 
+                            </tr>                                    
 
-                                @foreach ($ants as $ant)
-                                  <tr>
-                                    <td>{{ $ant->detalle }}</td>
-                                    <td col width="70px" align="right">{{ $ant->montoCuota }}</td>                       
-                                    <td col width="70px" align="right">{{ $ant->descuento }}</td>
-                                    <td col width="70px" align="right"><strong>{{ $ant->importe }}</strong></td>
-                                  </tr>
-                                @endforeach
-                              @endif
-                          </tbody>
-                      </table>    
-                  </div><!-- end row -->
-                  
-
+                            @foreach ($ants as $ant)
+                              <tr>
+                                <td>{{ $ant->detalle }}</td>
+                                <td col width="70px" align="right">{{ $ant->montoCuota }}</td>                       
+                                <td col width="70px" align="right">{{ $ant->descuento }}</td>
+                                <td col width="70px" align="right"><strong>{{ $ant->importe }}</strong></td>
+                              </tr>
+                            @endforeach
+                          @endif
+                      </tbody>
+                  </table>    
+              </div><!-- end row -->
             </div>
           @endif
           
           @if ($data['anticipado']>0)
             <HR WIDTH=100% ALIGN=CENTER COLOR="BLACK">
             <div class="row">
-                  <div class="col-xs-10 col-md-offset-1">
-                    <p class="text-justify">Estimado propietario, su cuenta de pagos por anticipados refleja un saldo a su favor de B/. <strong>{{ $data['pagos_anticipados'] }}</strong>. Este saldo lo podrá utilizar para completar futuros pagos. Gracias por mantener sus pagos al dia.</p>
-                  </div>
+              <div class="col-xs-10 col-md-offset-1">
+                <p class="text-justify">Estimado propietario, su cuenta de pagos por anticipados refleja un saldo a su favor de B/. <strong>{{ $data['pagos_anticipados'] }}</strong>. Este saldo lo podrá utilizar para completar futuros pagos. Gracias por mantener sus pagos al dia.</p>
+              </div>
             </div>
           @endif
           
           <div class="row">
-                <div class="col-xs-12">
-                  <h3><p class="text-center"><strong>PAZ Y SALVO</strong></p></h3>
-                  <p class="text-center">Gracias por mantener su estado de cuenta al dia.</p>
-                </div>
+            <div class="col-xs-12">
+              <h3><p class="text-center"><strong>PAZ Y SALVO</strong></p></h3>
+              <p class="text-center">Gracias por mantener su estado de cuenta al dia.</p>
+            </div>
           </div>
 
         @elseif (count($imps)>0 || count($recs)>0 || count($extras)>0 && $data['activa']==1)
           <div class="col-xs-12">
-                <div class="row">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <strong><tr>
-                                <th>Detalle</th>
-                                <th col width="110px" class="text-center">Pagar antes de:</th>                    
-                                <th col width="110px" class="text-center">Deuda</th>
-                            </tr></strong>
-                        </thead>
-                        <tbody>
-                            @if (count($imps)>0)
-                              <tr>
-                                <td>==== Cuotas de mantenimiento por pagar ====</td>
-                                <td></td>
-                                <td></td>                                        
-                              </tr>                                    
+            <div class="row">
+              <table class="table table-bordered table-striped">
+                  <thead>
+                      <strong><tr>
+                        <th>Detalle</th>
+                        <th col width="110px" class="text-center">Pagar antes de:</th>                    
+                        <th col width="110px" class="text-center">Deuda</th>
+                      </tr></strong>
+                  </thead>
+                  <tbody>
+                      @if (count($imps)>0)
+                        <tr>
+                          <td>==== Cuotas de mantenimiento por pagar ====</td>
+                          <td></td>
+                          <td></td>                                        
+                        </tr>                                    
 
-                              @foreach ($imps as $imp)
-                                <tr>
-                                  <td>Debe cuota de mantenimiento del mes de <strong>{{ $imp->mes_anio }}</strong></td>
-                                  <td align="right">{{ $imp->f_vencimiento }}</td>                      
-                                  <td col width="90px" align="right"><mark>{{ $imp->importe }}</mark></td>                                        
-                                </tr>
-                              @endforeach
-                            @endif
-                            
-                            @if (count($recs)>0)
-                              <tr>
-                                <td>==== Recargos por pagar ====</td>
-                                <td></td>
-                                <td></td>                                        
-                              </tr>                                    
+                        @foreach ($imps as $imp)
+                          <tr>
+                            <td>Debe cuota de mantenimiento del mes de <strong>{{ $imp->mes_anio }}</strong></td>
+                            <td align="right">{{ $imp->f_vencimiento }}</td>                      
+                            <td col width="90px" align="right"><mark>{{ $imp->importe }}</mark></td>                                        
+                          </tr>
+                        @endforeach
+                      @endif
+                      
+                      @if (count($recs)>0)
+                        <tr>
+                          <td>==== Recargos por pagar ====</td>
+                          <td></td>
+                          <td></td>                                        
+                        </tr>                                    
 
-                              @foreach ($recs as $rec)
-                                <tr>
-                                  <td>Debe recargo del mes de <strong>{{ $rec->mes_anio }}</strong></td>
-                                  <td></td>                       
-                                  <td col width="90px" align="right"><mark>{{ $rec->recargo}}</mark></td>
-                                </tr>
-                              @endforeach
-                            @endif
-                            
-                            @if (count($extras)>0)
-                              <tr>
-                                <td>==== Cuotas extraordinarios por pagar ====</td>
-                                <td></td>
-                                <td></td>                                        
-                              </tr>                                    
+                        @foreach ($recs as $rec)
+                          <tr>
+                            <td>Debe recargo del mes de <strong>{{ $rec->mes_anio }}</strong></td>
+                            <td></td>                       
+                            <td col width="90px" align="right"><mark>{{ $rec->recargo}}</mark></td>
+                          </tr>
+                        @endforeach
+                      @endif
+                      
+                      @if (count($extras)>0)
+                        <tr>
+                          <td>==== Cuotas extraordinarios por pagar ====</td>
+                          <td></td>
+                          <td></td>                                        
+                        </tr>                                    
 
-                              @foreach ($extras as $extra)
-                                <tr>
-                                  <td>Debe cuota extraordinaria del mes de <strong>{{ $extra->mes_anio }}</strong></td>
-                                  <td></td>                       
-                                  <td col width="90px" align="right"><mark>{{ $extra->extra}}</mark></td>
-                                </tr>
-                              @endforeach
-                            @endif
-                        </tbody>
-                    </table>    
-                </div><!-- end row -->
-                <br>
-                <div class="row">
-                      <div class="col-xs-10">
-                        <p class="text-right"><strong>Deuda acumulada a cancelar</strong></p>
-                      </div>
-                      <div class="col-xs-2">
-                        <p class="text-right"><strong>{{ $data['total'] }}</strong></p>
-                      </div>
-                </div>
-              
-                <div class="row">
-                      <div class="col-xs-10">
-                        <p class="text-right"><strong>(-) Saldo a favor por pagos anticipados</strong></p>
-                      </div>
-                      <div class="col-xs-2">
-                        <p class="text-right"><strong>{{ $data['pagos_anticipados'] }}</strong></p>
-                      </div>
-                </div>
-                
-                <div class="row">
-                      <div class="col-xs-10">
-                        <p class="text-right"></p>
-                      </div>
-                      <div class="col-xs-2">
-                        <p class="text-right">========</p>
-                      </div>
-                </div>
-                
-                <div class="row">
-                      <div class="col-xs-10">
-                        <p class="text-right"><strong>Total de la deuda</strong></p>
-                      </div>
-                      <div class="col-xs-2">
-                        <p class="text-right"><strong>{{ $data['total_adeudado'] }}</strong></p>
-                      </div>
-                </div>
+                        @foreach ($extras as $extra)
+                          <tr>
+                            <td>Debe cuota extraordinaria del mes de <strong>{{ $extra->mes_anio }}</strong></td>
+                            <td></td>                       
+                            <td col width="90px" align="right"><mark>{{ $extra->extra}}</mark></td>
+                          </tr>
+                        @endforeach
+                      @endif
+                  </tbody>
+              </table>    
+            </div><!-- end row -->
+            <br>
+            <div class="row">
+              <div class="col-xs-10">
+                <p class="text-right"><strong>Deuda acumulada a cancelar</strong></p>
+              </div>
+              <div class="col-xs-2">
+                <p class="text-right"><strong>{{ $data['total'] }}</strong></p>
+              </div>
+            </div>
+          
+            <div class="row">
+              <div class="col-xs-10">
+                <p class="text-right"><strong>(-) Saldo a favor por pagos anticipados</strong></p>
+              </div>
+              <div class="col-xs-2">
+                <p class="text-right"><strong>{{ $data['pagos_anticipados'] }}</strong></p>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-xs-10">
+                <p class="text-right"></p>
+              </div>
+              <div class="col-xs-2">
+                <p class="text-right">========</p>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-xs-10">
+                <p class="text-right"><strong>Total de la deuda</strong></p>
+              </div>
+              <div class="col-xs-2">
+                <p class="text-right"><strong>{{ $data['total_adeudado'] }}</strong></p>
+              </div>
+            </div>
           </div>
 
           @if ($data['anticipado']>0)
             <HR WIDTH=100% ALIGN=CENTER COLOR="BLACK">
             <div class="row">
-                  <div class="col-xs-10 col-md-offset-1">
-                    <p class="text-justify">Estimado propietario, su cuenta de pagos por anticipados refleja un saldo a su favor de B/. <strong>{{ $data['pagos_anticipados'] }}</strong>. Este saldo lo podrá utilizar para completar futuros pagos. Gracias por mantener sus pagos al dia.</p>
-                  </div>
+              <div class="col-xs-10 col-md-offset-1">
+                <p class="text-justify">Estimado propietario, su cuenta de pagos por anticipados refleja un saldo a su favor de B/. <strong>{{ $data['pagos_anticipados'] }}</strong>. Este saldo lo podrá utilizar para completar futuros pagos. Gracias por mantener sus pagos al dia.</p>
+              </div>
             </div>
           @endif
         @else
           <div class="row">
-                <div class="col-xs-12">
-                  <h3><p class="text-center"><strong>CUENTA INACTIVA</strong></p></h3>
-                </div>
+            <div class="col-xs-12">
+              <h3><p class="text-center"><strong>CUENTA INACTIVA</strong></p></h3>
+            </div>
           </div>
         @endif
 

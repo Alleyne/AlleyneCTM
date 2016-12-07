@@ -51,10 +51,8 @@
     
       <!--=== Copyright ===-->
       <div class="copyright">
-          <div class="container">
-            @include('templates.frontend._partials.copyright')
-          </div> 
-      </div><!--/copyright--> 
+        @include('templates.frontend._partials.copyright')
+      </div> 
       <!--=== End Copyright ===-->
     </div><!--/wrapper-->
     

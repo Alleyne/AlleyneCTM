@@ -12,14 +12,15 @@
 
 <!-- CSS Global Compulsory -->
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+
 <link href="{{ asset('assets/frontend/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 <link href="{{ asset('assets/frontend/css/style.css') }}" rel="stylesheet">
-
 <!-- CSS Implementing Plugins -->
 <link rel="stylesheet" href="{{ URL::asset('assets/frontend/plugins/line-icons/line-icons.css') }}">            
 <link rel="stylesheet" href="{{ URL::asset('assets/frontend/plugins/font-awesome/css/font-awesome.min.css') }}">    
-<link rel="stylesheet" href="{{ URL::asset('assets/frontend/plugins/flexslider/flexslider.css') }}">    
-<link rel="stylesheet" href="{{ URL::asset('assets/frontend/plugins/parallax-slider/css/parallax-slider.css') }}">     
+<!--<link rel="stylesheet" href="{{ URL::asset('assets/frontend/plugins/flexslider/flexslider.css') }}"> -->   
+<link rel="stylesheet" href="{{ URL::asset('assets/frontend/plugins/parallax-slider/css/parallax-slider.css') }}">   
 
 <!-- CSS Theme -->    
 <link rel="stylesheet" href="{{ URL::asset('assets/frontend/css/themes/default.css') }}" id="style_color">     
