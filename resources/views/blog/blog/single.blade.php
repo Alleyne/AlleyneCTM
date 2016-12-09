@@ -56,35 +56,42 @@
                 </div><!--/media-->
                 <!-- End Recent Comments -->
 
-                <!-- Comment Form -->
-                <div class="post-comment">
-                	<h3>Leave a Comment</h3>
-					{{ Form::open(['route' => ['comments.store', $post->id], 'method' => 'POST']) }}
+                @if (Auth::check())
+                    <!-- Comment Form -->
+                    <div class="post-comment">
+                        <h3>Haga un comentario</h3>
+                        {{ Form::open(['route' => ['comments.store', $post->id], 'method' => 'POST']) }}
 
-						<div class="row">
-							<div class="col-md-6">
-								{{ Form::label('name', "Name:") }}
-								{{ Form::text('name', null, ['class' => 'form-control']) }}
-							</div>
+                            <div class="row">
+                                <!--<div class="col-md-6">
+                                    {{ Form::label('name', "Name:") }}
+                                    {{ Form::text('name', null, ['class' => 'form-control']) }}
+                                </div>
 
-							<div class="col-md-6">
-								{{ Form::label('email', 'Email:') }}
-								{{ Form::text('email', null, ['class' => 'form-control']) }}
-							</div>
+                                <div class="col-md-6">
+                                    {{ Form::label('email', 'Email:') }}
+                                    {{ Form::text('email', null, ['class' => 'form-control']) }}
+                                </div> -->
 
-							<div class="col-md-12">
-								{{ Form::label('comment', "Comment:") }}
-								{{ Form::textarea('comment', null, ['class' => 'form-control', 'rows' => '5']) }}
-                                <br>
-                                <div class="g-recaptcha" data-sitekey="6LfPuwsUAAAAADUHG1HdmOh_p2mIi9II9a4vGTyX"></div>
-						
-                                {{ Form::submit('Agregar Commentario', ['class' => 'btn btn-success btn-block', 'style' => 'margin-top:15px;']) }}
-							</div>
-						</div>
+                                <div class="col-md-12">
+                                    {{ Form::label('comment', "Commentario:") }}
+                                    {{ Form::textarea('comment', null, ['class' => 'form-control', 'rows' => '5']) }}
+                                    <br>
+                                    <div class="g-recaptcha" data-sitekey="6LfPuwsUAAAAADUHG1HdmOh_p2mIi9II9a4vGTyX"></div>
+                            
+                                    {{ Form::submit('Agregar Commentario', ['class' => 'btn btn-success btn-block', 'style' => 'margin-top:15px;']) }}
+                                </div>
+                            </div>
 
-					{{ Form::close() }}
-                </div>
-                <!-- End Comment Form -->
+                        {{ Form::close() }}
+                    </div>
+                    <!-- End Comment Form -->
+                @else
+                    <div class="alert alert-info fade in">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <strong>Atención!</strong> Para hacer comentarios deberá <a class="alert-link" href="{{ url('/login') }}"> loquease</a> al Sistema en primera instancia..
+                    </div>
+                @endif
             </div>
             <!-- End Left Sidebar -->
 

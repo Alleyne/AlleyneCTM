@@ -29,10 +29,11 @@
             </li>
             <!-- End Articulos -->
             
-            <!-- Reportes -->            
+                        
             @if (Auth::check())
                 @foreach (Auth::user()->roles as $role)
                     @if($role->name==='Propietarios' )
+                        <!-- Reportes -->
                         <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Reportes</a>
                             <ul class="dropdown-menu">  
                                 @foreach (Auth::user()->props as $un)
@@ -42,11 +43,21 @@
                                 @endforeach
                             </ul>            
                         </li>                              
+                        <!-- End Reportes -->
+                        
+                        <!-- Gerencia -->
+                        <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Gerencia</a>
+                            <ul class="dropdown-menu">  
+                                <li><a href="">Periodos contables</a></li>
+                                <li><a href="">Graficas periodo vigente</a></li>                                
+                                <li><a href="">Graficas historico</a></li>   
+                            </ul>   
+                        </li>
+                        <!-- End Gerencia -->                    
                     @endif
                 @endforeach
             @endif
-            <!-- End Reportes -->
-
+            
             <!-- Junta Directiva -->
             <li class="dropdown">
                 <a href="{{ URL::route('directivos') }}" class="dropdown-toggle">

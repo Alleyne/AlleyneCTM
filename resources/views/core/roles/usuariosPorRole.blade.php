@@ -4,10 +4,9 @@
 
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
-		
+
 			<!-- row -->
 			<div class="row">
-		
 				<!-- NEW WIDGET START -->
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<!-- Widget ID (each widget will need unique ID)-->
@@ -26,10 +25,14 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-							<h2>Roles </h2>
+							<h2>Usuarios por role </h2>
 							<div class="widget-toolbar">
+								<a href="{{ URL::route('roles.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 
-							</div>	
+								<button class="btn btn-success" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
+									 Vincular usuario
+								</button>
+							</div>
 						</header>
 		
 						<!-- widget div-->
@@ -55,55 +58,28 @@
 										<tr>
 											<th>ID</th>
 											<th>NOMBRE</th>
-											<th>DESCRIPCION</th>
-											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
+											<th>EMAIL</th>
+											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>								
 										</tr>
 									</thead>
 									<tbody>
-						
 										@foreach ($datos as $dato)
 											<tr>
-												@if (Cache::get('esAdminkey'))												
-													<td><strong>{{ $dato->id }}</strong></td>
-													<td><strong>{{ $dato->name }}</strong></td>
-													<td><strong>{{ $dato->description }}</strong></td>
-													<td col width="250px" align="right">
-														<ul class="demo-btns">
-															<a href="{{ URL::route('usuariosPorRole', $dato->id) }}" class="btn btn-success btn-xs"><i class="fa fa-search"></i> Asignar usuario</a>
-															<a href="{{ URL::route('permisPorRole', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar permisos</a>
-														</ul>
-													</td>
-
-												@elseif (Cache::get('esAdminDeBloquekey'))												
-													<td><strong>{{ $dato->nombre }}</strong></td>
-													<td col width="380px" align="right">
-														<ul class="demo-btns">
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Bloques</a>
-															</li>
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-															</li>				
-														</ul>
-													</td>
-												
-												@elseif (Cache::get('esJuntaDirectivakey'))
-													<td col width="40px"><strong>{{ $dato->jd->id }}</strong></td>
-													<td><strong>{{ $dato->jd->nombre }}</strong></td>
-													<td col width="160px" align="center">
-														<ul class="demo-btns">
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Bloques</a>
-															</li>
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-															</li>				
-														</ul>
-													</td>
-												@endif	
+												<td><strong>{{ $dato->id }}</strong></td>
+												<td><strong>{{ $dato->nombre_completo }}</strong></td>
+												<td><strong>{{ $dato->email }}</strong></td>
+												<td col width="160px" align="center">
+													<ul class="demo-btns">
+														<li>
+															<a href="{{ URL::route('users.show', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
+														</li>				
+														<div id="ask_1" class="btn btn-warning btn-xs">
+															<a href="{{ URL::route('desvincularusuario', array($role_id, $dato->id)) }}" title="Desvincular"><i class="fa fa-search"></i> Desvincular</a>
+														</div>
+													</ul>
+												</td>
 											</tr>
 										@endforeach
-							
 									</tbody>
 								</table>
 							</div>
@@ -121,8 +97,42 @@
 		
 		</section>
 		<!-- end widget grid -->
-
-
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Vincular usuario a role</h4>
+					</div>
+					<div class="modal-body">
+		
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'roleStoreUsuario')) }}
+							<fieldset>
+								{{ Form::hidden('role_id', $role_id) }}
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="usuario"> Usuario</label>
+											{{ Form::select('id', array('' => 'Escoja el usuario que desea vincular...') + $usuarios, array('title' => 'Escoja el usuario que desea vincular')) }}
+											{!! $errors->first('id', '<li style="color:red">:message</li>') !!}
+										</div>
+									</div>
+								</div>
+							</fieldset>				
+							
+							<div class="form-actions">
+								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
+								<button type="button" class="btn btn-default" data-dismiss="modal">
+									Cancel
+								</button>
+							</div>
+						{{ Form::close() }}
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 @stop
 
 @section('relatedplugins')

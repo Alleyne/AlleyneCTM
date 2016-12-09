@@ -99,6 +99,10 @@ Route::group(['namespace' => 'core'], function()
 	//---------------------------------------------------------// 	
   Route::get('roles/desvincularpermis{role_id}, {permis_id}', 'RolesController@desvincularpermis')->name('desvincularpermis');
   Route::get('roles/permisPorRole{role_id}', 'RolesController@permisPorRole')->name('permisPorRole');
+  Route::get('roles/desvincularusuario{role_id}, {user_id}', 'RolesController@desvincularusuario')->name('desvincularusuario');
+  Route::get('roles/usuariosPorRole{role_id}', 'RolesController@usuariosPorRole')->name('usuariosPorRole');
+  Route::post('roles/roleStoreUsuario', 'RolesController@roleStoreUsuario')->name('roleStoreUsuario');
+	
 	Route::resource('roles', 'RolesController');
 	
 	//---------------------------------------------------------//

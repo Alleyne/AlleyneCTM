@@ -63,10 +63,10 @@
 		</ul>
 	</li>
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Blog</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Articulos</span></a>
 		<ul>
 			<li>
-				<a href="{{ route('posts.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Posts</span></a>
+				<a href="{{ route('posts.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Articulos</span></a>
 			</li>
 			<li>
 				<a href="{{ route('categories.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Categorias</span></a>

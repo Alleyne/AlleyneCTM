@@ -105,7 +105,7 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Vincular Administrador de Bloque</h4>
+						<h4 class="modal-title" id="myModalLabel">Vincular perimiso a role</h4>
 					</div>
 					<div class="modal-body">
 		

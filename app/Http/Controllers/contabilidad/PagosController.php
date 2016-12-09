@@ -53,7 +53,8 @@ class PagosController extends Controller {
 	public function indexPagosfrontend($un_id, $codigo)
 	{
 
-		$datos = Pago::where('un_id', $un_id)->get();
+		$datos= Pago::where('un_id', $un_id)->get();
+		$datos= $datos->sortByDesc('id');
 		//dd($datos->toArray());
 		
 		return view('contabilidad.pagos.indexPagosfrontend')

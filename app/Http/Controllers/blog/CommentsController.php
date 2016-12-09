@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\blog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests;
 use App\Comment;
@@ -12,10 +13,16 @@ use Guzzlehttp\Client;
 
 class CommentsController extends Controller
 {
+    
     public function __construct()
     {
-        $this->middleware('auth', ['except' => 'store']);
+        $this->middleware('hasAccess');    
     }
+
+/*    public function __construct()
+    {
+        $this->middleware('auth', ['except' => 'store']);
+    }*/
 
     /**
      * Store a newly created resource in storage.
@@ -26,8 +33,6 @@ class CommentsController extends Controller
     public function store(Request $request, $post_id)
     {
         $this->validate($request, array(
-            'name'      =>  'required|max:255',
-            'email'     =>  'required|email|max:255',
             'comment'   =>  'required|min:5|max:2000'
             ));
 
@@ -47,8 +52,8 @@ class CommentsController extends Controller
                 $post = Post::find($post_id);
 
                 $comment = new Comment();
-                $comment->name = $request->name;
-                $comment->email = $request->email;
+                $comment->name = Auth::user()->nombre_completo;
+                $comment->email = Auth::user()->email;
                 $comment->comment = $request->comment;
                 $comment->approved = true;
                 $comment->post()->associate($post);
@@ -58,12 +63,13 @@ class CommentsController extends Controller
                 return redirect()->route('blog.single', [$post->slug]);
             
             } else {
-                Session::flash('error', 'you are probably a roobot!');
+                Session::flash('error', 'Permiso para agregar comentarios ha sido denegado!');
                 return redirect()->route('blog.single', [$post->slug]);
             }
 
         } else {
-            return redirect()->route('blog.single', [$post->slug]);
+            Session::flash('error', 'Permiso para agregar comentarios ha sido denegado!');
+            return redirect()->back()->withInput($request->input());
         }
     }
 
@@ -98,7 +104,7 @@ class CommentsController extends Controller
 
         Session::flash('success', 'Comentario fue actualizado!');
 
-        return redirect()->route('blog.posts.show', $comment->post->id);
+        return redirect()->route('posts.show', $comment->post->id);
     }
 
     public function delete($id)
@@ -121,6 +127,6 @@ class CommentsController extends Controller
 
         Session::flash('success', 'Comentario ha sido borrado!');
 
-        return redirect()->route('blog.posts.show', $post_id);
+        return redirect()->route('posts.show', $post_id);
     }
 }

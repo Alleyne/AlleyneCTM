@@ -10,12 +10,6 @@
 			
 			{{ Form::model($comment, ['route' => ['comments.update', $comment->id], 'method' => 'PUT']) }}
 			
-				{{ Form::label('name', 'Nombre:') }}
-				{{ Form::text('name', null, ['class' => 'form-control', 'disabled' => '']) }}
-			
-				{{ Form::label('email', 'Email:') }}
-				{{ Form::text('email', null, ['class' => 'form-control', 'disabled' => '']) }}
-			
 				{{ Form::label('comment', 'Comentario:') }}
 				{{ Form::textarea('comment', null, ['class' => 'form-control']) }}
 			
