@@ -35,6 +35,18 @@ class PcontablesController extends Controller {
   /*************************************************************************************
    * Despliega un grupo de registros en formato de tabla
    ************************************************************************************/  
+  public function indexPeriodosfrontend()
+  {
+    //Obtiene todos los Periodos contables.
+    $datos = Pcontable::All();
+    //dd($datos->toArray());
+
+    return view('contabilidad.pcontables.indexPeriodosfrontend')->with('datos', $datos);      
+  } 
+
+  /*************************************************************************************
+   * Despliega un grupo de registros en formato de tabla
+   ************************************************************************************/  
   public function store()
   {
 

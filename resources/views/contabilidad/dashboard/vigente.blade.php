@@ -1,273 +1,266 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Dashboard')
+@section('title', '| Vigente')
 
 @section('content')
-	<!-- MAIN CONTENT -->
-	<div id="content">
+	<!-- widget grid -->
+	<section id="widget-grid" class="">
 
-		<!-- widget grid -->
-		<section id="widget-grid" class="">
+		<!-- row -->
+		<div class="row">
 
-			<!-- row -->
-			<div class="row">
+			<!-- NEW WIDGET START -->
+			<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-				<!-- NEW WIDGET START -->
-				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<!-- Widget ID (each widget will need unique ID)-->
+				<div class="jarviswidget" id="wid-id-11" data-widget-editbutton="false">
+					<!-- widget options:
+					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-11" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+					data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="true"
+					data-widget-sortable="false"
 
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
+					-->
+					<header>
+						<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
+						<h2>Propietarios Morosos a la fecha. Total adeudado B/. {{ number_format($data['totalAdeudado'],2) }}</h2>
 
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Propietarios Morosos a la fecha. Total adeudado B/. {{ number_format($data['totalAdeudado'],2) }}</h2>
+					</header>
 
-						</header>
+					<!-- widget div-->
+					<div>
 
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-
-        				<div id="morosos" style="min-width: 310px; max-width: 800px; margin: 0 auto"></div>
-
-							</div>
-							<!-- end widget content -->
+						<!-- widget edit box -->
+						<div class="jarviswidget-editbox">
+							<!-- This area used as dropdown edit box -->
 
 						</div>
-						<!-- end widget div -->
+						<!-- end widget edit box -->
 
-					</div>
-					<!-- end widget -->
+						<!-- widget content -->
+						<div class="widget-body no-padding">
 
-				</article>
-				<!-- WIDGET END -->
-
-			</div>
-			<!-- end row -->
-			
-			<!-- row -->
-			<div class="row">
-
-				<!-- NEW WIDGET START -->
-				<article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Ingresos vs gastos del periodo vigente </h2>
-
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-        				<div id="utilidad" style="min-width: 310px; max-width: 800px; margin: 0 auto"></div>
-
-							</div>
-							<!-- end widget content -->
+      				<div id="morosos" style="min-width: 310px; max-width: 800px; margin: 0 auto"></div>
 
 						</div>
-						<!-- end widget div -->
+						<!-- end widget content -->
 
 					</div>
-					<!-- end widget -->
+					<!-- end widget div -->
 
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-3" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+				</div>
+				<!-- end widget -->
 
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
+			</article>
+			<!-- WIDGET END -->
 
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2></h2>
+		</div>
+		<!-- end row -->
+		
+		<!-- row -->
+		<div class="row">
 
-						</header>
+			<!-- NEW WIDGET START -->
+			<article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 
-						<!-- widget div-->
-						<div>
+				<!-- Widget ID (each widget will need unique ID)-->
+				<div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false">
+					<!-- widget options:
+					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
+					data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="true"
+					data-widget-sortable="false"
 
-							</div>
-							<!-- end widget edit box -->
+					-->
+					<header>
+						<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
+						<h2>Ingresos vs gastos del periodo vigente </h2>
 
-							<!-- widget content -->
-							<div class="widget-body no-padding">
+					</header>
 
-							</div>
-							<!-- end widget content -->
+					<!-- widget div-->
+					<div>
+
+						<!-- widget edit box -->
+						<div class="jarviswidget-editbox">
+							<!-- This area used as dropdown edit box -->
 
 						</div>
-						<!-- end widget div -->
+						<!-- end widget edit box -->
 
-					</div>
-					<!-- end widget -->
-
-				</article>
-				<!-- WIDGET END -->
-
-				<!-- NEW WIDGET START -->
-				<article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-2" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
-
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2>Gastos incurridos en el periodo vigente Total: B/. {{ number_format($ER_totalGastos,2) }} </h2>
-
-						</header>
-
-						<!-- widget div-->
-						<div>
-
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
-
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-
-								<div id="gastos" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-							
-							</div>
-							<!-- end widget content -->
+						<!-- widget content -->
+						<div class="widget-body no-padding">
+      				<div id="utilidad" style="min-width: 310px; max-width: 800px; margin: 0 auto"></div>
 
 						</div>
-						<!-- end widget div -->
+						<!-- end widget content -->
 
 					</div>
-					<!-- end widget -->
+					<!-- end widget div -->
 
-					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false">
-						<!-- widget options:
-						usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+				</div>
+				<!-- end widget -->
 
-						data-widget-colorbutton="false"
-						data-widget-editbutton="false"
-						data-widget-togglebutton="false"
-						data-widget-deletebutton="false"
-						data-widget-fullscreenbutton="false"
-						data-widget-custombutton="false"
-						data-widget-collapsed="true"
-						data-widget-sortable="false"
+				<!-- Widget ID (each widget will need unique ID)-->
+				<div class="jarviswidget" id="wid-id-3" data-widget-editbutton="false">
+					<!-- widget options:
+					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
-						-->
-						<header>
-							<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-							<h2></h2>
+					data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="true"
+					data-widget-sortable="false"
 
-						</header>
+					-->
+					<header>
+						<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
+						<h2></h2>
 
-						<!-- widget div-->
-						<div>
+					</header>
 
-							<!-- widget edit box -->
-							<div class="jarviswidget-editbox">
-								<!-- This area used as dropdown edit box -->
+					<!-- widget div-->
+					<div>
 
-							</div>
-							<!-- end widget edit box -->
-
-							<!-- widget content -->
-							<div class="widget-body no-padding">
-
-								<div id="stacked-bar-graph" class="chart no-padding"></div>
-
-							</div>
-							<!-- end widget content -->
+						<!-- widget edit box -->
+						<div class="jarviswidget-editbox">
+							<!-- This area used as dropdown edit box -->
 
 						</div>
-						<!-- end widget div -->
+						<!-- end widget edit box -->
+
+						<!-- widget content -->
+						<div class="widget-body no-padding">
+
+						</div>
+						<!-- end widget content -->
 
 					</div>
-					<!-- end widget -->
+					<!-- end widget div -->
 
-				</article>
-				<!-- WIDGET END -->
+				</div>
+				<!-- end widget -->
 
-			</div>
+			</article>
+			<!-- WIDGET END -->
 
-			<!-- end row -->
+			<!-- NEW WIDGET START -->
+			<article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 
-		</section>
-		<!-- end widget grid -->
+				<!-- Widget ID (each widget will need unique ID)-->
+				<div class="jarviswidget" id="wid-id-2" data-widget-editbutton="false">
+					<!-- widget options:
+					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
-	</div>
-	<!-- END MAIN CONTENT -->
+					data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="true"
+					data-widget-sortable="false"
 
+					-->
+					<header>
+						<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
+						<h2>Gastos incurridos en el periodo vigente Total: B/. {{ number_format($ER_totalGastos,2) }} </h2>
+
+					</header>
+
+					<!-- widget div-->
+					<div>
+
+						<!-- widget edit box -->
+						<div class="jarviswidget-editbox">
+							<!-- This area used as dropdown edit box -->
+
+						</div>
+						<!-- end widget edit box -->
+
+						<!-- widget content -->
+						<div class="widget-body no-padding">
+
+							<div id="gastos" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+						
+						</div>
+						<!-- end widget content -->
+
+					</div>
+					<!-- end widget div -->
+
+				</div>
+				<!-- end widget -->
+
+				<!-- Widget ID (each widget will need unique ID)-->
+				<div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false">
+					<!-- widget options:
+					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+					data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="true"
+					data-widget-sortable="false"
+
+					-->
+					<header>
+						<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
+						<h2></h2>
+
+					</header>
+
+					<!-- widget div-->
+					<div>
+
+						<!-- widget edit box -->
+						<div class="jarviswidget-editbox">
+							<!-- This area used as dropdown edit box -->
+
+						</div>
+						<!-- end widget edit box -->
+
+						<!-- widget content -->
+						<div class="widget-body no-padding">
+
+							<div id="stacked-bar-graph" class="chart no-padding"></div>
+
+						</div>
+						<!-- end widget content -->
+
+					</div>
+					<!-- end widget div -->
+
+				</div>
+				<!-- end widget -->
+
+			</article>
+			<!-- WIDGET END -->
+
+		</div>
+
+		<!-- end row -->
+
+	</section>
+	<!-- end widget grid -->
 @stop
 
 @section('relatedplugins')

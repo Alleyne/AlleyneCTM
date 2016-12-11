@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\contabilidad;
 use App\Http\Controllers\Controller;
 use App\library\Graph;
+use App\library\Grupo;
 use Carbon\Carbon;
 
 use App\Ctdasm;
@@ -185,36 +186,41 @@ class DashboardController extends Controller
     $ER_totalGastos= $gastostotales + $totalItbms;
     $ER_totalIngresos= $totalIngresos - ($gastostotales + $totalItbms);
     //dd($totalIngresos, $totalGastos);
+  
+    $viewData= [
+                'data' => $data,
+                'pdo' => $pdo,
+                'descuentos' => $descuentos,                              
 
-    return view('contabilidad.dashboard.historico', [
+                'espRegularesSD' => $espRegularesSD,
+                'espRegularesCD' => $espRegularesCD,
+                'espRecargos' => $espRecargos,
+                'espExtraordinarias' => $espExtraordinarias,
+                
+                'totalIngresoEsperadoSD' => $totalIngresoEsperadoSD,
+                'totalIngresoEsperadoCD' => $totalIngresoEsperadoCD,
+                
+                'pagRegulares' => $pagRegulares,
+                'pagRecargos' => $pagRecargos,
+                'pagExtraordinarias' => $pagExtraordinarias,
+                
+                'totalPagado' => $totalPagado,                                  
+                
+                'totalIngresoPorCobrarCD' => $totalIngresoPorCobrarCD,                                  
+                
+                'totalGastos' => $totalGastos,                                  
 
-                                                    'data' => $data,
-                                                    'pdo' => $pdo,
-                                                    'descuentos' => $descuentos,                              
-
-                                                    'espRegularesSD' => $espRegularesSD,
-                                                    'espRegularesCD' => $espRegularesCD,
-                                                    'espRecargos' => $espRecargos,
-                                                    'espExtraordinarias' => $espExtraordinarias,
-                                                    
-                                                    'totalIngresoEsperadoSD' => $totalIngresoEsperadoSD,
-                                                    'totalIngresoEsperadoCD' => $totalIngresoEsperadoCD,
-                                                    
-                                                    'pagRegulares' => $pagRegulares,
-                                                    'pagRecargos' => $pagRecargos,
-                                                    'pagExtraordinarias' => $pagExtraordinarias,
-                                                    
-                                                    'totalPagado' => $totalPagado,                                  
-                                                    
-                                                    'totalIngresoPorCobrarCD' => $totalIngresoPorCobrarCD,                                  
-                                                    
-                                                    'totalGastos' => $totalGastos,                                  
-
-                                                    'ER_totalIngresos' => $ER_totalIngresos,
-                                                    'ER_totalGastos' => $ER_totalGastos,
-                                                    'itbms' => $totalItbms,
-                                                    'gastos' => $gastos
-                                                  ]); 
+                'ER_totalIngresos' => $ER_totalIngresos,
+                'ER_totalGastos' => $ER_totalGastos,
+                'itbms' => $totalItbms,
+                'gastos' => $gastos  
+              ];
+    
+    if (Grupo::esAdmin()) {
+      return view('contabilidad.dashboard.historico', $viewData); 
+    } elseif (Grupo::esPropietario() || Grupo::esAdminDeBloque()) {
+      return view('contabilidad.dashboard.historicoFrontend', $viewData); 
+    }
   } // end function
 
   /*************************************************************************************
@@ -339,33 +345,39 @@ class DashboardController extends Controller
     // total de ingresos disponibles para utilizar
     $totalIngresosDisponible= $_totalIngresoPagados - $gastostotales;  
     //dd($totalIngresosDisponible);
+    
+    $viewData=[
+                'pdo' => $periodo->perido,
+                'data' => $data,
+                'descuentos' => $_totalDescuentos,                              
 
-    return view('contabilidad.dashboard.vigente', [
+                //'espRegularesSD' => $_totalEspRegularesSD,
+                //'espRegularesCD' => $_totalEspRegularesCD,
+                //'espRecargos' => $_totalEspRecargos,
+                //'espExtraordinarias' => $_totalEspExtraordinarias,
+                
+                //'totalIngresoEsperadoSD' => $_totalEspRegularesSD,
+                //'totalIngresoEsperadoCD' => $_totalEspRegularesCD,
+                
+                'pagRegulares' => $_totalPagRegulares,
+                'pagRecargos' => $_totalPagRecargos,
+                'pagExtraordinarias' => $_totalPagExtraordinarias,
+                
+                'totalPagado' => $_totalIngresoPagados,                                  
+                'totalGastos' => $gastostotales,                                  
+                'totalIngresosDisponible' => $totalIngresosDisponible, 
+                
+                'ER_totalIngresos' => $ER_totalIngresos,
+                'ER_totalGastos' => $ER_totalGastos,
+                'itbms' => $totalItbms,
+                'gastos' => $gastos
+              ]; 
+  
+    if (Grupo::esAdmin()) {
+      return view('contabilidad.dashboard.vigente', $viewData);  
+    } elseif (Grupo::esPropietario() || Grupo::esAdminDeBloque()) {
+      return view('contabilidad.dashboard.vigenteFrontend', $viewData); 
+    }
 
-                                                    'pdo' => $periodo->perido,
-                                                    'data' => $data,
-                                                    'descuentos' => $_totalDescuentos,                              
-
-                                                    //'espRegularesSD' => $_totalEspRegularesSD,
-                                                    //'espRegularesCD' => $_totalEspRegularesCD,
-                                                    //'espRecargos' => $_totalEspRecargos,
-                                                    //'espExtraordinarias' => $_totalEspExtraordinarias,
-                                                    
-                                                    //'totalIngresoEsperadoSD' => $_totalEspRegularesSD,
-                                                    //'totalIngresoEsperadoCD' => $_totalEspRegularesCD,
-                                                    
-                                                    'pagRegulares' => $_totalPagRegulares,
-                                                    'pagRecargos' => $_totalPagRecargos,
-                                                    'pagExtraordinarias' => $_totalPagExtraordinarias,
-                                                    
-                                                    'totalPagado' => $_totalIngresoPagados,                                  
-                                                    'totalGastos' => $gastostotales,                                  
-                                                    'totalIngresosDisponible' => $totalIngresosDisponible, 
-                                                    
-                                                    'ER_totalIngresos' => $ER_totalIngresos,
-                                                    'ER_totalGastos' => $ER_totalGastos,
-                                                    'itbms' => $totalItbms,
-                                                    'gastos' => $gastos
-                                                  ]); 
   } // end function
 } // end of class

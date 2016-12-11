@@ -31,18 +31,8 @@ class WelcomeController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
+	public function index() {
 		
-		/* if (Auth::check()) {
-      foreach (Auth::user()->roles as $role) {
-        if($role->name==='Propietarios') {
-        	foreach (Auth::user()->props as $un)
-        		dd($un->toArray(), $un->un->codigo);
-        }
-      }
-    }*/
-
 		// encuentra la data para la grafica de propietarios morosos a la fecha
 		$data= Graph::getDataGraphMorosos();
 		

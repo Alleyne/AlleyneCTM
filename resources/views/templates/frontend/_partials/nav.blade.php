@@ -48,9 +48,9 @@
                         <!-- Gerencia -->
                         <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Gerencia</a>
                             <ul class="dropdown-menu">  
-                                <li><a href="">Periodos contables</a></li>
-                                <li><a href="">Graficas periodo vigente</a></li>                                
-                                <li><a href="">Graficas historico</a></li>   
+                                <li><a href="{{ URL::route('indexPeriodosfrontend') }}">Periodos contables</a></li>
+                                <li><a href="{{ URL::route('vigente') }}">Graficas periodo vigente</a></li>                                
+                                <li><a href="{{ URL::route('historico') }}">Graficas historico</a></li>   
                             </ul>   
                         </li>
                         <!-- End Gerencia -->                    

@@ -156,6 +156,8 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------// 	
   Route::get('crearPeriodoInicial/{todate}', 'PcontablesController@crearPeriodoInicial')->name('crearPeriodoInicial');
   Route::get('cerrarPeriodoContable/{pcontable_id}', 'PcontablesController@cerrarPeriodoContable')->name('cerrarPeriodoContable');
+	Route::get('indexPeriodosfrontend', 'PcontablesController@indexPeriodosfrontend')->name('indexPeriodosfrontend');
+
 	Route::resource('pcontables', 'PcontablesController');
 
 	//---------------------------------------------------------//
@@ -331,7 +333,7 @@ Route::get('/test', function () {
 use App\Seccione;
 use App\User;
 use App\Pago;
-
+use App\library\Grupo;
 Route::get('/query', function () {
 
 //$data= Seccione::find(1)->secapto;
@@ -377,20 +379,5 @@ foreach ($roles as $role) {
                 ->having('pcontable_id', '>', 1)
                 ->get();
 dd($datos->toArray());*/
-
-		$es = false;
-		if (Auth::check()) 
-  		{
-		    // encuentra todos los roles del usuario logueado
-			$roles = Auth::user()->roles;
-		     dd($roles->toArray());
-
-			foreach ($roles as $role) {
-		    	if($role->name==='Propietario') {
-		    		$es = true;
-		    	}
-			}
-		}
-		return $es;	
 
 });
