@@ -4,7 +4,7 @@
 
 @section('content')
 <!--Hover Rows-->
-<div class="col-xs-12 col-sm-12 col-md-12">
+
 
     <div class="alert alert-success" role="alert">
         <strong>Estimado Propietario</strong>, acontinuacion se muestran todos los Periodos contables a la fecha.
@@ -50,8 +50,6 @@
         <p class="text-center">© Copyright 2016-2025 ctmaster.net - All Rights Reserved</p>
       </div>
     </div> 
-            
-</div>
 <!--End Hover Rows-->
 @stop
 
