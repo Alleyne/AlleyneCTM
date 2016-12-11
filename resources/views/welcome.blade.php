@@ -16,14 +16,23 @@
 
 @section('content')
 
-    <div class="headline"><h2>Propietarios Morosos a la fecha. Total adeudado B/. {{ number_format($data['totalAdeudado'],2) }}</h2>
-</div>
     <div class="row margin-bottom-20">
-        <div class="col-md-12 col-sm-12">
-            <div id="morosos" style="min-width: 310px; max-width: 1000px; margin: 0 auto"></div>
-        </div>
-    </div>
-    
+      <div class="col-md-12">
+          <!-- Grey Panel -->            
+          <div class="panel panel-grey">
+              <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-tasks"></i> </h3>
+              </div>
+              <div class="panel-body">
+                  <h4>Propietarios Morosos a la fecha, adeudan un total de B/. {{ number_format($data['totalAdeudado'],2) }}</h4>   
+                  <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+                  <div id="morosos" style="margin: 0 auto"></div>
+              </div>
+          </div>
+          <!-- End Grey Panel -->            
+      </div>
+    </div>    
+
     <div class="headline"><h2>Articulos recientes</h2></div>
     <div class="row blog-page">    
         <!-- Left Sidebar -->

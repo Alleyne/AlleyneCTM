@@ -1,6 +1,6 @@
 @extends('templates.frontend._layouts.unify')
 
-@section('title', '| Pagos efectuados')
+@section('title', '| Hoja de Trabajo')
 
 @section('content')
 	<div class="row">
@@ -45,14 +45,10 @@
 						<td align="right">{{ $dato['saldoAjustado_debito']==0 ? '' : number_format($dato['saldoAjustado_debito'],2) }}</td>
 						<td align="right">{{ $dato['saldoAjustado_credito']==0 ? '' : number_format($dato['saldoAjustado_credito'],2) }}</td>
 						<td col width="70px" align="right">
-							<ul class="demo-btns">
-								<li>
-									<a href="{{ URL::route('verMayorAux', array($dato['periodo'],
-																		  $dato['cuenta'],
-																		  $dato['codigo']
-																		)) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-book"></i></a>
-								</li>
-							</ul>												
+							<a href="{{ URL::route('verMayorAux', array($dato['periodo'],
+																  $dato['cuenta'],
+																  $dato['codigo'] 
+																)) }}" class="btn-u.btn-u-blue"><i class="glyphicon glyphicon-book"></i></a>
 						</td>
 					</tr>
 				@endforeach
