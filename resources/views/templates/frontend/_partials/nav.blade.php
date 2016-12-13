@@ -28,11 +28,10 @@
                 </a>
             </li>
             <!-- End Articulos -->
-            
                         
             @if (Auth::check())
                 @foreach (Auth::user()->roles as $role)
-                    @if($role->name==='Propietarios' )
+                    @if($role->name==='Propietarios' && Auth::user()->activated)
                         <!-- Reportes -->
                         <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Reportes</a>
                             <ul class="dropdown-menu">  

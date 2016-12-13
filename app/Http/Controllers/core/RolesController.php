@@ -70,7 +70,7 @@ class RolesController extends Controller
     //dd($datos_1);
 
     //Obtiene todos los permisos registrados en la base de datos
-	  $datos_2= User::orderBy('nombre_completo')->get();
+	  $datos_2= User::where('activated', 1)->orderBy('nombre_completo')->get();
     $datos_2= $datos_2->pluck('nombre_completo', 'id')->all();      
     //dd($datos_1, $datos_2);
         

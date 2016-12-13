@@ -5,6 +5,7 @@ use Redirect;
 use App\Permission;
 use Cache;
 use Session;
+use App\User;
 
 class hasAccess {
   /**
@@ -19,16 +20,16 @@ class hasAccess {
     if(Auth::check()) {
       // Get the current route.
       $route = $request->route();
-      
+
       // Get the current route actions.
       $currentAction = $route->getAction();
-      $currentAction =$currentAction['controller'];
-      $currentAction = explode(chr(92), $currentAction);
-      $currentAction = $currentAction[4];
+      $currentAction = $currentAction['controller'];
+      $currentAction = collect(explode(chr(92), $currentAction));
+      $currentAction = $currentAction->last();
       //dd($currentAction);
       
       // encuentra todos los roles del usuario logueado
-      $roles = Auth::user()->roles;
+      $roles= User::find(Auth::user()->id)->roles;
       //dd(Cache::get('userRoleskey')->toArray());
       //$roles = Cache::get('userRoleskey');
       
@@ -64,7 +65,7 @@ class hasAccess {
         if ($request->ajax()) {
           return response('Unauthorized.', 401);
         } else {
-          Session::flash('warning', '--'. $currentAction . '-- Usted no tiene permiso para accesar esta pagina!');
+          Session::flash('danger', '--'. $currentAction . '-- Usted no tiene permiso para accesar esta pagina!');
           return back();
         }            
       }            

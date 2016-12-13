@@ -4,52 +4,50 @@
 
 @section('content')
 <!--Hover Rows-->
-
-
-    <div class="alert alert-success" role="alert">
-        <strong>Estimado Propietario</strong>, acontinuacion se muestran todos los Periodos contables a la fecha.
-    </div>
-        <table id="dt_basic" class="table table-hover">
-            <thead>
+<div class="alert alert-success" role="alert">
+    <strong>Estimado Propietario</strong>, acontinuacion se muestran todos los Periodos contables a la fecha.
+</div>
+    <table id="dt_basic" class="table table-hover">
+        <thead>
+            <tr>
+                <th>NO</th>
+                <th>PERIODO</th>
+                <th>F_CIERRE</th>
+                <th>CERRADO</th>
+                <th class="text-right"><i class="fa fa-gear fa-lg"></i></th>                                       
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($datos as $dato)
                 <tr>
-                    <th>NO</th>
-                    <th>PERIODO</th>
-                    <th>F_CIERRE</th>
-                    <th>CERRADO</th>
-                    <th class="text-right"><i class="fa fa-gear fa-lg"></i></th>                                       
+                    <td col width="20px" align="right"><strong>{{ $dato->id }}</strong></td>
+                    <td col width="50px" align="left"><strong>{{ $dato->periodo }}</strong></td>
+                    <td col width="60px" align="left">{{ $dato->f_cierre }}</td>
+                    <td col width="60px" align="center">{{ $dato->cerrado ? 'Si' : 'No' }}</td>
+                    <td col width="510px" align="right">
+                        @if ( $dato->cerrado == 0 )
+                            <a href="{{ URL::route('hojadetrabajos.show', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> Hoja trabajo</a>
+                            <a href="{{ URL::route('ctdiarios.show', $dato->id) }}" class="btn bg-color-green txt-color-white btn-xs"><i class="fa fa-search"></i> Diario</a>
+                            <a href="{{ URL::route('estadoderesultado', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Estado Resultado Proyectado</a>
+                            <a href="{{ URL::route('balancegeneral', array($dato->id, $dato->periodo)) }}" class="btn btn-warning btn-xs"><i class="fa fa-search"></i> Balance General Proyectado</a>
+                        @else
+                            <a href="{{ URL::route('hojadetrabajo', $dato->id) }}" class="btn btn-default txt-color-purple btn-xs"><i class="glyphicon glyphicon-lock"></i> Hoja de trabajo</a>
+                            <a href="{{ URL::route('diarioFinal', $dato->id) }}" class="btn btn-default txt-color-green btn-xs"><i class="glyphicon glyphicon-lock"></i> Diario</a>
+                            <a href="{{ URL::route('er', $dato->id) }}" class="btn btn-default txt-color-blue btn-xs"><i class="glyphicon glyphicon-lock"></i> Estado Resultado Final</a>
+                            <a href="{{ URL::route('bg', $dato->id) }}" class="btn btn-default txt-color-yellow btn-xs"><i class="glyphicon glyphicon-lock"></i> Balance General Final</a>
+                        @endif                                                          
+
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($datos as $dato)
-                    <tr>
-                        <td col width="20px" align="right"><strong>{{ $dato->id }}</strong></td>
-                        <td col width="50px" align="left"><strong>{{ $dato->periodo }}</strong></td>
-                        <td col width="60px" align="left">{{ $dato->f_cierre }}</td>
-                        <td col width="60px" align="center">{{ $dato->cerrado ? 'Si' : 'No' }}</td>
-                        <td col width="510px" align="right">
-                            @if ( $dato->cerrado == 0 )
-                                <a href="{{ URL::route('hojadetrabajos.show', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> Hoja trabajo</a>
-                                <a href="{{ URL::route('ctdiarios.show', $dato->id) }}" class="btn bg-color-green txt-color-white btn-xs"><i class="fa fa-search"></i> Diario</a>
-                                <a href="{{ URL::route('estadoderesultado', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Estado Resultado Proyectado</a>
-                                <a href="{{ URL::route('balancegeneral', array($dato->id, $dato->periodo)) }}" class="btn btn-warning btn-xs"><i class="fa fa-search"></i> Balance General Proyectado</a>
-                            @else
-                                <a href="{{ URL::route('hojadetrabajo', $dato->id) }}" class="btn btn-default txt-color-purple btn-xs"><i class="glyphicon glyphicon-lock"></i> Hoja de trabajo</a>
-                                <a href="{{ URL::route('diarioFinal', $dato->id) }}" class="btn btn-default txt-color-green btn-xs"><i class="glyphicon glyphicon-lock"></i> Diario</a>
-                                <a href="{{ URL::route('er', $dato->id) }}" class="btn btn-default txt-color-blue btn-xs"><i class="glyphicon glyphicon-lock"></i> Estado Resultado Final</a>
-                                <a href="{{ URL::route('bg', $dato->id) }}" class="btn btn-default txt-color-yellow btn-xs"><i class="glyphicon glyphicon-lock"></i> Balance General Final</a>
-                            @endif                                                          
+            @endforeach
+        </tbody>
+    </table>
 
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-
-    <div class="row">
-      <div class="col-xs-12">
-        <p class="text-center">© Copyright 2016-2025 ctmaster.net - All Rights Reserved</p>
-      </div>
-    </div> 
+<div class="row">
+  <div class="col-xs-12">
+    <p class="text-center">© Copyright 2016-2025 ctmaster.net - All Rights Reserved</p>
+  </div>
+</div> 
 <!--End Hover Rows-->
 @stop
 

@@ -59,7 +59,7 @@
 										<tr>
 											<th>ID</th>
 											<th>NOMBRE</th>
-											<th>VALOR</th>
+											<th>DESCRIPCION</th>
 											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
 										</tr>
 									</thead>
@@ -70,8 +70,8 @@
 												@if (Cache::get('esAdminkey'))												
 													<td><strong>{{ $dato->id }}</strong></td>
 													<td><strong>{{ $dato->name }}</strong></td>
-													<td><strong>{{ $dato->value }}</strong></td>
-													<td col width="380px" align="right">
+													<td><strong>{{ $dato->description }}</strong></td>
+													<td col width="80px" align="right">
 														<ul class="demo-btns">
 															<li>
 																<a href="{{ URL::route('permissions.show', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>

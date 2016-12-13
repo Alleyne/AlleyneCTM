@@ -114,10 +114,9 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Activado</label>
 											<div class="col-md-9">
-												{{ Form::text('activated', $dato->activated, array('class' => 'form-control input-sm', 'title' => 'Usuario activado si o no...')) }}
+												{{ Form::checkbox('activated') }}
 												{!! $errors->first('activated', '<li style="color:red">:message</li>') !!}
 											</div>
-										</div>
 									</fieldset>
 									<div class="form-actions">
 										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}

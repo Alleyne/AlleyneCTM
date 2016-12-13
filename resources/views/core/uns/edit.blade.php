@@ -48,7 +48,7 @@
 								<div class="widget-body"><!-- widget content -->
 								{{ Form::model($dato, array('class' => 'form-horizontal', 'method' => 'put', 'route' => array('uns.update', $dato->id))) }}
 										{{ csrf_field() }}
-                                        {{ Form::hidden('seccione_id', $seccion->id) }}
+                    {{ Form::hidden('seccione_id', $seccion->id) }}
 										<fieldset>
 											<div class="form-group">
 												<label class="col-md-3 control-label">Código</label>

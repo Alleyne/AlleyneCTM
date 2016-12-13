@@ -174,19 +174,21 @@ class UsersController extends Controller {
 			$dato->cedula        = Input::get('cedula');
 			$dato->telefono      = Input::get('telefono');			
 			$dato->celular       = Input::get('celular');			
+			$dato->activated     = Input::has('activated');		
 			$dato->save();		
 		
 			// Registra en bitacoras
-			$detalle =	'username= '.		$dato->username. ', '.
-						'email= '.		    $dato->email. ', '.
-						'first_name= '.	    $dato->first_name. ', '.						
-						'last_name= '.	    $dato->last_name. ', '.
-						'middle_name= '.	$dato->middle_name. ', '.
-						'sur_name= '.	    $dato->sur_name. ', '.						
-						'telefono= '.		$dato->telefono. ', '.
-						'cedula= '.		    $dato->cedula. ', '.
-						'celular= '.		$dato->celular;      
-			
+			$detalle ='username= '.$dato->username. ', '.
+						'email= '.		   $dato->email. ', '.
+						'first_name= '.	 $dato->first_name. ', '.						
+						'last_name= '.	 $dato->last_name. ', '.
+						'middle_name= '. $dato->middle_name. ', '.
+						'sur_name= '.	   $dato->sur_name. ', '.						
+						'telefono= '.		 $dato->telefono. ', '.
+						'cedula= '.		   $dato->cedula. ', '.
+						'celular= '.		 $dato->celular. ', '.      
+						'activated= '.	 $dato->activated; 
+
 			Sity::RegistrarEnBitacora(2, 'users', $dato->id, $detalle);
 			Session::flash('success', 'El Usuario No. ' .$id. ' ha sido editado con éxito.');
 			return redirect()->route('users.index');

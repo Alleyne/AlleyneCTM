@@ -65,6 +65,12 @@
                                 @endif
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <div class="g-recaptcha" data-sitekey="6LfPuwsUAAAAADUHG1HdmOh_p2mIi9II9a4vGTyX"></div>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">

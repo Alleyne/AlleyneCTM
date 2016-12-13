@@ -41,7 +41,7 @@
 		<![endif]-->
 
 		<!-- Demo purpose only-->
-		<!-- <script src="{{ URL::asset('assets/backend/js/demo.js') }}"></script> -->
+		<script src="{{ URL::asset('assets/backend/js/demo.js') }}"></script>
 		
 		<!-- MAIN APP JS FILE-->
 		<script src="{{ URL::asset('assets/backend/js/app.js') }}"></script> 

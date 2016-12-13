@@ -43,7 +43,7 @@ class PermissionsController extends Controller
 	    else {
 			//return response()->json(["mensaje" => "Permiso no existe!"]); //api			
 			Session::flash('danger', 'El permiso No. ' .$id. ' no existe.');
-	    	return redirect()->action('PermissionsController@index');
+	    return redirect()->action('PermissionsController@index');
 	    }
 	}
    
