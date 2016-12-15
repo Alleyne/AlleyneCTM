@@ -22,8 +22,15 @@ class DashboardController extends Controller
    ************************************************************************************/  
   public function historico() {
     // encuentra la data para la grafica de morosos
-    $data= Graph::getDataGraphMorosos();
-    //dd($data);
+    $dataMorosos= Graph::getDataGraphMorosos();
+    //dd($dataMorosos);
+
+    // encuentra la data para la grafica de gastos por periodo contable    
+    $dataGastos= Graph::getDataGraphGastos();
+    //dd($dataGastos);
+
+    $dataGastosTotales= Graph::getDataGraphGastosTotales();
+    //dd($dataGastosTotales);
 
     /*
     |--------------------------------------------------------------------------------
@@ -50,19 +57,19 @@ class DashboardController extends Controller
         // calcula el total ingresos esperado por cada periodo contable
         //----------------------------------------------------------------------
           // calcula el total de descuentos otorgados por pagos anticipados
-          $_totalDescuentos = $ctdasm->where('descuento_siono', 1)->sum('descuento');  
+          $_totalDescuentos= $ctdasm->where('descuento_siono', 1)->sum('descuento');  
 
           // calcula el total de ingresos por cuotas regulares sin descuento incluido
-          $_totalEspRegularesSD = $ctdasm->sum('importe');   
+          $_totalEspRegularesSD= $ctdasm->sum('importe');   
    
           // calcula el total de ingresos por cuotas regulares con descuento incluido
-          $_totalEspRegularesCD = $_totalEspRegularesSD - $_totalDescuentos;   
+          $_totalEspRegularesCD= $_totalEspRegularesSD - $_totalDescuentos;   
 
           // calcula el total de recargos
-          $_totalEspRecargos = $recargos->where('recargo_siono', 1)->sum('recargo');
+          $_totalEspRecargos= $recargos->where('recargo_siono', 1)->sum('recargo');
 
           // calcula el total de cuotas extraordinarias
-          $_totalEspExtraordinarias = $ctdasm->where('extra_siono', 1)->sum('extra');  
+          $_totalEspExtraordinarias= $ctdasm->where('extra_siono', 1)->sum('extra');  
           
           
           // calcula el total de ingresos esperado sin descuento
@@ -91,9 +98,10 @@ class DashboardController extends Controller
           // calcula el total de gastos efectuados a la fecha
           //----------------------------------------------------------------------          
           // crea una colleccion con todas las cuenta de gastos 
+          //$ctmayores= Ctmayore::where('pcontable_id', $periodo->id)->where('tipo', 6)->get();
           $ctmayores= Ctmayore::where('pcontable_id', $periodo->id)->where('tipo', 6)->get();
           $_totalGastos= $ctmayores->sum('debito') - $ctmayores->sum('credito');
-  
+
           // almacena los datos en arreglos por periodo contable
           $pdo[]= $periodo->periodo;            
           $totalDescuentos[]= $_totalDescuentos;          
@@ -139,88 +147,38 @@ class DashboardController extends Controller
       
       $totalGastos = implode(", ", $totalGastos);     
 
-    /*
-    |------------------------------------------------------------------------------------------
-    | Procesa los datos necesarios para la grafica de Ingreso vs Gastos para el periodo actual
-    |------------------------------------------------------------------------------------------
-    */
-    // encuentra el periodo mas antiguo abierto
-    $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first()->id;
-    
-    // calcula el total de ingresos del periodo
-    $ingresos= Ctmayore::where('pcontable_id', $periodo)->where('tipo', 4)->get();
-    $totalIngresos= $ingresos->sum('credito') - $ingresos->sum('debito');
-    //dd($totalIngresos);
+      $viewData= [
+                  'dataMorosos' => $dataMorosos,
+                  'dataGastos' => $dataGastos,                  
+                  'dataGastosTotales' => $dataGastosTotales, 
 
-    // crea una colleccion con todas las cuenta de gastos 
-    $ctmayores= Ctmayore::where('pcontable_id', $periodo)->where('tipo', 6)->get();
-    
-    // calcula el total de itbms del periodo    
-    $itbms= $ctmayores->where('cuenta', 15);
-    $totalItbms= $itbms->sum('debito') - $itbms->sum('credito');
-    // dd($totalItbms);
-    
-    // calcula el total de gastos del periodo excluyendo la cuenta de itbms
-    $gastos= $ctmayores->where('cuenta','!=', 15);
-    
-    // excluye todos los registro que el campo debito y credito sea igual a cero
-    $gastos = $gastos->reject(function($gasto) {
-      return $gasto->debito == "0.00" && $gasto->credito == "0.00"; 
-    });
-    
-    $gastostotales= $gastos->sum('debito') - $gastos->sum('credito');
-    //dd($totalGastos);
-    
-    $datos="";
-    foreach ($gastos as $gasto) {
-      $datos = $datos.'{name: "'.Catalogo::find($gasto->cuenta)->nombre.'", y: '.$gasto->debito.'},';
-    }
-    $gastos= rtrim($datos, ',');
-    // dd($data);
-    
-    /*
-    |--------------------------------------------------------------------------------
-    | Procesa los datos necesarios para la grafica de Utilidad Ingresos vs Gastos para el periodo actual
-    |--------------------------------------------------------------------------------
-    */
-    $ER_totalGastos= $gastostotales + $totalItbms;
-    $ER_totalIngresos= $totalIngresos - ($gastostotales + $totalItbms);
-    //dd($totalIngresos, $totalGastos);
-  
-    $viewData= [
-                'data' => $data,
-                'pdo' => $pdo,
-                'descuentos' => $descuentos,                              
+                  'pdo' => $pdo,
+                  'descuentos' => $descuentos,                              
 
-                'espRegularesSD' => $espRegularesSD,
-                'espRegularesCD' => $espRegularesCD,
-                'espRecargos' => $espRecargos,
-                'espExtraordinarias' => $espExtraordinarias,
-                
-                'totalIngresoEsperadoSD' => $totalIngresoEsperadoSD,
-                'totalIngresoEsperadoCD' => $totalIngresoEsperadoCD,
-                
-                'pagRegulares' => $pagRegulares,
-                'pagRecargos' => $pagRecargos,
-                'pagExtraordinarias' => $pagExtraordinarias,
-                
-                'totalPagado' => $totalPagado,                                  
-                
-                'totalIngresoPorCobrarCD' => $totalIngresoPorCobrarCD,                                  
-                
-                'totalGastos' => $totalGastos,                                  
-
-                'ER_totalIngresos' => $ER_totalIngresos,
-                'ER_totalGastos' => $ER_totalGastos,
-                'itbms' => $totalItbms,
-                'gastos' => $gastos  
-              ];
+                  'espRegularesSD' => $espRegularesSD,
+                  'espRegularesCD' => $espRegularesCD,
+                  'espRecargos' => $espRecargos,
+                  'espExtraordinarias' => $espExtraordinarias,
+                  
+                  'totalIngresoEsperadoSD' => $totalIngresoEsperadoSD,
+                  'totalIngresoEsperadoCD' => $totalIngresoEsperadoCD,
+                  
+                  'pagRegulares' => $pagRegulares,
+                  'pagRecargos' => $pagRecargos,
+                  'pagExtraordinarias' => $pagExtraordinarias,
+                  
+                  'totalPagado' => $totalPagado,                                  
+                  
+                  'totalIngresoPorCobrarCD' => $totalIngresoPorCobrarCD,                                  
+                  
+                  'totalGastos' => $totalGastos                                  
+                 ];
     
-    if (Grupo::esAdmin()) {
-      return view('contabilidad.dashboard.historico', $viewData); 
-    } elseif (Grupo::esPropietario() || Grupo::esAdminDeBloque()) {
-      return view('contabilidad.dashboard.historicoFrontend', $viewData); 
-    }
+      if (Grupo::esAdmin()) {
+        return view('contabilidad.dashboard.historico', $viewData); 
+      } elseif (Grupo::esPropietario() || Grupo::esAdminDeBloque()) {
+        return view('contabilidad.dashboard.historicoFrontend', $viewData); 
+      }
   } // end function
 
   /*************************************************************************************

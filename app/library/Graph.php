@@ -2,6 +2,9 @@
 
 use App\Ctdasm;
 use App\Un;
+use App\Pcontable;
+use App\Ctmayore;
+use App\Catalogo;
 
 class Graph {
 
@@ -71,4 +74,81 @@ class Graph {
             'totalAdeudado' => $totalAdeudado];
 
   } // end function
+
+  /** 
+  *==================================================================================================
+  * Procesa la data necesaria para desplegar la grafica de Gastos por periodo
+  * @return $series string
+  **************************************************************************************************/
+  public static function getDataGraphGastos() {
+    // encuentra todas las cuentas de gastos existentes en el catalogo
+    $cuentasGastos= Catalogo::where('tipo', 6)->get();      
+    
+    // obtiene los doce ultimos periodos contables registrados
+    $periodos= Pcontable::orderBy('id', 'desc')->take(12)->get();
+    $periodos= $periodos->sortBy('id');
+    //dd($periodos->toArray());      
+    
+    $series= "";
+
+    foreach ($cuentasGastos as $cuenta) {
+      // almacena el nombre de la cuenta de gastos
+      $name= Catalogo::find($cuenta->id)->nombre;
+      //dd($name);
+      
+      $data="";
+      
+      foreach ($periodos as $periodo) {
+        // calcula el total gastado de la cuenta en el periodo        
+        $ctmayores= Ctmayore::where('pcontable_id', $periodo->id)->where('cuenta', $cuenta->id)->get();
+        $total= $ctmayores->sum('debito') - $ctmayores->sum('credito');
+        //dd($totales);     
+        $data= $data.$total.',';
+      }
+
+      $data= rtrim($data, ',');       
+      //dd($data);      
+    
+      $series= $series.'{name: "'.$name.'", data: ['.$data.']},';
+    }
+    $series= rtrim($series, ',');    
+    //dd($series);        
+    
+    return $series;
+  
+  } // end function
+
+
+  /** 
+  *==================================================================================================
+  * Procesa la data necesaria para desplegar la grafica de Gastos totales por periodo
+  * @return $series string
+  **************************************************************************************************/
+  public static function getDataGraphGastosTotales() {
+   
+    // obtiene los doce ultimos periodos contables registrados
+    $periodos= Pcontable::orderBy('id', 'desc')->take(12)->get();
+    $periodos= $periodos->sortBy('id');
+    //dd($periodos->toArray());      
+    
+    $data=""; 
+    $series= "";
+    foreach ($periodos as $periodo) {
+      // calcula el total gastado de la cuenta en el periodo        
+      $ctmayores= Ctmayore::where('pcontable_id', $periodo->id)->where('tipo', 6)->get();
+      $total= $ctmayores->sum('debito') - $ctmayores->sum('credito');
+      //dd($totales);     
+      $data= $data.$total.',';
+    }
+
+    $data= rtrim($data, ',');       
+    //dd($data);      
+   
+    $series= $series.'{name: "Totales por periodo", data: ['.$data.']},';
+    $series= rtrim($series, ',');    
+    return $series;
+  
+  } // end function
+
+
 } //fin de Class Graph

@@ -29,7 +29,7 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-						<h2>Propietarios Morosos a la fecha. Total adeudado B/. {{ number_format($data['totalAdeudado'],2) }}</h2>
+						<h2>Propietarios Morosos a la fecha. Total adeudado B/. {{ number_format($dataMorosos['totalAdeudado'],2) }}</h2>
 
 					</header>
 
@@ -265,7 +265,7 @@
 
 						<!-- widget content -->
 						<div class="widget-body no-padding">
-
+							<div id="gastosTotales" style="margin: 0 auto"></div>
 						</div>
 						<!-- end widget content -->
 
@@ -358,7 +358,7 @@
 						<!-- widget content -->
 						<div class="widget-body no-padding">
 
-							<div id="gastos" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+							<div id="gastos" style="margin: 0 auto"></div>
 						
 						</div>
 						<!-- end widget content -->
@@ -441,7 +441,7 @@
 		            text: ''
 		        },
 		        xAxis: {
-		            categories: [{!! $data['categorias'] !!}]
+		            categories: [{!! $dataMorosos['categorias'] !!}]
 		        },
 		        yAxis: {
 		            min: 0,
@@ -459,13 +459,13 @@
 		        },
 		        series: [{
 		            name: 'Debe Cuota Extraordinaria',
-		            data: [{{ $data['ctaExtra'] }}]
+		            data: [{{ $dataMorosos['ctaExtra'] }}]
 		        }, {
 		            name: 'Debe Recargos',
-		            data: [{{ $data['recargo'] }}]
+		            data: [{{ $dataMorosos['recargo'] }}]
 		        }, {
 		            name: 'Debe Cuota Regular',
-		            data: [{{ $data['ctaRegular'] }}]
+		            data: [{{ $dataMorosos['ctaRegular'] }}]
 		        }]
 		    });
 		});
@@ -564,6 +564,56 @@
 		});
 
 		$(function () {
+		    Highcharts.chart('gastosTotales', {
+		        chart: {
+		          type: 'bar'
+		        },
+		        title: {
+		          text: 'Gastos Totales por Periodo contable'
+		        },
+		        subtitle: {
+		          text: ''
+		        },
+		        xAxis: {
+	            categories: [{!! $pdo !!}],
+	            title: {
+	              text: null
+	            }
+		        },
+		        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Gasto (Balboas)',
+	                align: 'high'
+	            },
+	            labels: {
+	                overflow: 'justify'
+	            }
+		        },
+		        tooltip: {
+		            valueSuffix: ' Balboas'
+		        },
+		        plotOptions: {
+	            bar: {
+                dataLabels: {
+                  enabled: true
+                }
+	            }
+		        },
+		        legend: {
+	            layout: 'horizontal',
+	            align: 'center',
+	            verticalAlign: 'bottom',
+	            borderWidth: 0
+		        },
+		        credits: {
+		          enabled: false
+		        },
+		        series: [{!! $dataGastosTotales !!}]
+		    });
+		});	
+
+		$(function () {
 		    Highcharts.chart('historicos', {
 		        chart: {
 		            type: 'areaspline'
@@ -632,6 +682,56 @@
 
 		    });
 		});
+
+		$(function () {
+		    Highcharts.chart('gastos', {
+		        chart: {
+		          type: 'bar'
+		        },
+		        title: {
+		          text: 'Gastos por Periodo contable'
+		        },
+		        subtitle: {
+		          text: ''
+		        },
+		        xAxis: {
+	            categories: [{!! $pdo !!}],
+	            title: {
+	              text: null
+	            }
+		        },
+		        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Gasto (Balboas)',
+	                align: 'high'
+	            },
+	            labels: {
+	                overflow: 'justify'
+	            }
+		        },
+		        tooltip: {
+		            valueSuffix: ' Balboas'
+		        },
+		        plotOptions: {
+	            bar: {
+                dataLabels: {
+                  enabled: true
+                }
+	            }
+		        },
+		        legend: {
+	            layout: 'horizontal',
+	            align: 'center',
+	            verticalAlign: 'bottom',
+	            borderWidth: 0
+		        },
+		        credits: {
+		          enabled: false
+		        },
+		        series: [{!! $dataGastos !!}]
+		    });
+		});		
 
 	</script>
 @endsection 

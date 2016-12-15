@@ -11,7 +11,7 @@
                   <h3 class="panel-title"><i class="fa fa-tasks"></i> </h3>
               </div>
               <div class="panel-body">
-                  <h4>Propietarios Morosos a la fecha, adeudan un total de B/. {{ number_format($data['totalAdeudado'],2) }}</h4>   
+                  <h4>Propietarios Morosos a la fecha, adeudan un total de B/. {{ number_format($dataMorosos['totalAdeudado'],2) }}</h4>   
                   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
       						<div id="morosos" style="margin: 0 auto"></div>
               </div>
@@ -81,6 +81,7 @@
               <div class="panel-body">
                   <h4>Accusamus et iusto odio</h4>   
                   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+      						<div id="gastosTotales" style="margin: 0 auto"></div>
               </div>
           </div>
           <!-- End Grey Panel -->            
@@ -94,6 +95,7 @@
               <div class="panel-body">
                   <h4>Accusamus et iusto odio</h4>   
                   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+      						<div id="gastos" style="margin: 0 auto"></div>
               </div>
           </div>
           <!-- End Red Panel -->            
@@ -117,7 +119,7 @@
 		            text: ''
 		        },
 		        xAxis: {
-		            categories: [{!! $data['categorias'] !!}]
+		            categories: [{!! $dataMorosos['categorias'] !!}]
 		        },
 		        yAxis: {
 		            min: 0,
@@ -135,13 +137,13 @@
 		        },
 		        series: [{
 		            name: 'Debe Cuota Extraordinaria',
-		            data: [{{ $data['ctaExtra'] }}]
+		            data: [{{ $dataMorosos['ctaExtra'] }}]
 		        }, {
 		            name: 'Debe Recargos',
-		            data: [{{ $data['recargo'] }}]
+		            data: [{{ $dataMorosos['recargo'] }}]
 		        }, {
 		            name: 'Debe Cuota Regular',
-		            data: [{{ $data['ctaRegular'] }}]
+		            data: [{{ $dataMorosos['ctaRegular'] }}]
 		        }]
 		    });
 		});
@@ -306,6 +308,106 @@
 		        }]
 
 
+		    });
+		});
+
+		$(function () {
+		    Highcharts.chart('gastosTotales', {
+		        chart: {
+		          type: 'bar'
+		        },
+		        title: {
+		          text: 'Gastos Totales por Periodo contable'
+		        },
+		        subtitle: {
+		          text: ''
+		        },
+		        xAxis: {
+	            categories: [{!! $pdo !!}],
+	            title: {
+	              text: null
+	            }
+		        },
+		        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Gasto (Balboas)',
+	                align: 'high'
+	            },
+	            labels: {
+	                overflow: 'justify'
+	            }
+		        },
+		        tooltip: {
+		            valueSuffix: ' Balboas'
+		        },
+		        plotOptions: {
+	            bar: {
+                dataLabels: {
+                  enabled: true
+                }
+	            }
+		        },
+		        legend: {
+	            layout: 'horizontal',
+	            align: 'center',
+	            verticalAlign: 'bottom',
+	            borderWidth: 0
+		        },
+		        credits: {
+		          enabled: false
+		        },
+		        series: [{!! $dataGastosTotales !!}]
+		    });
+		}); 
+
+		$(function () {
+		    Highcharts.chart('gastos', {
+		        chart: {
+		          type: 'bar'
+		        },
+		        title: {
+		          text: 'Gastos por Periodo contable'
+		        },
+		        subtitle: {
+		          text: ''
+		        },
+		        xAxis: {
+	            categories: [{!! $pdo !!}],
+	            title: {
+	              text: null
+	            }
+		        },
+		        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Gasto (Balboas)',
+	                align: 'high'
+	            },
+	            labels: {
+	                overflow: 'justify'
+	            }
+		        },
+		        tooltip: {
+		            valueSuffix: ' Balboas'
+		        },
+		        plotOptions: {
+	            bar: {
+                dataLabels: {
+                  enabled: true
+                }
+	            }
+		        },
+		        legend: {
+	            layout: 'horizontal',
+	            align: 'center',
+	            verticalAlign: 'bottom',
+	            borderWidth: 0
+		        },
+		        credits: {
+		          enabled: false
+		        },
+		        series: [{!! $dataGastos !!}]
 		    });
 		});
 
