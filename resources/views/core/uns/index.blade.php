@@ -76,7 +76,7 @@
                                     @if (Cache::get('esAdminkey'))
                                         <td col width="80px" align="right">
                                             <ul class="demo-btns">
-                                                @if ($dato->inicializada==0)
+                                                @if ($dato->inicializada==0 && $dato->activa==1)
                                                     <li>
                                                          <a href="{{ URL::route('inicializaUn', $dato->id) }}" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-fire"></i></a>
                                                     </li> 

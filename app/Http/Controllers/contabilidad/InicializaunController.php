@@ -54,7 +54,7 @@ class InicializaunController extends Controller {
       } 
       
       $rules = array(
-          'meses'       => 'Required|Numeric|min:0',
+          'meses'       => 'Required|integer|min:1',
           'monto'       => 'required|Numeric|min:0',
           'anticipados'  => 'required|Numeric|min:0'
       );
@@ -70,7 +70,7 @@ class InicializaunController extends Controller {
 
       if ($validation->passes())
       {
-        // encuentra los datos de la unidad y la marca la unidad como inicializada
+        // encuentra los datos de la unidad y marca la unidad como inicializada
         $un= Un::find(Input::get('un_id'));      
         //dd($un->toArray());      
         $un->inicializada= 1;
@@ -89,23 +89,19 @@ class InicializaunController extends Controller {
         
         if (Input::get('meses')>0) {
           
-          $monto= floatval(Input::get('monto'));
-          $meses= floatval(Input::get('meses'));
-          $sumaMontoMensual=0;
-          
           $seccion= Seccione::find($un->seccione_id);
           $blqAdmin= Blqadmin::where('bloque_id', $seccion->bloque_id)->first();
           $secapto= Secapto::where('seccione_id', $seccion->id)->first();
-          //dd($secapto->toArray());
+          //dd($secapto->toArray());          
           
-          // calcula diferencia en centavos entre el total registrado de todos los meses y el total adeudado
-          for ($y= 1; $y <= $meses; $y++) {
-            $sumaMontoMensual= round($sumaMontoMensual,2)+ round($monto/$meses,2);
-          }
-    
-          $diferencia= round($monto - $sumaMontoMensual,2);
-          //dd($sumaMontoMensual, $diferencia);          
+          $meses= floatval(Input::get('meses'));  // 3        5       3
+          $monto= floatval(Input::get('monto'));  // 250.00   355.00  272.00            
           
+          $n= round(($monto/$meses),2) * $meses;  // 249.99   355.00  272.01
+          $cuotaMesual= round(($monto/$meses),2); //  83.33    71.00  90.67
+          $fraction = round($monto - $n,2);       //   0.01     0.00  -0.01
+          //dd($n, $cuotaMesual, $fraction);
+
           for ($x= 1; $x <= $meses; $x++) {
 
             $fecha= $fecha->subMonth();
@@ -122,19 +118,19 @@ class InicializaunController extends Controller {
             $dto->mes_anio         = Sity::getMonthName($month).'-'.$year;
             $dto->detalle          = 'Cuota de mantenimiento Unidad No ' . Input::get('un_id');
             
-            if ($x==1 && $diferencia>=0) {
-              $dto->importe = round($monto/$meses,2) + abs($diferencia);
+            if ($x==1 && $fraction>=0) {
+              $dto->importe = $cuotaMesual + abs($fraction);
 
-            } elseif ($x==1 && $diferencia<0) {
-              $dto->importe = round($monto/$meses,2) - abs($diferencia);
+            } elseif ($x==1 && $fraction<0) {
+              $dto->importe = $cuotaMesual - abs($fraction);
             
             } else {
-              $dto->importe = round($monto/$meses,2);
+              $dto->importe = $cuotaMesual;
             }
 
             $dto->f_vencimiento    = Carbon::createFromDate($year, $month, 1)->endOfMonth();
             $dto->recargo          = 0;
-            $dto->recargo_pagado   = 0;
+            $dto->recargo_pagado   = 1;
             $dto->f_descuento      = $fecha;   
             $dto->bloque_id        = $seccion->bloque_id;
             $dto->seccione_id      = $seccion->id;
