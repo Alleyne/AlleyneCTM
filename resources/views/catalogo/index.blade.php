@@ -73,6 +73,7 @@
 											<th>CODIGO</th>
 											<th>TIPO</th>
 											<th>CLASE</th>
+											<th>ESTADO</th>
 											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
 										</tr>
 									</thead>
@@ -91,10 +92,13 @@
 													@elseif ($dato->corriente_siono===null)
 													@endif
 												</td>
+												<td col width="80px">
+													{{ $dato->activa ? 'Activa': 'Inactiva' }}
+												</td>
 												<td col width="70px" align="right">
 													<ul class="demo-btns">
 														<li>
-															<a href="#" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
+															<a href="{{ URL::route('catalogos.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
 														</li>
 														<li>
 										

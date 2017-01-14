@@ -28,9 +28,11 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-						<h2>Proveedores </h2>
+						<h2>Organizacione proveedoras </h2>
 						<div class="widget-toolbar">
-
+							@if (Cache::get('esAdminkey'))
+								<a href="{{ URL::route('orgs.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Organizacion</a>
+							@endif	
 						</div>	
 					</header>
 	
@@ -67,9 +69,19 @@
 											@if (Cache::get('esAdminkey'))												
 												<td><strong>{{ $dato->nombre }}</strong></td>
 												<td col width="80px">{{ $dato->ruc }}</td>
-												<td col width="100px" align="right">
+												<td col width="250px" align="right">
 													<ul class="demo-btns">
-														<a href="{{ URL::route('catalogosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar cuenta de gasto</a>
+														<li>
+															<a href="{{ URL::route('catalogosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar cuenta de gasto</a>
+														</li>
+														<li>
+															<a href="{{ URL::route('orgs.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
+														</li>
+														<li>
+															{{ Form::open(array('route' => array('orgs.destroy', $dato->id), 'method' => 'delete', 'data-confirm' => 'Deseas borrar la Organizacion '. $dato->nombre. ' permanentemente?')) }}
+																<button type="submit" href="{{ URL::route('orgs.destroy', $dato->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
+															{{ Form::close() }}		
+														</li>
 													</ul>
 												</td>
 

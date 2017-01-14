@@ -73,7 +73,8 @@ Route::group(['namespace' => 'core'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador OrgsController
 	//---------------------------------------------------------// 	
-  Route::get('orgs/desvincularSubcuenta{org_id}, {ksubcuenta_id}', 'OrgsController@desvincularSubcuenta')->name('desvincularSubcuenta');
+  Route::get('orgs/desvincularSubcuenta/{org_id}, {ksubcuenta_id}', 'OrgsController@desvincularSubcuenta')->name('desvincularSubcuenta');
+  Route::post('orgs/vinculaCuentaStore', 'OrgsController@vinculaCuentaStore')->name('vinculaCuentaStore');
   Route::get('orgs/catalogosPorOrg/{org_id}', 'OrgsController@catalogosPorOrg')->name('catalogosPorOrg');
 	Route::resource('orgs', 'OrgsController');
 

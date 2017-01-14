@@ -18,7 +18,7 @@ class CatalogosController extends Controller {
 	public function index()
 	{
 
-    $datos = Catalogo::where('activa', 1)->orderBy('codigo')->get();
+    $datos = Catalogo::all();
     //dd($datos->toArray());
     
     if($datos) {
@@ -45,7 +45,7 @@ class CatalogosController extends Controller {
 	{
 
 		//dd($request->All());
-    $codigo= $request->input('codigo');
+    $codigo= $request->input('id');
     //dd($codigo);
 
     if ($codigo==1 || $codigo==2) {
@@ -108,7 +108,7 @@ class CatalogosController extends Controller {
 		} elseif ($codigo[0]=='6') {
 			$dato->nombre       	 = $request->input('nombre');
 			$dato->codigo		       = $request->input('codigo');
-			$dato->tipo			  	   = $request->input('tipo');
+			$dato->tipo			  	   = $request->input('id');
 			$dato->nombre_factura  = $request->input('nombre_factura');
 			$dato->save();	
 
@@ -123,4 +123,51 @@ class CatalogosController extends Controller {
 		Session::flash('success', 'La cuenta -'.$dato->nombre.'- ha sido creada con éxito.');
 		return redirect()->route('catalogos.index');
 	}
+
+  /**
+   * Show the form for editing the specified resource.
+   *
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function edit($id)
+  {
+    //dd($id);
+    $cuenta = Catalogo::find($id);
+    return view('catalogo.edit')->withCuenta($cuenta);
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function update(Request $request, $id)
+	{
+		$cuenta= Catalogo::find($id);
+		if($cuenta->tipo=='1' || $cuenta->tipo=='2') {      
+			$this->validate($request, array(
+      'nombre' => 'required'
+    	));			
+		}
+			
+		elseif($cuenta->tipo=='6') {
+			$this->validate($request, array(
+      'nombre' => 'required',
+      'nombre_factura' => 'required'    
+    	));		
+		}
+
+		$cuenta->nombre = $request->nombre;		
+		$cuenta->nombre_factura = $request->nombre_factura;					
+		$cuenta->corriente_siono = $request->corriente_siono;		
+		$cuenta->enfactura = $request->enfactura;
+		$cuenta->activa = $request->activa;
+		$cuenta->save();
+		
+		Session::flash('success', 'La cuenta ' .$cuenta->nombre. ' ha sido editada con exito');
+    return redirect()->route('catalogos.index');
+	}
+
 }

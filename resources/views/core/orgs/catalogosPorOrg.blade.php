@@ -106,7 +106,7 @@
 					</div>
 					<div class="modal-body">
 
-						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'orgs.store')) }}
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'vinculaCuentaStore')) }}
 							<fieldset>
 								{{ Form::hidden('org_id', $org_id) }}
 								<div class="row">

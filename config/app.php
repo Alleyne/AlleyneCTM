@@ -240,7 +240,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class, 
         'Image' => Intervention\Image\Facades\Image::class,
         'Date' => Jenssegers\Date\Date::class,
-        'Purifier'  => Mews\Purifier\Facades\Purifier::class,
+        'Purifier' => Mews\Purifier\Facades\Purifier::class,
     ],
 
 ];
