@@ -13,6 +13,7 @@ use App\Detalledescuento;
 use App\Detallepago;
 use App\Ctdiario;
 
+
 class Desc {
 
   /** 
