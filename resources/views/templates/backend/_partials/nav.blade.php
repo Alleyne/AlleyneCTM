@@ -46,6 +46,9 @@
 			<li>
 				<a href="{{ URL::route('catalogos.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Catalogo</span></a>
 			</li>
+			<li>
+				<a href="{{ URL::route('diariocajas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Diarios de Caja</span></a>
+			</li>
 		</ul>
 	</li>
 	<li>

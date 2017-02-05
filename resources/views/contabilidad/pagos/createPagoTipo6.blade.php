@@ -52,23 +52,12 @@
 									<fieldset>
 
 	 									{{ Form::hidden('un_id', $un_id) }}
-                   
+	 									{{ Form::hidden('key', $key) }}
+	 									
 										<div class="form-group">
-										  <label class="col-md-3 control-label">Tipo de pago</label>
-											<div class="col-md-9">
-
-										    <select name="trantipo_id" id="trantipo_id" class="form-control" onclick="createUserJsObject.ShowtipoDePago;">
-									        @foreach ($trantipos as $trantipo)
-									        	<option id="{{ $trantipo->id }}" value="{{ $trantipo->id }}">{{ $trantipo->nombre }}</option>				        	
-									        @endforeach
-										    </select>
-											</div>		
-										</div>
-										
-										<div class="bancos form-group" style=" display: none;">
 											<label class="col-md-3 control-label">Banco</label>
 											<div class="col-md-9">
-												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control']) }}
+												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control', 'required' => '']) }}
 											</div>
 										</div>	
 
@@ -81,42 +70,6 @@
 												</div>
 	                      </div>
 	                  </div>  
-										
-										<div class="transNo form-group" style=" display: none;">
-											<label class="col-md-3 control-label">Transaccion No.</label>
-											<div class="col-md-9">
-												{{ Form::text('transno', old('transno'),
-													array(
-												    'class' => 'form-control',
-												    'id' => 'transno',
-												    'placeholder' => 'Escriba el numero de la transaccion...',
-														'autocomplete' => 'off',
-														'data-parsley-type'=>'digits',
-														'minlength '=>'1',
-														'maxlength '=>'10',
-														'data-parsley-error-message'=>'mi mensaje para el campo trans no'
-													))
-												}} 
-											</div>
-										</div>	
-										
-										<div class="quecheNo form-group" style=" display: none;">
-											<label class="col-md-3 control-label">Cheque No.</label>
-											<div class="col-md-9">
-												{{ Form::text('transno', old('transno'),
-													array(
-												    'class' => 'form-control',
-												    'id' => 'transno',
-												    'placeholder' => 'Escriba el numero de la transaccion...',
-														'autocomplete' => 'off',
-														'data-parsley-type'=>'digits',
-														'minlength '=>'1',
-														'maxlength '=>'10',
-														'data-parsley-error-message'=>'mi mensaje para el campo trans no'
-													))
-												}} 
-											</div>
-										</div>										
 
 										<div class="form-group">
 											<label class="col-md-3 control-label">Monto</label>
@@ -213,31 +166,5 @@
 			$(function () {
 			$("#fecha").datepicker();
 		});
-	
-		var tipoDePago = jQuery('#trantipo_id');
-		var select = this.value;
-		tipoDePago.change(function () {
-	    if ($(this).val() == '1') {
-	      $('.bancos').show();		
-	      $('.transNo').hide();	
-	      $('.quecheNo').show();			    
-	    
-	    } else if ($(this).val() == '2' || $(this).val() == '3'|| $(this).val() == '4') {
-	      $('.bancos').show();		    	
-	      $('.transNo').show();	
-	      $('.quecheNo').hide();	
-
-	    } else if ($(this).val() == '5') {
-	      $('.bancos').hide();		    	
-	      $('.transNo').hide();	
-	      $('.quecheNo').hide();	
-
-	    } else if ($(this).val() == '6') {
-	      $('.bancos').show();		    	
-	      $('.transNo').hide();	
-	      $('.quecheNo').hide();	
-	    }		
-		});
-
 	</script>
 @stop

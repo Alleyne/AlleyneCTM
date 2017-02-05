@@ -63,7 +63,8 @@
 											<th>FECHA</th>
 											<th>DETALLE</th>
 											<th>MONTO</th>
-											<th>TIPO</th>
+											<th>TRANS</th>
+											<th>PAGO</th>
 											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>	
 										</tr>
 									</thead>
@@ -74,6 +75,7 @@
 												<td col width="100px">{{ $dato->fecha }}</td>
 												<td>{{ $dato->detalle }}</td>
 												<td col width="100px">{{ $dato->monto }}</td>
+												<td col width="100px">{{ $dato->Trantipo->nombre }}</td>
 												<td col width="100px">{{ $dato->pagotipo ? 'Completo' : 'Parcial' }}</td>
 												@if ($dato->contabilizado == 0)
 													<td col width="140px" align="right">
@@ -152,18 +154,29 @@
 		
 						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'detallepagofacturas.store')) }}
 							<fieldset>
+      				{{ Form::hidden('factura_id', $factura->id) }}                
+								<div class="form-group">
+								  <label class="col-md-3 control-label">Tipo de pago</label>
+									<div class="col-md-9">
 
-                				{{ Form::hidden('factura_id', $factura->id) }}                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label">Fecha</label>
-                                    <div class="col-md-4">
+								    <select name="trantipo_id" id="trantipo_id" class="form-control" onclick="createUserJsObject.ShowtipoDePago;">
+							        @foreach ($trantipos as $trantipo)
+							        	<option id="{{ $trantipo->id }}" value="{{ $trantipo->id }}">{{ $trantipo->nombre }}</option>				        	
+							        @endforeach
+								    </select>
+									</div>		
+								</div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Fecha</label>
+                  <div class="col-md-4">
 										<div class="input-group">
 											<input type="text" class="Form-control datepicker" name="fecha" placeholder="Seleccione la fecha del pago de la factura ..." data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 										</div>
-                                    	{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
-                                    </div>
-                                </div>  
+	                  {!! $errors->first('fecha', '<li style="color:red">:message</li>') !!} 
+                  </div>
+                </div>  
 
 								<div class="form-group">
 									<label class="col-md-3 control-label">Detalle</label>

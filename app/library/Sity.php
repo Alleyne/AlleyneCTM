@@ -81,9 +81,10 @@ class Sity {
   /****************************************************************************************
    * Registra en ctmayores
    ****************************************************************************************/
-  public static function registraEnCuentas($pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id=Null, $pago_id=Null, $org_id=Null, $ctdasm_id=Null, $anula=Null)
+  public static function registraEnCuentas($pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id=Null, $pago_id=Null, $detallepagofactura_id=Null, $org_id=Null, $ctdasm_id=Null, $anula=Null)
   {
-
+    //dd($pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id=Null, $pago_id=Null, $detallepagofactura_id, $org_id=Null, $ctdasm_id=Null, $anula=Null);
+    
     $debito = 0;
     $credito = 0;
     //dd($cuenta);
@@ -119,19 +120,20 @@ class Sity {
 
     // agrega el nuevo registro al modelo ctmayore
     $dato = new Ctmayore;
-    $dato->pcontable_id     = $pcontable_id;
-    $dato->tipo             = $tipo;
-    $dato->cuenta           = $cuenta;
-    $dato->codigo           = $cta->codigo;
-    $dato->fecha            = $fecha;
-    $dato->detalle          = $detalle;
-    $dato->debito           = $debito;
-    $dato->credito          = $credito;
-    $dato->un_id            = $un_id;
-    $dato->org_id           = $org_id; 
-    $dato->pago_id          = $pago_id; 
-    $dato->ctdasm_id        = $ctdasm_id;
-    $dato->anula            = $anula;
+    $dato->pcontable_id           = $pcontable_id;
+    $dato->tipo                   = $tipo;
+    $dato->cuenta                 = $cuenta;
+    $dato->codigo                 = $cta->codigo;
+    $dato->fecha                  = $fecha;
+    $dato->detalle                = $detalle;
+    $dato->debito                 = $debito;
+    $dato->credito                = $credito;
+    $dato->un_id                  = $un_id;
+    $dato->detallepagofactura_id  = $detallepagofactura_id;
+    $dato->org_id                 = $org_id; 
+    $dato->pago_id                = $pago_id; 
+    $dato->ctdasm_id              = $ctdasm_id;
+    $dato->anula                  = $anula;
     $dato->save();
   }   
 

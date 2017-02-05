@@ -25,10 +25,29 @@
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                 <h2>Pagos </h2>
                 <div class="widget-toolbar">
-                    <a href="{{ URL::route('uns.show', $un_id) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>            
+                    <a href="{{ Cache::get('indexunallkey') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
                     @if (Cache::get('esAdminkey'))
-                        <a href="{{ URL::route('createPago', $un_id) }}" class="btn btn-success"><i class="fa fa-plus"></i> Registrar pago</a>
-                    @endif
+                        <div class="btn-group">
+                            <a class="btn btn-success btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Registrar pago de propietario</a>
+                            <a class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Banca en linea</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 2)) }}">Transferencia</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 3)) }}">ACH</a></li>
+                                
+                                <li class="divider"></li>                                
+                                <li><a href="{{ URL::route('createPago', array($un_id, 5)) }}">Efectivo</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 1)) }}">Cheque</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 6)) }}">Tarjeta Clave</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 7)) }}">Visa</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 8)) }}">Master Card</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 9)) }}">American Express</a></li>
+ 
+                                <li><!-- <a href="#">Separated link</a> --></li>
+                            </ul>
+                        </div><!-- /btn-group -->       
+                    @endif 
+
                 </div>
             </header>
 
@@ -61,7 +80,7 @@
                                     <td col width="60px"><strong>{{ $dato->id }}</strong></td>
                                     <td col width="100px" align="left">{{ $dato->trantipo->nombre }}</td>
                                     <td col width="70px"><strong>{{ $dato->trans_no }}</strong></td>
-                                    <td>{{ $dato->banco->nombre }}</td>
+                                    <td>{{{ $dato->banco->nombre or '' }}} </td>
                                     <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_pago)->format('M j\\, Y') }}</td>
                                     <td col width="90px" align="right">{{ $dato->monto }}</td>
                                     

@@ -25,6 +25,7 @@ use App\Banco;
 use App\Ctmayore;
 use App\Secapto;
 use App\Trantipo;
+use App\Diariocaja;
 
 class PagosController extends Controller {
     
@@ -66,21 +67,38 @@ class PagosController extends Controller {
   /*************************************************************************************
 	 * Despliega formulario para crear un nuevo registro
 	 ************************************************************************************/	
-	public function createPago($un_id)
+	public function createPago($un_id, $key)
 	{
     
     // obtiene todas las instituciones bancarias actualmente registrada
     $bancos= Banco::orderBy('nombre')->pluck('nombre', 'id')->all();
 		//dd($bancos);	    
     
-    // obtiene todos los diferentes tipos de pagos
-    $trantipos= Trantipo::orderBy('nombre')->pluck('nombre', 'id')->all();
-		//dd($trantipos);	    
+    if ($key==1) {
+	    return view('contabilidad.pagos.createPagoTipo1')        			
+						->with('bancos', $bancos)
+						->with('key', $key)
+						->with('un_id', $un_id);
     
-    return view('contabilidad.pagos.createPago')        			
-					->with('bancos', $bancos)
-					->with('trantipos', $trantipos)
-					->with('un_id', $un_id);    	
+    } elseif ($key==2 || $key==3 || $key==4) {
+	    return view('contabilidad.pagos.createPagoTipo234')        			
+						->with('bancos', $bancos)
+						->with('key', $key)
+						->with('un_id', $un_id);
+    
+    } elseif ($key==5 || $key==7 || $key==8 || $key==9) {
+	    return view('contabilidad.pagos.createPagoTipo5')        			
+						->with('bancos', $bancos)
+						->with('key', $key)
+						->with('un_id', $un_id);
+    
+    } elseif ($key==6) {
+	    return view('contabilidad.pagos.createPagoTipo6')        			
+						->with('bancos', $bancos)
+						->with('key', $key)
+						->with('un_id', $un_id);
+    }
+    	
 	} 
 
   /*************************************************************************************
@@ -96,24 +114,60 @@ class PagosController extends Controller {
 
       $f_final= Carbon::today()->addDay(1);
 
-      $rules = array(
-          'banco_id'   	=> 'required|not_in:0',
-          'trantipo_id' => 'required|not_in:0',
+      if (Input::get('key')== '1') {
+	      $rules = array(
           'transno'   	=> 'Required|Numeric|digits_between:1,10|min:1',
           'monto'   	 	=> 'required|Numeric|min:0.01',
           'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
           'descripcion'	=> 'required',
           'un_id'		 		=> 'required'            
-      );
-  
-        
+	      );  
+      
+      } elseif (Input::get('key')== '2' || Input::get('key')== '3' || Input::get('key')== '4') {
+	      $rules = array(
+          'banco_id'   	=> 'required|not_in:0',
+          'monto'   	 	=> 'required|Numeric|min:0.01',
+          'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
+          'descripcion'	=> 'required',
+          'un_id'		 		=> 'required'            
+	      );  
+      
+      } elseif (Input::get('key')== '5' || Input::get('key')== '7' || Input::get('key')== '8' || Input::get('key')== '9') {
+	      $rules = array(
+          'monto'   	 	=> 'required|Numeric|min:0.01',
+          'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
+          'descripcion'	=> 'required',
+          'un_id'		 		=> 'required'            
+	      );      
+      
+      } elseif (Input::get('key')== '6') {
+	      $rules = array(
+          'banco_id'   	=> 'required|not_in:0',
+          'monto'   	 	=> 'required|Numeric|min:0.01',
+          'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
+          'descripcion'	=> 'required',
+          'un_id'		 		=> 'required'            
+	      );   
+      }
+
       //dd($rules, $messages);
       
       $validation = \Validator::make($input, $rules);      	
 
 			if ($validation->passes())
 			{
+				// verifica si existe registro para informe de diario de caja para el dia de hoy,
+				// si no existe entonces lo crea.
+				if (Input::get('key') != '2' && Input::get('key') != '4' ) {
+					$diariocaja= Diariocaja::where('fecha', Input::get('f_pago'))->first();
 
+			    if (!$diariocaja) {
+			    	$dato = new Diariocaja; 
+				    $dato->fecha= Input::get('f_pago'); 		    
+				    $dato->save();
+			    }
+				}
+		    
 		    // calcula el periodo al que corresponde la fecha de pago
 		    $f_pago= Carbon::parse(Input::get('f_pago'));
 		    $year= $f_pago->year;
@@ -137,11 +191,11 @@ class PagosController extends Controller {
 				$montoRecibido= round(floatval(Input::get('monto')),2);
 
 				// Procesa el pago recibido	si el tipo de transaccion es cheque
-				if (Input::get('trantipo_id') == 1 || Input::get('trantipo_id') == 3) {
+				if (Input::get('key') == 1 || Input::get('key') == 3) {
 					// Solamente registra el pago recibido no lo procesa
 					$dato = new Pago;
 					$dato->banco_id    = Input::get('banco_id');
-					$dato->trantipo_id = Input::get('trantipo_id');
+					$dato->trantipo_id = Input::get('key');
 				  $dato->trans_no    = Input::get('transno'); 
 					$dato->monto       = $montoRecibido;
 					$dato->f_pago      = Input::get('f_pago');
@@ -164,7 +218,7 @@ class PagosController extends Controller {
 					// Registra el pago recibido
 					$dato = new Pago;
 					$dato->banco_id    = Input::get('banco_id');
-					$dato->trantipo_id = Input::get('trantipo_id');
+					$dato->trantipo_id = Input::get('key');
 				  $dato->trans_no    = Input::get('transno'); 
 					$dato->monto       = $montoRecibido;
 					$dato->f_pago      = Input::get('f_pago');
@@ -334,7 +388,7 @@ class PagosController extends Controller {
 			//dd($periodo->fecha);  
 
 			// proceso de contabilizar el pago recibido
-			Sity::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago, $periodo->id, $periodo->periodo);
+			Npago::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago, $periodo->id, $periodo->periodo);
 
 			// Registra el pago como tramitado
 			$dato1 = Pago::find($pago_id);

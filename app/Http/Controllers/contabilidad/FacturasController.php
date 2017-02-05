@@ -123,10 +123,10 @@ class FacturasController extends Controller {
 		    }
 
 				$dato = new Factura;
-				$dato->org_id       	= Input::get('org_id');
+				$dato->org_id     = Input::get('org_id');
 				$dato->no			    = strtoupper(Input::get('no'));
-				$dato->fecha 	       	= Input::get('fecha');
-				$dato->total 	       	= Input::get('total');
+				$dato->fecha 	    = Input::get('fecha');
+				$dato->total 	    = Input::get('total');
 				$dato->save();	
   
 				Sity::RegistrarEnBitacora(1, 'facturas', $dato->id, $dato->tojson());
@@ -231,7 +231,11 @@ class FacturasController extends Controller {
 						$dato->nombre,
 						$dato->precio,
 						Null,
-						$org_id
+						Null,
+						Null,
+						$org_id,
+						Null,
+						Null
 						);
 				
 			 	Sity::registraEnCuentas(
@@ -243,7 +247,11 @@ class FacturasController extends Controller {
 						Catalogo::find(15)->nombre.', factura No. '.$factura->no.', proveedor No. '.$org_id,
 						$dato->itbms,
 						Null,
-						$org_id
+						Null,
+						Null,
+						$org_id,
+						Null,
+						Null
 						);	        
 
 		        // registra en Ctdiario principal
@@ -275,7 +283,11 @@ class FacturasController extends Controller {
 					'   Cuentas por pagar a proveedores. Factura No. '.$factura->no.', Proveedor No. '.$org_id,
 					$factura->total,
 					Null,
-					$org_id
+					Null,
+					Null,
+					$org_id,
+					Null,
+					Null
 					);
 
 	    // registra en Ctdiario principal

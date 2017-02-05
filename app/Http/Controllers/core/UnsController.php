@@ -188,6 +188,8 @@ class UnsController extends Controller {
 	    $dato = Un::find($un_id);
 	    //dd($dato->toArray());
 	    
+	    Cache::forever('indexunallkey', URL::full());
+
 	    if(!empty($dato)) {
 			//obtiene los datos de la sección
 			$seccion = Seccione::find($dato->seccione_id);	

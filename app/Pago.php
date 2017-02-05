@@ -31,4 +31,9 @@ class Pago extends Model
       return $this->belongsTo('App\Trantipo');
   }
 
+  public function ctmayores()
+  {
+   return $this->hasMany('App\Ctmayore');    
+  }
+
 }

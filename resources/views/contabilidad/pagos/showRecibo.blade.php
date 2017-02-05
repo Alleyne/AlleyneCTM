@@ -89,13 +89,13 @@
               </div>
               <br>
           </div>
-      </div>  
+      </
       
       <br>
       
       <div class="row">
         <div class="col-md-12">
-           <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $pago->un->codigofull }}</strong>, la suma de <strong>B/. {{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trantipo->nombre }}</strong> no <strong>{{ $pago->trans_no }}</strong> del <strong>{{ $pago->nombre }}</strong> el dia <strong>{{ Date::parse($pago->f_pago)->format('l\, j F Y') }}</strong>, en concepto de pago por servicios de mantenimiento del {{ $pago->un->seccione->ph->nombre }}.</p>
+           <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $pago->un->codigofull }}</strong>, la suma de <strong>B/. {{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trantipo->nombre }} {{{ $pago->trans_no or '' }}}</strong> el dia <strong>{{ Date::parse($pago->f_pago)->format('l\, j F Y') }}</strong>, en concepto de pago por servicios de mantenimiento del {{ $pago->un->seccione->ph->nombre }}.</p>
         </div>
       </div>
       
@@ -103,7 +103,7 @@
       @if ($total > 0)       
         <div class="row">
           <div class="col-md-12">
-             <p>Acontinuacion se deglosa la forma en que se contabilizo su pago:</p>
+            <p>Acontinuacion se deglosa la forma en que se contabilizo su pago:</p>
           </div>
         </div>
 

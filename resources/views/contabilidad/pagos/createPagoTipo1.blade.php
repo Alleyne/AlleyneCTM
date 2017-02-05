@@ -1,8 +1,13 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Registrar Factura')
+@section('title', '| Crear pago')
+
+@section('stylesheets')
+	{!! Html::style('css/parsley.css') !!}
+@endsection
 
 @section('content')
+	
 	<!-- widget grid -->
 	<section id="widget-grid" class="">
 	
@@ -28,7 +33,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Registrar nueva factura</h2>
+						<h2>Registrar pagos</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -43,59 +48,81 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'facturas.store')) }}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'pagos.store', 'data-parsley-validate' => '')) }}		
 									<fieldset>
-	 									{{ csrf_field() }}
+
+	 									{{ Form::hidden('un_id', $un_id) }}
+	 									{{ Form::hidden('key', $key) }}
+										<h2>Registra pago con cheques</h2>
 										<div class="form-group">
-											<label class="col-md-3 control-label">Proveedor</label>
+											<label class="col-md-3 control-label">Banco</label>
 											<div class="col-md-9">
-												{{ Form::select('org_id', ['' => 'Selecione un proveedor ...'] + $proveedores, 0, ['class' => 'form-control']) }}
-												{!! $errors->first('org_id', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="col-md-3 control-label">Factura No.</label>
-											<div class="col-md-9">
-												{{ Form::text('no', old('no'),
-													array(
-													    'class' => 'form-control',
-													    'id' => 'no',
-													    'placeholder' => 'Escriba el numero de la factura...',
-														'autocomplete' => 'off',
-													))
-												}} 
-												{!! $errors->first('no', '<li style="color:red">:message</li>') !!}
+												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control', 'required' => '']) }}
 											</div>
 										</div>	
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Fecha</label>
-                        <div class="col-md-9">
-													<div class="input-group">
-														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
-														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-													</div>
-                        	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
-                        </div>
-                    </div>  
-										
+
 										<div class="form-group">
-											<label class="col-md-3 control-label">Total</label>
+											<label class="col-md-3 control-label">Cheque No.</label>
 											<div class="col-md-9">
-												{{ Form::text('total', old('total'),
+												{{ Form::text('transno', old('transno'),
 													array(
 													    'class' => 'form-control',
-													    'id' => 'total',
-													    'placeholder' => 'Escriba el monto total de la factura...',
-														'autocomplete' => 'off',
+													    'id' => 'transno',
+													    'placeholder' => 'Escriba el numero de la transaccion...',
+															'autocomplete' => 'off',
+															'required' => '',
+															'data-parsley-type'=>'digits',
+															'minlength '=>'1',
+															'maxlength '=>'10',
+															'data-parsley-error-message'=>'mi mensaje para el campo trans no'
 													))
 												}} 
-												{!! $errors->first('total', '<li style="color:red">:message</li>') !!}
 											</div>
+										</div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Fecha de pago</label>
+                        <div class="col-md-9">
+												<div class="input-group">
+													<input type="text" id="f_pago" name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" required="" value="{{ old('f_pago') }}">
+													<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+												</div>
+	                      </div>
+	                  </div>  
+
+										<div class="form-group">
+											<label class="col-md-3 control-label">Monto</label>
+											<div class="col-md-9">
+												{{ Form::text('monto', old('monto'),
+													array(
+												    'class' => 'form-control',
+												    'id' => 'monto',
+												    'placeholder' => 'Escriba el monto recibido ...',
+														'autocomplete' => 'off',
+														'required' => '',
+														'data-parsley-pattern'=>'^[0-9]*\.[0-9]{2}$'
+													))
+												}} 
+											</div>
+										</div>					
+
+										<div class="form-group">
+											<label class="col-md-3 control-label">Descripción</label>
+											<div class="col-md-9">
+								        {{ Form::textarea('descripcion', old('descripcion'),
+								        	array(
+								        		'class' => 'form-control',
+								        		'title' => 'Escriba la descripcion',
+								        		'rows' => '3',
+								        		'required' => ''
+								        	))
+								        }}
+											</div>
+										</div>				
 									</fieldset>
 									
 									<div class="form-actions">
 										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
-										<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
+										<a href="{{ URL::route('indexPagos', $un_id) }}" class="btn btn-large">Cancelar</a>
 									</div>
 								{{ Form::close() }}
 							</div>
@@ -109,41 +136,25 @@
 		</div>
 	
 		<!-- end row -->
-	
-		<!-- row -->
-	
-		<div class="row">
-	
-		</div>
-	
-		<!-- end row -->
-	
+		
 	</section>
 	<!-- end widget grid -->
 @stop
 
 @section('relatedplugins')
-<!-- PAGE RELATED PLUGIN(S) -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	{!! Html::script('js/parsley.min.js') !!}
 
-<script type="text/javascript">
-// DO NOT REMOVE : GLOBAL FUNCTIONS!
-$(document).ready(function() {
-	pageSetUp();
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $("input[type='submit']").attr("disabled", false);
+		    $("form").submit(function(){
+		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+		      return true;
+		    })
+		})
 	
-	$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
-	$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
-		var children = $(this).parent('li.parent_li').find(' > ul > li');
-		if (children.is(':visible')) {
-			children.hide('fast');
-			$(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
-		} else {
-			children.show('fast');
-			$(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
-		}
-		e.stopPropagation();
-	});
-
-		$('#fecha').datepicker({
+		$('#f_pago').datepicker({
 			prevText : '<i class="fa fa-chevron-left"></i>',
 			nextText : '<i class="fa fa-chevron-right"></i>',
 			onSelect : function(selectedDate) {
@@ -168,18 +179,11 @@ $(document).ready(function() {
 			showMonthAfterYear: false,
 			yearSuffix: ''
 			};
-			$.datepicker.setDefaults($.datepicker.regional['es']);
+		
+		$.datepicker.setDefaults($.datepicker.regional['es']);
 			$(function () {
 			$("#fecha").datepicker();
 		});
 
-
-    $("input[type='submit']").attr("disabled", false);
-    $("form").submit(function(){
-      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
-      return true;
-    });
-})
-
-</script>
+	</script>
 @stop

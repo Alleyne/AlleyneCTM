@@ -119,7 +119,7 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------// 		
   Route::get('procesaChequeRecibido/{pago_id}', 'PagosController@procesaChequeRecibido')->name('procesaChequeRecibido');
   Route::get('indexPagos/{un_id}', 'PagosController@indexPagos')->name('indexPagos');
-  Route::get('createPago/{un_id}', 'PagosController@createPago')->name('createPago');
+  Route::get('createPago/{un_id},{key}', 'PagosController@createPago')->name('createPago');
   Route::get('showRecibo/{pago_id}', 'PagosController@showRecibo')->name('showRecibo');
   Route::get('procesaAnulacionPago/{pago_id},{un_id}', 'PagosController@procesaAnulacionPago')->name('procesaAnulacionPago');
   Route::get('eliminaPagoCheque/{pago_id}', 'PagosController@eliminaPagoCheque')->name('eliminaPagoCheque');
@@ -199,6 +199,11 @@ Route::group(['namespace' => 'contabilidad'], function()
   Route::get('dashboard/historico', 'DashboardController@historico')->name('historico');
   Route::get('dashboard/vigente', 'DashboardController@vigente')->name('vigente');
 	
+	//---------------------------------------------------------//
+	// Funciones del controlador DiariocajasController
+	//---------------------------------------------------------// 	
+	Route::resource('diariocajas', 'DiariocajasController');  
+
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');
 	Route::get('/truncateAll','PruebasController@truncateAll');
@@ -334,7 +339,9 @@ Route::get('/test', function () {
 use App\Seccione;
 use App\User;
 use App\Pago;
+use App\Ctmayore;
 use App\library\Grupo;
+
 Route::get('/query', function () {
 
 //$data= Seccione::find(1)->secapto;
@@ -380,5 +387,6 @@ foreach ($roles as $role) {
                 ->having('pcontable_id', '>', 1)
                 ->get();
 dd($datos->toArray());*/
-
+	
 });
+

@@ -17,6 +17,8 @@ use App\Detallepagofactura;
 use App\Bitacora;
 use App\Pcontable;
 use App\Ctdiario;
+use App\Trantipo;
+use App\Diariocaja;
 
 class DetallepagofacturasController extends Controller {
     public function __construct()
@@ -32,6 +34,11 @@ class DetallepagofacturasController extends Controller {
     $datos = Detallepagofactura::where('factura_id', $factura_id)->get();
     //dd($datos->toArray());		
 	    
+    // obtiene todos los diferentes tipos de pagos
+    $trantipos= Trantipo::pluck('nombre', 'id')->all();
+    $trantipos= Trantipo::orderBy('nombre')->get();		
+		//dd($trantipos);	
+
 		foreach ($datos as $dato) {
 			if ($dato->fecha) {
 			  $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
@@ -43,6 +50,7 @@ class DetallepagofacturasController extends Controller {
 		
 		return view('contabilidad.detallepagofacturas.show')
 				->with('factura', $factura)
+				->with('trantipos', $trantipos)
 				->with('datos', $datos);     	
 	}	
 
@@ -62,6 +70,7 @@ class DetallepagofacturasController extends Controller {
 			    'factura_id'		=> 'required',
 			    'fecha'    			=> 'required|Date',
 			    'detalle'    		=> 'Required',
+			    'trantipo_id'		=> 'Required',
 			    'monto'    			=> 'required|Numeric|min:0.01'
 			);
 
@@ -109,6 +118,7 @@ class DetallepagofacturasController extends Controller {
 					$dato->fecha 	   			= Input::get('fecha');
 					$dato->detalle 	      = Input::get('detalle');
 					$dato->monto 	       	= Input::get('monto');
+					$dato->trantipo_id   	= Input::get('trantipo_id');
 					$dato->pagotipo				= 1;
 					$dato->save();	
 					
@@ -134,6 +144,7 @@ class DetallepagofacturasController extends Controller {
 					$dato->fecha 	   			= Input::get('fecha');
 					$dato->detalle 	      = Input::get('detalle');
 					$dato->monto 	       	= Input::get('monto');
+					$dato->trantipo_id   	= Input::get('trantipo_id');
 					$dato->pagotipo				= 0;
 					$dato->save();	
 			    
@@ -203,30 +214,44 @@ class DetallepagofacturasController extends Controller {
 
 		DB::beginTransaction();
 		try {
-		    // encuentra los datos del detalle de pago en estudio
-		    $dato= Detallepagofactura::find($detallepagofactura_id);
-		    //dd($dato->toArray());
-		    
-		    // verifica que exista un periodo de acuerdo a la fecha de pago
-		    $year= Carbon::parse($dato->fecha)->year;
-		    $month= Carbon::parse($dato->fecha)->month;
-		    $pdo= Sity::getMonthName($month).'-'.$year;
 
-		    // encuentra el periodo mas antiguo abierto
-			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
-		    //dd($periodo);
-		    
-		    // solamente se permite registrar pagos de facturas que correspondan al periodo mas antiguo abierto
-		    if ($pdo != $periodo->periodo) {
-					Session::flash('danger', '<< ERROR >> Solamente se permite contabilizar pagos que correspondan al periodo vigente de '.$periodo->periodo);
-					return back();
+	    // encuentra los datos del detalle de pago en estudio
+	    $dato= Detallepagofactura::find($detallepagofactura_id);
+	    //dd($dato->toArray());
+	    
+			// verifica si existe registro para informe de diario de caja para el dia de hoy,
+			// si no existe entonces lo crea.
+			if ($dato->trantipo_id != '2' && $dato->trantipo_id != '4' ) {
+				$diariocaja= Diariocaja::where('fecha', $dato->fecha)->first();
+
+		    if (!$diariocaja) {
+		    	$dto = new Diariocaja; 
+			    $dto->fecha= $dato->fecha; 		    
+			    $dto->save();
 		    }
+			}	    
 
-		    // verifica si existe algun detalle de pago anterior al presente que no haya sido contabilizado
+
+	    // verifica que exista un periodo de acuerdo a la fecha de pago
+	    $year= Carbon::parse($dato->fecha)->year;
+	    $month= Carbon::parse($dato->fecha)->month;
+	    $pdo= Sity::getMonthName($month).'-'.$year;
+
+		  // encuentra el periodo mas antiguo abierto
+			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+	    //dd($periodo);
+	    
+	    // solamente se permite registrar pagos de facturas que correspondan al periodo mas antiguo abierto
+	    if ($pdo != $periodo->periodo) {
+				Session::flash('danger', '<< ERROR >> Solamente se permite contabilizar pagos que correspondan al periodo vigente de '.$periodo->periodo);
+				return back();
+	    }
+
+	    // verifica si existe algun detalle de pago anterior al presente que no haya sido contabilizado
 			$exiteAnterior= Detallepagofactura::where('id', '<', $detallepagofactura_id)->where('contabilizado', 0)->first();
 		    if ($exiteAnterior) {
-	            Session::flash('danger', '<< ERROR >> Debe contabilizar los detalles de pago en orden cronologico!');
-        		return back();
+          Session::flash('danger', '<< ERROR >> Debe contabilizar los detalles de pago en orden cronologico!');
+      		return back();
 		    }
 		    
 		    // encuentra el proveedor de la factura
@@ -246,7 +271,7 @@ class DetallepagofacturasController extends Controller {
 		    } else {
 		    	$pagotipo='parcial';
 		    } 
-		    
+ 
 			// registra en ctmayores una disminucion en la cuenta de Cuetas por pagar a proveedores
 		 	Sity::registraEnCuentas(
 					$periodo->id,
@@ -257,7 +282,11 @@ class DetallepagofacturasController extends Controller {
 		    	'Pago '.$pagotipo.', factura No. '.$factura->no.', Proveedor No. '.$factura->org_id.', '.$periodo->periodo,
 		    	$dato->monto,
 					Null,
-					$org->id
+					Null,
+					$dato->id,
+					$org->id,
+					Null,
+					Null
 					);
 			
 		    // registra en Ctdiario principal
@@ -275,9 +304,14 @@ class DetallepagofacturasController extends Controller {
 					1, 
 					8,
 					$dato->fecha,
-					'Pago '.$pagotipo.', factura No. '.$factura->no.', Proveedor No. '.$factura->org_id.', '.$periodo->periodo,					$dato->monto,
+					'Pago '.$pagotipo.', factura No. '.$factura->no.', Proveedor No. '.$factura->org_id.', '.$periodo->periodo,
+		    	$dato->monto,
 					Null,
-					$org->id
+					Null,
+					$dato->id,
+					$org->id,
+					Null,
+					Null
 					);
 
 		    // registra en Ctdiario principal

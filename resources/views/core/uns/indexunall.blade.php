@@ -50,7 +50,7 @@
                                 @foreach ($datos as $dato)
                                     <tr>
                                         <td col width="40px">{{ $dato->id }}</td>
-                                        <td col width="100px"><strong>{{ $dato->codigo }}</strong></td>
+                                        <td col width="80px"><strong>{{ $dato->codigo }}</strong></td>
 
                                         @if ($dato->estatus == 'Paz y salvo')
                                             <td col width="60px"><span class="label label-success">Paz y salvo</span></td>
@@ -60,10 +60,13 @@
                                         <td>{{ $dato->propietarios }}</td>
                                         <td col width="10px">{{ $dato->activa ? '' : 'inactiva' }}</td>
                                         @if (Cache::get('esAdminkey') || Cache::get('esAdminDeBloquekey'))
-                                            <td col width="60px" align="right">
+                                            <td col width="70px" align="right">
                                                 <ul class="demo-btns">
                                                     <li>
-                                                         <a href="{{ URL::route('uns.show', $dato->id) }}" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-folder-open"></i></a>
+                                                        <a href="{{ URL::route('indexPagos', $dato->id) }}" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-usd"></span></a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="{{ URL::route('uns.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-folder-open"></span></a>
                                                     </li>                
                                                 </ul>
                                             </td>

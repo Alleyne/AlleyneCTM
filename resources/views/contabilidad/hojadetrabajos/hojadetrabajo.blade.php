@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<title>Asamblea Nacional</title>
+	<title>Hoja de trabajo</title>
     <style type="text/css">
 		@page { margin: 0px; }
 		html { margin: 0px}

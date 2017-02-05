@@ -24,7 +24,8 @@ class Lim {
     DB::table('bitacoras')->truncate();   
     DB::table('hts')->truncate();   
     DB::table('detalledescuentos')->truncate();  
-
+    DB::table('diariocajas')->truncate();
+      
     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
   }
 
