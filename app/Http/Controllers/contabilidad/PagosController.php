@@ -406,7 +406,7 @@ class PagosController extends Controller {
 		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaChequeRecibido, la transaccion ha sido cancelada! '.$e->getMessage());
-			return back()->withInput()->withErrors($validation);
+			return redirect()->route('indexPagos',  $dato->un_id);
 		}
 	} 
 }

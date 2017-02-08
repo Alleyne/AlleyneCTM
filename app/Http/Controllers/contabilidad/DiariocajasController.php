@@ -119,7 +119,12 @@ class DiariocajasController extends Controller
       //dd($totalAmericanExpress);
 
       // encuentra los datos para la seccion de Ingresos de efectivo del Informe de caja diario (Cheque y Efectivo)
+      // 1. encuentra la cantidad de efectivo desembolsado
       $desembolsoEfectivos= Detallepagofactura::where('detallepagofacturas.fecha', $fecha)
+                ->where(function($query){
+                                          return $query
+                                            ->where('trantipo_id', 5);
+                                        })                
                 ->join('ctmayores', function($join)
                   {
                     $join->on('detallepagofacturas.id', '=', 'ctmayores.detallepagofactura_id')
@@ -133,7 +138,7 @@ class DiariocajasController extends Controller
                 ->get(['detallepagofacturas.id as pagoNo', 'trantipos.nombre','codigo','ctmayores.detalle','credito as monto']);
       //dd($desembolsoEfectivos->toArray()); 
 
-      // calcula el total desembolsado en efectivo y cheques      
+      // calcula el total desembolsado en efectivo solamente      
       $totalDesembolsoEfectivos= $desembolsoEfectivos->sum('monto');  
       //dd($totalDesembolsoEfectivos);
 

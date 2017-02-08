@@ -108,9 +108,9 @@
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td><p class="mix" >{{ $totalIngresoEfectivos }}</p></td>
+						<td><p class="mix" >{{ number_format($totalIngresoEfectivos,2) }}</p></td>
 						<td><p class="mix" >&nbsp;</p></td>
-				    <td><p class="mix" >{{ $totalIngresoEfectivos }}</p></td>
+				    <td><p class="mix" >{{ number_format($totalIngresoEfectivos,2) }}</p></td>
 				    <td><p >&nbsp;</p></td>
 					</tr>
 					<tr align="right">
@@ -119,7 +119,7 @@
 						<td>&nbsp;</td>
 						<td><p >&nbsp;</p></td>
 						<td colspan="2"><p >&nbsp;</p></td>
-					  <td><p >{{ $totalIngresoEfectivos }}</p></td>
+					  <td><p >{{ number_format($totalIngresoEfectivos,2) }}</p></td>
 					</tr>
 			  </table>
 			</div>
@@ -156,9 +156,9 @@
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td><p class="mix" >{{ $totalDesembolsoEfectivos }}</p></td>
+						<td><p class="mix" >{{ number_format($totalDesembolsoEfectivos,2) }}</p></td>
 						<td><p class="mix" >&nbsp;</p></td>
-				    <td><p class="mix" >{{ $totalDesembolsoEfectivos }}</p></td>
+				    <td><p class="mix" >{{ number_format($totalDesembolsoEfectivos,2) }}</p></td>
 				    <td><p >&nbsp;</p></td>
 					</tr>
 					<tr align="right">
@@ -167,15 +167,16 @@
 						<td>&nbsp;</td>
 						<td><p >&nbsp;</p></td>
 						<td colspan="2"><p >&nbsp;</p></td>
-					  <td><p >{{ $totalDesembolsoEfectivos }}</p></td>
+					  <td><p >{{ number_format($totalDesembolsoEfectivos,2) }}</p></td>
 					</tr>
 					<tr align="right">
 					  <td colspan="6" ><div align="right"><strong>Efectivo neto recibido </strong>&nbsp;&nbsp;</div></td>
-					  <td colspan="1" bgcolor="#66FF99"><p class="mix" >{{ $totalIngresoEfectivos - $totalDesembolsoEfectivos }}</p></td>
+					  <td colspan="1" bgcolor="#66FF99"><p class="mix" >{{ number_format($totalIngresoEfectivos - $totalDesembolsoEfectivos,2) }}</p></td>
 					</tr>			  
 			  </table>
 			</div>
 			<br />
+			<br />	
 			
 			<div>
 				<table width="100%" border="0" cellspacing="1" cellpadding="0">
@@ -195,26 +196,26 @@
 						<td colspan="3" align="left">Efectivo (Billetes y monedas) </td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td>{{ $totalEfectivos }}</td>
+						<td>{{ number_format($totalEfectivos - $totalDesembolsoEfectivos,2) }}</td>
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
 						<td colspan="3" align="left">Cheques</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td class="simple">{{ $totalCheques }}</td>
+						<td class="simple">{{ number_format($totalCheques,2) }}</td>
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
 						<td colspan="3" align="left">&nbsp;</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td><p class="mix" >{{ $totalCheques +  $totalEfectivos }}</p></td>
+						<td><p class="mix" >{{ number_format($totalCheques +  ($totalEfectivos - $totalDesembolsoEfectivos),2) }}</p></td>
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
 						<td colspan="6" ><div align="right"></div></td>
-						<td colspan="1"><p >{{ $totalCheques +  $totalEfectivos }}</p></td>
+						<td colspan="1"><p >{{ number_format($totalCheques +  ($totalEfectivos - $totalDesembolsoEfectivos),2) }}</p></td>
 					</tr>
 			  </table>
 			</div>			
@@ -251,9 +252,9 @@
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td><p class="mix" >{{ $totalIngresosTarjetas }}</p></td>
+						<td><p class="mix" >{{ number_format($totalIngresosTarjetas,2) }}</p></td>
 						<td><p class="mix" >&nbsp;</p></td>
-					  <td><p class="mix" >{{ $totalIngresosTarjetas }}</p></td>
+					  <td><p class="mix" >{{ number_format($totalIngresosTarjetas,2) }}</p></td>
 					  <td><p >&nbsp;</p></td>
 					</tr>
 					<tr align="right">
@@ -262,11 +263,11 @@
 						<td>&nbsp;</td>
 						<td><p >&nbsp;</p></td>
 						<td colspan="2"><p >&nbsp;</p></td>
-					  <td><p >{{ $totalIngresosTarjetas }}</p></td>
+					  <td><p >{{ number_format($totalIngresosTarjetas,2) }}</p></td>
 					</tr>
 					<tr align="right">
 						<td colspan="6" ><div align="right"><strong>Total de efectivo y tarjetas &nbsp;&nbsp;</strong>&nbsp;&nbsp;</div></td>
-						<td colspan="1" bgcolor="#66FF99"><p class="mix" >{{ $totalIngresoEfectivos + $totalIngresosTarjetas }}</p></td>
+						<td colspan="1" bgcolor="#66FF99"><p class="mix" >{{ number_format($totalCheques +  ($totalEfectivos - $totalDesembolsoEfectivos) + $totalIngresosTarjetas,2) }}</p></td>
 					</tr>
 					<tr align="right">
 						<td colspan="6" >&nbsp;&nbsp;</td>

@@ -231,7 +231,6 @@ class DetallepagofacturasController extends Controller {
 		    }
 			}	    
 
-
 	    // verifica que exista un periodo de acuerdo a la fecha de pago
 	    $year= Carbon::parse($dato->fecha)->year;
 	    $month= Carbon::parse($dato->fecha)->month;
@@ -248,11 +247,11 @@ class DetallepagofacturasController extends Controller {
 	    }
 
 	    // verifica si existe algun detalle de pago anterior al presente que no haya sido contabilizado
-			$exiteAnterior= Detallepagofactura::where('id', '<', $detallepagofactura_id)->where('contabilizado', 0)->first();
+/*			$exiteAnterior= Detallepagofactura::where('id', '<', $detallepagofactura_id)->where('contabilizado', 0)->first();
 		    if ($exiteAnterior) {
           Session::flash('danger', '<< ERROR >> Debe contabilizar los detalles de pago en orden cronologico!');
       		return back();
-		    }
+		    }*/
 		    
 		    // encuentra el proveedor de la factura
 		    $factura= Factura::find($dato->factura_id);
