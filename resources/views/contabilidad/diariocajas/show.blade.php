@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<title>Asamblea Nacional</title>
+	<title>Diario de Caja General</title>
     <style type="text/css">
 		@page { margin: 0px; }
 		html { margin: 0px}
@@ -85,7 +85,7 @@
 					</tr>
 					<tr bgcolor="#999999">
 						<th width="1%" bgcolor="#CCCCCC" scope="col">C&oacute;digo</th>
-						<th width="1.5%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
+						<th width="2.5%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
 						<th width="30%"  align="left" bgcolor="#CCCCCC" scope="col">Cuenta</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">Monto</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">ITBMS</th>
@@ -95,7 +95,7 @@
 					@foreach ($ingresoEfectivos as $ingresoEfectivo) 
 						<tr align="right">
 							<td align="left">{{ $ingresoEfectivo->codigo }}</td>
-							<td align="left">{{ $ingresoEfectivo->nombre }}</td>
+							<td align="left">{{ $ingresoEfectivo->nombre == 'Cheque' ? "Chq " . $ingresoEfectivo->trans_no : $ingresoEfectivo->nombre }}</td>
 							<td align="left">{{ $ingresoEfectivo->detalle }} </td>
 							<td>{{ $ingresoEfectivo->monto }}</td>
 							<td>&nbsp;</td>
@@ -132,7 +132,7 @@
 					</tr>
 					<tr bgcolor="#999999">
 						<th width="1%" bgcolor="#CCCCCC" scope="col">C&oacute;digo</th>
-						<th width="1.5%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
+						<th width="2.5%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
 						<th width="30%"  align="left" bgcolor="#CCCCCC" scope="col">Cuenta</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">Monto</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">ITBMS</th>
@@ -143,7 +143,7 @@
 					@foreach ($desembolsoEfectivos as $desembolsoEfectivo) 
 						<tr align="right">
 							<td align="left">{{ $desembolsoEfectivo->codigo }}</td>
-							<td align="left">{{ $desembolsoEfectivo->nombre }}</td>
+							<td align="left">{{ $desembolsoEfectivo->nombre == 'Cheque' ? "Chq " . $desembolsoEfectivo->trans_no : $desembolsoEfectivo->nombre }}</td>
 							<td align="left">{{ $desembolsoEfectivo->detalle }} </td>
 							<td>{{ $desembolsoEfectivo->monto }}</td>
 							<td>&nbsp;</td>
@@ -181,11 +181,11 @@
 			<div>
 				<table width="100%" border="0" cellspacing="1" cellpadding="0">
 					<tr bgcolor="#999999">
-						<th colspan="3" bgcolor="#CCCCCC" scope="col"><div align="left">Desglose del efectivo</div></th>
+						<th colspan="3" bgcolor="#CCCCCC" scope="col"><div align="left">Desglose del efectivo disponible en Caja</div></th>
 					</tr>
 					<tr bgcolor="#999999">
 						<th width="1%" bgcolor="#CCCCCC" scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
-						<th width="1.5%"  align="left" bgcolor="#CCCCCC" scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+						<th width="2.5%"  align="left" bgcolor="#CCCCCC" scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
 						<th width="30%"  align="left" bgcolor="#CCCCCC" scope="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">Monto</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">ITBMS</th>
