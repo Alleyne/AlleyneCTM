@@ -203,6 +203,16 @@ Route::group(['namespace' => 'contabilidad'], function()
 	// Funciones del controlador DiariocajasController
 	//---------------------------------------------------------// 	
 	Route::resource('diariocajas', 'DiariocajasController');  
+	
+	//---------------------------------------------------------//
+	// Funciones del controlador CajachicasController
+	//---------------------------------------------------------// 
+	Route::resource('cajachicas', 'CajachicasController');
+
+	//---------------------------------------------------------//
+	// Funciones del controlador EcajachicasController
+	//---------------------------------------------------------// 
+	Route::resource('ecajachicas', 'EcajachicasController'); 
 
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');

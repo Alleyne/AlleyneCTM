@@ -32,11 +32,28 @@
 		<a href="{{ URL::route('indexunall') }}"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Unidades</span></a>
 	</li>
 	<li>
-		<a href="{{ URL::route('facturas.index') }}"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Registrar Facturas</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Caja General</span></a>
+		<ul>
+			<li>
+				<a href="{{ URL::route('facturas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Registrar facturas</span></a>
+			</li>
+			<li>
+				<a href="{{ URL::route('pagarfacturas') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagar facturas</span></a>
+			</li>
+		</ul>
 	</li>
 	<li>
-		<a href="{{ URL::route('pagarfacturas') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagar Facturas</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Caja Menuda</span></a>
+		<ul>
+			<li>
+				<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Registrar egresos</span></a>
+			</li>
+			<li>
+				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagar egresos</span></a>
+			</li>
+		</ul>
 	</li>
+
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Contabilidad</span></a>
 		<ul>
@@ -44,10 +61,13 @@
 				<a href="{{ URL::route('pcontables.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Periodos</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('catalogos.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Catalogo</span></a>
+				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagos no identificados</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('diariocajas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Diarios de Caja</span></a>
+				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Monto de Caja Menuda</span></a>
+			</li>
+			<li>
+				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Catalogo</span></a>
 			</li>
 		</ul>
 	</li>

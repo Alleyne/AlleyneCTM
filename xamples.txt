@@ -2070,3 +2070,19 @@ Work::with(
         }   
     });
   </script>
+
+  
+  /*************************************************************************************
+   * Ocultar elementos html5 de acuerdo a lo que se haya seleccionado de un radio/checkboxes 
+   ************************************************************************************/
+  <table><tr><td>
+    <input type="radio" name="cars" id="Package_1"  />
+    <input type="radio" name="cars" id="Package_2"/> 
+   </td></tr></table>   
+    <div class="package_extension"> package_extension </div>  
+
+
+    $(".package_extension").hide();
+     $("#Package_1").click(function(){
+         $(".package_extension").show();
+     });

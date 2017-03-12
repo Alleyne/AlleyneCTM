@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Informes de diario de caja')
+@section('title', '| Informes de diario de Caja Chica')
 
 @section('content')
 
@@ -20,11 +20,14 @@
             data-widget-custombutton="false"
             data-widget-collapsed="true"
             data-widget-sortable="false"-->
-            
+
             <header>
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Informes de Diarios de cajas </h2>
+                <h2>Informes de Diarios de Cajas Chicas </h2>
                 <div class="widget-toolbar">
+                    @if (Cache::get('esAdminkey'))
+                        <a href="{{ URL::route('cajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajustar Caja Chica</a>
+                    @endif  
                 </div>
             </header>
 
@@ -44,7 +47,10 @@
                             <tr>
                                 <th>ID</th>
                                 <th>FECHA</th>  
-                                <th>APROBADO</th>
+                                <th>AUMENTO</th>
+                                <th>DISMINUCION</th>
+                                <th>MONTO</th>
+                                <th>CERRADA</th>
                                 <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
                             </tr>
                         </thead>
@@ -53,20 +59,10 @@
                                 <tr>
                                     <td col width="60px"><strong>{{ $dato->id }}</strong></td>
                                     <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
-                                    <td col width="70px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
-                                    
-                                    @if (Cache::get('esAdminkey'))
-                                        <td col width="210px" align="right">
-                                            <ul class="demo-btns">
-                                                <li>
-                                                    <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
-                                                </li>                
-                                                <li>
-                                                    <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Ajustar</a>
-                                                </li> 
-                                            </ul>
-                                        </td>
-                                    @endif
+                                    <td col width="60px"><strong>{{ $dato->aumento }}</strong></td>
+                                    <td col width="60px"><strong>{{ $dato->disminucion }}</strong></td>
+                                    <td col width="60px"><strong>{{ $dato->monto }}</strong></td>
+                                    <td col width="70px"><strong>{{ $dato->cerrada ? "Si" : 'No' }}</strong></td>
                                 </tr>
                             @endforeach
                         </tbody>

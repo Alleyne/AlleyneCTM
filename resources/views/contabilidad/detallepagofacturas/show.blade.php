@@ -158,7 +158,6 @@
 								<div class="form-group">
 								  <label class="col-md-3 control-label">Tipo de pago</label>
 									<div class="col-md-9">
-
 								    <select name="trantipo_id" id="trantipo_id" class="form-control" onclick="createUserJsObject.ShowtipoDePago;">
 							        @foreach ($trantipos as $trantipo)
 							        	<option id="{{ $trantipo->id }}" value="{{ $trantipo->id }}">{{ $trantipo->nombre }}</option>				        	
@@ -166,7 +165,37 @@
 								    </select>
 									</div>		
 								</div>
-
+								
+								<div class="form-group chequeNo" style=" display: none;">
+									<label class="col-md-3 control-label">Cheque No.</label>
+									<div class="col-md-9">
+										{{ Form::text('transno', old('transno'),
+											array(
+											    'class' => 'form-control',
+											    'id' => 'transno',
+											    'placeholder' => 'Escriba el numero del cheque...',
+													'autocomplete' => 'off',
+											))
+										}} 
+										{!! $errors->first('transno', '<li style="color:red">:message</li>') !!}
+									</div>
+								</div>	
+								
+								<div class="form-group transaccionNo" style=" display: none;">
+									<label class="col-md-3 control-label">Transaccion No.</label>
+									<div class="col-md-9">
+										{{ Form::text('transno', old('transno'),
+											array(
+											    'class' => 'form-control',
+											    'id' => 'transno',
+											    'placeholder' => 'Escriba el numero de la transaccion...',
+													'autocomplete' => 'off',
+											))
+										}} 
+										{!! $errors->first('transno', '<li style="color:red">:message</li>') !!}
+									</div>
+								</div>	
+                
                 <div class="form-group">
                   <label class="col-md-3 control-label">Fecha</label>
                   <div class="col-md-4">
@@ -178,6 +207,7 @@
                   </div>
                 </div>  
 
+								
 								<div class="form-group">
 									<label class="col-md-3 control-label">Detalle</label>
 									<div class="col-md-9">
@@ -234,11 +264,33 @@
 	        });
 	    })
 
-		$(function () {
+		var trantipo_id = jQuery('#trantipo_id');
+		var select = this.value;
+		trantipo_id.change(function () {
+		    if ($(this).val() == 1) {
+		        $('.chequeNo').show();
+		    		$('.transaccionNo').hide();
+		    
+		    } else if ($(this).val() == 2 || $(this).val() == 3 || $(this).val() == 4 || $(this).val() == 6 || $(this).val() == 7) {
+		    	$('.chequeNo').hide();
+		    	$('.transaccionNo').show();
+		    
+		    } else if ($(this).val() == 5) {
+		    	$('.chequeNo').hide();
+		    	$('.transaccionNo').hide();
+	    
+		    }	else {
+		    	$('.chequeNo').hide();
+		    	$('.transaccionNo').hide();
+		    }
+		});
 
-		    $("#fecha").datepicker({
-		        dateFormat: 'yy-mm-dd'
-		    });
+
+
+		$(function () {
+	    $("#fecha").datepicker({
+	        dateFormat: 'yy-mm-dd'
+	    });
 
 			$.datepicker.regional['es'] = {
 				closeText: 'Cerrar',
@@ -262,27 +314,27 @@
 				$("#fecha").datepicker();
 			});
 
-		    $("#dialog").dialog({
-		        autoOpen: false,
-		        show: {
-		            effect: "blind",
-		            duration: 1000
-		        },
-		        hide: {
-		            effect: "explode",
-		            duration: 1000
-		        }
-		    });
+	    $("#dialog").dialog({
+	        autoOpen: false,
+	        show: {
+	            effect: "blind",
+	            duration: 1000
+	        },
+	        hide: {
+	            effect: "explode",
+	            duration: 1000
+	        }
+	    });
 		    
-		    $("#opener").click(function () {
-		        $("#dialog").dialog("open");
-		    });
-	    
-		    $("input[type='submit']").attr("disabled", false);
-		    $("form").submit(function(){
-		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
-		      return true;
-		    });
+	    $("#opener").click(function () {
+	        $("#dialog").dialog("open");
+	    });
+    
+	    $("input[type='submit']").attr("disabled", false);
+	    $("form").submit(function(){
+	      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+	      return true;
+	    });
 		});
 	</script>
 @stop

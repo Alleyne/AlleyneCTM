@@ -77,22 +77,20 @@
 														@if ( $dato->cerrado == 0 )
 															<li>
 																<div class="btn-group">
-																	<button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-																		Action <span class="caret"></span>
+																	<button class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">
+																		<span class="glyphicon glyphicon-usd"></span> Manejo del efectivo <span class="caret"></span>
 																	</button>
 																	<ul class="dropdown-menu">
 																		<li>
-																			<a href="javascript:void(0);">Action</a>
+																			<a href="{{ URL::route('diariocajas.index') }}">Diario de Caja General</a>
 																		</li>
+																		<li class="divider"></li>																					
 																		<li>
-																			<a href="javascript:void(0);">Another action</a>
+																			<a href="javascript:void(0);">Diario de Caja Chica</a>
 																		</li>
+																		<li class="divider"></li>	
 																		<li>
-																			<a href="javascript:void(0);">Something else here</a>
-																		</li>
-																		<li class="divider"></li>
-																		<li>
-																			<a href="javascript:void(0);">Separated link</a>
+																			<a href="javascript:void(0);">Conciliación Bancaria</a>
 																		</li>
 																	</ul>
 																</div>

@@ -63,7 +63,7 @@
 			<div>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				  <tr>
-						<td width="14%"> <img src="asamblea_logo.png" width=70 height=70 alt="Responsive image"></td>
+						<td width="14%"> <img src="{{asset('assets/backend/img/ctmaster_logo.png') }}" width=70 height=70 alt="Responsive image"></td>
 						<td width="69%">
 							<div class="encabezado-principal">
 								<label>MONAGRE CORP. S.A.</label><br>
@@ -81,11 +81,11 @@
 			<div>
 				<table width="100%" border="0" cellspacing="1" cellpadding="0">
 					<tr bgcolor="#999999">
-						<th colspan="3" bgcolor="#CCCCCC" scope="col"><div align="left">Ingreso de Efectivo</div></th>
+						<th colspan="3" bgcolor="#CCCCCC" scope="col"><div align="left">&nbsp;Ingreso de Efectivo</div></th>
 					</tr>
 					<tr bgcolor="#999999">
 						<th width="1%" bgcolor="#CCCCCC" scope="col">C&oacute;digo</th>
-						<th width="2.5%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
+						<th width="3.5%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
 						<th width="30%"  align="left" bgcolor="#CCCCCC" scope="col">Cuenta</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">Monto</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">ITBMS</th>
@@ -128,11 +128,11 @@
 			<div>
 				<table width="100%" border="0" cellspacing="1" cellpadding="0">
 					<tr bgcolor="#999999">
-						<th colspan="3" bgcolor="#CCCCCC" scope="col"><div align="left">Desembolso de efectivo</div></th>
+						<th colspan="3" bgcolor="#CCCCCC" scope="col"><div align="left">&nbsp;Desembolso de efectivo</div></th>
 					</tr>
 					<tr bgcolor="#999999">
 						<th width="1%" bgcolor="#CCCCCC" scope="col">C&oacute;digo</th>
-						<th width="2.5%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
+						<th width="3.5%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
 						<th width="30%"  align="left" bgcolor="#CCCCCC" scope="col">Cuenta</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">Monto</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">ITBMS</th>
@@ -143,7 +143,7 @@
 					@foreach ($desembolsoEfectivos as $desembolsoEfectivo) 
 						<tr align="right">
 							<td align="left">{{ $desembolsoEfectivo->codigo }}</td>
-							<td align="left">{{ $desembolsoEfectivo->nombre == 'Cheque' ? "Chq " . $desembolsoEfectivo->trans_no : $desembolsoEfectivo->nombre }}</td>
+							<td align="left">{{ $desembolsoEfectivo->trantipo == 'Cheque' ? "Chq " . $desembolsoEfectivo->trans_no : $desembolsoEfectivo->trantipo }}</td>
 							<td align="left">{{ $desembolsoEfectivo->detalle }} </td>
 							<td>{{ $desembolsoEfectivo->monto }}</td>
 							<td>&nbsp;</td>
@@ -171,7 +171,7 @@
 					</tr>
 					<tr align="right">
 					  <td colspan="6" ><div align="right"><strong>Efectivo neto recibido </strong>&nbsp;&nbsp;</div></td>
-					  <td colspan="1" bgcolor="#66FF99"><p class="mix" >{{ number_format($totalIngresoEfectivos - $totalDesembolsoEfectivos,2) }}</p></td>
+					  <td colspan="1"><p class="mix" >{{ number_format($totalIngresoEfectivos - $totalDesembolsoEfectivos,2) }}</p></td>
 					</tr>			  
 			  </table>
 			</div>
@@ -181,11 +181,11 @@
 			<div>
 				<table width="100%" border="0" cellspacing="1" cellpadding="0">
 					<tr bgcolor="#999999">
-						<th colspan="3" bgcolor="#CCCCCC" scope="col"><div align="left">Desglose del efectivo disponible en Caja</div></th>
+						<th colspan="3" bgcolor="#CCCCCC" scope="col"><div align="left">&nbsp;Desglose del efectivo disponible en Caja</div></th>
 					</tr>
 					<tr bgcolor="#999999">
 						<th width="1%" bgcolor="#CCCCCC" scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
-						<th width="2.5%"  align="left" bgcolor="#CCCCCC" scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+						<th width="3.5%"  align="left" bgcolor="#CCCCCC" scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
 						<th width="30%"  align="left" bgcolor="#CCCCCC" scope="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">Monto</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">ITBMS</th>
@@ -207,67 +207,29 @@
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
+						<td colspan="3" align="left">Tarjetas Clave</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td class="simple">{{ number_format($totalClaves,2) }}</td>
+						<td>&nbsp;</td>
+				  </tr>	
+					<tr align="right">
+						<td colspan="3" align="left">Tarjetas de credito</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td class="simple">{{ number_format($totalTarjetas,2) }}</td>
+						<td>&nbsp;</td>
+				  </tr>		
+					<tr align="right">
 						<td colspan="3" align="left">&nbsp;</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td><p class="mix" >{{ number_format($totalCheques +  ($totalEfectivos - $totalDesembolsoEfectivos),2) }}</p></td>
+						<td><p class="mix" >{{ number_format($totalIngresoEfectivos,2) }}</p></td>
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
 						<td colspan="6" ><div align="right"></div></td>
-						<td colspan="1"><p >{{ number_format($totalCheques +  ($totalEfectivos - $totalDesembolsoEfectivos),2) }}</p></td>
-					</tr>
-			  </table>
-			</div>			
-			<br />
-			<br />	
-		
-			<div>
-				<table width="100%" border="0" cellspacing="1" cellpadding="0">
-					<tr bgcolor="#999999">
-						<th colspan="3" bgcolor="#CCCCCC" scope="col"><div align="left">Ingresos por Tarjetas de cr&eacute;dito </div></th>
-					</tr>
-					<tr bgcolor="#999999">
-						<th width="1%" bgcolor="#CCCCCC" scope="col">C&oacute;digo</th>
-						<th width="3%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
-						<th width="30%"  align="left" bgcolor="#CCCCCC" scope="col">Cuenta</th>
-						<th width="2%" bgcolor="#CCCCCC" scope="col">Monto</th>
-						<th width="2%" bgcolor="#CCCCCC" scope="col">ITBMS</th>
-						<th width="2%" bgcolor="#CCCCCC" scope="col">Total</th>
-						<th width="2%" bgcolor="#FFFFFF" scope="col">&nbsp;</th>
-					</tr>
-					@foreach ($ingresoTarjetas as $ingresoTarjeta) 
-						<tr align="right">
-							<td align="left">{{ $ingresoTarjeta->codigo }}</td>
-							<td align="left">{{ $ingresoTarjeta->nombre }}</td>
-							<td align="left">{{ $ingresoTarjeta->detalle }} </td>
-							<td>{{ $ingresoTarjeta->monto }}</td>
-							<td>&nbsp;</td>
-							<td>{{ $ingresoTarjeta->monto }}</td>
-							<td>&nbsp;</td>
-					  </tr>
-					@endforeach
-
-					<tr align="right">
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td><p class="mix" >{{ number_format($totalIngresosTarjetas,2) }}</p></td>
-						<td><p class="mix" >&nbsp;</p></td>
-					  <td><p class="mix" >{{ number_format($totalIngresosTarjetas,2) }}</p></td>
-					  <td><p >&nbsp;</p></td>
-					</tr>
-					<tr align="right">
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td><p >&nbsp;</p></td>
-						<td colspan="2"><p >&nbsp;</p></td>
-					  <td><p >{{ number_format($totalIngresosTarjetas,2) }}</p></td>
-					</tr>
-					<tr align="right">
-						<td colspan="6" ><div align="right"><strong>Total de efectivo y tarjetas &nbsp;&nbsp;</strong>&nbsp;&nbsp;</div></td>
-						<td colspan="1" bgcolor="#66FF99"><p class="mix" >{{ number_format($totalCheques +  ($totalEfectivos - $totalDesembolsoEfectivos) + $totalIngresosTarjetas,2) }}</p></td>
+						<td colspan="1" bgcolor="#66FF99"><p >{{ number_format($totalIngresoEfectivos,2) }}</p></td>
 					</tr>
 					<tr align="right">
 						<td colspan="6" >&nbsp;&nbsp;</td>
@@ -276,9 +238,11 @@
 					<tr align="right">
 						<td colspan="6" ><div align="right"><strong>Sobrante o Faltante en efectivo</strong>&nbsp;&nbsp;</div></td>
 						<td colspan="1" bgcolor="#66FF99"><p>&nbsp;</p></td>
-					</tr>			  
-				</table>
-			</div>
+					</tr>	
+			  </table>
+			</div>			
+			<br />
+			<br />	
 		</div>
 	</div>
 </body>
