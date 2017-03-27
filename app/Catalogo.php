@@ -6,13 +6,8 @@ class Catalogo extends Model
 	protected $table = 'catalogos';
     public $timestamps = false;    
 
-    public function orgs()
+    public function serviproductos()
     {
-        return $this->belongsToMany('App\Org');
-    }
-
-    public function detallefacturas()
-    {
-        return $this->hasMany('App\detallefactura');
+        return $this->hasMany('App\Serviproducto');
     }
 }

@@ -1,9 +1,9 @@
 <?php namespace App;
 use Illuminate\Database\Eloquent\Model;
 
-class Dte_cajachica extends Model 
+class Dte_ecajachica extends Model 
 {
-	protected $table = 'dte_cajachicas';
+	protected $table = 'dte_ecajachicas';
   public $timestamps = false;    
 
   public function ecajachica()

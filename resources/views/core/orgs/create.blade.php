@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Crear Organizaciones')
+@section('title', '| Crear Proveedor')
 
 @section('content')
 	<!-- widget grid -->
@@ -29,7 +29,7 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear un nueva Organizacion</h2>
+						<h2>Crear un nuevo Proveedor</h2>
 	
 					</header>
 	

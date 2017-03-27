@@ -71,7 +71,7 @@
 										<tr>
 											<td col width="40px">{{ $dato->id }}</td>
 											<td>{{ $dato->org->nombre }}</td>
-											<td col width="40px">{{ $dato->no }}</td>
+											<td col width="40px">{{ $dato->doc_no }}</td>
 											<td col width="90px">{{ $dato->fecha }}</td>
 											<td col width="60px">{{ $dato->total }}</td>
 							
@@ -82,7 +82,7 @@
 											@endif
 											<td col width="200px" align="right">
 												<ul class="demo-btns">
-													@if ($dato->etapa==0)
+													@if ($dato->etapa==1)
 														<li>
 															<span class="label label-warning">Registrando</span>
 														</li>
@@ -109,10 +109,10 @@
 															{{Form::close()}}
 														</li>
 													
-													@elseif ($dato->etapa==1)
+													@elseif ($dato->etapa==2)
 														<li>
 															<div id="ask_5">
-																<a href="{{ URL::route('contabilizaDetallesFactura', $dato->id) }}" class="btn btn-warning btn-xs"> Contabilizar</a>
+																<a href="{{ URL::route('contabilizaDetallesFactura', $dato->id) }}" class="btn btn-success btn-xs"> Contabilizar</a>
 															</div>
 														</li>
 														<li>
@@ -137,7 +137,7 @@
 																))}}
 															{{Form::close()}}
 														</li>
-													@elseif ($dato->etapa==2)
+													@elseif ($dato->etapa==3)
 														<li>
 															<span class="label label-success">Contabilizada</span>
 														</li>															
@@ -174,7 +174,7 @@
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script> -->
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
     
     <script type="text/javascript">
     $(document).ready(function() {

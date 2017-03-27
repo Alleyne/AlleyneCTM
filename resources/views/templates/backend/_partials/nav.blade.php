@@ -29,10 +29,19 @@
 		</ul>
 	</li>
 	<li>
-		<a href="{{ URL::route('indexunall') }}"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Unidades</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Ingresos</span></a>
+		<ul>
+			<li>
+				<a href="{{ URL::route('indexunall') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Por Unidades</span></a>
+			</li>
+			<li>
+				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Otros</span></a>
+			</li>
+		</ul>
 	</li>
+
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Caja General</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Egreso Caja General</span></a>
 		<ul>
 			<li>
 				<a href="{{ URL::route('facturas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Registrar facturas</span></a>
@@ -43,13 +52,13 @@
 		</ul>
 	</li>
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Caja Menuda</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Egreso Caja Menuda</span></a>
 		<ul>
 			<li>
 				<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Registrar egresos</span></a>
 			</li>
 			<li>
-				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagar egresos</span></a>
+				<a href="{{ URL::route('pagarecajachicas') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagar egresos</span></a>
 			</li>
 		</ul>
 	</li>
@@ -67,12 +76,9 @@
 				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Monto de Caja Menuda</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Catalogo</span></a>
+				<a href="{{ URL::route('catalogos.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Catalogo</span></a>
 			</li>
 		</ul>
-	</li>
-	<li>
-		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Organizaciones</span></a>
 	</li>
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Dashboard</span></a>
@@ -84,6 +90,12 @@
 				<a href="{{ URL::route('historico') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Historico</span></a>
 			</li>
 		</ul>
+	</li>
+	<li>
+		<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Serviproductos</span></a>
+	</li>
+	<li>
+		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Proveedores</span></a>
 	</li>
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Articulos</span></a>

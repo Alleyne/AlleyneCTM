@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Organizaciones')
+@section('title', '| Proveedores')
 
 @section('content')
 
@@ -28,10 +28,10 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-						<h2>Organizacione proveedoras </h2>
+						<h2>Proveedores de Productos y Servicios</h2>
 						<div class="widget-toolbar">
 							@if (Cache::get('esAdminkey'))
-								<a href="{{ URL::route('orgs.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Organizacion</a>
+								<a href="{{ URL::route('orgs.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Proveedor</a>
 							@endif	
 						</div>	
 					</header>
@@ -72,7 +72,7 @@
 												<td col width="250px" align="right">
 													<ul class="demo-btns">
 														<li>
-															<a href="{{ URL::route('catalogosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar cuenta de gasto</a>
+															<a href="{{ URL::route('serviproductosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar serviproducto</a>
 														</li>
 														<li>
 															<a href="{{ URL::route('orgs.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
@@ -90,7 +90,7 @@
 												<td col width="80px">{{ $dato->ruc }}</td>
 												<td col width="100px" align="right">
 													<ul class="demo-btns">
-														<a href="{{ URL::route('catalogosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar cuenta de gasto</a>
+														<a href="{{ URL::route('serviproductosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar serviproducto</a>
 													</ul>
 												</td>
 											
@@ -99,7 +99,7 @@
 												<td col width="80px">{{ $dato->ruc }}</td>
 												<td col width="100px" align="right">
 													<ul class="demo-btns">
-														<a href="{{ URL::route('catalogosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar cuenta de gasto</a>
+														<a href="{{ URL::route('serviproductosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar serviproducto</a>
 													</ul>
 												</td>
 											@endif	
@@ -129,7 +129,7 @@
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script> -->
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
     
     <script type="text/javascript">
     $(document).ready(function() {

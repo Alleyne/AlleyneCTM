@@ -55,22 +55,22 @@
 									<thead>
 										<tr>
 											<th col width="25px">NUMERO</th>
-											<th>PROVEEDOR</th>
+											<th col width="290px">PROVEEDOR</th>
 											<th col width="85px">FECHA</th>
 											<th col width="20px">TOTALFAC</th>
 											<th col width="20px">TOTALPAGADO</th>
-											<th col width="200px"class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
+											<th col width="80px" class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
 										</tr>
 									</thead>
 									<tbody>
 										@foreach ($datos as $dato)
 											<tr>
-												<td>{{ $dato->no }}</td>
-												<td>{{ $dato->nombre }}</td>
+												<td>{{ $dato->doc_no }}</td>
+												<td>{{ $dato->afavorde }}</td>
 												<td>{{ $dato->fecha }}</td>
 												<td>{{ $dato->total }}</td>
 											
-												@if ($dato->total==$dato->totalpagodetalle)
+												@if ($dato->total == $dato->totalpagodetalle)
 													<td>{{ $dato->totalpagodetalle }}</td>
 												@else
 													<td><mark>{{ $dato->totalpagodetalle }}</mark></td>
@@ -78,20 +78,20 @@
 
 												<td align="right">
 													<ul class="demo-btns">
-														@if ($dato->pagada==0)
+														@if ($dato->pagada == 0)
 															<li>
 																<span class="label label-warning">Pago pendiente<span>
 															</li>
 															<li>
-																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-info btn-xs"> Detalles de pago</a>
+																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-info btn-xs"> Programar pagos</a>
 															</li>										
 
-														@elseif ($dato->pagada==1)
+														@elseif ($dato->pagada == 1)
 															<li>
 																<span class="label label-success">Factura pagada</span>
 															</li>
 															<li>
-																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-info btn-xs"> Detalles de pago</a>
+																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-info btn-xs"> Programacion de pagos</a>
 															</li>									
 														@endif	
 													</ul>												
@@ -124,7 +124,7 @@
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script> -->
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
     
     <script type="text/javascript">
     $(document).ready(function() {

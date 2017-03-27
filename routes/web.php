@@ -73,9 +73,9 @@ Route::group(['namespace' => 'core'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador OrgsController
 	//---------------------------------------------------------// 	
-  Route::get('orgs/desvincularSubcuenta/{org_id}, {ksubcuenta_id}', 'OrgsController@desvincularSubcuenta')->name('desvincularSubcuenta');
-  Route::post('orgs/vinculaCuentaStore', 'OrgsController@vinculaCuentaStore')->name('vinculaCuentaStore');
-  Route::get('orgs/catalogosPorOrg/{org_id}', 'OrgsController@catalogosPorOrg')->name('catalogosPorOrg');
+  Route::get('orgs/desvincularServiproducto/{org_id}, {serviproducto_id}', 'OrgsController@desvincularServiproducto')->name('desvincularServiproducto');
+  Route::post('orgs/vinculaServiproductoStore', 'OrgsController@vinculaServiproductoStore')->name('vinculaServiproductoStore');
+  Route::get('orgs/serviproductosPorOrg/{org_id}', 'OrgsController@serviproductosPorOrg')->name('serviproductosPorOrg');
 	Route::resource('orgs', 'OrgsController');
 
 	//---------------------------------------------------------//
@@ -136,7 +136,7 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador DetallefacturasController
 	//---------------------------------------------------------// 		
-    //Route::get('createDetalleFactura/{factura_id}', 'ContabilidadController@createDetalleFactura')->name('createDetalleFactura');
+  //Route::get('createDetalleFactura/{factura_id}', 'ContabilidadController@createDetalleFactura')->name('createDetalleFactura');
 	Route::resource('detallefacturas', 'DetallefacturasController');
 
 	//---------------------------------------------------------//
@@ -212,7 +212,17 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador EcajachicasController
 	//---------------------------------------------------------// 
+  Route::get('pagarecajachicas', 'EcajachicasController@pagarecajachicas')->name('pagarecajachicas');
 	Route::resource('ecajachicas', 'EcajachicasController'); 
+
+	//---------------------------------------------------------//
+	// Funciones del controlador EcajachicasController
+	//---------------------------------------------------------// 		
+  Route::get('contabilizaDetallesEcajachica/{ecajachica_id}', 'EcajachicasController@contabilizaDetallesEcajachica')->name('contabilizaDetallesEcajachica');
+	Route::resource('dte_ecajachicas', 'DtecajachicasController');
+
+
+
 
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');

@@ -10,7 +10,7 @@
 	  <div class="col-md-12"><p class="text-center">(En Balboas)</p></div>
 	</div>
 
-	<div class="row">
+	<div class="row col-md-12">
 		<table class="table table-bordered table-striped">
 			<thead class="thead-inverse">
 				<tr>

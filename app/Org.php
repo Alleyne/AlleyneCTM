@@ -18,14 +18,19 @@ class Org extends Model
         return $this->hasMany('App\user');
     }
     
-    // una organizacion puede tener asignadas una o muchas cuentas contables
-    public function catalogos()
+    // una organizacion puede tener asignadas uno o muchos serviprodustos
+    public function serviproductos()
     {
-        return $this->belongsToMany('App\Catalogo');
+        return $this->belongsToMany('App\Serviproducto');
     }
-    
+
     // una organizacion puede tener una o muchas facturas
     public function facturas() {
         return $this->hasMany('App\factura');
+    }
+
+    // una organizacion puede estar en una o muchas ecajachica
+    public function ecajachicas() {
+        return $this->hasMany('App\Ecajachica');
     }
 }

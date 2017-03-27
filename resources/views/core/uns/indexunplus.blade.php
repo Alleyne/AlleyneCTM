@@ -117,7 +117,7 @@
 	<!--<script src="{{ URL::asset('assets/backend/js/plugin/datatables/media/js/TableTools.min.js') }}"></script> -->
 	
 	<!-- <script src="js/plugin/datatables/DT_bootstrap.js"></script> -->
-	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script> -->
+	<script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
 	
 	<script type="text/javascript">
 	// DO NOT REMOVE : GLOBAL FUNCTIONS!

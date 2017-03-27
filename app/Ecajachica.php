@@ -8,6 +8,11 @@ class Ecajachica extends Model
 
     public function detallefacturas()
     {
-  	 return $this->hasMany('App\dte_ecajachica');    
+  	 return $this->hasMany('App\Dte_ecajachica');    
+    }
+    
+    public function org()
+    {
+      return $this->belongsTo('App\Org');
     }
 }

@@ -1,12 +1,12 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Detalle de Egreso de factura')
+@section('title', '| Detalle de Egreso de caja chica')
 
 @section('content')
 
 <div class="card card-outline-danger text-center">
 	  <div class="card-block">
-	    <h4 class="card-title">Egreso de Caja General</h4>
+	    <h4 class="card-title">Egreso de Caja Chica</h4>
 		  <div class="row">
 		    <div class="col-md-2">
 					12/12/2017
@@ -24,8 +24,8 @@
 	<hr />
 	
 <div class="pull-right">
-		<a href="{{ URL::route('facturas.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
-			@if ($factura->etapa < 2)
+		<a href="{{ URL::route('ecajachicas.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
+			@if ($ecajachica->etapa < 3)
 				<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
 					 Agregar Serviproducto
 				</button>
@@ -43,7 +43,7 @@
 				<th>ITBMS</th>
 				<th>TOTAL</th>
 
-				@if ($factura->etapa < 2)
+				@if ($ecajachica->etapa < 3)
 					<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>	
 				@endif
 			</tr>
@@ -58,12 +58,12 @@
 					<td col width="60px">{{ $dato->precio }}</td>
 					<td col width="60px">{{ $dato->itbms }}</td>
 					<td col width="60px"><strong>{{ $dato->total }}</strong></td>
-					@if ($factura->etapa < 3)
+					@if ($ecajachica->etapa < 3)
 						<td col width="40px" align="right">
 							<ul class="demo-btns">
 								<li>
 									{{ Form::open(array(
-										'route' => array('detallefacturas.destroy', $dato->id),
+										'route' => array('dte_ecajachicas.destroy', $dato->id),
 										'method' => 'DELETE',
 										'style' => 'display:inline'
 										))
@@ -73,8 +73,8 @@
 										'class' => 'btn btn-danger btn-xs',
 										'data-toggle' => 'modal',
 										'data-target' => '#confirmDelete',
-										'data-title' => 'Borrar detalle de egreso de factura',
-										'data-message' => 'Esta seguro(a) que desea borrar el presente detalle de egreso de factura?',
+										'data-title' => 'Borrar detalle de egreso de caja chica',
+										'data-message' => 'Esta seguro(a) que desea borrar el presente detalle de egreso de caja chica?',
 										'data-btncancel' => 'btn-default',
 										'data-btnaction' => 'btn-danger',
 										'data-btntxt' => 'Borrar detalle'
@@ -124,9 +124,9 @@
 				</div>
 				<div class="modal-body">
 	
-					{{ Form::open(array('class' => 'form-horizontal', 'route' => 'detallefacturas.store')) }}
+					{{ Form::open(array('class' => 'form-horizontal', 'route' => 'dte_ecajachicas.store')) }}
 						<fieldset>
-							{{ Form::hidden('factura_id', $factura->id) }}
+							{{ Form::hidden('ecajachica_id', $ecajachica->id) }}
 							
 							<div class="form-group">
 								<label class="col-md-3 control-label">Serviproducto</label>

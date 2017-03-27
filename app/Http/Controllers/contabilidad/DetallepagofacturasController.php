@@ -253,117 +253,117 @@ class DetallepagofacturasController extends Controller {
       		return back();
 		    }*/
 		    
-		    // encuentra el proveedor de la factura
-		    $factura= Factura::find($dato->factura_id);
-		    
-		    // almacena el total de la factura 
-		    $totalfactura= round(floatval($factura->total),2);
-		    
-		    // encuentra los datos de la organizacion
-		    $org= Org::find($factura->org_id);
-		    //dd($org->toArray());    
+	    // encuentra el proveedor de la factura
+	    $factura= Factura::find($dato->factura_id);
+	    //dd($factura->doc_no);
+	    
+	    // almacena el total de la factura 
+	    $totalfactura= round(floatval($factura->total),2);
+	    
+	    // encuentra los datos de la organizacion
+	    $org= Org::find($factura->org_id);
+	    //dd($org->toArray());    
 
-		    // verifica si se trata de un pago completo o parcial
-		    if ($dato->pagotipo==1) {
-		    	$pagotipo='completo';
-		    
-		    } else {
-		    	$pagotipo='parcial';
-		    } 
+	    // verifica si se trata de un pago completo o parcial
+	    if ($dato->pagotipo==1) {
+	    	$pagotipo='completo';
+	    
+	    } else {
+	    	$pagotipo='parcial';
+	    } 
  
 			// registra en ctmayores una disminucion en la cuenta de Cuetas por pagar a proveedores
 		 	Sity::registraEnCuentas(
-					$periodo->id,
-					'menos', 
-					2,
-					6,
-					$dato->fecha,
-		    	'Pago '.$pagotipo.', factura No. '.$factura->no.', Proveedor No. '.$factura->org_id.', '.$periodo->periodo,
-		    	$dato->monto,
-					Null,
-					Null,
-					$dato->id,
-					$org->id,
-					Null,
-					Null
-					);
-			
-		    // registra en Ctdiario principal
-		    $diario = new Ctdiario;
-		    $diario->pcontable_id  = $periodo->id;
-		    $diario->fecha   = $dato->fecha;
-		    $diario->detalle = 'Cuenta por pagar a proveedores';
-		    $diario->debito  = $dato->monto;
-		    $diario->save(); 
+				$periodo->id,
+				'menos', 
+				2,
+				6,
+				$dato->fecha,
+	    	'Pago '.$pagotipo.', factura No. '.$factura->doc_no.', Proveedor No. '.$factura->org_id.', '.$periodo->periodo,
+	    	$dato->monto,
+				Null,
+				Null,
+				$dato->id,
+				$org->id,
+				Null,
+				Null
+			);
+
+	    // registra en Ctdiario principal
+	    $diario = new Ctdiario;
+	    $diario->pcontable_id  = $periodo->id;
+	    $diario->fecha   = $dato->fecha;
+	    $diario->detalle = 'Cuenta por pagar a proveedores';
+	    $diario->debito  = $dato->monto;
+	    $diario->save(); 
 			
 			// registra en ctmayores una disminucion en la cuenta Banco
 		 	Sity::registraEnCuentas(
-					$periodo->id,
-					'menos',
-					1, 
-					8,
-					$dato->fecha,
-					'Pago '.$pagotipo.', factura No. '.$factura->no.', Proveedor No. '.$factura->org_id.', '.$periodo->periodo,
-		    	$dato->monto,
-					Null,
-					Null,
-					$dato->id,
-					$org->id,
-					Null,
-					Null
-					);
+				$periodo->id,
+				'menos',
+				1, 
+				8,
+				$dato->fecha,
+				'Pago '.$pagotipo.', factura No. '.$factura->doc_no.', Proveedor No. '.$factura->org_id.', '.$periodo->periodo,
+	    	$dato->monto,
+				Null,
+				Null,
+				$dato->id,
+				$org->id,
+				Null,
+				Null
+			);
 
-		    // registra en Ctdiario principal
-		    $diario = new Ctdiario;
-		    $diario->pcontable_id  = $periodo->id;
-		    $diario->detalle = 'Pago '.$pagotipo.' factura No.'. $factura->no;
-		    $diario->credito = $dato->monto;
-		    $diario->save(); 
-		    
-		    // registra en Ctdiario principal
-		    $diario = new Ctdiario;
-		    $diario->pcontable_id  = $periodo->id;
-		    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura No.'. $factura->no.' '.$periodo->periodo;
-		    $diario->save(); 
+	    // registra en Ctdiario principal
+	    $diario = new Ctdiario;
+	    $diario->pcontable_id  = $periodo->id;
+	    $diario->detalle = 'Pago '.$pagotipo.' factura No.'. $factura->doc_no;
+	    $diario->credito = $dato->monto;
+	    $diario->save(); 
+	    
+	    // registra en Ctdiario principal
+	    $diario = new Ctdiario;
+	    $diario->pcontable_id  = $periodo->id;
+	    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura No.'. $factura->doc_no.' '.$periodo->periodo;
+	    $diario->save(); 
 
 			// registra el detalle de pago de factura como contabilizado	
 			$dato->contabilizado = 1;
 			$dato->save();
-
 			
 			// verifica si hay algun detalle que no ha sido contabilizado
-		    $sinContabilizar= Detallepagofactura::where('factura_id', $factura->id)
-												->where('contabilizado', 0)
-		    									->count('contabilizado');		    
+	    $sinContabilizar= Detallepagofactura::where('factura_id', $factura->id)
+											->where('contabilizado', 0)
+	    								->count('contabilizado');		    
 			//dd($sinContabilizar);
 
-		    // calcula el monto total de los detalles de la presente factura
+		  // calcula el monto total de los detalles de la presente factura
 			$totaldetalles= Detallepagofactura::where('factura_id', $factura->id)->sum('monto');		    
 			$totaldetalles=round(floatval($totaldetalles),2);
 			//dd($totaldetalles, $sinContabilizar, $totalfactura, $factura->id);	
 
-		    // si el total de la factura es igual al total de los detalles y no exiten detalles por contabilizar
-		    // entonces registra la factura como pagada en su totalidad
-		    if (($totalfactura == $totaldetalles) && $sinContabilizar==0) {
+	    // si el total de la factura es igual al total de los detalles y no exiten detalles por contabilizar
+	    // entonces registra la factura como pagada en su totalidad
+	    if (($totalfactura == $totaldetalles) && $sinContabilizar==0) {
 				$factura->pagada= 1;
 				$factura->save();		
-		    	
-		    } elseif ($totaldetalles < $totalfactura) {
+	    	
+	    } elseif ($totaldetalles < $totalfactura) {
 				$factura->pagada= 0;
 				$factura->save();
-		    }
+	    }
 
 			// Registra en bitacoras
 			$detalle =	'Registra pago '.$pagotipo. 
-									' de la factura '.$factura->no. 
+									' de la factura '.$factura->doc_no. 
 									' de '. $org->nombre. 
 									' por la suma de '.$dato->monto. 
 									', periodo contable '.$periodo->periodo.
 									', fecha= '.$dato->fecha;
 
-			Sity::RegistrarEnBitacora(18, 'facturas', $factura->id, $detalle);
+			Sity::RegistrarEnBitacora(18, 'detallepagofacturas', $factura->id, $detalle);
 			DB::commit();			
-			Session::flash('success', 'Detalle de pago de factura No. ' .$factura->no. ' ha sido cotabilizado.');
+			Session::flash('success', 'Detalle de pago de factura No. ' .$factura->doc_no. ' ha sido cotabilizado.');
 
 			return Redirect()->route('detallepagofacturas.show', $factura->id);
 		

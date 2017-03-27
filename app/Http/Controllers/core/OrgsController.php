@@ -8,6 +8,7 @@ use App\library\Sity;
 use Session;
 
 use App\Org;
+use App\Serviproducto;
 use App\Catalogo;
 use App\Bitacora;
 
@@ -42,30 +43,28 @@ class OrgsController extends Controller
   /*************************************************************************************
    * Despliega un grupo de registros en formato de tabla
    ************************************************************************************/	
-	public function catalogosPorOrg($org_id)
+	public function serviproductosPorOrg($org_id)
 	{
-		//Encuentra todos las cuentas de gastos asignadas a una determinada Organizacion
-		$datos = Org::find($org_id)->catalogos;
-		$datos_1 = $datos->pluck('nombre_factura', 'id')->all(); 
+		//Encuentra todos los serviproductos asignadas a una determinada Organizacion
+		$datos = Org::find($org_id)->serviproductos;
+		$datos_1 = $datos->pluck('nombre', 'id')->all(); 
     //dd($datos_1);
 
-    //Obtiene todas las cuentas de gastos registrados en la base de datos
-    $datos_2= Catalogo::where('enfactura',1)
-                ->orderBy('nombre_factura')
-                ->get();
-    $datos_2= $datos_2->pluck('nombre_factura', 'id')->all();       
+    //Obtiene todos los serviproductos registrados en la base de datos
+    $datos_2= Serviproducto::orderBy('nombre')->get();
+    $datos_2= $datos_2->pluck('nombre', 'id')->all();       
     //dd($datos_1, $datos_2);
         
-    // Subtrae de la lista total de cuentas de gastos registrados toda aquellas
+    // Subtrae de la lista total serviproductos registrados toda aquellos
     // que ya están asignadas a una organizacion
-    // para evitar asignar cuentas previamente asignadas
-		$ksubcuentas = array_diff($datos_2, $datos_1);		
-		//dd($ksubcuentas);  
+    // para evitar asignar serviproductos previamente asignadas
+		$serviproductos = array_diff($datos_2, $datos_1);		
+		//dd($serviproductos);  
  		
- 		return view('core.orgs.catalogosPorOrg')
+ 		return view('core.orgs.serviproductosPorOrg')
  				->with('datos', $datos)
  				->with('org_id', $org_id)
- 				->with('ksubcuentas', $ksubcuentas);
+ 				->with('serviproductos', $serviproductos);
 	}
 
   /**
@@ -194,17 +193,17 @@ class OrgsController extends Controller
   /*************************************************************************************
    * Almacena un nuevo registro en la base de datos
    ************************************************************************************/	
-	public function vinculaCuentaStore()
+	public function vinculaServiproductoStore()
 	{
     //dd(Input::all());
     $input = Input::all();
     $rules = array(
-        'id'    	=> 'required'
+      'id' => 'required'
     );
 
     $messages = [
-        'required' => 'El campo :attribute es requerido!',
-        'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+      'required' => 'El campo :attribute es requerido!',
+      'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
     ];        
         
     $validation = \Validator::make($input, $rules, $messages);      	
@@ -212,16 +211,16 @@ class OrgsController extends Controller
 		if ($validation->passes())
 		{
 			
-			$org=Org::find(Input::get('org_id'));
-			$org->catalogos()->attach(Input::get('id'));		
+			$org= Org::find(Input::get('org_id'));
+			$org->serviproductos()->attach(Input::get('id'));		
 			
-			$kcuentasname = Catalogo::find(Input::get('id'));
+			$serviproductonombre = Catalogo::find(Input::get('id'))->nombre;
 
 			// Registra en bitacoras
-			$detalle =	'Vincula cuenta '.	$kcuentasname->nombre_factura. ' a proveedor '. $org->nombre;
- 			Sity::RegistrarEnBitacora(10, 'ksubcuenta_org',1, $detalle);
+			$detalle =	'Vincula cuenta '.	$serviproductonombre. ' a proveedor '. $org->nombre;
+ 			Sity::RegistrarEnBitacora(10, 'org_serviproducto',1, $detalle);
 			
-			Session::flash('success', 'La cuenta ' .$kcuentasname->nombre_factura. ' ha sido vinculada a el proveedor '. $org->nombre);
+			Session::flash('success', 'El serviproducto ' .$serviproductonombre. ' ha sido vinculada a el proveedor '. $org->nombre);
 			return back();
 		}
     return back()->withInput()->withErrors($validation);
@@ -231,19 +230,19 @@ class OrgsController extends Controller
   /*************************************************************************************
    * Almacena un nuevo registro en la base de datos
    ************************************************************************************/	
-	public function desvincularSubcuenta($org_id, $kresultadocta_id)
+	public function desvincularServiproducto($org_id, $serviproducto_id)
 	{
 		
 		$org=Org::find($org_id);
-		$org->catalogos()->detach($kresultadocta_id);		
+		$org->serviproductos()->detach($serviproducto_id);		
 
-		$kcuenta = Catalogo::find($kresultadocta_id);
+		$serviproductonombre = Serviproducto::find($serviproducto_id)->nombre;
 
 		// Registra en bitacoras
-		$detalle =	'Desvincula subcuenta '.$kcuenta->nombre. ' del proveedor '. $org->nombre;
+		$detalle =	'Desvincula serviproducto '.$serviproductonombre. ' del proveedor '. $org->nombre;
 		Sity::RegistrarEnBitacora(11, 'kresultadocta_org',1, $detalle);
 		
-		Session::flash('success', 'La cuenta ' .$kcuenta->nombre. ' ha sido desvinculada del proveedor '. $org->nombre);
-		return redirect()->route('catalogosPorOrg', $org_id);
+		Session::flash('success', 'El serviproducto ' .$serviproductonombre. ' ha sido desvinculado del proveedor '. $org->nombre);
+		return redirect()->route('serviproductosPorOrg', $org_id);
  	}
 }

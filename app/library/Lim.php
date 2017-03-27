@@ -25,7 +25,10 @@ class Lim {
     DB::table('hts')->truncate();   
     DB::table('detalledescuentos')->truncate();  
     DB::table('diariocajas')->truncate();
-      
+    DB::table('ecajachicas')->truncate();
+    DB::table('dte_ecajachicas')->truncate();
+    DB::table('dte_ecajachicas')->cajachicas();
+
     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
   }
 

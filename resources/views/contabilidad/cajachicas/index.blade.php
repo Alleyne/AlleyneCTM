@@ -51,13 +51,12 @@
                                 <th>DISMINUCION</th>
                                 <th>MONTO</th>
                                 <th>CERRADA</th>
-                                <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($datos as $dato)
                                 <tr>
-                                    <td col width="60px"><strong>{{ $dato->id }}</strong></td>
+                                    <td col width="30px"><strong>{{ $dato->id }}</strong></td>
                                     <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
                                     <td col width="60px"><strong>{{ $dato->aumento }}</strong></td>
                                     <td col width="60px"><strong>{{ $dato->disminucion }}</strong></td>
@@ -80,7 +79,7 @@
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script> -->
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
     
     <script type="text/javascript">
     $(document).ready(function() {

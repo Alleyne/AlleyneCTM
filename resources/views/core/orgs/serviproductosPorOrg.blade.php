@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Administradores')
+@section('title', '| Serviproductos por organizacion')
 
 @section('content')
 
@@ -27,12 +27,12 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-							<h2>Administradores de Bloques </h2>
+							<h2>Serviproductos vinculados al proveedor </h2>
 							<div class="widget-toolbar">
-								<a href="{{ URL::route('indexblqplus', $jd_id) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
+								<a href="{{ URL::route('orgs.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 
 								<button class="btn btn-success" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
-									 Vincular Administrador
+									 Vincular serviproducto
 								</button>
 							</div>
 						</header>
@@ -60,35 +60,19 @@
 										<tr>
 											<th>ID</th>
 											<th>NOMBRE</th>
-											<th>APELLIDO</th>
-											<th>CARGO</th>
-											<th>ORGANIZACION</th>
-											<th>RES</th>											
-											<th>BLOQUES</th>
-											<th>ACCIONES</th>										
+											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>								
 										</tr>
 									</thead>
 									<tbody>
 										@foreach ($datos as $dato)
 											<tr>
-												<td col width="40px"><strong>{{ $dato->id }}</strong></td>
-												<td col width="120px">{{ $dato->user->first_name }}</td>
-												<td col width="120px">{{ $dato->user->last_name }}</td>
-												<td col width="130px">{{ $dato->cargo ? 'Persona Juridica' : 'Persona Natural' }}</td>
-												<td>{{{ $dato->org->nombre or '' }}}</td>
-												<td col width="10px">{{ $dato->encargado ? 'Si' : 'No' }}</td>
-												<td>{{ $dato->bloque->nombre }}</td>
-												<td col width="160px" align="center">
+												<td><strong>{{ $dato->id }}</strong></td>
+												<td><strong>{{ $dato->nombre }}</strong></td>
+												<td col width="130px" align="right">
 													<ul class="demo-btns">
-														<li>
-															<a href="{{ URL::route('users.show', $dato->user->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-														</li>				
 														<div id="ask_1" class="btn btn-warning btn-xs">
-															<a href="{{ URL::route('desvincularblqdmin', array($dato->id)) }}" title="Desvincular"><i class="fa fa-search"></i> Desvincular</a>
+															<a href="{{ URL::route('desvincularServiproducto', array($org_id, $dato->id)) }}" title="Desvincular"><i class="fa fa-search"></i> Desvincular</a>
 														</div>
-														<!-- <li>
-															<a href="{{ URL::route('desvincularblqdmin', array($dato->id)) }}" class="btn btn-warning btn-xs"><i class="fa fa-search"></i> Desvincular</a>
-														</li> -->
 													</ul>
 												</td>
 											</tr>
@@ -118,50 +102,19 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Vincular Administrador de Bloque</h4>
+						<h4 class="modal-title" id="myModalLabel">Vincular serviproducto</h4>
 					</div>
 					<div class="modal-body">
-		
-						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'blqadmins.store')) }}
-							<fieldset>
-								{{ Form::hidden('bloque_id', $bloque_id) }}
-								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="cargo"> Usuarios</label>
-											{{ Form::select('user_id', array('' => 'Escoja al Usuario que desea vincular...') + $usuarios, array('title' => 'Escoja el usuario que desea vincular')) }}
-											{!! $errors->first('user_id', '<li style="color:red">:message</li>') !!}
-										</div>
-									</div>
-								</div>
-								
-								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="cargo"> Cargo</label>
-											{{ Form::select('cargo', array('0' => 'Persona Natural', '1' => 'Persona Jurídica'), array('title' => 'Escoja su tipo de propietario')) }}
- 											{!! $errors->first('cargo', '<li style="color:red">:message</li>') !!}										
-										</div>
-									</div>
-								</div>
 
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'vinculaServiproductoStore')) }}
+							<fieldset>
+								{{ Form::hidden('org_id', $org_id) }}
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
-											<label for="category"> Organizacion</label>
-											{{ Form::select('org_id', array('' => 'Escoja la organización...') + $orgs, array('title' => 'Escoja la organización a la cual pertenece')) }}
-											{!! $errors->first('org_id', '<li style="color:red">:message</li>') !!}
-										</div>
-									</div>
-								</div>
-							
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="col-md-3 control-label">Encargado</label>
-											<div class="col-md-9">
-												{{ Form::checkbox('encargado','1', false) }}
-											</div>
+											<label for="cargo"> Serviproductos</label>
+											{{ Form::select('id', array('' => 'Escoja el serviproducto que desea vincular...') + $serviproductos, array('title' => 'Escoja el serviproducto que desea vincular')) }}
+											{!! $errors->first('id', '<li style="color:red">:message</li>') !!}
 										</div>
 									</div>
 								</div>

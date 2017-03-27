@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Crear pago por Caja General')
+@section('title', '| Registrar Factura')
 
 @section('content')
 	<!-- widget grid -->
@@ -28,7 +28,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear Pago por Caja General</h2>
+						<h2>Pago por Caja Chica</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -43,7 +43,7 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'facturas.store')) }}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'ecajachicas.store')) }}		
 									<fieldset>
 	 									{{ csrf_field() }}
                    
@@ -61,7 +61,7 @@
 										<div class="form-group organizaciones">
 											<label class="col-md-3 control-label">Proveedor</label>
 											<div class="col-md-9">
-												{{ Form::select('org_id', ['' => 'Selecione un proveedor ...'] + $proveedores, 0, ['class' => 'form-control']) }}
+												{{ Form::select('org_id', ['' => 'Selecione una organizacion ...'] + $proveedores, 0, ['class' => 'form-control']) }}
 												{!! $errors->first('org_id', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>

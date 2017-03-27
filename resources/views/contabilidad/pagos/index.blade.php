@@ -28,7 +28,23 @@
                     <a href="{{ Cache::get('indexunallkey') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
                     @if (Cache::get('esAdminkey'))
                         <div class="btn-group">
-                            <a class="btn btn-success btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Registrar pago de propietario</a>
+                            <a class="btn btn-info btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Otros ingresos</a>
+                            <a class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">REGISTRAR INGRESO POR:</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Alquiler del area social</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 2)) }}">Multas</a></li>
+                                
+                                <li class="divider"></li>                                
+                                <li><a href="#">COBRAR INGRESO POR:</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Alquiler del area social</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 2)) }}">Multas</a></li>
+                                <li><!-- <a href="#">Separated link</a> --></li>
+                            </ul>
+                        </div><!-- /btn-group --> 
+
+                        <div class="btn-group">
+                            <a class="btn btn-success btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Registrar cobro de cuotas y recargos</a>
                             <a class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Banca en linea</a></li>
@@ -138,7 +154,7 @@
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script> -->
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
     
     <script type="text/javascript">
     $(document).ready(function() {

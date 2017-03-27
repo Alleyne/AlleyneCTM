@@ -1,14 +1,15 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Catalogo por organizacion')
+@section('title', '| Pagar egreso de caja chicas')
 
 @section('content')
 
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
-
+		
 			<!-- row -->
 			<div class="row">
+		
 				<!-- NEW WIDGET START -->
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<!-- Widget ID (each widget will need unique ID)-->
@@ -27,13 +28,8 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-							<h2>Cuentas de gastos vinculadas al proveedor </h2>
+							<h2>Pagar Egreso de Caja Chica </h2>
 							<div class="widget-toolbar">
-								<a href="{{ URL::route('orgs.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
-
-								<button class="btn btn-success" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
-									 Vincular cuenta de gastos
-								</button>
 							</div>
 						</header>
 		
@@ -58,27 +54,54 @@
 								<table id="dt_basic" class="table table-hover">
 									<thead>
 										<tr>
-											<th>ID</th>
-											<th>NOMBRE</th>
-											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>								
+											<th col width="25px">NUMERO</th>
+											<th>PROVEEDOR</th>
+											<th col width="85px">FECHA</th>
+											<th col width="20px">TOTALFAC</th>
+											<th col width="20px">TOTALPAGADO</th>
+										  <th col width="200px" class="text-center"><i class="fa fa-gear fa-lg"></i></th>
 										</tr>
 									</thead>
 									<tbody>
 										@foreach ($datos as $dato)
 											<tr>
-												<td><strong>{{ $dato->id }}</strong></td>
-												<td><strong>{{ $dato->nombre_factura }}</strong></td>
-												<td col width="130px" align="right">
+												<td>{{ $dato->doc_no }}</td>
+												<td>{{ $dato->afavorde }}</td>
+												<td>{{ $dato->fecha }}</td>
+												<td>{{ $dato->total }}</td>
+											
+												@if ($dato->total==$dato->totalpagodetalle)
+													<td>{{ $dato->totalpagodetalle }}</td>
+												@else
+													<td><mark>{{ $dato->totalpagodetalle }}</mark></td>
+												@endif
+
+												<td align="right">
 													<ul class="demo-btns">
-														<div id="ask_1" class="btn btn-warning btn-xs">
-															<a href="{{ URL::route('desvincularSubcuenta', array($org_id, $dato->id)) }}" title="Desvincular"><i class="fa fa-search"></i> Desvincular</a>
-														</div>
-													</ul>
+														@if ($dato->pagada==0)
+															<li>
+																<span class="label label-warning">Pago pendiente<span>
+															</li>
+															<li>
+																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-info btn-xs"> Detalles de pago</a>
+															</li>										
+
+														@elseif ($dato->pagada==1)
+															<li>
+																<span class="label label-success">Factura pagada</span>
+															</li>
+															<li>
+																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-info btn-xs"> Detalles de pago</a>
+															</li>									
+														@endif	
+													</ul>												
 												</td>
 											</tr>
 										@endforeach
 									</tbody>
 								</table>
+								<!-- Incluye la modal box -->
+								@extends('templates.backend._partials.modal_confirm')
 							</div>
 							<!-- end widget content -->
 		
@@ -94,48 +117,14 @@
 		
 		</section>
 		<!-- end widget grid -->
-		<!-- Modal -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-							&times;
-						</button>
-						<h4 class="modal-title" id="myModalLabel">Vincular subcuenta</h4>
-					</div>
-					<div class="modal-body">
 
-						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'vinculaCuentaStore')) }}
-							<fieldset>
-								{{ Form::hidden('org_id', $org_id) }}
-								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="cargo"> Subcuentas</label>
-											{{ Form::select('id', array('' => 'Escoja la subcuenta que desea vincular...') + $ksubcuentas, array('title' => 'Escoja la subcuenta que desea vincular')) }}
-											{!! $errors->first('id', '<li style="color:red">:message</li>') !!}
-										</div>
-									</div>
-								</div>
-							</fieldset>				
-							
-							<div class="form-actions">
-								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
-								<button type="button" class="btn btn-default" data-dismiss="modal">
-									Cancel
-								</button>
-							</div>
-						{{ Form::close() }}
-				</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
+
 @stop
 
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script> -->
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
     
     <script type="text/javascript">
     $(document).ready(function() {

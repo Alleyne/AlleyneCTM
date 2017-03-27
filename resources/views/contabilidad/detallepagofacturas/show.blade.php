@@ -27,12 +27,12 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-							<h2>Detalles de pago de factura </h2>
+							<h2>Programacion de pagos de la factura </h2>
 							<div class="widget-toolbar">
 								<a href="{{ URL::route('pagarfacturas') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 									@if ($factura->pagada == 0)
 										<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
-											 Agregar detalle de pago de factura
+											 Agregar programacion de pago de factura
 										</button>
 									@endif
 							</div>
@@ -148,7 +148,7 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Agregar detalle de pago de factura</h4>
+						<h4 class="modal-title" id="myModalLabel">Agregar programacion de pago de factura</h4>
 					</div>
 					<div class="modal-body">
 		
@@ -206,22 +206,7 @@
 	                  {!! $errors->first('fecha', '<li style="color:red">:message</li>') !!} 
                   </div>
                 </div>  
-
 								
-								<div class="form-group">
-									<label class="col-md-3 control-label">Detalle</label>
-									<div class="col-md-9">
-										{{ Form::text('detalle', old('detalle'),
-											array(
-											    'class' => 'form-control',
-											    'id' => 'detalle',
-											    'placeholder' => 'Escriba el detalle del pago...',
-												'autocomplete' => 'off',
-											))
-										}} 
-										{!! $errors->first('detalle', '<li style="color:red">:message</li>') !!}
-									</div>
-								</div>	
 								<div class="form-group">
 									<label class="col-md-3 control-label">Monto</label>
 									<div class="col-md-9">
@@ -234,6 +219,21 @@
 											))
 										}} 
 										{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
+									</div>
+								</div>	
+							
+								<div class="form-group">
+									<label class="col-md-3 control-label">Detalle</label>
+									<div class="col-md-9">
+										{{ Form::text('detalle', old('detalle'),
+											array(
+											    'class' => 'form-control',
+											    'id' => 'detalle',
+											    'placeholder' => 'Escriba el detalle del pago...',
+												'autocomplete' => 'off',
+											))
+										}} 
+										{!! $errors->first('detalle', '<li style="color:red">:message</li>') !!}
 									</div>
 								</div>	
 							</fieldset>				
@@ -253,7 +253,7 @@
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script> -->
+    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
     
     <script type="text/javascript">
 	    $(document).ready(function() {

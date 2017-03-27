@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Crear pago por Caja General')
+@section('title', '| Registrar Factura')
 
 @section('content')
 	<!-- widget grid -->
@@ -28,7 +28,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear Pago por Caja General</h2>
+						<h2>Pago por Caja Chica</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -43,13 +43,13 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'facturas.store')) }}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'ecajachicas.store')) }}		
 									<fieldset>
 	 									{{ csrf_field() }}
-                   
+										
                     <div class="form-group">
                         <label class="col-md-3 control-label">Fecha</label>
-                        <div class="col-md-9">
+                        <div class="col-md-6">
 													<div class="input-group">
 														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -57,67 +57,69 @@
                         	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
                         </div>
                     </div>  
-
+										
 										<div class="form-group organizaciones">
 											<label class="col-md-3 control-label">Proveedor</label>
-											<div class="col-md-9">
-												{{ Form::select('org_id', ['' => 'Selecione un proveedor ...'] + $proveedores, 0, ['class' => 'form-control']) }}
+											<div class="col-md-6">
+												{{ Form::select('org_id', ['' => 'Selecione una organizacion ...'] + $organizaciones, 0, ['class' => 'form-control']) }}
 												{!! $errors->first('org_id', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
-							
-										<hr />
 										
-										<!-- Multiple Radios (inline) -->
-										<div class="form-group">
-										  <label class="col-md-3 control-label" for="radios">Tipo de documento:</label>
-										  <div class="col-md-9"> 
-										    <label class="radio-inline" for="radios-0">
-										      <input type="radio" name="tipodoc_radios" id="tipodoc-1" value="1" checked="checked">
-										      Factura
-										    </label> 
-										    <label class="radio-inline" for="radios-1">
-										      <input type="radio" name="tipodoc_radios" id="tipodoc-2" value="2">
-										      Comprobante de caja
-										    </label>
-										  </div>
-										</div>
-
-										<div class="form-group factura">
-											<label class="col-md-3 control-label"></label>
-											<div class="col-md-9">
-												{{ Form::text('no', old('no'),
-													array(
-													    'class' => 'form-control',
-													    'id' => 'no',
-													    'placeholder' => 'Escriba el numero de la factura...',
-														'autocomplete' => 'off',
-													))
-												}} 
-												{!! $errors->first('no', '<li style="color:red">:message</li>') !!}
+										<hr />
+	    							
+	    							<div class="col-md-12">
+											<!-- Multiple Radios (inline) -->
+											<div class="form-group">
+											  <label class="col-md-4 control-label" for="radios">Tipo de documento:</label>
+											  <div class="col-md-8"> 
+											    <label class="radio-inline" for="radios-0">
+											      <input type="radio" name="tipodoc_radios" id="tipodoc-1" value="1" checked="checked">
+											      Factura
+											    </label> 
+											    <label class="radio-inline" for="radios-1">
+											      <input type="radio" name="tipodoc_radios" id="tipodoc-2" value="2">
+											      Comprobante de caja
+											    </label>
+											  </div>
 											</div>
-										</div>	
+
+											<div class="form-group factura">
+												<label class="col-md-1 control-label"></label>
+												<div class="col-md-11">
+													{{ Form::text('no', old('no'),
+														array(
+														    'class' => 'form-control',
+														    'id' => 'no',
+														    'placeholder' => 'Escriba el numero de la factura...',
+															'autocomplete' => 'off',
+														))
+													}} 
+													{!! $errors->first('no', '<li style="color:red">:message</li>') !!}
+												</div>
+	   									</div>
+	  								</div>
 										
 										<hr />
 
 										<div class="form-group">
-											<label class="col-md-3 control-label">Monto Total</label>
-											<div class="col-md-9">
-												{{ Form::text('monto', old('monto'),
+											<label class="col-md-2 control-label">Monto Total</label>
+											<div class="col-md-10">
+												{{ Form::text('total', old('total'),
 													array(
 													    'class' => 'form-control',
-													    'id' => 'monto',
+													    'id' => 'total',
 													    'placeholder' => 'Escriba el total del egreso de caja chica...',
 														'autocomplete' => 'off',
 													))
 												}} 
-												{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
+												{!! $errors->first('total', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 
 										<div class="form-group">
-											<label class="col-md-3 control-label">Descripción</label>
-											<div class="col-md-9">
+											<label class="col-md-2 control-label">Descripción</label>
+											<div class="col-md-10">
 								        {{ Form::textarea('descripcion', old('descripcion'),
 								        	array(
 								        		'class' => 'form-control',
@@ -145,17 +147,6 @@
 			</article>
 			<!-- WIDGET END -->
 		</div>
-	
-		<!-- end row -->
-	
-		<!-- row -->
-	
-		<div class="row">
-	
-		</div>
-	
-		<!-- end row -->
-	
 	</section>
 	<!-- end widget grid -->
 @stop
@@ -181,6 +172,18 @@ $(document).ready(function() {
 		e.stopPropagation();
 	});
 
+
+	   $("#afavorde-1").click(function(){
+	       $(".organizaciones").show();
+	       $(".usuarios").hide();	   
+	   });
+
+	   $("#afavorde-2").click(function(){
+	       $(".organizaciones").hide();
+	       $(".usuarios").show();	   
+	   });
+
+	
 	   $("#tipodoc-1").click(function(){
 	       $(".factura").show();
 	   });

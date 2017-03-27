@@ -20,49 +20,49 @@ use App\Catalogo;
 
 class FacturasController extends Controller {
     
-    public function __construct()
-    {
-       	$this->middleware('hasAccess');    
-    }
-    
-    /*************************************************************************************
-     * Despliega un grupo de registros en formato de tabla
-     ************************************************************************************/	
-		public function index()
-		{
-	    // encuentra todas las facturas que aun no han sido contabilizadas
-	    $datos = Factura::where('etapa','!=', 2)->get();
-			
-			// formatea la fecha
-			$datos = $datos->each(function ($dato, $key) {
-				return $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
-			});
-	    //dd($datos->toArray());
+  public function __construct()
+  {
+   	$this->middleware('hasAccess');    
+  }
+  
+  /*************************************************************************************
+   * Despliega un grupo de registros en formato de tabla
+   ************************************************************************************/	
+	public function index()
+	{
+    // encuentra todas las facturas que aun no han sido contabilizadas
+    $datos = Factura::where('etapa','!=', 3)->get();
+		
+		// formatea la fecha
+		$datos = $datos->each(function ($dato, $key) {
+			return $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
+		});
+    //dd($datos->toArray());
 
-			return view('contabilidad.facturas.registrar.index')->with('datos', $datos);     	
-		}	
+		return view('contabilidad.facturas.registrar.index')->with('datos', $datos);     	
+	}	
 
-    /*************************************************************************************
-     * Despliega un grupo de registros en formato de tabla
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Despliega un grupo de registros en formato de tabla
+   ************************************************************************************/	
 	public function pagarfacturas()
 	{
         
-	    // encuentra todas las facturas que han sido contabilizadas
-	    $datos = Factura::where('etapa', 2)->get();
-			
-			// formatea la fecha para cada uno de los renglones de la collection
-			$datos = $datos->each(function ($dato, $key) {
-				return $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
-			});
-	    //dd($datos->toArray());
+    // encuentra todas las facturas que han sido contabilizadas
+    $datos = Factura::where('etapa', 3)->get();
+		
+		// formatea la fecha para cada uno de los renglones de la collection
+		$datos = $datos->each(function ($dato, $key) {
+			return $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
+		});
+    //dd($datos->toArray());
 
-  		return view('contabilidad.facturas.pagar.index')->with('datos', $datos);     	
+		return view('contabilidad.facturas.pagar.index')->with('datos', $datos);     	
 	}
 
-   /*************************************************************************************
-     * Despliega formulario para crear un nuevo registro
-     ************************************************************************************/	
+ /*************************************************************************************
+   * Despliega formulario para crear un nuevo registro
+   ************************************************************************************/	
 	public function create()
 	{
     //Encuentra todos los proveedores registrados
@@ -70,89 +70,107 @@ class FacturasController extends Controller {
 	  //dd($proveedores);
         
     return view('contabilidad.facturas.registrar.create')
-    		->with('proveedores', $proveedores);
+    			->with('proveedores', $proveedores);
 	}     
     
-    /*************************************************************************************
-     * Almacena un nuevo registro en la base de datos
-     ************************************************************************************/	
-	public function store()
-	{
-        
-		DB::beginTransaction();
-		try {
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store()
+  {
+      
+      DB::beginTransaction();
+      try {
 
-	        //dd(Input::all());
-	        $input = Input::all();
-	        $f_final=Carbon::today()->addDay(1);
-	        
-	        $rules = array(
-            'org_id'		=> 'required',
-            'no'    		=> 'Required|Numeric|digits_between:1,10|min:1',
-	        	'total'    		=> 'required|Numeric|min:0.01',
-	        	'fecha'    		=> 'required|Date|Before:' . $f_final
-	        );
-	    
-	        $messages = [
-            'required'		=> 'Informacion requerida!',
-            'before'		=> 'La fecha de la factura debe ser anterior o igual a fecha del dia de hoy!',
-	        	'digits_between'=> 'El numero de la factura debe tener de uno a diez digitos!',
-	        	'numeric'		=> 'Solo se admiten valores numericos!',
-	        	'date'			=> 'Fecha invalida!',
-	        	'min'			=> 'Se requiere un valor mayor que cero!'
-	        ];            	
-	        
-	        $validation = \Validator::make($input, $rules, $messages);  
-			
-			if ($validation->passes())
-			{
-				
-		    // verifica que exista un periodo de acuerdo a la fecha de pago
-		    $year= Carbon::parse(Input::get('fecha'))->year;
-		    $month= Carbon::parse(Input::get('fecha'))->month;
-		    $pdo= Sity::getMonthName($month).'-'.$year;    
+		      //dd(Input::all());
+		      $input = Input::all();
+		      $f_final=Carbon::today()->addDay(1);
 
-			    // encuentra el periodo mas antiguo abierto
-				$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
-			    //dd($periodo);
-			    
-		    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
-		    if ($pdo != $periodo->periodo) {
-          Session::flash('danger', '<< ERROR >> Solamente se permite registrar facturas de gastos que correspondan al periodo vigente de '.$periodo->periodo);
-      		return back()->withInput()->withErrors($validation);
-		    }
-
-				$dato = new Factura;
-				$dato->org_id     = Input::get('org_id');
-				$dato->no			    = strtoupper(Input::get('no'));
-				$dato->fecha 	    = Input::get('fecha');
-				$dato->total 	    = Input::get('total');
-				$dato->save();	
-  
-				Sity::RegistrarEnBitacora(1, 'facturas', $dato->id, $dato->tojson());
-		    DB::commit();				
-				Session::flash('success', 'La factura No. ' .$dato->no. ' ha sido creada con éxito.');
-
-				return redirect()->route('facturas.index');		    
-			}		
-		
-		} catch (\Exception $e) {
-		    DB::rollback();
-      	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-      	return back()->withInput()->withErrors($validation);
-		}
-
-	}
+          $rules = array(
+              'fecha' => 'required|date',          
+              'org_id' => 'required|Numeric|min:1',
+              'no' => 'required|Numeric|min:1',
+              'descripcion' => 'required',
+              'monto' => 'required|Numeric|min:0.01'
+          );
     
-    /*************************************************************************************
-     * Borra registro de la base de datos
-     ************************************************************************************/	
+          $messages = [
+              'required'      => 'Informacion requerida!',
+              'before'        => 'La fecha de la factura debe ser anterior o igual a fecha del dia de hoy!',
+              'digits_between'=> 'El numero de la factura debe tener de uno a diez digitos!',
+              'numeric'       => 'Solo se admiten valores numericos!',
+              'date'          => 'Fecha invalida!',
+              'min'           => 'Se requiere un valor mayor que cero!'
+          ];                
+
+          $validation = \Validator::make($input, $rules, $messages);  
+
+          if ($validation->passes())
+          {
+
+					    // verifica que exista un periodo de acuerdo a la fecha de pago
+					    $year= Carbon::parse(Input::get('fecha'))->year;
+					    $month= Carbon::parse(Input::get('fecha'))->month;
+					    $pdo= Sity::getMonthName($month).'-'.$year;    
+
+						  // encuentra el periodo mas antiguo abierto
+							$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+						  //dd($periodo);
+						    
+					    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+					    if ($pdo != $periodo->periodo) {
+			          Session::flash('danger', '<< ERROR >> Solamente se permite registrar facturas de gastos que correspondan al periodo vigente de '.$periodo->periodo);
+			      		return back()->withInput()->withErrors($validation);
+					    }
+
+              $factura = new Factura;
+              $factura->fecha = Input::get('fecha');
+              $factura->org_id = Input::get('org_id');
+              $factura->afavorde = Org::find(Input::get('org_id'))->nombre;
+
+              if (Input::get('tipodoc_radios') == 1) {
+                  $factura->tipodoc = 1;
+                  $factura->doc_no = Input::get('no');        
+              
+              } elseif (Input::get('tipodoc_radios') == 2) {
+                  $factura->tipodoc = 2;
+              }
+
+              $factura->descripcion = Input::get('descripcion');
+              $factura->total = Input::get('monto');
+              $factura->etapa = 1;
+              $factura->save();
+	
+							Sity::RegistrarEnBitacora(1, 'facturas', $factura->id, $factura->tojson());								
+							Session::flash('success', 'La factura No. ' .$factura->doc_no. ' ha sido creada con éxito.');
+              DB::commit();       
+
+              return redirect()->route('facturas.index');
+          }       
+      
+          Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
+          return back()->withInput()->withErrors($validation);
+
+      } catch (\Exception $e) {
+          DB::rollback();
+          Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+          return back()->withInput()->withErrors($validation);
+      }
+  }
+
+  /*************************************************************************************
+   * Borra registro de la base de datos
+   ************************************************************************************/	
 	public function destroy($factura_id)
 	{
 
 		DB::beginTransaction();
 		try {
 			$dato = Detallefactura::where('factura_id', $factura_id)->first();		
+			
 			if($dato) {
 				Session::flash('warning', '<< ATENCION >> Esta factura no puede ser borrada porque tiene detalles!');
 				return Redirect()->route('facturas.index');
@@ -164,8 +182,8 @@ class FacturasController extends Controller {
 
 				// Registra en bitacoras
 				$detalle =	'Borra el Factura '.$dato->no. ', '.
-							'org_id= '.   		$dato->org_id. ', '.
-							'fecha= '. 			$dato->fecha;
+										'org_id= '.   		$dato->org_id. ', '.
+										'fecha= '. 			$dato->fecha;
 				
 				Sity::RegistrarEnBitacora(3, 'facturas', $dato->id, $detalle);
 				Session::flash('success', 'La factura No' .$dato->no. ' ha sido borrada permanentemente de la base de datos.');
@@ -174,10 +192,10 @@ class FacturasController extends Controller {
 			}
 
 		} catch (\Exception $e) {
-		    DB::rollback();
-      	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
+	    DB::rollback();
+    	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
 
-      	return back()->withInput()->withErrors($validation);
+    	return back()->withInput()->withErrors($validation);
 		}		
 	}
 
@@ -208,68 +226,96 @@ class FacturasController extends Controller {
 	    //dd($periodo); 
 
 	    if (!$periodo) {
-	        Session::flash('warning', '<< ATENCION >> La presente factura no puede ser contabilizada ya que el periodo contable al cual pertenece ha sido cerrado. Borre la factura y sus detalles e ingrecela nuevamente con fecha del periodo actualmente abierto.');
-	        return back();
+        Session::flash('warning', '<< ATENCION >> La presente factura no puede ser contabilizada ya que el periodo contable al cual pertenece ha sido cerrado. Borre la factura y sus detalles e ingrecela nuevamente con fecha del periodo actualmente abierto.');
+        return back();
 	    }
 
 	    //Encuentra todos los detalles de una determinada factura
-	    $datos= Detallefactura::where('factura_id', $factura_id)
-	            ->join('catalogos', 'catalogos.id', '=', 'detallefacturas.catalogo_id')
-	            ->select('detallefacturas.precio','detallefacturas.itbms','catalogos.nombre','catalogos.id','catalogos.codigo')
-	            ->get();
-	    //dd($datos->toArray());
-			
-			// se anota el monto de cada uno de los gastos de la factura con su respectivo codigo de gasto
-			$i=1;
-			foreach ($datos as $dato) {
+      $datos = Detallefactura::where('factura_id', $factura_id)
+                              ->select('catalogo_id')
+                              ->get();
+      //dd($datos->toArray());             
+
+      // encuentra cada una de las cuentas que estuvieron involucradas en la factura
+      $cuentas = $datos->unique('catalogo_id');
+      $cuentas->values()->all();
+      //dd($cuentas->toArray()); 
+      
+      $i=1;
+      $montoTotal= 0;
+      $itbmsTotal= 0;               
+      
+      // se anota el monto de cada uno de los gastos del egreso con su respectivo codigo de gasto
+      foreach ($cuentas as $cuenta) {
+        $datos = Detallefactura::where('factura_id', $factura_id)
+                            ->where('catalogo_id', $cuenta->catalogo_id)
+                            ->get();
+        $monto= 0;
+        $itbms= 0;
+
+        // calcula los total por cada cuenta
+        foreach ($datos as $dato) {
+            $monto= $monto + ($dato->cantidad * $dato->precio);
+            $itbms= $itbms + $dato->itbms;
+        }
+	
 			 	Sity::registraEnCuentas(
 						$periodo->id,
 						'mas', 
 						6,
-						$dato->id,
-						$factura->fecha,
-						$dato->nombre,
-						$dato->precio,
+						$cuenta->catalogo_id,
+						$f_factura,
+						$dato->cuenta,
+						$monto,
 						Null,
 						Null,
 						Null,
-						$org_id,
+						$factura->org_id,
 						Null,
 						Null
 						);
 				
-			 	Sity::registraEnCuentas(
+        if ($itbms > 0) {
+				 	Sity::registraEnCuentas(
 						$periodo->id,
 						'mas', 
 						6,
 						15,
-						$factura->fecha,
-						Catalogo::find(15)->nombre.', factura No. '.$factura->no.', proveedor No. '.$org_id,
-						$dato->itbms,
+						$f_factura,
+						Catalogo::find(15)->nombre.', factura No. '.$factura->doc_no.', proveedor No. '.$factura->org_id,
+						$itbms,
 						Null,
 						Null,
 						Null,
-						$org_id,
+						$factura->org_id,
 						Null,
 						Null
 						);	        
+				}
+	        
+        // registra en Ctdiario principal
+        $diario = new Ctdiario;
+        $diario->pcontable_id = $periodo->id;
+        if ($i == 1) {
+        	$diario->fecha = $f_factura;
+        	$i = 0;	        
+        } 
+        
+        $diario->detalle = $dato->cuenta;
+        $diario->debito  = $monto;
+        $diario->save(); 
 
-		        // registra en Ctdiario principal
-		        $diario = new Ctdiario;
-		        $diario->pcontable_id  = $periodo->id;
-		        if ($i==1) {
-		        	$diario->fecha   = $factura->fecha;
-		        	$i=0;	        
-		        } 
-		        $diario->detalle = $dato->nombre;
-		        $diario->debito  = $dato->precio;
-		        $diario->save(); 
-
-		        $diario = new Ctdiario;
-		        $diario->pcontable_id  = $periodo->id;
-		        $diario->detalle = Catalogo::find(15)->nombre;
-		        $diario->debito  = $dato->itbms;
-		        $diario->save(); 
+        if ($itbms > 0) {
+	        $diario = new Ctdiario;
+	        $diario->pcontable_id  = $periodo->id;
+	        $diario->detalle = Catalogo::find(15)->nombre;
+	        $diario->debito  = $itbms;
+	        $diario->save(); 
+				}
+        
+        //acumula los totales finales
+        $montoTotal= $montoTotal + $monto;
+        $itbmsTotal= $itbmsTotal + $itbms;
 			}
 			
 			// se anota el total de la factura a credito incluyendo el itbms en
@@ -279,45 +325,45 @@ class FacturasController extends Controller {
 					'mas',
 					2, 
 					6,
-					$factura->fecha,
-					'   Cuentas por pagar a proveedores. Factura No. '.$factura->no.', Proveedor No. '.$org_id,
-					$factura->total,
+					$f_factura,
+					'   Cuentas por pagar a proveedores. Factura No. '.$factura->doc_no.', Proveedor No. '.$factura->org_id,
+					$montoTotal + $itbmsTotal,
 					Null,
 					Null,
 					Null,
-					$org_id,
+					$factura->org_id,
 					Null,
 					Null
-					);
+			);
 
 	    // registra en Ctdiario principal
 	    $diario = new Ctdiario;
 	    $diario->pcontable_id  = $periodo->id;
-	    $diario->detalle = '   Cuentas por pagar a proveedores. ';
-	    $diario->credito = $factura->total;
+	    $diario->detalle = '   Cuentas por pagar a proveedores. '.$factura->org_id;
+	    $diario->credito = $montoTotal + $itbmsTotal;
 	    $diario->save(); 
 	    
 	    // registra en Ctdiario principal
 	    $diario = new Ctdiario;
 	    $diario->pcontable_id  = $periodo->id;
-	    $diario->detalle = 'Para registrar factura No. '.$factura->no;
+	    $diario->detalle = 'Para registrar factura No. '.$factura->doc_no;
 	    $diario->save(); 
 
 			// cambia la factura de etapa pagar			
 			$factura= Factura::find($factura_id);
-			$factura->etapa= 2;
+			$factura->etapa = 3;
 			$factura->save();	
 		  
 			// Registra en bitacoras
 			$detalle =	'Contabiliza factura '.$factura_id. ', '.
 									'pcontable_id= '.$pdo.', '.
-									'no= '.$factura->no.', '.
+									'no= '.$factura->doc_no.', '.
 									'org_id= '.$factura->org_id.', '.
-									'fecha= '.$factura->fecha;
+									'fecha= '.$f_factura;
 
 			Sity::RegistrarEnBitacora(15, 'facturas', $factura_id, $detalle);
 			DB::commit();		
-			Session::flash('success', 'La factura No. ' .$factura->no. ' ha sido cotabilizada.');
+			Session::flash('success', 'La factura No. ' .$factura->doc_no. ' ha sido cotabilizada.');
 			return Redirect()->route('facturas.index');
 
 		} catch (\Exception $e) {
