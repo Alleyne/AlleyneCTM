@@ -74,13 +74,28 @@ class DesembolsosController extends Controller
 				if ($validation->passes())
 				{
 
-					$ecajachica = new Desembolso;
-					$ecajachica->fecha = Input::get('fecha');
-					$ecajachica->save();
+					//verifica si hay detalles de desembolsos por asignar
+					$dte_desembolsos= Dte_desembolso::where('desembolso_id', 0)->first();
+					//dd($dte_desembolsos);
 
-					Session::flash('success', 'Se registrado un nuevo desembolso de caja chica!');
-					DB::commit();       
-					return redirect()->route('desembolsos.index');
+					if ($dte_desembolsos) {
+						$ecajachica = new Desembolso;
+						$ecajachica->fecha = Input::get('fecha');
+						$ecajachica->save();
+
+						//encuentra todos los detalles de desembolso que tengan desembolso_id igual a cero y se los asigna
+						// al recien creado desembolso
+						Dte_desembolso::where('desembolso_id', 0)
+						          ->update(['desembolso_id' => $ecajachica->id]);
+
+						Session::flash('success', 'Se registrado un nuevo desembolso de caja chica!');
+						DB::commit();       
+						return redirect()->route('desembolsos.index');
+					
+					} else {
+						Session::flash('danger', '<< ATENCION >> No se puede crear el desembolso ya que no existe ningun servicio o producto pagados por caja chica!');
+						return redirect()->route('desembolsos.index');
+					}
 				}       
 		
 				Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
