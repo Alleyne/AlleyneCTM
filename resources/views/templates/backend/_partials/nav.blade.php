@@ -60,6 +60,9 @@
 			<li>
 				<a href="{{ URL::route('pagarecajachicas') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagar egresos</span></a>
 			</li>
+			<li>
+				<a href="{{ URL::route('desembolsos.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Desembolsos</span></a>
+			</li>
 		</ul>
 	</li>
 
@@ -73,7 +76,7 @@
 				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagos no identificados</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Monto de Caja Menuda</span></a>
+				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Caja Menuda</span></a>
 			</li>
 			<li>
 				<a href="{{ URL::route('catalogos.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Catalogo</span></a>

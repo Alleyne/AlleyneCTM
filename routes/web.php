@@ -210,6 +210,11 @@ Route::group(['namespace' => 'contabilidad'], function()
 	Route::resource('cajachicas', 'CajachicasController');
 
 	//---------------------------------------------------------//
+	// Funciones del controlador DesembolsosController
+	//---------------------------------------------------------// 
+	Route::resource('desembolsos', 'DesembolsosController');
+
+	//---------------------------------------------------------//
 	// Funciones del controlador EcajachicasController
 	//---------------------------------------------------------// 
   Route::get('pagarecajachicas', 'EcajachicasController@pagarecajachicas')->name('pagarecajachicas');
