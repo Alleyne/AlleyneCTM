@@ -26,7 +26,9 @@
                 <h2>Administracion de Caja Chica </h2>
                 <div class="widget-toolbar">
                     @if (Cache::get('esAdminkey'))
-                        <a href="{{ URL::route('cajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Abrir nueva Caja chica</a>
+                        @if($cerrada == 1)
+                            <a href="{{ URL::route('cajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Abrir reabrir Caja chica</a>
+                         @endif  
                     @endif  
                 </div>
             </header>
@@ -68,24 +70,35 @@
                                     @endif 
                                     <td col width="70px">{{ $dato->cerrada ? "Si" : 'No' }}</td>
                                     @if (Cache::get('esAdminkey'))
-                                        <td col width="330px" align="right">
+                                        <td col width="265px" align="right">
                                             <ul class="demo-btns">
-                                                <li>
-                                                    <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i> Editar</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ URL::route('aumentarCajachicaCreate') }}" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i> Aumentar</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ URL::route('disminuirCajachicaCreate') }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-minus"></i> Disminuir</a>
-                                                </li>                                       
-                                                <li>
-                                                    <a href="{{ URL::route('cerrarCajachicaCreate') }}" class="btn btn-danger btn-xs"><i class="fa fa-lock"></i> Cerrar</a>
-                                                </li> 
-                                                <li>
-                                                    <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-warning btn-xs"> Detalles</a>
-                                                </li>
-                                            
+                                                @if(is_null($dato->f_cierre))
+                                                    <li>
+                                                        <a href="{{ URL::route('desembolsos.index') }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ URL::route('aumentarCajachicaCreate') }}" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ URL::route('disminuirCajachicaCreate') }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-minus"></i></a>
+                                                    </li>                                       
+                                                    <li>
+                                                        <a href="{{ URL::route('cerrarCajachicaCreate') }}" class="btn btn-danger btn-xs"><i class="fa fa-lock"></i></a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-warning btn-xs"> Detalles</a>
+                                                    </li>
+                                                @else    
+                                                    <li>
+                                                        <a href="{{ URL::route('desembolsos.index') }}" class="btn btn-default btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-default btn-xs"> Historial de Caja Chica</a>
+                                                    </li>
+                                                @endif
                                             </ul>
                                         </td>
                                     @endif

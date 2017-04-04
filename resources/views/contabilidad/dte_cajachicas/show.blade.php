@@ -6,16 +6,16 @@
 
 	<div class="well well-sm">
 		<div class="card card-outline-danger text-center">
-	    <h4 class="card-title">Caja Chica</h4>
+	    <h4 class="card-title">Diario de Caja Chica</h4>
 		  <div class="row">
 		    <div class="col-md-2">
 					12/12/2017
 		    </div>
 		    <div class="col-md-8">
-		      Veneficiario: Mi compania
+		      xxxxxxxxxxxxxxxxxxx
 		    </div>
 		    <div class="col-md-2">
-					Factura no: 123456
+					xxxxxxxxxxxxxxxxx
 		    </div>
 		  </div>		
 		</div>	

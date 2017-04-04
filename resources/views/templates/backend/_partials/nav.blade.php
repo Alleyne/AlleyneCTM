@@ -59,10 +59,10 @@
 				<a href="{{ URL::route('pcontables.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Periodos</span></a>
 			</li>
 			<li>
-				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagos no identificados</span></a>
+				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Admin Caja Chica</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Admin Caja Chica</span></a>
+				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagos no identificados</span></a>
 			</li>
 			<li>
 				<a href="{{ URL::route('catalogos.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Catalogo</span></a>
@@ -118,15 +118,7 @@
 		</ul>
 	</li>	
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
-		<ul>
-			<li>
-				<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Paga-Registra facturas</span></a>
-			</li>
-			<li>
-				<a href="{{ URL::route('desembolsos.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Desembolsos</span></a>
-			</li>
-		</ul>
+		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
 	</li>
 	<li>
 		<a href="{{ URL::route('bitacoras.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Bitácora</span></a>

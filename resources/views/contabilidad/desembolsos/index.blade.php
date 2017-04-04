@@ -25,6 +25,7 @@
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                 <h2>Desembolsos de Caja Chica</h2>
                 <div class="widget-toolbar">
+                    <a href="{{ URL::route('cajachicas.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
                     @if (Cache::get('esAdminkey'))
                         <a href="{{ URL::route('desembolsos.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Crear Desembolso</a>
                     @endif  
@@ -47,9 +48,9 @@
                             <tr>
                                 <th>ID</th>
                                 <th>FECHA</th>  
-                                <th>APROBADO</th>
                                 <th>CHEQUE</th>
                                 <th>MONTO</th>
+                                <th>APROBADO</th>
                                 <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
                             </tr>
                         </thead>
@@ -57,19 +58,20 @@
                             @foreach ($datos as $dato)
                                 <tr>
                                     <td col width="30px"><strong>{{ $dato->id }}</strong></td>
-                                    <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
-                                    <td col width="70px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
+                                    <td col width="70px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
                                     <td col width="60px"><strong>{{ $dato->cheque }}</strong></td>
+                                    <td col width="60px"><strong>{{ $dato->monto }}</strong></td>                                    
+                                    <td col width="40px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
                                     @if (Cache::get('esAdminkey'))
-                                        <td col width="60px"><strong>{{ $dato->monto }}</strong></td>
-                                        <td col width="210px" align="right">
+
+                                        <td col width="220px" align="right">
                                             @if($dato->aprobado == 0)
                                                 <ul class="demo-btns">
                                                     <li>
                                                         <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
                                                     </li>                
                                                     <li>
-                                                        <a href="{{ URL::route('aprobarInforme', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Informe</a>
+                                                        <a href="{{ URL::route('aprobarInforme', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Desembolso</a>
                                                     </li> 
                                                     <li>
                                                         <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Borrar</a>

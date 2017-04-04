@@ -17,6 +17,7 @@ use App\Pcontable;
 use App\Ctdiario;
 use App\Catalogo;
 use App\Cajachica;
+use App\Dte_cajachica;
 
 class DesembolsosController extends Controller
 {
@@ -165,40 +166,6 @@ class DesembolsosController extends Controller
 					 ->with('datos', $datos);
 		}
 
-		/**
-		 * Show the form for editing the specified resource.
-		 *
-		 * @param  int  $id
-		 * @return \Illuminate\Http\Response
-		 */
-		public function edit($id)
-		{
-				//
-		}
-
-		/**
-		 * Update the specified resource in storage.
-		 *
-		 * @param  \Illuminate\Http\Request  $request
-		 * @param  int  $id
-		 * @return \Illuminate\Http\Response
-		 */
-		public function update(Request $request, $id)
-		{
-				//
-		}
-
-		/**
-		 * Remove the specified resource from storage.
-		 *
-		 * @param  int  $id
-		 * @return \Illuminate\Http\Response
-		 */
-		public function destroy($id)
-		{
-				//
-		}
-
 		public function aprobarInforme($desembolso_id)
 		{
 			// encuentra los datos del desembolso
@@ -338,16 +305,37 @@ class DesembolsosController extends Controller
 	          Null,
 	          Null
 	        );
+					
+		      // calcula el saldo actual de los detalles de cajachicas
+		      $montoActual = Dte_cajachica::all()->last();
+		      if ($montoActual) {
+		        $montoActual= $montoActual->saldo;
+		      } else {
+		        $montoActual= 0;
+		      }
+		      //dd($montoActual);
 
-					estoy trabajando aqui...
-					1. actualizar solo el saldo de cajachicas
-					2. agregar registro a Dte_ecajachica en donde se recupera el saldo por desembolso_id
-					
-					
+		      // encuentra los datos de la ultima caja chica
+		      $cchica = Cajachica::all()->last();
+
+		      // registra nuevo detalle en dte_cajachicas
+		      $dte_cajachica = new Dte_cajachica;
+		      $dte_cajachica->fecha = Input::get('fecha');
+		      $dte_cajachica->descripcion = 'Reponer fondo de caja chica, cheque no. '.Input::get('cheque');
+		      $dte_cajachica->doc_no = Input::get('cheque');
+		      $dte_cajachica->aumenta = Input::get('monto');
+		      $dte_cajachica->saldo = Input::get('monto') + $montoActual;
+		      $dte_cajachica->aprueba_id = Input::get('user_id');
+		      $dte_cajachica->aprueba = User::find(Input::get('user_id'))->nombre_completo;
+		      $dte_cajachica->cajachica_id = $cchica->id;
+		      $dte_cajachica->save();   
+		     
+		      // Actualiza el saldo de cajachicas
+		      $cchica->saldo = Input::get('monto') + $montoActual;
+		      $cchica->save();
+
 					// actualiza del diario de caja chica para que refleje nuevo saldo
 					$cajachica = new Cajachica;
-					$cajachica->fecha = Input::get('fecha');
-					$cajachica->aumento = Input::get('monto');
 					$cajachica->saldo = Cajachica::all()->last()->saldo - Input::get('monto');
 					$cajachica->save();
 
