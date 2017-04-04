@@ -207,27 +207,39 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador CajachicasController
 	//---------------------------------------------------------// 
+ 	Route::get('cerrarCajachicaCreate', 'CajachicasController@cerrarCajachicaCreate')->name('cerrarCajachicaCreate');
+ 	Route::get('disminuirCajachicaCreate', 'CajachicasController@disminuirCajachicaCreate')->name('disminuirCajachicaCreate');
+  Route::get('aumentarCajachicaCreate', 'CajachicasController@aumentarCajachicaCreate')->name('aumentarCajachicaCreate');
+	
+	Route::post('cerrarCajachicaStore', 'CajachicasController@cerrarCajachicaStore')->name('cerrarCajachicaStore');
+ 	Route::post('disminuirCajachicaStore', 'CajachicasController@disminuirCajachicaStore')->name('disminuirCajachicaStore');
+  Route::post('aumentarCajachicaStore', 'CajachicasController@aumentarCajachicaStore')->name('aumentarCajachicaStore');
+
 	Route::resource('cajachicas', 'CajachicasController');
+
+	//---------------------------------------------------------//
+	// Funciones del controlador Dte_cajachicasController
+	//---------------------------------------------------------// 
+	Route::resource('dte_cajachicas', 'Dte_cajachicasController');	
 
 	//---------------------------------------------------------//
 	// Funciones del controlador DesembolsosController
 	//---------------------------------------------------------// 
-	Route::resource('desembolsos', 'DesembolsosController');
+  Route::post('storeAprobarInforme', 'DesembolsosController@storeAprobarInforme')->name('storeAprobarInforme');
+  Route::get('aprobarInforme/{desembolso_id}', 'DesembolsosController@aprobarInforme')->name('aprobarInforme');
+  Route::resource('desembolsos', 'DesembolsosController');
 
 	//---------------------------------------------------------//
 	// Funciones del controlador EcajachicasController
 	//---------------------------------------------------------// 
   Route::get('pagarecajachicas', 'EcajachicasController@pagarecajachicas')->name('pagarecajachicas');
+  Route::get('contabilizaDetallesEcajachica/{ecajachica_id}', 'EcajachicasController@contabilizaDetallesEcajachica')->name('contabilizaDetallesEcajachica');
 	Route::resource('ecajachicas', 'EcajachicasController'); 
 
 	//---------------------------------------------------------//
 	// Funciones del controlador EcajachicasController
 	//---------------------------------------------------------// 		
-  Route::get('contabilizaDetallesEcajachica/{ecajachica_id}', 'EcajachicasController@contabilizaDetallesEcajachica')->name('contabilizaDetallesEcajachica');
-	Route::resource('dte_ecajachicas', 'DtecajachicasController');
-
-
-
+	Route::resource('dte_ecajachicas', 'Dte_ecajachicasController');
 
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');

@@ -4,26 +4,25 @@
 
 @section('content')
 
-<div class="card card-outline-danger text-center">
-	  <div class="card-block">
-	    <h4 class="card-title">Egreso de Caja General</h4>
-		  <div class="row">
-		    <div class="col-md-2">
-					12/12/2017
-		    </div>
-		    <div class="col-md-8">
-		      Veneficiario: Mi compania
-		    </div>
-		    <div class="col-md-2">
-					Factura no: 123456
-		    </div>
-		  </div>
-	  </div>
+<div class="well well-sm">
+	<div class="card card-outline-danger text-center">
+		    <h4 class="card-title">Egreso de Caja General</h4>
+			  <div class="row">
+			    <div class="col-md-2">
+						12/12/2017
+			    </div>
+			    <div class="col-md-8">
+			      Veneficiario: Mi compania
+			    </div>
+			    <div class="col-md-2">
+						Factura no: 123456
+			    </div>
+			  </div>
 	</div>
+</div>
 
-	<hr />
-	
-<div class="pull-right">
+<div class="well well-sm">	
+	<div class="pull-right">
 		<a href="{{ URL::route('facturas.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 			@if ($factura->etapa < 2)
 				<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
@@ -90,21 +89,22 @@
 			@endforeach
 		</tbody>
 	</table>
-  
+</div>
+	
 	<div class="invoice-footer">
 		<div class="col-sm-12">
 			<div class="invoice-sum-total pull-right">
-				<h7><strong>Sub Total : <span>{{ number_format(floatval($subTotal),2) }}</span></strong></h3>
+				<h7><strong>Sub Total : <span>{{ number_format(floatval($subTotal),2) }}</span></strong></h7>
 			</div>
 		</div>
 		<div class="col-sm-12">
 			<div class="invoice-sum-total pull-right">
-				<h7><strong>Itbms : <span>{{ number_format(floatval($totalItbms),2) }}</span></strong></h3>
+				<h7><strong>Itbms : <span>{{ number_format(floatval($totalItbms),2) }}</span></strong></h7>
 			</div>
 		</div>
 		<div class="col-sm-12">
 			<div class="invoice-sum-total pull-right">
-				<h5><strong>Total : <span class="text-success">{{ number_format(floatval($subTotal + $totalItbms),2) }}</span></strong></h3>
+				<h5><strong>Total : <span class="text-success">{{ number_format(floatval($subTotal + $totalItbms),2) }}</span></strong></h5>
 			</div>
 		</div>
 	</div>

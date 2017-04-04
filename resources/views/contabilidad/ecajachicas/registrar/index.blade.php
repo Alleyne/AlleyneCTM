@@ -13,6 +13,34 @@
             <!-- NEW WIDGET START -->
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <!-- Widget ID (each widget will need unique ID)-->
+
+                
+                    @if ($status == 1)                                          
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong>ATENCION! </strong>
+                            La Caja chica no existe, favor crear una!
+                        </div>                    
+                    @elseif ($status == 2)   
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong>ATENCION! </strong>
+                            La Caja chica se encuentra cerrada!
+                        </div>                    
+                    @elseif ($status == 3)       
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong>ATENCION! </strong>
+                            La Caja chica no tiene saldo!
+                        </div>  
+                    @else
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong>ATENCION! </strong>
+                            Caja chica saldo actual <strong> B/.{{ $saldoCajaChica }} </strong>
+                        </div>  
+                    @endif
+
                 <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="true" data-widget-deletebutton="false">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false">
@@ -28,11 +56,13 @@
                     -->
                     <header>
                         <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                        <h2>Egreso de Cajas Chicas </h2>
+                        <h2>Facturas de Egreso de Caja</h2>
                         <div class="widget-toolbar">
-                            @if (Cache::get('esAdminkey'))
-                                <a href="{{ URL::route('ecajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ingresar egreso de Caja Chica</a>
-                            @endif  
+                            @if ($status == 4)                                          
+                                @if (Cache::get('esAdminkey'))
+                                    <a href="{{ URL::route('ecajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Registrar factura de egreso de Caja Chica</a>
+                                @endif
+                            @endif
                         </div>
                     </header>
     
@@ -60,14 +90,14 @@
                                         <th>ID</th>
                                         <th>FECHA</th>  
                                         <th>A FAVOR DE</th>
-                                        <th col width="20px">TOTALFAC</th>
-                                        <th col width="20px">TOTALDETALLE</th>
+                                        <th col width="20px">TOTAL FAC</th>
+                                        <th col width="20px">TOTAL DETALLES</th>
                                         <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($datos as $dato)
-                                        <td col width="60px"><strong>{{ $dato->id }}</strong></td>
+                                        <td col width="40px"><strong>{{ $dato->id }}</strong></td>
                                         <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
                                         <td><strong>{{ $dato->afavorde }}</strong></td>
                                         <td>{{ $dato->total }}</td>
@@ -76,7 +106,7 @@
                                         @else
                                             <td><mark>{{ $dato->totaldetalle }}</mark></td>
                                         @endif
-                                        <td col width="200px" align="right">
+                                        <td col width="240px" align="right">
                                             <ul class="demo-btns">
                                                 @if ($dato->etapa == 1)
                                                     <li>
@@ -108,7 +138,7 @@
                                                 @elseif ($dato->etapa == 2)
                                                     <li>
                                                         <div id="ask_5">
-                                                            <a href="{{ URL::route('contabilizaDetallesEcajachica', $dato->id) }}" class="btn btn-success btn-xs"> Contabilizar</a>
+                                                            <a href="{{ URL::route('contabilizaDetallesEcajachica', $dato->id) }}" class="btn btn-success btn-xs"> Pagar y contabilizar</a>
                                                         </div>
                                                     </li>
                                                     <li>
@@ -135,7 +165,7 @@
                                                     </li>
                                                 @elseif ($dato->etapa == 3)
                                                     <li>
-                                                        <span class="label label-success">Contabilizada</span>
+                                                        <span class="label label-success">Pagada y Contabilizada</span>
                                                     </li>                                                           
                                                     <li>
                                                         <a href="{{ URL::route('dte_ecajachicas.show', $dato->id) }}" class="btn btn-info btn-xs"> Detalles</a>
@@ -152,10 +182,8 @@
                             @include('templates.backend._partials.modal_confirm')
                         </div>
                         <!-- end widget content -->
-    
                     </div>
                     <!-- end widget div -->
-    
                 </div>
                 <!-- end widget -->
             </article>

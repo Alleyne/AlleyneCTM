@@ -28,7 +28,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Ajustar monto total de Caja Chica</h2>
+						<h2>Caja Chica</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -48,7 +48,7 @@
 	 									{{ csrf_field() }}
                 
 									<!-- Form Name -->
-										<legend>Ajustar monto de la Caja Chica</legend>
+										<legend>Abrir o reabrir Caja Chica</legend>
 
                     <div class="form-group">
                         <label class="col-md-3 control-label">Fecha</label>
@@ -61,19 +61,27 @@
                         </div>
                     </div>  
 
-										<!-- Multiple Radios (inline) -->
+										<div class="form-group factura">
+											<label class="col-md-3 control-label">Cheque No.</label>
+											<div class="col-md-9">
+												{{ Form::text('doc_no', old('doc_no'),
+													array(
+													    'class' => 'form-control',
+													    'id' => 'doc_no',
+													    'placeholder' => 'Escriba el numero del cheque...',
+														'autocomplete' => 'off',
+													))
+												}} 
+												{!! $errors->first('doc_no', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>	
+
 										<div class="form-group">
-										  <label class="col-md-3 control-label" for="radios">Caja chica</label>
-										  <div class="col-md-9"> 
-										    <label class="radio-inline" for="radios-0">
-										      <input type="radio" name="radios" id="radios-0" value="1" checked="checked">
-										      Aumenta
-										    </label> 
-										    <label class="radio-inline" for="radios-1">
-										      <input type="radio" name="radios" id="radios-1" value="2">
-										      Disminuye
-										    </label>
-										  </div>
+											<label class="col-md-3 control-label">Responsable</label>
+											<div class="col-md-9">
+												{{ Form::select('user_id', ['' => 'Selecione una persona responsable del fondo de caja chica ...'] + $usuarios, 0, ['class' => 'form-control']) }}
+												{!! $errors->first('user_id', '<li style="color:red">:message</li>') !!}
+											</div>
 										</div>
 										
 										<div class="form-group">
@@ -87,9 +95,20 @@
 														'autocomplete' => 'off',
 													))
 												}} 
-												{!! $errors->first('total', '<li style="color:red">:message</li>') !!}
+												{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
+
+										<hr />		
+
+										<div class="form-group">
+											<label class="col-md-3 control-label">Aprobado por</label>
+											<div class="col-md-9">
+												{{ Form::select('aprueba_id', ['' => 'Selecione la persona que aprueba la apertura del fondo de caja chica ...'] + $usuarios, 0, ['class' => 'form-control']) }}
+												{!! $errors->first('aprueba_id', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>
+
 									</fieldset>
 									
 									<div class="form-actions">

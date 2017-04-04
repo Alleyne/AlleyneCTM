@@ -1669,6 +1669,11 @@ Work::with(
   $q->whereYear('created_at', '=', date('Y'));
 
 
+  if (Carbon::parse($desembolso->fecha)->lt(Carbon::parse(Input::get('fecha')))) {
+    Session::flash('danger', '<< ATENCION >> La fecha de aprobacion debera ser igual o posterior a la fecha del registro de desembolsol!');
+  }
+
+
   /*************************************************************************************
    * para general listas para desplegar en combobox
    ************************************************************************************/
@@ -2086,3 +2091,10 @@ Work::with(
      $("#Package_1").click(function(){
          $(".package_extension").show();
      });
+
+  /*************************************************************************************
+   * convert a string to a number in PHP?
+   ************************************************************************************/
+  $num = "3.14";
+  $int = (int)$num;
+  $float = (float)$num;

@@ -23,10 +23,10 @@
 
             <header>
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Informes de Diarios de Cajas Chicas </h2>
+                <h2>Administracion de Caja Chica </h2>
                 <div class="widget-toolbar">
                     @if (Cache::get('esAdminkey'))
-                        <a href="{{ URL::route('cajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajustar Caja Chica</a>
+                        <a href="{{ URL::route('cajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Abrir nueva Caja chica</a>
                     @endif  
                 </div>
             </header>
@@ -46,24 +46,52 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>FECHA</th>  
-                                <th>AUMENTO</th>
-                                <th>DISMINUCION</th>
-                                <th>MONTO</th>
+                                <th>F_INICIO</th>  
+                                <th>RESPONSABLE POR FONDO</th>
+                                <th>SALDO</th>
+                                <th>F_CIERRE</th> 
                                 <th>CERRADA</th>
+                                <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>   
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($datos as $dato)
                                 <tr>
-                                    <td col width="30px"><strong>{{ $dato->id }}</strong></td>
-                                    <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
-                                    <td col width="60px"><strong>{{ $dato->aumento }}</strong></td>
-                                    <td col width="60px"><strong>{{ $dato->disminucion }}</strong></td>
-                                    <td col width="60px"><strong>{{ $dato->monto }}</strong></td>
-                                    <td col width="70px"><strong>{{ $dato->cerrada ? "Si" : 'No' }}</strong></td>
+                                    <td col width="30px">{{ $dato->id }}</td>
+                                    <td col width="75px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_inicio)->format('M j\\, Y') }}</td>
+                                    <td>{{ $dato->responsable }}</td>
+                                    <td col width="60px"><strong>{{ $dato->saldo }}</strong></td>
+                                    @if(is_null($dato->f_cierre))
+                                        <td></td>                                    
+                                    @else
+                                        <td col width="75px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_cierre)->format('M j\\, Y') }}</td>
+                                    @endif 
+                                    <td col width="70px">{{ $dato->cerrada ? "Si" : 'No' }}</td>
+                                    @if (Cache::get('esAdminkey'))
+                                        <td col width="330px" align="right">
+                                            <ul class="demo-btns">
+                                                <li>
+                                                    <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i> Editar</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ URL::route('aumentarCajachicaCreate') }}" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i> Aumentar</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ URL::route('disminuirCajachicaCreate') }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-minus"></i> Disminuir</a>
+                                                </li>                                       
+                                                <li>
+                                                    <a href="{{ URL::route('cerrarCajachicaCreate') }}" class="btn btn-danger btn-xs"><i class="fa fa-lock"></i> Cerrar</a>
+                                                </li> 
+                                                <li>
+                                                    <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-warning btn-xs"> Detalles</a>
+                                                </li>
+                                            
+                                            </ul>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
+                                                           
                         </tbody>
                     </table>
                 

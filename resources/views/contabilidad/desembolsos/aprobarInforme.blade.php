@@ -28,7 +28,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear Desembolso de Caja Chica</h2>
+						<h2>Aprobar Informe de Caja Chica</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -43,20 +43,59 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'desembolsos.store')) }}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'storeAprobarInforme')) }}		
 									<fieldset>
 	 									{{ csrf_field() }}
-                   
+                   	{{ Form::hidden('desembolso_id', $desembolso_id) }}
+                    
                     <div class="form-group">
                         <label class="col-md-3 control-label">Fecha</label>
                         <div class="col-md-9">
 													<div class="input-group">
-														<input type="text" name="fecha" placeholder="Seleccione la fecha del Informe de caja chica a generar ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+														<input type="text" name="fecha" placeholder="Seleccione la fecha de aprobacion ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 													</div>
                         	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
                         </div>
                     </div>  
+										
+										<div class="form-group">
+											<label class="col-md-3 control-label">Aprobado por:</label>
+											<div class="col-md-9">
+												{{ Form::select('user_id', ['' => 'Selecione un aprobador ...'] + $aprobadores, 0, ['class' => 'form-control']) }}
+												{!! $errors->first('user_id', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>
+										
+										<div class="form-group factura">
+											<label class="col-md-3 control-label">Cheque No. </label>
+											<div class="col-md-9">
+												{{ Form::text('cheque', old('cheque'),
+													array(
+													    'class' => 'form-control',
+													    'id' => 'cheque',
+													    'placeholder' => 'Escriba el numero del cheque...',
+														'autocomplete' => 'off',
+													))
+												}} 
+												{!! $errors->first('cheque', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>	
+										
+										<div class="form-group">
+											<label class="col-md-3 control-label">Monto del cheque</label>
+											<div class="col-md-9">
+												{{ Form::text('monto', old('monto'),
+													array(
+													    'class' => 'form-control',
+													    'id' => 'monto',
+													    'placeholder' => 'Escriba monto del cheque...',
+														'autocomplete' => 'off',
+													))
+												}} 
+												{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>
 									</fieldset>
 									
 									<div class="form-actions">

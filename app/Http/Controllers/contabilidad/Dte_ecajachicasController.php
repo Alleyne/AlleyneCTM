@@ -15,7 +15,7 @@ use App\Bitacora;
 use App\Serviproducto;
 use App\Org;
 
-class DtecajachicasController extends Controller {
+class Dte_ecajachicasController extends Controller {
   
   public function __construct()
   {
@@ -140,27 +140,27 @@ class DtecajachicasController extends Controller {
 				foreach ($detalles as $detalle) {
 					$totaldetalles = $totaldetalles + ($detalle->precio + $detalle->itbms);
 				}
-				//dd($totaldetalles);
-			    
-		    if (round(floatval($totalecajachica),2) < round(floatval($totaldetalles),2)) {
+				//dd((float)$totalecajachica, (float)$totaldetalles);
+		    
+		    if ((float)$totalecajachica < (float)$totaldetalles) {
 	        Session::flash('danger', '<< ERROR >> El valor total de los detalles no puede sobrepasar al valor total de la factura de egresos. Intente nuevamente!');
-	        return back();
+	        DB::rollback();
+	        return back()->withInput()->withErrors($validation);
 		    	
-		    } elseif (round(floatval($totalecajachica),2) > round(floatval($totaldetalles),2)) {
+		    } elseif ((float)$totalecajachica > (float)$totaldetalles) {
 					$ecajachica->totaldetalle= $totaldetalles;
 					$ecajachica->save();
-			    Session::flash('warning', '<< ATENCION >> El valor total de los detalles es inferior al valor total de la factura egresos. Continue ingresando detalles!');
 		    
-		    } elseif (round(floatval($totalecajachica),2) == round(floatval($totaldetalles),2)) {
+		    } elseif ((float)$totalecajachica == (float)$totaldetalles) {
 					$ecajachica->totaldetalle= $totaldetalles;
 					$ecajachica->etapa= 2;
 					$ecajachica->save();		
 		    }
 			    
-				Sity::RegistrarEnBitacora(1, 'dte_cajachicas', $dato->id, $det);
+				Sity::RegistrarEnBitacora(1, 'dte_ecajachicas', $dato->id, $det);
 				Session::flash('success', 'El detalle de ecajachica No. ' .$dato->id. ' ha sido creado con éxito.');
 		    DB::commit();				
-				return redirect()->route('dte_cajachicas.show', $dato->factura_id);
+				return redirect()->route('dte_ecajachicas.show', Input::get('ecajachica_id'));
 			}
 	        
       Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
@@ -207,19 +207,19 @@ class DtecajachicasController extends Controller {
 	    $ecajachica= Ecajachica::find($dato->ecajachica_id);
 	    if (round(floatval($ecajachica->total),2) == round(floatval($totaldetalles),2)) {
 				$ecajachica->totaldetalle= $totaldetalles;
-				$ecajachica->etapa = 1;
+				$ecajachica->etapa = 2;
 				$ecajachica->save();		
 	    
 	    } else {
 				$ecajachica->totaldetalle = $totaldetalles;
-				$ecajachica->etapa = 0;
+				$ecajachica->etapa = 1;
 				$ecajachica->save();
 	    }
 			
 			Sity::RegistrarEnBitacora(3, 'dte_ecajachicas', $dato->id, $det);
 			Session::flash('success', 'El detalle "' .$dato->detalle .'" ha sido borrado permanentemente de la base de datos.');
 			DB::commit();
-			return redirect()->route('dte_cajachicas.show', $dato->ecajachica_id);
+			return redirect()->route('dte_ecajachicas.show', $dato->ecajachica_id);
 		
 		} catch (\Exception $e) {
 	    DB::rollback();

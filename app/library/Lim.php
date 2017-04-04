@@ -11,6 +11,8 @@ class Lim {
     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
     
     DB::table('cajachicas')->truncate();
+    DB::table('dte_cajachicas')->truncate();
+
     DB::table('ctdasms')->truncate(); 
     DB::table('detallepagos')->truncate();
     DB::table('pagos')->truncate();
@@ -25,10 +27,12 @@ class Lim {
     DB::table('bitacoras')->truncate();   
     DB::table('hts')->truncate();   
     DB::table('detalledescuentos')->truncate();  
-    DB::table('diariocajas')->truncate();
+    
     DB::table('ecajachicas')->truncate();
     DB::table('dte_ecajachicas')->truncate();
-    DB::table('dte_ecajachicas')->truncate();
+    
+    DB::table('desembolsos')->truncate();
+    DB::table('dte_desembolsos')->truncate();
 
     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
   }

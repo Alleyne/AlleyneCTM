@@ -12,10 +12,13 @@ use App\Ecajachica;
 use App\Org;
 use App\User;
 use App\Dte_ecajachica;
+use App\Dte_desembolso;
 use App\Pcontable;
 use App\Bitacora;
 use App\Ctdiario;
 use App\Catalogo;
+use App\Cajachica;
+use App\Dte_cajachica;
 
 class EcajachicasController extends Controller
 {
@@ -32,8 +35,34 @@ class EcajachicasController extends Controller
 		 */
 		public function index()
 		{
+			// encuentra todos los egresos de caja chica
 			$datos = Ecajachica::all();
-			return view('contabilidad.ecajachicas.registrar.index')->withDatos($datos);
+			
+			// verifica la existencia de una caja chica abierta
+			$cchica = Cajachica::all()->last();
+			//dd($cchica);
+			
+			if (!$cchica) {											// La Caja chica no existe!
+				$status = 1;
+				$saldoCajaChica = 0;
+			
+			} elseif ($cchica->cerrada == 1) {	// La Caja chica se encuentra cerrada!
+				$status = 2;
+				$saldoCajaChica = 0;
+
+			}	elseif ($cchica->saldo == 0) {		// La Caja chica no tiene saldo!
+				$status = 3;
+				$saldoCajaChica = 0;
+
+			} else {
+				$status= 4;
+				$saldoCajaChica = $cchica->saldo;	// La Caja tiene saldo!				
+			}
+			
+			return view('contabilidad.ecajachicas.registrar.index')
+						->with('status', $status)
+						->with('saldoCajaChica', $saldoCajaChica)
+						->with('datos', $datos);
 		}
 
 		/**
@@ -88,6 +117,33 @@ class EcajachicasController extends Controller
 				if ($validation->passes())
 				{
 
+					// encuentra le saldo actual de la caja chica
+					$saldoCajaChica = Cajachica::all()->last()->saldo;
+					//dd((float)$saldoCajaChica, (float)Input::get('monto'));
+					
+					if ((float)$saldoCajaChica < (float)Input::get('monto')) {
+	          Session::flash('danger', '<< ERROR >> El monto sobre pasa el saldo actual de la caja chica de B/.'. $saldoCajaChica);
+						return back()->withInput()->withErrors($validation);
+					} 
+
+					// convierte la fecha string a carbon/carbon
+					$f_ecajachica = Carbon::parse(Input::get('fecha'));   
+					$month= $f_ecajachica->month;    
+					$year= $f_ecajachica->year;    
+
+					// determina el periodo al que corresponde la fecha de pago    
+					$pdo= Sity::getMonthName($month).'-'.$year;
+				  
+				  // encuentra el periodo mas antiguo abierto
+					$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+				  //dd($periodo);
+
+			    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+			    if ($pdo != $periodo->periodo) {
+	          Session::flash('danger', '<< ERROR >> Solamente se permite registrar egresos de caja chica que correspondan al periodo vigente de '.$periodo->periodo);
+						return back()->withInput()->withErrors($validation);
+			    }
+
 					$ecajachica = new Ecajachica;
 					$ecajachica->fecha = Input::get('fecha');
 					$ecajachica->org_id = Input::get('org_id');
@@ -105,7 +161,7 @@ class EcajachicasController extends Controller
 					$ecajachica->total = Input::get('monto');
 					$ecajachica->etapa = 1;
 					$ecajachica->save();
-
+				
 					Session::flash('success', 'Se registrado un nuevo egreso de caja chica!');
 					DB::commit();       
 					return redirect()->route('ecajachicas.index');
@@ -163,7 +219,7 @@ class EcajachicasController extends Controller
 		 */
 		public function destroy($id)
 		{
-				//
+				echo('en construccion!');
 		}
 
 		/*************************************************************************************
@@ -194,6 +250,15 @@ class EcajachicasController extends Controller
 			DB::beginTransaction();
 			try {
 			
+				// verifica la existencia de una caja chica abierta
+				$cchica = Cajachica::all()->last();
+				//dd($cchica);
+				
+				if ($cchica->cerrada == 1) {
+					Session::flash('danger', 'No puede contabilizar los egresos de caja chica porque no existe ninguna caja chica abierta!');
+					return Redirect()->route('ecajachicas.index');
+				}
+				
 				//Encuentra los datos generales del egreso de caja chica
 				$ecajachica= Ecajachica::find($ecajachica_id);
 			 
@@ -204,17 +269,28 @@ class EcajachicasController extends Controller
 
 				// determina el periodo al que corresponde la fecha de pago    
 				$pdo= Sity::getMonthName($month).'-'.$year;
-				$periodo= Pcontable::where('periodo', $pdo)
-														->where('cerrado', 0)
-														->first();
-				//dd($periodo); 
 
-				if (!$periodo) {
-						Session::flash('warning', '<< ATENCION >> El presente egreso de caja chica no puede ser contabilizado ya que el periodo contable al cual pertenece ha sido cerrado. Borre el egreso de caja chica y sus detalles e ingrecela nuevamente con fecha del periodo actualmente abierto.');
-						return back();
+			 //Encuentra todos los detalles de un determinado egreso de caja chica
+				$datos = Dte_ecajachica::where('ecajachica_id', $ecajachica_id)
+																->get();
+				//dd($datos->toArray());  				
+			  
+			  // encuentra el periodo mas antiguo abierto
+				$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+			  //dd($periodo);
+				
+				foreach ($datos as $dato) {
+						$dte_desembolso = new Dte_desembolso;
+						$dte_desembolso->doc_no  = $dato->ecajachica->doc_no;
+						$dte_desembolso->serviproducto = $dato->nombre;
+						$dte_desembolso->cantidad   = $dato->cantidad;
+						$dte_desembolso->codigo   = $dato->codigo;
+						$dte_desembolso->precio   = $dato->precio;
+						$dte_desembolso->itbms   = $dato->itbms;
+						$dte_desembolso->save(); 
 				}
 
-				//Encuentra todos los detalles de un determinado egreso de caja chica
+				//Encuentra todos los detalles de un determinado egreso de caja chica seleccionando solo el catalogo_id
 				$datos = Dte_ecajachica::where('ecajachica_id', $ecajachica_id)
 																->select('catalogo_id')
 																->get();
@@ -242,8 +318,9 @@ class EcajachicasController extends Controller
 								$monto= $monto + ($dato->cantidad * $dato->precio);
 								$itbms= $itbms + $dato->itbms;
 						}
-
 						//dd($cuenta->catalogo_id, $monto, $itbms); 
+
+						// registra en libros cada un de los serviproductos encontrados en la factura de caja chica
 						//$pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id=Null, $pago_id=Null, $detallepagofactura_id=Null, $org_id=Null, $ctdasm_id=Null, $anula=Null
 					 
 						Sity::registraEnCuentas(
@@ -314,7 +391,7 @@ class EcajachicasController extends Controller
 					'mas',
 					2, 
 					6,
-					$f_ecajachica,
+					$f_ecajachica,	
 					'   Cuentas por pagar a proveedores. Egreso de caja chica No. '.$ecajachica->doc_no.', Proveedor No. '.$ecajachica->org_id,
 					$montoTotal + $itbmsTotal,
 					Null,
@@ -343,6 +420,74 @@ class EcajachicasController extends Controller
 				$ecajachica->etapa= 3;
 				$ecajachica->save();   
 			
+				// registra en libros el pago inmediato de la factura
+				
+				Sity::registraEnCuentas(
+					$periodo->id,
+					'menos',
+					2, 
+					6,
+					$f_ecajachica,	
+					'   Cuentas por pagar a proveedores. Egreso de caja chica No. '.$ecajachica->doc_no.', Proveedor No. '.$ecajachica->org_id,
+					$montoTotal + $itbmsTotal,
+					Null,
+					Null,
+					Null,
+					$ecajachica->org_id,
+					Null,
+					Null
+				);
+
+        Sity::registraEnCuentas(
+          $periodo->id,
+          'menos', 
+          1,
+          30,
+					$f_ecajachica,
+          'Caja chica',
+					$montoTotal + $itbmsTotal,
+          Null,
+          Null,
+          Null,
+					$ecajachica->org_id,
+          Null,
+          Null
+        );
+
+				// registra en Ctdiario principal
+				$diario = new Ctdiario;
+				$diario->pcontable_id  = $periodo->id;
+				$diario->fecha = $f_ecajachica;
+				$diario->detalle = 'Cuentas por pagar a proveedores. '.$ecajachica->org_id;
+				$diario->debito = $montoTotal + $itbmsTotal;
+				$diario->save(); 
+				
+	      $dato = new Ctdiario;
+	      $dato->pcontable_id = $periodo->id;
+        $dato->detalle = 'Caja chica';
+        $dato->credito = $montoTotal + $itbmsTotal;
+	      $dato->save();				
+
+				// registra en Ctdiario principal
+				$diario = new Ctdiario;
+				$diario->pcontable_id  = $periodo->id;
+				$diario->detalle = 'Para registrar pago por caja chica No. '.$ecajachica->doc_no;
+				$diario->save(); 
+
+			  // actualiza cajachicas para que refleje nuevo saldo
+				$cchica->saldo = $cchica->saldo - ($montoTotal + $itbmsTotal);
+				$cchica->save();
+
+				// agrega nuevo registro a dte_cajachicas
+				$dte = new Dte_cajachica;
+				$dte->fecha = $f_ecajachica;
+				$dte->descripcion = 'Registra factura de caja chica, no. '.$ecajachica->doc_no;
+				$dte->doc_no = $ecajachica->doc_no;
+				$dte->disminuye = $montoTotal + $itbmsTotal;
+				$dte->saldo = Dte_cajachica::all()->last()->saldo - ($montoTotal + $itbmsTotal);
+				$dte->cajachica_id = $cchica->id;
+				$dte->save();				
+
 				// Registra en bitacoras
 				$detalle =  'Contabiliza ecajachica_id '.$ecajachica_id. ', '.
 																'pcontable_id= '.$pdo.', '.

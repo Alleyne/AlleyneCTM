@@ -56,21 +56,33 @@
                         <tbody>
                             @foreach ($datos as $dato)
                                 <tr>
-                                    <td col width="60px"><strong>{{ $dato->id }}</strong></td>
+                                    <td col width="30px"><strong>{{ $dato->id }}</strong></td>
                                     <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
                                     <td col width="70px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
-                                    <td col width="60px"><strong>{{ $dato->cheque }}</strong></td>                                    @if (Cache::get('esAdminkey'))
-                                    <td col width="60px"><strong>{{ $dato->monto }}</strong></td>
-                                    <td col width="210px" align="right">
-                                        <ul class="demo-btns">
-                                            <li>
-                                                <a href="#" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
-                                            </li>                
-                                            <li>
-                                                <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Borrar</a>
-                                            </li> 
-                                        </ul>
-                                    </td>
+                                    <td col width="60px"><strong>{{ $dato->cheque }}</strong></td>
+                                    @if (Cache::get('esAdminkey'))
+                                        <td col width="60px"><strong>{{ $dato->monto }}</strong></td>
+                                        <td col width="210px" align="right">
+                                            @if($dato->aprobado == 0)
+                                                <ul class="demo-btns">
+                                                    <li>
+                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
+                                                    </li>                
+                                                    <li>
+                                                        <a href="{{ URL::route('aprobarInforme', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Informe</a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Borrar</a>
+                                                    </li> 
+                                                </ul>
+                                            @else
+                                                <ul class="demo-btns">
+                                                    <li>
+                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
+                                                    </li>                
+                                                </ul>
+                                            @endif
+                                        </td>
                                     @endif
                                 </tr>
                             @endforeach

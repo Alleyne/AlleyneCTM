@@ -4,8 +4,8 @@
 
 @section('content')
 
-<div class="card card-outline-danger text-center">
-	  <div class="card-block">
+	<div class="well well-sm">
+		<div class="card card-outline-danger text-center">
 	    <h4 class="card-title">Egreso de Caja Chica</h4>
 		  <div class="row">
 		    <div class="col-md-2">
@@ -17,98 +17,98 @@
 		    <div class="col-md-2">
 					Factura no: 123456
 		    </div>
-		  </div>
-	  </div>
+		  </div>		
+		</div>	
 	</div>
 
-	<hr />
-	
-<div class="pull-right">
-		<a href="{{ URL::route('ecajachicas.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
-			@if ($ecajachica->etapa < 3)
-				<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
-					 Agregar Serviproducto
-				</button>
-			@endif
-	</div>
-
-	<table id="dt_basic" class="table table-hover">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>SERVIPRODUCTO</th>
-				<th>GASTO</th>
-				<th>CANT</th>
-				<th>PRECIO</th>
-				<th>ITBMS</th>
-				<th>TOTAL</th>
-
+	<div class="well well-sm">	
+		<div class="pull-right">
+			<a href="{{ URL::route('ecajachicas.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 				@if ($ecajachica->etapa < 3)
-					<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>	
+					<button class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
+						 Agregar Serviproducto
+					</button>
 				@endif
-			</tr>
-		</thead>
-		<tbody>
-			@foreach ($datos as $dato)
+		</div>
+
+		<table id="dt_basic" class="table table-hover">
+			<thead>
 				<tr>
-					<td col width="40px">{{ $dato->id }}</td>
-					<td><strong>{{ $dato->nombre }}</strong></td>
-					<td>{{ $dato->codigo }}</td>
-					<td col width="60px">{{ $dato->cantidad }}</td>
-					<td col width="60px">{{ $dato->precio }}</td>
-					<td col width="60px">{{ $dato->itbms }}</td>
-					<td col width="60px"><strong>{{ $dato->total }}</strong></td>
+					<th>ID</th>
+					<th>SERVIPRODUCTO</th>
+					<th>GASTO</th>
+					<th>CANT</th>
+					<th>PRECIO</th>
+					<th>ITBMS</th>
+					<th>TOTAL</th>
+
 					@if ($ecajachica->etapa < 3)
-						<td col width="40px" align="right">
-							<ul class="demo-btns">
-								<li>
-									{{ Form::open(array(
-										'route' => array('dte_ecajachicas.destroy', $dato->id),
-										'method' => 'DELETE',
-										'style' => 'display:inline'
-										))
-									}}
-
-									{{ Form::button('Borrar', array(
-										'class' => 'btn btn-danger btn-xs',
-										'data-toggle' => 'modal',
-										'data-target' => '#confirmDelete',
-										'data-title' => 'Borrar detalle de egreso de caja chica',
-										'data-message' => 'Esta seguro(a) que desea borrar el presente detalle de egreso de caja chica?',
-										'data-btncancel' => 'btn-default',
-										'data-btnaction' => 'btn-danger',
-										'data-btntxt' => 'Borrar detalle'
-										))
-									}}
-
-									{{ Form::close() }}
-								</li>
-							</ul>
-						</td>
+						<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>	
 					@endif
 				</tr>
-			@endforeach
-		</tbody>
-	</table>
-  
+			</thead>
+			<tbody>
+				@foreach ($datos as $dato)
+					<tr>
+						<td col width="40px">{{ $dato->id }}</td>
+						<td><strong>{{ $dato->nombre }}</strong></td>
+						<td>{{ $dato->codigo }}</td>
+						<td col width="60px">{{ $dato->cantidad }}</td>
+						<td col width="60px">{{ $dato->precio }}</td>
+						<td col width="60px">{{ $dato->itbms }}</td>
+						<td col width="60px"><strong>{{ $dato->total }}</strong></td>
+						@if ($ecajachica->etapa < 3)
+							<td col width="40px" align="right">
+								<ul class="demo-btns">
+									<li>
+										{{ Form::open(array(
+											'route' => array('dte_ecajachicas.destroy', $dato->id),
+											'method' => 'DELETE',
+											'style' => 'display:inline'
+											))
+										}}
+
+										{{ Form::button('Borrar', array(
+											'class' => 'btn btn-danger btn-xs',
+											'data-toggle' => 'modal',
+											'data-target' => '#confirmDelete',
+											'data-title' => 'Borrar detalle de egreso de caja chica',
+											'data-message' => 'Esta seguro(a) que desea borrar el presente detalle de egreso de caja chica?',
+											'data-btncancel' => 'btn-default',
+											'data-btnaction' => 'btn-danger',
+											'data-btntxt' => 'Borrar detalle'
+											))
+										}}
+
+										{{ Form::close() }}
+									</li>
+								</ul>
+							</td>
+						@endif
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+	</div>		  
+	
 	<div class="invoice-footer">
 		<div class="col-sm-12">
 			<div class="invoice-sum-total pull-right">
-				<h7><strong>Sub Total : <span>{{ number_format(floatval($subTotal),2) }}</span></strong></h3>
+				<h7><strong>Sub Total : <span>{{ number_format(floatval($subTotal),2) }}</span></strong></h7>
 			</div>
 		</div>
 		<div class="col-sm-12">
 			<div class="invoice-sum-total pull-right">
-				<h7><strong>Itbms : <span>{{ number_format(floatval($totalItbms),2) }}</span></strong></h3>
+				<h7><strong>Itbms : <span>{{ number_format(floatval($totalItbms),2) }}</span></strong></h7>
 			</div>
 		</div>
 		<div class="col-sm-12">
 			<div class="invoice-sum-total pull-right">
-				<h5><strong>Total : <span class="text-success">{{ number_format(floatval($subTotal + $totalItbms),2) }}</span></strong></h3>
+				<h5><strong>Total : <span class="text-success">{{ number_format(floatval($subTotal + $totalItbms),2) }}</span></strong></h5>
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- Incluye la modal box -->
 	@include('templates.backend._partials.modal_confirm')
 

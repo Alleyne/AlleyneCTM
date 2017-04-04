@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Crear desembolso')
+@section('title', '| Registrar Factura')
 
 @section('content')
 	<!-- widget grid -->
@@ -28,7 +28,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear Desembolso de Caja Chica</h2>
+						<h2>Caja Chica</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -43,20 +43,35 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'desembolsos.store')) }}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'cerrarCajachicaStore')) }}		
+									
 									<fieldset>
 	 									{{ csrf_field() }}
-                   
+                
+									<!-- Form Name -->
+										<legend>Cerrar Caja Chica</legend>
+
                     <div class="form-group">
                         <label class="col-md-3 control-label">Fecha</label>
                         <div class="col-md-9">
 													<div class="input-group">
-														<input type="text" name="fecha" placeholder="Seleccione la fecha del Informe de caja chica a generar ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 													</div>
                         	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
                         </div>
                     </div>  
+								
+										<hr />										
+
+										<div class="form-group">
+											<label class="col-md-3 control-label">Aprobado por</label>
+											<div class="col-md-9">
+												{{ Form::select('aprueba_id', ['' => 'Selecione una persona responsable por aprobar el aumento de caja chica ...'] + $usuarios, 0, ['class' => 'form-control']) }}
+												{!! $errors->first('aprueba_id', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>
+
 									</fieldset>
 									
 									<div class="form-actions">
@@ -75,13 +90,6 @@
 		</div>
 	
 		<!-- end row -->
-	
-		<!-- row -->
-	
-		<div class="row">
-	
-		</div>
-	
 		<!-- end row -->
 	
 	</section>
@@ -108,15 +116,6 @@ $(document).ready(function() {
 		}
 		e.stopPropagation();
 	});
-
-	   $("#tipodoc-1").click(function(){
-	       $(".factura").show();
-	   });
-
-	   $("#tipodoc-2").click(function(){
-	       $(".factura").hide();
-	   });
-
 
 		$('#fecha').datepicker({
 			prevText : '<i class="fa fa-chevron-left"></i>',
