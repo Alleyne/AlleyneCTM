@@ -343,6 +343,7 @@ class DesembolsosController extends Controller
 					1. actualizar solo el saldo de cajachicas
 					2. agregar registro a Dte_ecajachica en donde se recupera el saldo por desembolso_id
 					
+					
 					// actualiza del diario de caja chica para que refleje nuevo saldo
 					$cajachica = new Cajachica;
 					$cajachica->fecha = Input::get('fecha');

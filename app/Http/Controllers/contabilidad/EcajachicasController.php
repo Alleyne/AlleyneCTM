@@ -292,6 +292,21 @@ class EcajachicasController extends Controller
 
 				//Encuentra todos los detalles de un determinado egreso de caja chica seleccionando solo el catalogo_id
 				$datos = Dte_ecajachica::where('ecajachica_id', $ecajachica_id)
+																->get();
+				//dd($datos->toArray());  				
+
+				foreach ($datos as $dato) {
+						$dte_desembolso = new Dte_desembolso;
+						$dte_desembolso->fecha   = $dato->ecajachica->fecha;
+						$dte_desembolso->doc_no  = $dato->ecajachica->doc_no;
+						$dte_desembolso->detalle = $dato->nombre;
+						$dte_desembolso->monto   = $dato->precio;
+						$dte_desembolso->itbms   = $dato->itbms;
+						$dte_desembolso->save(); 
+				}
+
+				//Encuentra todos los detalles de un determinado egreso de caja chica seleccionando solo el catalogo_id
+				$datos = Dte_ecajachica::where('ecajachica_id', $ecajachica_id)
 																->select('catalogo_id')
 																->get();
 				//dd($datos->toArray());              
