@@ -18,7 +18,7 @@
 	</li>		
 	
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Bloques</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Bloques</span></a>
 		<ul>
 			<li>
 				<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Ver Bloques</span></a>
@@ -87,16 +87,16 @@
 		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-truck"></i> <span class="menu-item-parent">Proveedores</span></a>
 	</li>
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Articulos</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Articulos</span></a>
 		<ul>
 			<li>
-				<a href="{{ route('posts.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Articulos</span></a>
+				<a href="{{ route('posts.index') }}"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Articulos</span></a>
 			</li>
 			<li>
-				<a href="{{ route('categories.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Categorias</span></a>
+				<a href="{{ route('categories.index') }}"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Categorias</span></a>
 			</li>
 			<li>
-				<a href="{{ route('tags.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Etiquetas</span></a>
+				<a href="{{ route('tags.index') }}"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Etiquetas</span></a>
 			</li>
 		</ul>
 	</li>
