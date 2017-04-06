@@ -68,9 +68,9 @@
 									<tbody>
 										@foreach ($datos as $dato)
 											<tr>
-												<td col width="20px" align="right"><strong>{{ $dato->id }}</strong></td>
-												<td col width="70px" align="right"><strong>{{ $dato->periodo }}</strong></td>
-												<td col width="70px" align="right">{{ $dato->f_cierre }}</td>
+												<td col width="20px" align="left"><strong>{{ $dato->id }}</strong></td>
+												<td col width="70px" align="left"><strong>{{ $dato->periodo }}</strong></td>
+												<td col width="70px" align="left">{{ $dato->f_cierre }}</td>
 												<td col width="50px" align="center">{{ $dato->cerrado ? 'Si' : 'No' }}</td>
 												<td col width="510px" align="right">
 													<ul class="demo-btns">

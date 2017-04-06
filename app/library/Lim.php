@@ -33,6 +33,8 @@ class Lim {
     
     DB::table('desembolsos')->truncate();
     DB::table('dte_desembolsos')->truncate();
+    
+    DB::table('pagosnoids')->truncate();
 
     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
   }

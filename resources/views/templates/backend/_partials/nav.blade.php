@@ -29,62 +29,62 @@
 		</ul>
 	</li>
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Ingresos</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Ingresos</span></a>
 		<ul>
 			<li>
-				<a href="{{ URL::route('indexunall') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Por Unidades</span></a>
+				<a href="{{ URL::route('indexunall') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Por Unidades</span></a>
 			</li>
 			<li>
-				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Otros</span></a>
+				<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Otros</span></a>
 			</li>
 		</ul>
 	</li>
 
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Egreso Caja General</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja General</span></a>
 		<ul>
 			<li>
-				<a href="{{ URL::route('facturas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Registrar facturas</span></a>
+				<a href="{{ URL::route('facturas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Registrar facturas</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('pagarfacturas') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagar facturas</span></a>
+				<a href="{{ URL::route('pagarfacturas') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Pagar facturas</span></a>
 			</li>
 		</ul>
 	</li>
 
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Contabilidad</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Contabilidad</span></a>
 		<ul>
 			<li>
-				<a href="{{ URL::route('pcontables.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Periodos</span></a>
+				<a href="{{ URL::route('pcontables.index') }}"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Periodos</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Admin Caja Chica</span></a>
+				<a href="{{ URL::route('cajachicas.index') }}"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Admin Caja Chica</span></a>
 			</li>
 			<li>
-				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Pagos no identificados</span></a>
+				<a href="{{ URL::route('pagosnoids.index') }}"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Pagos no identificados</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('catalogos.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Catalogo</span></a>
+				<a href="{{ URL::route('catalogos.index') }}"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Catalogo</span></a>
 			</li>
 		</ul>
 	</li>
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Dashboard</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Dashboard</span></a>
 		<ul>
 			<li>
-				<a href="{{ URL::route('vigente') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Vigente</span></a>
+				<a href="{{ URL::route('vigente') }}"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Vigente</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('historico') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Historico</span></a>
+				<a href="{{ URL::route('historico') }}"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Historico</span></a>
 			</li>
 		</ul>
 	</li>
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Serviproductos</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-book"></i> <span class="menu-item-parent">Serviproductos</span></a>
 	</li>
 	<li>
-		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Proveedores</span></a>
+		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-truck"></i> <span class="menu-item-parent">Proveedores</span></a>
 	</li>
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Articulos</span></a>
@@ -104,24 +104,24 @@
 
 @if (Cache::get('esAdminkey') || Cache::get('esJuntaDirectivakey'))
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Autorizacion</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-key"></i> <span class="menu-item-parent">Autorizacion</span></a>
 		<ul>
 			<li>
-				<a href="{{ URL::route('users.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Usuarios</span></a>
+				<a href="{{ URL::route('users.index') }}"><i class="fa fa-lg fa-fw fa-key"></i> <span class="menu-item-parent">Usuarios</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('permissions.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Permisos</span></a>
+				<a href="{{ URL::route('permissions.index') }}"><i class="fa fa-lg fa-fw fa-key"></i> <span class="menu-item-parent">Permisos</span></a>
 			</li>
 			<li>
-				<a href="{{ URL::route('roles.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Roles</span></a>
+				<a href="{{ URL::route('roles.index') }}"><i class="fa fa-lg fa-fw fa-key"></i> <span class="menu-item-parent">Roles</span></a>
 			</li>
 		</ul>
 	</li>	
 	<li>
-		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
+		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
 	</li>
 	<li>
-		<a href="{{ URL::route('bitacoras.index') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Bitácora</span></a>
+		<a href="{{ URL::route('bitacoras.index') }}"><i class="fa fa-archive"></i> <span class="menu-item-parent">Bitácora</span></a>
 	</li>
 @endif	
 

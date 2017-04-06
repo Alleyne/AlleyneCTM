@@ -32,10 +32,14 @@ class DesembolsosController extends Controller
 		 *
 		 * @return \Illuminate\Http\Response
 		 */
-		public function index()
+		public function verDesembolsos($cajachica_id)
 		{
-			$datos = Desembolso::all();
-			return view('contabilidad.desembolsos.index')->withDatos($datos);
+			$cchicaCerrada= Cajachica::find($cajachica_id)->cerrada;
+
+			$datos = Desembolso::where('cajachica_id', $cajachica_id)->get();
+			return view('contabilidad.desembolsos.verDesembolsos')
+						->with('cchicaCerrada', $cchicaCerrada)
+						->with('datos', $datos);
 		}
 
 		/**
@@ -104,14 +108,15 @@ class DesembolsosController extends Controller
 					//dd($dte_desembolsos);
 
 					if ($dte_desembolsos) {
-						$ecajachica = new Desembolso;
-						$ecajachica->fecha = Input::get('fecha');
-						$ecajachica->save();
+						$desembolso = new Desembolso;
+						$desembolso->fecha = Input::get('fecha');
+						$desembolso->cajachica_id = Cajachica::all()->last()->id;
+						$desembolso->save();
 
 						//encuentra todos los detalles de desembolso que tengan desembolso_id igual a cero y se los asigna
 						// al recien creado desembolso
 						Dte_desembolso::where('desembolso_id', 0)
-						          ->update(['desembolso_id' => $ecajachica->id]);
+						          ->update(['desembolso_id' => $desembolso->id]);
 
 						Session::flash('success', 'Se registrado un nuevo desembolso de caja chica!');
 						DB::commit();       

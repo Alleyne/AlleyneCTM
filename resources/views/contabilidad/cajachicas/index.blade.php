@@ -74,7 +74,7 @@
                                             <ul class="demo-btns">
                                                 @if(is_null($dato->f_cierre))
                                                     <li>
-                                                        <a href="{{ URL::route('desembolsos.index') }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
+                                                        <a href="{{ URL::route('verDesembolsos', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
                                                     </li> 
                                                     <li>
                                                         <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
@@ -93,7 +93,7 @@
                                                     </li>
                                                 @else    
                                                     <li>
-                                                        <a href="{{ URL::route('desembolsos.index') }}" class="btn btn-default btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
+                                                        <a href="{{ URL::route('verDesembolsos', $dato->id) }}" class="btn btn-default btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
                                                     </li> 
                                                     <li>
                                                         <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-default btn-xs"> Historial de Caja Chica</a>

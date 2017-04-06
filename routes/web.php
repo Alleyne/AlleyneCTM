@@ -225,6 +225,7 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador DesembolsosController
 	//---------------------------------------------------------// 
+  Route::get('verDesembolsos/{cajachica_id}', 'DesembolsosController@verDesembolsos')->name('verDesembolsos');
   Route::post('storeAprobarInforme', 'DesembolsosController@storeAprobarInforme')->name('storeAprobarInforme');
   Route::get('aprobarInforme/{desembolso_id}', 'DesembolsosController@aprobarInforme')->name('aprobarInforme');
   Route::resource('desembolsos', 'DesembolsosController');
@@ -240,6 +241,15 @@ Route::group(['namespace' => 'contabilidad'], function()
 	// Funciones del controlador EcajachicasController
 	//---------------------------------------------------------// 		
 	Route::resource('dte_ecajachicas', 'Dte_ecajachicasController');
+
+	//---------------------------------------------------------//
+	// Funciones del controlador EcajachicasController
+	//---------------------------------------------------------// 		
+  Route::get('contabilizaPagonoid/{pagosnoid_id},{f_pago},{un_id},{monto},{banco_id},{doc_no}', 'PagosnoidsController@contabilizaPagonoid')->name('contabilizaPagonoid');
+  Route::post('identificarPagoStore', 'PagosnoidsController@identificarPagoStore')->name('identificarPagoStore');
+  Route::get('identificarPagoCreate/{pagosnoid_id}', 'PagosnoidsController@identificarPagoCreate')->name('identificarPagoCreate');
+	Route::resource('pagosnoids', 'PagosnoidsController');
+
 
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');

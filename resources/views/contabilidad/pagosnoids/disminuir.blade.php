@@ -1,13 +1,8 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Crear pago')
-
-@section('stylesheets')
-	{!! Html::style('css/parsley.css') !!}
-@endsection
+@section('title', '| Registrar Factura')
 
 @section('content')
-	
 	<!-- widget grid -->
 	<section id="widget-grid" class="">
 	
@@ -33,7 +28,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Registrar pagos en efectivo</h2>
+						<h2>Caja Chica</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -48,56 +43,55 @@
 	
 							<!-- widget content -->
 							<div class="widget-body">
-							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'pagos.store', 'data-parsley-validate' => '')) }}		
+							{{ Form::open(array('class' => 'form-horizontal', 'route' => 'disminuirCajachicaStore')) }}		
+									
 									<fieldset>
-
-	 									{{ Form::hidden('un_id', $un_id) }}
-	 									{{ Form::hidden('key', $key) }}
+	 									{{ csrf_field() }}
+                
+									<!-- Form Name -->
+										<legend>Disminuir saldo de Caja Chica</legend>
 
                     <div class="form-group">
-                        <label class="col-md-3 control-label">Fecha de pago</label>
+                        <label class="col-md-3 control-label">Fecha</label>
                         <div class="col-md-9">
-												<div class="input-group">
-													<input type="text" id="f_pago" name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" required="" value="{{ old('f_pago') }}">
-													<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-												</div>
-	                      </div>
-	                  </div>  
+													<div class="input-group">
+														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+													</div>
+                        	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
+                        </div>
+                    </div>  
 
-										<div class="form-group">
+  									<div class="form-group">
 											<label class="col-md-3 control-label">Monto</label>
 											<div class="col-md-9">
 												{{ Form::text('monto', old('monto'),
 													array(
-												    'class' => 'form-control',
-												    'id' => 'monto',
-												    'placeholder' => 'Escriba el monto recibido ...',
+													    'class' => 'form-control',
+													    'id' => 'monto',
+													    'placeholder' => 'Escriba el monto ...',
 														'autocomplete' => 'off',
-														'required' => '',
-														'data-parsley-pattern'=>'^[0-9]*\.[0-9]{2}$'
 													))
 												}} 
+												{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
 											</div>
-										</div>					
+										</div>	
+									
+										<hr />										
 
 										<div class="form-group">
-											<label class="col-md-3 control-label">Descripción</label>
+											<label class="col-md-3 control-label">Aprobado por</label>
 											<div class="col-md-9">
-								        {{ Form::textarea('descripcion', old('descripcion'),
-								        	array(
-								        		'class' => 'form-control',
-								        		'title' => 'Escriba la descripcion',
-								        		'rows' => '3',
-								        		'required' => ''
-								        	))
-								        }}
+												{{ Form::select('aprueba_id', ['' => 'Selecione una persona responsable por aprobar el aumento de caja chica ...'] + $usuarios, 0, ['class' => 'form-control']) }}
+												{!! $errors->first('aprueba_id', '<li style="color:red">:message</li>') !!}
 											</div>
-										</div>				
+										</div>
+
 									</fieldset>
 									
 									<div class="form-actions">
 										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
-										<a href="{{ URL::route('indexPagos', $un_id) }}" class="btn btn-large">Cancelar</a>
+										<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
 									</div>
 								{{ Form::close() }}
 							</div>
@@ -111,25 +105,41 @@
 		</div>
 	
 		<!-- end row -->
-		
+	
+		<!-- row -->
+	
+		<div class="row">
+	
+		</div>
+	
+		<!-- end row -->
+	
 	</section>
 	<!-- end widget grid -->
 @stop
 
 @section('relatedplugins')
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-	{!! Html::script('js/parsley.min.js') !!}
+<!-- PAGE RELATED PLUGIN(S) -->
 
-	<script type="text/javascript">
-		$(document).ready(function(){
-		    $("input[type='submit']").attr("disabled", false);
-		    $("form").submit(function(){
-		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
-		      return true;
-		    })
-		})
+<script type="text/javascript">
+// DO NOT REMOVE : GLOBAL FUNCTIONS!
+$(document).ready(function() {
+	pageSetUp();
 	
-		$('#f_pago').datepicker({
+	$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
+	$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
+		var children = $(this).parent('li.parent_li').find(' > ul > li');
+		if (children.is(':visible')) {
+			children.hide('fast');
+			$(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
+		} else {
+			children.show('fast');
+			$(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
+		}
+		e.stopPropagation();
+	});
+
+		$('#fecha').datepicker({
 			prevText : '<i class="fa fa-chevron-left"></i>',
 			nextText : '<i class="fa fa-chevron-right"></i>',
 			onSelect : function(selectedDate) {
@@ -154,36 +164,18 @@
 			showMonthAfterYear: false,
 			yearSuffix: ''
 			};
-		
-		$.datepicker.setDefaults($.datepicker.regional['es']);
+			$.datepicker.setDefaults($.datepicker.regional['es']);
 			$(function () {
 			$("#fecha").datepicker();
 		});
-	
-		var tipoDePago = jQuery('#trantipo_id');
-		var select = this.value;
-		tipoDePago.change(function () {
-		    if ($(this).val() == '1') {
-		      $('.bancos').show();		
-		      $('.transNo').hide();	
-		      $('.quecheNo').show();			    
-		    
-		    } else if ($(this).val() == '2' || $(this).val() == '3'|| $(this).val() == '4') {
-		      $('.bancos').show();		    	
-		      $('.transNo').show();	
-		      $('.quecheNo').hide();	
 
-		    } else if ($(this).val() == '5') {
-		      $('.bancos').hide();		    	
-		      $('.transNo').hide();	
-		      $('.quecheNo').hide();	
 
-		    } else if ($(this).val() == '6') {
-		      $('.bancos').show();		    	
-		      $('.transNo').hide();	
-		      $('.quecheNo').hide();	
-		    }		
-		});
+    $("input[type='submit']").attr("disabled", false);
+    $("form").submit(function(){
+      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+      return true;
+    });
+})
 
-	</script>
+</script>
 @stop

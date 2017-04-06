@@ -2098,3 +2098,25 @@ Work::with(
   $num = "3.14";
   $int = (int)$num;
   $float = (float)$num;
+
+  /*************************************************************************************
+   * agrega datos a una eloquent collection
+   ************************************************************************************/
+    $datos = Pagosnoid::all();
+    
+    // agrega el codigo a la collection
+    $datos->map(function ($dato) {
+        $dato['codigo'] = $dato->un->codigo;
+    });
+
+    dd($datos->toArray());
+
+    
+  /*************************************************************************************
+   * La colacion utf8_spanish_ci o utf8_general_ci
+   ************************************************************************************/
+    La colacion utf8_spanish_ci corresponde con español moderno. En esta colacion , 'ñ' es una letra independiente, entre 'n' y 'o'. Además, para español tradicional 'ch' es una letra, ordenada entre 'c' y d, y 'll' es una letra que se coloca entre 'l' y 'm'
+    utf8_general_ci
+    Es una colación heredada, la cual NO soporta EXPANSIONES.
+    Sólo puede hacer comparaciones entre caracteres uno a uno
+    Estas comparaciones son muy rápidas

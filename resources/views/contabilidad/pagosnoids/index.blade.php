@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Desembolsos de caja chica')
+@section('title', '| Informes de diario de Caja Chica')
 
 @section('content')
 
@@ -20,16 +20,15 @@
             data-widget-custombutton="false"
             data-widget-collapsed="true"
             data-widget-sortable="false"-->
-            
+
             <header>
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Desembolsos de Caja Chica</h2>
+                <h2>Pagos no indentificados </h2>
                 <div class="widget-toolbar">
-                    <a href="{{ URL::route('cajachicas.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
                     @if (Cache::get('esAdminkey'))
-                        <a href="{{ URL::route('desembolsos.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Crear Desembolso</a>
+                        <a href="{{ URL::route('pagosnoids.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Registrar pago no identificado</a>
                     @endif  
-                </div>  
+                </div>
             </header>
 
             <div><!-- widget div-->
@@ -46,48 +45,47 @@
                     <table id="dt_basic" class="table table-hover">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>FECHA</th>  
-                                <th>CHEQUE</th>
-                                <th>MONTO</th>
-                                <th>APROBADO</th>
-                                <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
+                                <th>BANCO</th>
+                                <th>TIPO</th>
+                                <th>MONTO</th> 
+                                <th>UNIDAD</th>
+                                <th>PROPIETARIOS</th>
+                                <th>IDENT</th>
+                                <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>   
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($datos as $dato)
                                 <tr>
-                                    <td col width="30px"><strong>{{ $dato->id }}</strong></td>
-                                    <td col width="70px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
-                                    <td col width="60px"><strong>{{ $dato->cheque }}</strong></td>
-                                    <td col width="60px"><strong>{{ $dato->monto }}</strong></td>                                    
-                                    <td col width="40px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
+                                    <td col width="80px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_pago)->format('M j\\, Y') }}</td>
+                                    <td>{{ $dato->banco }}</td>
+                                    <td col width="20px" align="left">{{ $dato->tipo }}</td>                                    
+                                    <td col width="50px" align="left">{{ $dato->monto }}</td>  
+                                    <td col width="80px"><strong>{{ $dato->codigo }}</strong></td>
+                                    <td>{{ $dato->propietarios }}</td>
+                                    <td col width="50px">{{ $dato->identificado ? "Si" : 'No' }}</td>
                                     @if (Cache::get('esAdminkey'))
-
-                                        <td col width="220px" align="right">
-                                            @if($dato->aprobado == 0)
-                                                <ul class="demo-btns">
+                                        <td col width="125px" align="right">
+                                            <ul class="demo-btns">
+                                                @if ($dato->contabilizado == 0)
                                                     <li>
-                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
-                                                    </li>                
-                                                    <li>
-                                                        <a href="{{ URL::route('aprobarInforme', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Desembolso</a>
+                                                        <a href="{{ URL::route('identificarPagoCreate', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
                                                     </li> 
                                                     <li>
-                                                        <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Borrar</a>
-                                                    </li> 
-                                                </ul>
-                                            @else
-                                                <ul class="demo-btns">
+                                                        <a href="{{ URL::route('contabilizaPagonoid', array($dato->id, $dato->f_pago, $dato->un_id, $dato->monto, $dato->banco_id, $dato->doc_no)) }}" class="btn btn-warning btn-xs">Contabilizar</a>
+                                                    </li>
+                                                @else
                                                     <li>
-                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
-                                                    </li>                
-                                                </ul>
-                                            @endif
+                                                        <span class="label label-success">Pago contabilizado</span>
+                                                    </li>
+                                                @endif
+                                            </ul>
                                         </td>
                                     @endif
                                 </tr>
                             @endforeach
+                                                           
                         </tbody>
                     </table>
                 
