@@ -87,10 +87,10 @@
 		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-truck"></i> <span class="menu-item-parent">Proveedores</span></a>
 	</li>
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Articulos</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Noticias</span></a>
 		<ul>
 			<li>
-				<a href="{{ route('posts.index') }}"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Articulos</span></a>
+				<a href="{{ route('posts.index') }}"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Noticias</span></a>
 			</li>
 			<li>
 				<a href="{{ route('categories.index') }}"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Categorias</span></a>
