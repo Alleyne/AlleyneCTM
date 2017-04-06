@@ -18,7 +18,7 @@
 	</li>		
 	
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Bloques</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
 		<ul>
 			<li>
 				<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Ver Bloques</span></a>
