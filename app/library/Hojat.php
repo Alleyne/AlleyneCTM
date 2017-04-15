@@ -844,7 +844,7 @@ class Hojat {
           $dato = new Ctdiario;
           $dato->pcontable_id  = $pcontable_id;
           $dato->fecha         = $fecha;
-          $dato->detalle = Catalogo::find($cuenta->cuenta)->nombre.' '.$cuenta->codigo;
+          $dato->detalle = Catalogo::find($cuenta->cuenta)->nombre;
           $dato->debito  = $saldoIngresos;
           $dato->save();  
         
@@ -852,7 +852,7 @@ class Hojat {
           // registra en Ctdiario principal
           $dato = new Ctdiario;
           $dato->pcontable_id  = $pcontable_id;
-          $dato->detalle = Catalogo::find($cuenta->cuenta)->nombre.' '.$cuenta->codigo;
+          $dato->detalle = Catalogo::find($cuenta->cuenta)->nombre;
           $dato->debito  = $saldoIngresos;
           $dato->save();  
         }
@@ -879,7 +879,7 @@ class Hojat {
       $dato->cuenta           = $cuenta->cuenta;
       $dato->codigo           = $cuenta->codigo;
       $dato->fecha            = $fecha;
-      $dato->detalle          = '   '.Catalogo::find($cuenta->cuenta)->nombre.' '.$cuenta->codigo;
+      $dato->detalle          = '   '.Catalogo::find($cuenta->cuenta)->nombre;
       $dato->debito           = 0;
       $dato->credito          = $saldoGastos;
       $dato->save();
@@ -888,7 +888,7 @@ class Hojat {
           // registra en Ctdiario principal
           $dato = new Ctdiario;
           $dato->pcontable_id  = $pcontable_id;
-          $dato->detalle = '   '.Catalogo::find($cuenta->cuenta)->nombre.' '.$cuenta->codigo;
+          $dato->detalle = '   '.Catalogo::find($cuenta->cuenta)->nombre;
           $dato->credito = $saldoGastos;
           $dato->save();  
         }

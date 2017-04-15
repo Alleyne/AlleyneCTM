@@ -114,6 +114,7 @@ class PagosController extends Controller {
 
       $f_final= Carbon::today()->addDay(1);
 
+      // 
       if (Input::get('key')== '1') {
 	      $rules = array(
           'transno'   	=> 'Required|Numeric|digits_between:1,10|min:1',
@@ -158,7 +159,7 @@ class PagosController extends Controller {
 			{
 				// verifica si existe registro para informe de diario de caja para el dia de hoy,
 				// si no existe entonces lo crea.
-				if (Input::get('key') != '2' && Input::get('key') != '4' ) {
+				if (Input::get('key') != '2' && Input::get('key') != '3' && Input::get('key') != '4') {
 					$diariocaja= Diariocaja::where('fecha', Input::get('f_pago'))->first();
 
 			    if (!$diariocaja) {
@@ -191,7 +192,7 @@ class PagosController extends Controller {
 				$montoRecibido= round(floatval(Input::get('monto')),2);
 
 				// Procesa el pago recibido	si el tipo de transaccion es cheque
-				if (Input::get('key') == 1 || Input::get('key') == 3) {
+				if (Input::get('key') == 1) {
 					// Solamente registra el pago recibido no lo procesa
 					$dato = new Pago;
 					$dato->banco_id    = Input::get('banco_id');
@@ -229,8 +230,11 @@ class PagosController extends Controller {
 			    $dato->user_id 	   = Auth::user()->id; 		    
 			    $dato->save();
 
+					$tipoPago = Input::get('key');
+					//dd($tipoPago);
+					
 					// proceso de contabilizar el pago recibido
-					Npago::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo);
+					Npago::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo, $tipoPago);
 
 					// Registra en bitacoras
 					$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $dato->monto;  
@@ -388,7 +392,7 @@ class PagosController extends Controller {
 			//dd($periodo->fecha);  
 
 			// proceso de contabilizar el pago recibido
-			Npago::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago, $periodo->id, $periodo->periodo);
+			Npago::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago, $periodo->id, $periodo->periodo, 1);
 
 			// Registra el pago como tramitado
 			$dato1 = Pago::find($pago_id);

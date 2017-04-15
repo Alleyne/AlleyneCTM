@@ -321,7 +321,7 @@ class PagosnoidsController extends Controller
 	    $dto->save();
 
 			// proceso de contabilizar el pago recibido
-			Npago::iniciaPago($un_id, $monto, $dato->id, $f_pago, $periodo->id, $periodo->periodo);
+			Npago::iniciaPago($un_id, $monto, $dato->id, $f_pago, $periodo->id, $periodo->periodo, 3);
 
 			// Registra en bitacoras
 			$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $monto;  

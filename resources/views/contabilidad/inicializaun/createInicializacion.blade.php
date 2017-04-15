@@ -13,7 +13,7 @@
 			<article class="col-sm-12 col-md-12 col-lg-12">
 	
 				<!-- Widget ID (each widget will need unique ID)-->
-				<div class="jarviswidget jarviswidget-color-orange" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
+				<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
 					<!-- widget options:
 					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 	
@@ -47,8 +47,23 @@
 									<fieldset>
 	 									{{ csrf_field() }}
 	 									{{ Form::hidden('un_id', $un_id) }}
-
+										
+										<!-- Multiple Radios (inline) -->
 										<div class="form-group">
+										  <label class="col-md-3 control-label" for="radios">Tipo de inicializacion:</label>
+										  <div class="col-md-9"> 
+										    <label class="radio-inline" for="radios-0">
+										      <input type="radio" name="tipoini_radios" id="tipoini-1" value="1" checked="checked">
+										      Arreglo de pago por cuotas adeudadas
+										    </label> 
+										    <label class="radio-inline" for="radios-1">
+										      <input type="radio" name="tipoini_radios" id="tipoini-2" value="2">
+										      Pagos anticipados
+										    </label>
+										  </div>
+										</div>
+
+										<div class="form-group totalmeses">
 											<label class="col-md-3 control-label">Total de meses adeudados</label>
 											<div class="col-md-9">
 												{{ Form::text('meses', old('meses'),
@@ -63,7 +78,7 @@
 											</div>
 										</div>	
 										
-										<div class="form-group">
+										<div class="form-group totalmonto">
 											<label class="col-md-3 control-label">Monto total adeudado</label>
 											<div class="col-md-9">
 												{{ Form::text('monto', old('monto'),
@@ -78,7 +93,7 @@
 											</div>
 										</div>					
 										
-										<div class="form-group">
+										<div class="form-group totalanticipados" style="display: none;">
 											<label class="col-md-3 control-label">Total de pagos anticipados</label>
 											<div class="col-md-9">
 												{{ Form::text('anticipados', old('anticipados'),
@@ -134,6 +149,19 @@
 				e.stopPropagation();
 			});			
 		})
+	
+	   $("#tipoini-1").click(function(){
+	       $(".totalmeses").show();
+	       $(".totalmonto").show();
+	       $(".totalanticipados").hide();
+	   });
+
+	   $("#tipoini-2").click(function(){
+	       $(".totalmeses").hide();
+	       $(".totalmonto").hide();
+	       $(".totalanticipados").show();
+	   });
+
 	</script>
 
 	<script type="text/javascript">

@@ -80,7 +80,7 @@ class Fact {
         $un_id= $un->id;
         $cuota_mant= floatval($secapto->cuota_mant);
         $descuento= floatval($secapto->descuento);
-        $ocobro= $un->codigo.' '.Sity::getMonthName($month).$day.'-'.$year;
+        $ocobro= $un->codigo.' OC '.Sity::getMonthName($month).' '.$day.'-'.$year;
         $descuento_siono= 0;
         $pagada= 0;
 
@@ -129,11 +129,8 @@ class Fact {
         $dato->extra            = $extra;
         $dato->save(); 
 
-        // verifica si se puede realizar pagos de cuotas o recargos utilizando solamente el contenido
-        // de la cuenta de pagos anticipados de la unidad
-        Npago::iniciaPago($un_id, Null, Null, $fecha, $periodo->id, $periodo->periodo); 
-      
       } // end foreach
+    
     } // end foreach secapto
 
     return 'Finaliza facturacion para el mes de '.Sity::getMonthName($month).'-'.$year ;

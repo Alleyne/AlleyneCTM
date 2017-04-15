@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Input;
 use Session, Cache, DB;
 use Carbon\Carbon;
 use App\library\Sity;
+use App\library\Ppago;
 
 use App\Pcontable;
 use App\Un;
@@ -41,23 +42,29 @@ class InicializaunController extends Controller {
       
       //dd(Input::all());
       $input = Input::all();
-
-      if (Input::get('meses')>0 && Input::get('monto')==0) {
-        Session::flash('danger', '<< ERROR >> Esta tratando de inicializar la unidad con '.Input::get('meses').' meses y monto total adeudado igual a cero!');     
-        return back()->withInput();
-      }
-      
       $pdo= Pcontable::find(1);
+      
       if (!$pdo) {
         Session::flash('danger', '<< ERROR >> Antes de inicializar una unidad usted debera crear el primer periodo contable!');     
         return back()->withInput();
-      } 
-      
-      $rules = array(
+      }
+
+      if (Input::get('tipoini_radios') == 1) {
+        if (Input::get('meses')>0 && Input::get('monto')==0) {
+          Session::flash('danger', '<< ERROR >> Esta tratando de inicializar la unidad con '.Input::get('meses').' meses y monto total adeudado igual a cero!');     
+          return back()->withInput();
+        }
+        
+        $rules = array(
           'meses'       => 'Required|integer|min:1',
-          'monto'       => 'required|Numeric|min:0',
+          'monto'       => 'required|Numeric|min:0'
+        );
+      
+      } else {
+        $rules = array(
           'anticipados'  => 'required|Numeric|min:0'
-      );
+        );
+      }
 
       $messages = [
         'required'       => 'Informacion requerida!',
@@ -73,6 +80,7 @@ class InicializaunController extends Controller {
         // encuentra los datos de la unidad y marca la unidad como inicializada
         $un= Un::find(Input::get('un_id'));      
         //dd($un->toArray());      
+        
         $un->inicializada= 1;
         $un->save();
         
@@ -87,8 +95,8 @@ class InicializaunController extends Controller {
         // hace una copia de la fecha original para evitar que $f_periodo cambie
         $fecha = clone $f_periodo;
         
-        if (Input::get('meses')>0) {
-          
+        if (Input::get('tipoini_radios') == 1) {
+             
           $seccion= Seccione::find($un->seccione_id);
           $blqAdmin= Blqadmin::where('bloque_id', $seccion->bloque_id)->first();
           $secapto= Secapto::where('seccione_id', $seccion->id)->first();
@@ -182,16 +190,15 @@ class InicializaunController extends Controller {
                   'Inicializa Ingreso por cuota de mantenimiento '.$un->codigo, // detalle
                   Input::get('monto') // monto
                  );
-        } 
-        
-        // contabiliza pago anticipado si existe
-        if (Input::get('anticipados')>0) {
-          
+
+        } else {
+
+          // contabiliza pago anticipado si existe
           // registra en Ctdiario principal
           $dato = new Ctdiario;
           $dato->pcontable_id  = $periodo->id;
           $dato->fecha         = $f_periodo;
-          $dato->detalle       = 'Pago anticipado por inicializacion del sistema';
+          $dato->detalle       = Catalogo::find(8)->nombre;
           $dato->debito        = Input::get('anticipados');
           $dato->save(); 
 
@@ -208,8 +215,17 @@ class InicializaunController extends Controller {
           $dato->detalle = 'Para registrar pago anticipados por inicializacion, '.$un->codigo;
           $dato->save(); 
           
-          Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $f_periodo, 'Anticipado por inicializacion del sistema '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
-          Sity::registraEnCuentas($periodo->id, 'mas', 2, 5, $f_periodo, Catalogo::find(5)->nombre.' unidad '.Un::find(Input::get('un_id'))->codigo.' '.$periodo->periodo, Input::get('anticipados'), Input::get('un_id'));
+          Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $f_periodo, 'Pago anticipado por inicializacion del sistema, unidad '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
+          Sity::registraEnCuentas($periodo->id, 'mas', 2, 5, $f_periodo, 'Pago anticipado por inicializacion del sistema, unidad '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
+        
+          // Encuentra todas las unidades activas
+          $uns= Un::where('activa', 1)->get();
+          // dd($uns->toArray());
+
+          // verifica si se puede realizar pagos de cuotas o recargos utilizando solamente
+          // el contenido de la cuenta de pagos anticipados de la unidad.        
+          Ppago::iniciaPago(Input::get('un_id'), $f_periodo, $periodo->id, $periodo->periodo);
+
         } 
 
         // Registra en bitacoras

@@ -9,9 +9,11 @@ use Carbon\Carbon;
 use App\library\Sity;
 use App\library\Npdo;
 use App\library\Fact;
+use App\library\Ppago;
 
 use App\Pcontable;
 use App\Bitacora;
+use App\Un;
 
 class PcontablesController extends Controller {
     
@@ -82,7 +84,7 @@ class PcontablesController extends Controller {
           return back();        
         }
         
-        // 1. crear un nuevo perido contable
+        // 1. crear un nuevo periodo contable
         // 2. inicializa en el libro mayor todas las cuentas temporales activas presentes en el catalogo de cuentas, no registra en el diario principal.
         // 3. calcula y contabiliza en libros los ingresos esperados en cuotas de mantenimiento regular para todas las secciones cuya ocobro se genera los dias primero o dieciseis de cada mes.
         // 4. calcula y contabiliza en libros los ingresos esperados en cuotas de mantenimiento extraordinarias para todas las secciones cuya ocobro se genera los dias primero o dieciseis de cada mes.
@@ -91,17 +93,17 @@ class PcontablesController extends Controller {
         // crea facturacion para el nuevo periodo contable
         // facturacion para las secciones que generan las ordenes de cobro los dias 1
         Fact::facturar(Carbon::createFromDate($year, $month, 1));
-        
+
         // facturacion para las secciones que generan las ordenes de cobro los dias 16
         Fact::facturar(Carbon::createFromDate($year, $month, 16));
         
+        DB::commit();           
+        
         // Registra en bitacoras
         $detalle =  'Se crea el primer periodo contable del sistema '.$pdo;
-      
-        Sity::RegistrarEnBitacora(1, 'pcontables', 1, $detalle);
-        DB::commit();        
-        Session::flash('success', 'Se crea el primer periodo contable del sistema '.$pdo. ' con éxito.');
+        Sity::RegistrarEnBitacora(1, 'pcontables', 1, $detalle);        
 
+        Session::flash('success', 'Se crea el primer periodo contable del sistema '.$pdo. ' con éxito.');
         return redirect()->route('pcontables.index');
       }
       return back()->withInput()->withErrors($validation);
@@ -110,7 +112,7 @@ class PcontablesController extends Controller {
         DB::rollback();
         Session::flash('warning', ' Ocurrio un error en el modulo PcontablesController.store, la transaccion ha sido cancelada! '.$e->getMessage());
 
-        return back()->withInput()->withErrors($validation);
+        return back();
     }
   } 
 

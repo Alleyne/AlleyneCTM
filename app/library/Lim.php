@@ -27,6 +27,7 @@ class Lim {
     DB::table('bitacoras')->truncate();   
     DB::table('hts')->truncate();   
     DB::table('detalledescuentos')->truncate();  
+    DB::table('diariocajas')->truncate();  
     
     DB::table('ecajachicas')->truncate();
     DB::table('dte_ecajachicas')->truncate();

@@ -8,7 +8,7 @@
     <div class="col-xs-12 col-sm-6 col-md-12">        
         <!-- NEW WIDGET START -->
         <!-- Widget ID (each widget will need unique ID)-->
-        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="true" data-widget-deletebutton="false">
+        <div class="jarviswidget jarviswidget-color-orangeDark" id="wid-id-1" data-widget-editbutton="true" data-widget-deletebutton="false">
             <!-- widget options:
             usage: <div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false">
 
@@ -44,8 +44,8 @@
                         </div><!-- /btn-group --> 
 
                         <div class="btn-group">
-                            <a class="btn btn-success btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Registrar cobro de cuotas y recargos</a>
-                            <a class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
+                            <a class="btn btn-primary btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Registrar cobro de cuotas y recargos</a>
+                            <a class="btn btn-primary dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Banca en linea</a></li>
                                 <li><a href="{{ URL::route('createPago', array($un_id, 2)) }}">Transferencia</a></li>

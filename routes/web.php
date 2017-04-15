@@ -390,6 +390,24 @@ use App\Ctmayore;
 use App\library\Grupo;
 
 Route::get('/query', function () {
+      
+     $tcredito= Ctmayore::where('un_id', 1)
+                  ->where('pcontable_id', 2)
+                  ->where('cuenta', 5)
+                  ->sum('credito');
+
+      $tdebito= Ctmayore::where('un_id', 1)
+                  ->where('pcontable_id',2)
+                  ->where('cuenta', 5)
+                  ->sum('debito');
+      //dd($tcredito, $tdebito);        
+      
+      $sa= round(floatval($tcredito),2) - round(floatval($tdebito),2);
+    
+    // si no tiene saldo, iniciliza en cero
+    $sa = ($sa) ? $sa : 0;
+    //dd($sa);    
+    return $sa;
 
 //$data= Seccione::find(1)->secapto;
 

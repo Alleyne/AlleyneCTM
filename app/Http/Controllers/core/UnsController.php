@@ -39,9 +39,9 @@ class UnsController extends Controller {
 	public function indexunall()
 	{
 
-	    // Almacena los datos de las unidades
-	    $datos = Cache::get('unsAllkey');
-	    //dd($datos->toArray());
+    // Almacena los datos de las unidades
+    $datos = Cache::get('unsAllkey');
+    //dd($datos->toArray());
 	    		
 		// Determina el estatus de la unidad (Paz y salvo o Moroso)
 		$i=0;		
@@ -185,12 +185,19 @@ class UnsController extends Controller {
     ************************************************************************************/	
 	public function show($un_id)
 	{
-	    $dato = Un::find($un_id);
+	    //$dato = Un::find($un_id);
 	    //dd($dato->toArray());
 	    
+			// trae los datos de las unidades almacenados en cache
+			$datos = Cache::get('unsAllkey');
+
+			// encuentra los datos de una unidad en especial
+			$dato = $datos->where('id', $un_id)->first();
+			//dd($dato);
+
 	    Cache::forever('indexunallkey', URL::full());
 
-	    if(!empty($dato)) {
+	    if(!is_null($dato)) {
 			//obtiene los datos de la sección
 			$seccion = Seccione::find($dato->seccione_id);	
 			//dd($seccion->toArray());			
@@ -201,46 +208,46 @@ class UnsController extends Controller {
 						->get();
 			
 
-			if ($seccion->tipo==1) {
-				$secapto=Secapto::where('seccione_id', $dato->seccione_id)->first();
-				//dd($secapto->toArray());
-			
-				return view('core.uns.show')
-				            ->with('dato', $dato)
-				            ->with('secapto', $secapto)
-				            ->with('props', $props)
-				            ->with('seccion', $seccion);
-			}
-			
-			elseif ($seccion->tipo==2) {
-				$secre=Secre::where('seccione_id', $dato->seccione_id)->first();
-				//dd($secre->toArray());
-			
-				return view('core.uns.show')
-				            ->with('dato', $dato)
-				            ->with('secre', $secre)
-				            ->with('seccion', $seccion);
-			}
+				if ($seccion->tipo==1) {
+					$secapto=Secapto::where('seccione_id', $dato->seccione_id)->first();
+					//dd($secapto->toArray());
+				
+					return view('core.uns.show')
+					            ->with('dato', $dato)
+					            ->with('secapto', $secapto)
+					            ->with('props', $props)
+					            ->with('seccion', $seccion);
+				}
+				
+				elseif ($seccion->tipo==2) {
+					$secre=Secre::where('seccione_id', $dato->seccione_id)->first();
+					//dd($secre->toArray());
+				
+					return view('core.uns.show')
+					            ->with('dato', $dato)
+					            ->with('secre', $secre)
+					            ->with('seccion', $seccion);
+				}
 
-			elseif ($seccion->tipo==3) {
-				$seclced=Seclced::where('seccione_id', $dato->seccione_id)->first();
-				//dd($Seccled->toArray());
-			
-				return view('core.uns.show')
-				            ->with('dato', $dato)
-				            ->with('seclced', $seclced)
-				            ->with('seccion', $seccion);
-			}
+				elseif ($seccion->tipo==3) {
+					$seclced=Seclced::where('seccione_id', $dato->seccione_id)->first();
+					//dd($Seccled->toArray());
+				
+					return view('core.uns.show')
+					            ->with('dato', $dato)
+					            ->with('seclced', $seclced)
+					            ->with('seccion', $seccion);
+				}
 
-			elseif ($seccion->tipo==4) {
-				$seclcre=Seclcre::where('seccione_id', $dato->seccione_id)->first();
-				//dd($Secclre->toArray());
-			
-				return view('core.uns.show')
-				            ->with('dato', $dato)
-				            ->with('seclcre', $seclcre)
-				            ->with('seccion', $seccion);
-			}			
+				elseif ($seccion->tipo==4) {
+					$seclcre=Seclcre::where('seccione_id', $dato->seccione_id)->first();
+					//dd($Secclre->toArray());
+				
+					return view('core.uns.show')
+					            ->with('dato', $dato)
+					            ->with('seclcre', $seclcre)
+					            ->with('seccion', $seccion);
+				}			
 	    }
 	    else {
 			Session::flash('danger', 'La Unidad administrada No. ' .$un_id. ' no existe.');

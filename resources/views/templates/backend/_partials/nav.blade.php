@@ -6,7 +6,7 @@
 <!-- Escoje la navegación de acuerdo al grupo al que pertenece el usuario -->
 @if (Cache::get('esAdminkey') || Cache::get('esJuntaDirectivakey') || Cache::get('esAdminDeBloquekey'))
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Juntas Directivas</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Juntas Directivas</span></a>
 		<ul>
 			<li>
 			<a href="{{ URL::route('jds.index') }}" ><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Ver Juntas</span></a>  

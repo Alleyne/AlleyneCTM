@@ -45,7 +45,7 @@ class emailUsoDeCuentaAnticipados extends Notification
         return (new MailMessage)
                     ->subject('Se utilizó su cuenta de pagos por anticipados')
                     ->greeting('Buen dia señor(a) '.$this->propietario)
-                    ->line($this->nota.'. Para una información detallada haga click en el boton azul.')
+                    ->line($this->nota.' Para una información detallada haga click en el boton azul.')
                     ->action('Ver estado de cuenta', 'http://ctmaster.net')
                     ->line('Gracias por la atención prestada.');
     }

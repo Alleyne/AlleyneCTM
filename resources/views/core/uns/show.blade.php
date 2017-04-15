@@ -23,7 +23,7 @@
 		<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 		<h2>Detalles de la Unidad </h2>
 		<div class="widget-toolbar">
-			<a href="{{ Cache::get('indexunallkey') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
+			<a href="{{ URL::route('indexunall') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 		</div>
 	</header>
 

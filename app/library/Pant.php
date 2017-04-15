@@ -1,6 +1,7 @@
 <?php namespace App\library;
 
 use App\Ctmayore;
+use Log;
 
 class Pant {
 
@@ -21,7 +22,7 @@ class Pant {
                   ->where('pcontable_id', $periodo)
                   ->where('cuenta', 5)
                   ->sum('credito');
-
+      
       $tdebito= Ctmayore::where('un_id', $un_id)
                   ->where('pcontable_id',$periodo)
                   ->where('cuenta', 5)

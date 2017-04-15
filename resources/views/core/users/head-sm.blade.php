@@ -1,6 +1,6 @@
 <!-- NEW WIDGET START -->
 <!-- Widget ID (each widget will need unique ID)-->
-<div class="jarviswidget jarviswidget-color-orange" id="wid-id-52" data-widget-editbutton="false" data-widget-deletebutton="false">
+<div class="jarviswidget jarviswidget-color-darken" id="wid-id-52" data-widget-editbutton="false" data-widget-deletebutton="false">
 	<!-- widget options:
 	usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 

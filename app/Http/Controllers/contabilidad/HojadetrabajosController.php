@@ -7,6 +7,7 @@ use App\library\Npdo;
 use App\library\Fact;
 use App\library\Hojat;
 use App\library\Grupo;
+use App\library\Ppago;
 
 use Input, Session, Carbon\Carbon;
 use Validator, DB;
@@ -506,7 +507,7 @@ class HojadetrabajosController extends Controller {
       
       // calcula cual seria la fecha del nuevo periodo si se llegara a crear
       $fecha= Carbon::parse($fecha);
-      $fechaNuevoPeriodo= Carbon::parse($fecha)->addMonth();
+      $fechaNuevoPeriodo = Carbon::parse($fecha)->addMonth();
       
       // verifica si el nuevo periodo ya existe
       $newPeriodo= Pcontable::find($pcontable_id + 1);         
@@ -529,7 +530,7 @@ class HojadetrabajosController extends Controller {
         Fact::facturar(Carbon::createFromDate($year, $month, 16));
 
         Hojat::penalizarTipo1($fecha, $pcontable_id);
-
+        
         // Registra en bitacoras
         $detalle =  'Se crea periodo contable de '.Pcontable::all()->last()->periodo;
         Sity::RegistrarEnBitacora(1, 'pcontables', 1, $detalle);     
@@ -561,6 +562,24 @@ class HojadetrabajosController extends Controller {
       // migra los datos de ctdiarios a la tabla de datos historicos ctdiariohis y 
       // posteriormente los borra de la tabla ctdiarios
       Hojat::migraDatosCtdiariohis($pcontable_id);
+      
+      DB::commit();  
+      
+      // encuentra el ultimo periodo contable registrado
+      $periodo= Pcontable::all()->last(); 
+      //dd($periodo);
+
+      // Encuentra todas las unidades que pertenecen a la seccion 
+      $uns= Un::where('activa', 1)->get();
+      // dd($uns->toArray());
+
+      // Por cada apartamento que exista, verifica si se puede realizar pagos de cuotas o recargos utilizando solamente
+      // el contenido de la cuenta de pagos anticipados de la unidad.        
+      foreach ($uns as $un) {
+        Ppago::iniciaPago($un->id, $fechaNuevoPeriodo, $periodo->id, $periodo->periodo);
+      }      
+
+      DB::commit();
 
       // registra en bitacoras
       Sity::RegistrarEnBitacora(17, 'pcontables', $pcontable_id, $periodo);

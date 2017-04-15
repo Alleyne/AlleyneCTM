@@ -41,7 +41,7 @@
                         </div>  
                     @endif
 
-                <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="true" data-widget-deletebutton="false">
+                <div class="jarviswidget jarviswidget-color-greenLight" id="wid-id-1" data-widget-editbutton="true" data-widget-deletebutton="false">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false">
     

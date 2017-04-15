@@ -1947,7 +1947,7 @@ Work::with(
    * log information to console
    ************************************************************************************/
   use Log;
-  Log::info($montoRecibido + $saldocpa);
+  Log::info([$montoRecibido, $importe]);
   Log::info('This is some useful information.');
   Log::warning('Something could be going wrong.');
   Log::error('Something is really going wrong.');
@@ -2120,3 +2120,27 @@ Work::with(
     Es una colación heredada, la cual NO soporta EXPANSIONES.
     Sólo puede hacer comparaciones entre caracteres uno a uno
     Estas comparaciones son muy rápidas
+
+
+  /*************************************************************************************
+   * Encontrar un valor almacenado en una colleccion almacenada en cache
+   ************************************************************************************/
+  // almacena los datos deseados en cache
+  Cache::forever('unsAllkey', Un::all()); 
+
+  // trae los datos de las unidades almacenados en cache
+  $datos = Cache::get('unsAllkey');
+  
+  // encuentra un valor en especial
+  $unCodigo = $datos->where('id', $un_id)->first()->codigo;
+  //dd($unCodigo);
+
+  
+  /*************************************************************************************
+   * Cuando se trata de comparar valores que representan moneda (currency), si el operador de comparacion
+   * incluye el signo de =, ejemplo <=, >= o ==, se debe utilizar la funcion php number_format($valor, 2)
+   * en ambos lados de la comparacion.
+   ************************************************************************************/
+  if (number_format($montoRecibido,2) >= number_format($dato->importe,2)) {
+    code ...
+  }
