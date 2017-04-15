@@ -1051,7 +1051,7 @@ class Hojat {
                 ->orderBy('f_vencimiento')              
                 ->distinct()
                 ->get();
-    //dd($fecha, $vfechas->toArray(), $f_limite->endOfMonth()->toDateString(), $pcontable_id);
+    //dd($fecha, $vfechas->toArray(), $f_limite->toDateString(), $pcontable_id);
     
     // si encuentra alguna fecha, quiere decir que hay unidades a penalizar        
     if ($vfechas->count()>0) {

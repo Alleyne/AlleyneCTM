@@ -80,7 +80,7 @@ class Fact {
         $un_id= $un->id;
         $cuota_mant= floatval($secapto->cuota_mant);
         $descuento= floatval($secapto->descuento);
-        $ocobro= $un->codigo.' OC '.Sity::getMonthName($month).' '.$day.'-'.$year;
+        $ocobro= $un->codigo.' Oc '.Sity::getMonthName($month).' '.$day.'-'.$year;
         $descuento_siono= 0;
         $pagada= 0;
 

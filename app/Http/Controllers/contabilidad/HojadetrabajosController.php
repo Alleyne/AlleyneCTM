@@ -488,109 +488,122 @@ class HojadetrabajosController extends Controller {
   * @return void
   **************************************************************************************************/
   public function cierraPeriodo($pcontable_id, $periodo, $fecha) {
-    //dd($pcontable_id, $periodo, $fecha);
+  //dd($pcontable_id, $periodo, $fecha);
 
     DB::beginTransaction();
     try {
-        
+      
       // verifica que todas las unidades esten debidamente inicializadas
       $datos= Un::where('inicializada', 0)->first();
       if ($datos) {
-          Session::flash('danger', 'Hay algunas unidades que no han sido inicializadas, antes de cerrar el periodo debera inicializar todas las unidades!');
-          //return redirect()->route('pcontables.index');
+        Session::flash('danger', 'Hay algunas unidades que no han sido inicializadas, antes de cerrar el periodo debera inicializar todas las unidades!');
+        //return redirect()->route('pcontables.index');
       }
-      
+
+      // verifica si el nuevo periodo ya existe
+      $newPeriodo= Pcontable::find($pcontable_id + 1);        
+      //dd($newPeriodo);
+
       // Construye la fecha del periodo real
       $year= Carbon::today()->year;
       $month= Carbon::today()->month;
       $periodoReal= Carbon::createFromDate($year, $month, 1);
-      
+
       // calcula cual seria la fecha del nuevo periodo si se llegara a crear
       $fecha= Carbon::parse($fecha);
       $fechaNuevoPeriodo = Carbon::parse($fecha)->addMonth();
-      
-      // verifica si el nuevo periodo ya existe
-      $newPeriodo= Pcontable::find($pcontable_id + 1);         
+
+      //dd($periodoReal, $fecha, $newPeriodo);
 
       // si la fecha del nuevo periodo no es igual a la fecha del periodo real,
-      // entonces se procede a crear el nuevo periodo
+      // entonces se procede a cerrar el periodo actual y crear el nuevo periodo
       if (($periodoReal->ne($fecha)) && !$newPeriodo) {
-          
-        // si no existe entonces crea un nuevo periodo contable
+        
+        // penaliza antes de cerrar el periodo
+        Hojat::penalizarTipo1($fecha, $pcontable_id); 
+        
+        // procede a cerrar el periodo actual              
+        $fnext= clone $fecha;
+        $fnext= $fnext->addMonth();
+       
+        // almacena datos del periodo antes de cerrarlo y las almacena en la tabla Hts (hoja de trabajo historica)
+        Hojat::migraDatosHts($pcontable_id);
+
+        // cierra todas la cuentas nominales o temporales por finalizacion de periodo contable
+        Hojat::cierraCuentasTemp($pcontable_id, $fecha);
+
+        // inicializa las cuentas permanentes en periodo posterior
+        Hojat::inicializaCuentasPerm($pcontable_id, $fnext);
+
+        // cierra el periodo contable
+        $pc= Pcontable::find($pcontable_id);
+        $pc->cerrado= 1;
+        $pc->f_cierre= $fecha->endOfMonth();
+        $pc->save();
+
+        // migra los datos de ctmayores a la tabla de datos historicos ctmayorehi y 
+        // posteriormente los borra de la tabla ctmayores
+        Hojat::migraDatosCtmayorehis($pcontable_id);
+
+        // migra los datos de ctdiarios a la tabla de datos historicos ctdiariohis y 
+        // posteriormente los borra de la tabla ctdiarios
+        Hojat::migraDatosCtdiariohis($pcontable_id);
+        
+        // crea el nuevo periodo contable
         Npdo::periodo($fechaNuevoPeriodo);
 
-        $year= $fechaNuevoPeriodo->year;
-        $month= $fechaNuevoPeriodo->month;
-        
-        // crea facturacion para el nuevo periodo contable
-        // facturacion para las secciones que generan las ordenes de cobro los dias 1
-        Fact::facturar(Carbon::createFromDate($year, $month, 1));
-        
-        // facturacion para las secciones que generan las ordenes de cobro los dias 16
-        Fact::facturar(Carbon::createFromDate($year, $month, 16));
+        DB::commit();            
 
-        Hojat::penalizarTipo1($fecha, $pcontable_id);
-        
-        // Registra en bitacoras
-        $detalle =  'Se crea periodo contable de '.Pcontable::all()->last()->periodo;
-        Sity::RegistrarEnBitacora(1, 'pcontables', 1, $detalle);     
-      } 
-        
-      // procede a cerrar el periodo               
-      $fnext= clone $fecha;
-      $fnext= $fnext->addMonth();
+        // registra en bitacoras
+        Sity::RegistrarEnBitacora(17, 'pcontables', $pcontable_id, 'Cierra periodo contable de '.$periodo);
 
-      // almacena datos del periodo antes de cerrarlo y las almacena en la tabla Hts (hoja de trabajo historica)
-      Hojat::migraDatosHts($pcontable_id);
+        // verifica si se creo con exito el nuevo periodo
+        $newPeriodo= Pcontable::find($pcontable_id + 1);        
+        //dd($newPeriodo);
 
-      // cierra todas la cuentas nominales o temporales por finalizacion de periodo contable
-      Hojat::cierraCuentasTemp($pcontable_id, $fecha);
-      
-      // inicializa las cuentas permanentes en periodo posterior
-      Hojat::inicializaCuentasPerm($pcontable_id, $fnext);
+        if ($newPeriodo) {
 
-      // cierra el periodo contable
-      $pc= Pcontable::find($pcontable_id);
-      $pc->cerrado= 1;
-      $pc->f_cierre= $fecha->endOfMonth();
-      $pc->save();
-      
-      // migra los datos de ctmayores a la tabla de datos historicos ctmayorehi y 
-      // posteriormente los borra de la tabla ctmayores
-      Hojat::migraDatosCtmayorehis($pcontable_id);
-      
-      // migra los datos de ctdiarios a la tabla de datos historicos ctdiariohis y 
-      // posteriormente los borra de la tabla ctdiarios
-      Hojat::migraDatosCtdiariohis($pcontable_id);
-      
-      DB::commit();  
-      
-      // encuentra el ultimo periodo contable registrado
-      $periodo= Pcontable::all()->last(); 
-      //dd($periodo);
+          $year= $fechaNuevoPeriodo->year;
+          $month= $fechaNuevoPeriodo->month;
 
-      // Encuentra todas las unidades que pertenecen a la seccion 
-      $uns= Un::where('activa', 1)->get();
-      // dd($uns->toArray());
+          // crea facturacion para el nuevo periodo contable
+          // facturacion para las secciones que generan las ordenes de cobro los dias 1
+          Fact::facturar(Carbon::createFromDate($year, $month, 1));
 
-      // Por cada apartamento que exista, verifica si se puede realizar pagos de cuotas o recargos utilizando solamente
-      // el contenido de la cuenta de pagos anticipados de la unidad.        
-      foreach ($uns as $un) {
-        Ppago::iniciaPago($un->id, $fechaNuevoPeriodo, $periodo->id, $periodo->periodo);
-      }      
+          // facturacion para las secciones que generan las ordenes de cobro los dias 16
+          Fact::facturar(Carbon::createFromDate($year, $month, 16));
 
-      DB::commit();
 
-      // registra en bitacoras
-      Sity::RegistrarEnBitacora(17, 'pcontables', $pcontable_id, $periodo);
-      DB::commit();             
-      Session::flash('success', 'Periodo '.$periodo.' ha sido cerrado permanentemente!');
-      return redirect()->route('pcontables.index');
-    
+
+          // Encuentra todas las unidades que pertenecen a la seccion 
+          $uns= Un::where('activa', 1)->get();
+          // dd($uns->toArray());
+
+          // Por cada apartamento que exista, verifica si se puede realizar pagos de cuotas o recargos utilizando solamente
+          // el contenido de la cuenta de pagos anticipados de la unidad.        
+          foreach ($uns as $un) {
+            Ppago::iniciaPago($un->id, $fechaNuevoPeriodo, $newPeriodo->id, $newPeriodo->periodo);
+          }  
+
+          DB::commit();         
+
+          // Registra en bitacoras
+          $detalle =  'Se crea periodo contable de '.$newPeriodo->periodo;
+          Sity::RegistrarEnBitacora(1, 'pcontables', 1, $detalle);
+
+          Session::flash('success', 'Periodo '.$periodo.' ha sido cerrado permanentemente!');
+          return redirect()->route('pcontables.index');        
+        }
+
+      } else {
+        Session::flash('warning', 'No se puede cerrar el presente periodo ya que existe un periodo posterios!');
+        return redirect()->route('pcontables.index'); 
+      }
+
     } catch (\Exception $e) {
-        DB::rollback();
-        Session::flash('warning', ' Ocurrio un error en el modulo HojadetrabajosController.cierraPeriodo, la transaccion ha sido cancelada! '.$e->getMessage());
-        return back();
+      DB::rollback();
+      Session::flash('warning', ' Ocurrio un error en el modulo HojadetrabajosController.cierraPeriodo, la transaccion ha sido cancelada! '.$e->getMessage());
+      return back();
     }
   }
 } // fin de controller
