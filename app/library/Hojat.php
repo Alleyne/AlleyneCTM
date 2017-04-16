@@ -43,7 +43,7 @@ class Hojat {
           $data->cuenta           = $dato['cuenta'];
           $data->codigo           = $dato['codigo'];
           $data->fecha            = $fecha;
-          $data->detalle          = $dato['cta_nombre'].' '.$pdo;
+          $data->detalle          = 'Inicializa, '.$dato['cta_nombre'].', por cierre '.$pdo;
           $data->debito           = $dato['saldoAjustado_debito'];
           $data->credito          = $dato['saldoAjustado_credito'];
           $data->save();
@@ -81,7 +81,7 @@ class Hojat {
           $data->cuenta           = $dato['cuenta'];
           $data->codigo           = $dato['codigo'];
           $data->fecha            = $fecha;
-          $data->detalle          = $dato['cta_nombre'].' '.$pdo;
+          $data->detalle          = 'Inicializa, '.$dato['cta_nombre'].', por cierre '.$pdo;
           $data->debito           = $dato['saldoAjustado_debito'];
           $data->credito          = $dato['saldoAjustado_credito'];
           $data->un_id            = 0;
@@ -112,8 +112,8 @@ class Hojat {
       // Encuentra saldo a favor en cuenta 2010.00 No. 5 "Anticipos y avances recibidos de propietarios" 
       $saldocpa= Pant::getSaldoCtaPagosAnticipados($un->un_id, $pcontable_id);
       //dd($saldocpa);
-      
-      $detalle= Catalogo::find(5)->nombre.', '.Un::find($un->un_id)->codigo;
+
+      $detalle= 'Inicializa, '.Catalogo::find(5)->nombre.', '.Un::find($un->un_id)->codigo.', por cierre '.$pdo;
       
       // registra en la tabla ctmayores
       $data = new Ctmayore;

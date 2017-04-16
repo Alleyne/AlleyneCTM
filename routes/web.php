@@ -250,6 +250,10 @@ Route::group(['namespace' => 'contabilidad'], function()
   Route::get('identificarPagoCreate/{pagosnoid_id}', 'PagosnoidsController@identificarPagoCreate')->name('identificarPagoCreate');
 	Route::resource('pagosnoids', 'PagosnoidsController');
 
+	//---------------------------------------------------------//
+	// Funciones del controlador ServiproductosController
+	//---------------------------------------------------------// 		
+	Route::resource('serviproductos', 'ServiproductosController');
 
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');

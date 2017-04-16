@@ -13,18 +13,7 @@
 			<article class="col-sm-12 col-md-12 col-lg-12">
 	
 				<!-- Widget ID (each widget will need unique ID)-->
-				<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
-					<!-- widget options:
-					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-	
-					data-widget-colorbutton="false"
-					data-widget-editbutton="false"
-					data-widget-togglebutton="false"
-					data-widget-deletebutton="false"
-					data-widget-fullscreenbutton="false"
-					data-widget-custombutton="false"
-					data-widget-collapsed="true"
-					data-widget-sortable="false" -->
+				<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0">
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
@@ -48,29 +37,22 @@
 	 									{{ csrf_field() }}
 	 									{{ Form::hidden('un_id', $un_id) }}
 										
-										<!-- Multiple Radios (inline) -->
-										<div class="form-group">
-										  <label class="col-md-3 control-label" for="radios">Tipo de inicializacion:</label>
-										  <div class="col-md-9"> 
-										    <label class="radio-inline" for="radios-0">
-										      <input type="radio" name="tipoini_radios" id="tipoini-1" value="1" checked="checked">
-										      Arreglo de pago por cuotas adeudadas
-										    </label> 
-										    <label class="radio-inline" for="radios-1">
-										      <input type="radio" name="tipoini_radios" id="tipoini-2" value="2">
-										      Pagos anticipados
-										    </label>
-										  </div>
+										<div class="col-sm-12 mensaje_1">
+											<div class="alert alert-block alert-warning">
+												<a class="close" data-dismiss="alert" href="#">×</a>
+												<h4 class="alert-heading">Inicializar una unidad con deuda acumulada!</h4>
+												Si una unidad tiene una deuda acumulada en cuotas de mantenimiento regular o extraordinarias, recargos, multas y otros, se debera calcular el monto total y conversar con el propietario para acordar un arreglo de pago. En el arreglo de pago se dividira la totalidad de la deuda en meses para que sea mas comodo para el propietario cancelar la totalidad de la deuda. Esta deuda se cargara a la cuenta de Cuotas de mantinimiento por cobrar para facilitar el proceso de inicializacion y cobro de la misma.
+											</div>
 										</div>
-
-										<div class="form-group totalmeses">
-											<label class="col-md-3 control-label">Total de meses adeudados</label>
+										
+										<div class="form-group">
+											<label class="col-md-3 control-label">Total de meses</label>
 											<div class="col-md-9">
 												{{ Form::text('meses', old('meses'),
 													array(
 													    'class' => 'form-control',
 													    'id' => 'meses',
-													    'placeholder' => 'Escriba en numero de meses atrasados que debe la unidad...',
+													    'placeholder' => 'Escriba en numero de meses acordados con el propietario para cancelar la deuda!',
 														'autocomplete' => 'off'
 													))
 												}} 
@@ -78,14 +60,14 @@
 											</div>
 										</div>	
 										
-										<div class="form-group totalmonto">
+										<div class="form-group">
 											<label class="col-md-3 control-label">Monto total adeudado</label>
 											<div class="col-md-9">
 												{{ Form::text('monto', old('monto'),
 													array(
 													    'class' => 'form-control',
 													    'id' => 'monto',
-													    'placeholder' => 'Escriba el monto total adeudado en cuotas de mantenimiento...',
+													    'placeholder' => 'Escriba el monto total adeudado por el propietario!',
 														'autocomplete' => 'off'
 													))
 												}} 
@@ -93,14 +75,24 @@
 											</div>
 										</div>					
 										
-										<div class="form-group totalanticipados" style="display: none;">
+										<hr>
+										
+										<div class="col-sm-12">
+											<div class="alert alert-block alert-warning">
+												<a class="close" data-dismiss="alert" href="#">×</a>
+												<h4 class="alert-heading">Inicializar una unidad con pagos anticipados!</h4>
+												Si una unidad presenta pagos anticipados, se debera registrar la totalidad. Este monto sera utilizado por el sistema para cobrar o completar pagos ya se de Cuotas de mantenimiento regular o extraordinaria y recargos en un futuro. Se considera que este dinero ya esta depositado en la cuenta de banco.
+											</div>
+										</div>
+
+										<div class="form-group">
 											<label class="col-md-3 control-label">Total de pagos anticipados</label>
 											<div class="col-md-9">
 												{{ Form::text('anticipados', old('anticipados'),
 													array(
 													    'class' => 'form-control',
 													    'id' => 'anticipados',
-													    'placeholder' => 'Escriba el monto total adeudado en recargos ...',
+													    'placeholder' => 'Escriba el monto total en pagos anticipados!',
 														'autocomplete' => 'off'
 													))
 												}} 
@@ -131,39 +123,6 @@
 @stop
 
 @section('relatedplugins')
-	<script type="text/javascript">
-		$(document).ready(function() {
-			pageSetUp();
-			
-			// PAGE RELATED SCRIPTS
-			$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
-			$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
-				var children = $(this).parent('li.parent_li').find(' > ul > li');
-				if (children.is(':visible')) {
-					children.hide('fast');
-					$(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
-				} else {
-					children.show('fast');
-					$(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
-				}
-				e.stopPropagation();
-			});			
-		})
-	
-	   $("#tipoini-1").click(function(){
-	       $(".totalmeses").show();
-	       $(".totalmonto").show();
-	       $(".totalanticipados").hide();
-	   });
-
-	   $("#tipoini-2").click(function(){
-	       $(".totalmeses").hide();
-	       $(".totalmonto").hide();
-	       $(".totalanticipados").show();
-	   });
-
-	</script>
-
 	<script type="text/javascript">
 	  $(document).ready(function(){
 	    $("input[type='submit']").attr("disabled", false);

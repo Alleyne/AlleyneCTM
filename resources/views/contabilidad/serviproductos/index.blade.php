@@ -27,12 +27,10 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-							<h2>Serviproductos vinculados al proveedor </h2>
+							<h2>Serviproductos </h2>
 							<div class="widget-toolbar">
-								<a href="{{ URL::route('orgs.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
-
 								<button class="btn btn-success" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
-									 Vincular serviproducto
+									 Crear serviproducto
 								</button>
 							</div>
 						</header>
@@ -58,8 +56,9 @@
 								<table id="dt_basic" class="table table-hover">
 									<thead>
 										<tr>
-											<th col width="25px">ID</th>
+											<th col width="15px">ID</th>
 											<th>NOMBRE</th>
+											<th col width="35px">TIPO</th>
 											<th col width="130px" class="text-center"><i class="fa fa-gear fa-lg"></i></th>								
 										</tr>
 									</thead>
@@ -68,10 +67,14 @@
 											<tr>
 												<td><strong>{{ $dato->id }}</strong></td>
 												<td><strong>{{ $dato->nombre }}</strong></td>
+												<td>{{ $dato->tipo ? 'Servicio' : 'Producto' }}</td>
 												<td align="right">
 													<ul class="demo-btns">
 														<div id="ask_1" class="btn btn-warning btn-xs">
-															<a href="{{ URL::route('desvincularServiproducto', array($org_id, $dato->id)) }}" title="Desvincular"><i class="fa fa-search"></i> Desvincular</a>
+															<a href="#" title="Desvincular"><i class="fa fa-search"></i> Editar</a>
+														</div>
+														<div id="ask_1" class="btn btn-warning btn-xs">
+															<a href="#" title="Desvincular"><i class="fa fa-search"></i> Eliminar</a>
 														</div>
 													</ul>
 												</td>
@@ -106,43 +109,39 @@
 					</div>
 					<div class="modal-body">
 
-						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'vinculaServiproductoStore')) }}
+						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'serviproductos.store')) }}
 							<fieldset>
-								{{ Form::hidden('org_id', $org_id) }}
-								<!-- Multiple Radios (inline) -->
-								<div class="form-group">
-								  <label class="col-md-3 control-label" for="radios">Tipo</label>
-								  <div class="col-md-9"> 
-								    <label class="radio-inline" for="radios-0">
-								      <input type="radio" name="tipo_radios" id="tipo-1" value="0" checked="checked">
-								      Producto
-								    </label> 
-								    <label class="radio-inline" for="radios-1">
-								      <input type="radio" name="tipo_radios" id="tipo-2" value="1">
-								      Servicio
-								    </label>
-								  </div>
-								</div>
 
-								<div class="row productos">
-									<div class="col-md-12">
 										<div class="form-group">
-											<label for="productos"> Productos</label>
-											{{ Form::select('producto_id', array('' => 'Escoja el serviproducto que desea vincular...') + $productos, array('title' => 'Escoja el serviproducto que desea vincular')) }}
-											{!! $errors->first('producto_id', '<li style="color:red">:message</li>') !!}
+											<label class="col-md-2 control-label">Nombre</label>
+											<div class="col-md-10">
+												{{ Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre de la Organizacion...', 'autocomplete' => 'off')) }}
+												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
+											</div>
 										</div>
-									</div>
-								</div>
-								
-								<div class="row servicios" style="display: none;">
-									<div class="col-md-12">
+										
+										<!-- Multiple Radios (inline) -->
 										<div class="form-group">
-											<label for="servicios"> Servicios</label>
-											{{ Form::select('servicio_id', array('' => 'Escoja el serviproducto que desea vincular...') + $servicios, array('title' => 'Escoja el serviproducto que desea vincular')) }}
-											{!! $errors->first('servicio_id', '<li style="color:red">:message</li>') !!}
+										  <label class="col-md-3 control-label" for="radios">Tipo</label>
+										  <div class="col-md-9"> 
+										    <label class="radio-inline" for="radios-0">
+										      <input type="radio" name="tipo_radios" id="tipo-1" value="0" checked="checked">
+										      Producto
+										    </label> 
+										    <label class="radio-inline" for="radios-1">
+										      <input type="radio" name="tipo_radios" id="tipo-2" value="1">
+										      Servicio
+										    </label>
+										  </div>
 										</div>
-									</div>
-								</div>
+
+										<div class="form-group">
+											<label class="col-md-2 control-label">Cuenta</label>
+											<div class="col-md-10">
+											{{ Form::select('catalogo_id', array('' => 'Escoja la cuenta a la que pertence el serviproducto!') + $cuentas, array('title' => 'Escoja la cuenta a la que pertence el serviproducto!')) }}
+											{!! $errors->first('catalogo_id', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>
 
 							</fieldset>				
 							
@@ -172,18 +171,4 @@
         });
     })
     </script>
-    
-    <script>	
-	   $("#tipo-1").click(function(){
-	       $(".productos").show();
-	       $(".servicios").hide();
-	   });
-
-	   $("#tipo-2").click(function(){
-	       $(".productos").hide();
-	       $(".servicios").show();
-	   });
-
-	</script>
-
 @stop

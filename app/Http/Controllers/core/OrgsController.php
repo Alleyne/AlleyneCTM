@@ -3,7 +3,7 @@ namespace App\Http\Controllers\core;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Grupo;
+use Grupo, DB;
 use App\library\Sity;
 use Session;
 
@@ -50,22 +50,31 @@ class OrgsController extends Controller
 		$datos_1 = $datos->pluck('nombre', 'id')->all(); 
     //dd($datos_1);
 
-    //Obtiene todos los serviproductos registrados en la base de datos
-    $datos_2= Serviproducto::orderBy('nombre')->get();
+    //Obtiene solo los productos registrados en la tabla serviproductos
+    $datos_2= Serviproducto::where('tipo', 0)->orderBy('nombre')->get();
     $datos_2= $datos_2->pluck('nombre', 'id')->all();       
     //dd($datos_1, $datos_2);
         
+    //Obtiene solo los servicios registrados en la tabla serviproductos
+    $datos_3= Serviproducto::where('tipo', 1)->orderBy('nombre')->get();
+    $datos_3= $datos_3->pluck('nombre', 'id')->all();       
+    //dd($datos_1, $datos_2, $datos_3);    
+
     // Subtrae de la lista total serviproductos registrados toda aquellos
     // que ya están asignadas a una organizacion
     // para evitar asignar serviproductos previamente asignadas
-		$serviproductos = array_diff($datos_2, $datos_1);		
-		//dd($serviproductos);  
+		$productos = array_diff($datos_2, $datos_1);		
+		//dd($productos);  
+    
+    $servicios = array_diff($datos_3, $datos_1);    
+    //dd($datos_1, $productos, $servicios); 		
  		
- 		return view('core.orgs.serviproductosPorOrg')
+    return view('core.orgs.serviproductosPorOrg')
  				->with('datos', $datos)
  				->with('org_id', $org_id)
- 				->with('serviproductos', $serviproductos);
-	}
+ 				->with('productos', $productos)
+        ->with('servicios', $servicios);
+  }
 
   /**
    * Store a newly created resource in storage.
@@ -191,41 +200,61 @@ class OrgsController extends Controller
   }
 
   /*************************************************************************************
-   * Almacena un nuevo registro en la base de datos
-   ************************************************************************************/	
-	public function vinculaServiproductoStore()
-	{
-    //dd(Input::all());
-    $input = Input::all();
-    $rules = array(
-      'id' => 'required'
-    );
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   *************************************************************************************/
+  public function vinculaServiproductoStore(Request $request) {
+    //dd($request->toArray());
+    
+    DB::beginTransaction();
+    try {
 
-    $messages = [
-      'required' => 'El campo :attribute es requerido!',
-      'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
-    ];        
+      if ($request->tipo_radios == 0) {
+        $this->validate($request, array(
+          'producto_id' => 'Required'
+        ));
+      
+        $org= Org::find($request->org_id);
+        $org->serviproductos()->attach($request->producto_id);   
         
-    $validation = \Validator::make($input, $rules, $messages);      	
+        $productoNombre = Serviproducto::find($request->producto_id)->nombre;
+        $detalle =  'Vincula '.$productoNombre. ' a proveedor '. $org->nombre;
 
-		if ($validation->passes())
-		{
-			
-			$org= Org::find(Input::get('org_id'));
-			$org->serviproductos()->attach(Input::get('id'));		
-			
-			$serviproductonombre = Catalogo::find(Input::get('id'))->nombre;
+        // Registra en bitacoras
+        Sity::RegistrarEnBitacora(10, 'org_serviproducto',1, $detalle);
+        Session::flash('success', $productoNombre.' ha sido vinculada a el proveedor '. $org->nombre);
+        
+        DB::commit();     
+        return back();
 
-			// Registra en bitacoras
-			$detalle =	'Vincula cuenta '.	$serviproductonombre. ' a proveedor '. $org->nombre;
- 			Sity::RegistrarEnBitacora(10, 'org_serviproducto',1, $detalle);
-			
-			Session::flash('success', 'El serviproducto ' .$serviproductonombre. ' ha sido vinculada a el proveedor '. $org->nombre);
-			return back();
-		}
-    return back()->withInput()->withErrors($validation);
-	}
+      } else {
+        $this->validate($request, array(
+          'servicio_id' => 'Required'
+        ));
+        
+        $org= Org::find($request->org_id);
+        $org->serviproductos()->attach($request->servicio_id);   
+        
+        $servicioNombre = Serviproducto::find($request->servicio_id)->nombre;
+        $detalle =  'Vincula '.$servicioNombre. ' a proveedor '. $org->nombre;
+        
+        // Registra en bitacoras
+        Sity::RegistrarEnBitacora(10, 'org_serviproducto',1, $detalle);
+        Session::flash('success', $servicioNombre.' ha sido vinculada a el proveedor '. $org->nombre);
+        
+        DB::commit();     
+        return back();
+      }
+    
+    } catch (\Exception $e) {
+      DB::rollback();
+      Session::flash('warning', ' Ocurrio un error en el modulo OrgsController.vinculaServiproductoStore, la transaccion ha sido cancelada! '.$e->getMessage());
+      return back();
+    }
 
+  }
 
   /*************************************************************************************
    * Almacena un nuevo registro en la base de datos

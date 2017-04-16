@@ -81,7 +81,7 @@
 		</ul>
 	</li>
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-book"></i> <span class="menu-item-parent">Serviproductos</span></a>
+		<a href="{{ URL::route('serviproductos.index') }}"><i class="fa fa-lg fa-fw fa-book"></i> <span class="menu-item-parent">Serviproductos</span></a>
 	</li>
 	<li>
 		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-truck"></i> <span class="menu-item-parent">Proveedores</span></a>

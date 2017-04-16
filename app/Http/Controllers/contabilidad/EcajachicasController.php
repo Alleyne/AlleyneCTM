@@ -162,8 +162,9 @@ class EcajachicasController extends Controller
 					$ecajachica->etapa = 1;
 					$ecajachica->save();
 				
+					DB::commit(); 					
 					Session::flash('success', 'Se registrado un nuevo egreso de caja chica!');
-					DB::commit();       
+      
 					return redirect()->route('ecajachicas.index');
 				}       
 		
