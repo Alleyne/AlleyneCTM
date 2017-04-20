@@ -97,64 +97,73 @@
 		
 		</section>
 		<!-- end widget grid -->
-		<!-- Modal -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-							&times;
-						</button>
-						<h4 class="modal-title" id="myModalLabel">Vincular serviproducto</h4>
-					</div>
-					<div class="modal-body">
-
-						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'serviproductos.store')) }}
-							<fieldset>
-
-										<div class="form-group">
-											<label class="col-md-2 control-label">Nombre</label>
-											<div class="col-md-10">
-												{{ Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre de la Organizacion...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>
-										
-										<!-- Multiple Radios (inline) -->
-										<div class="form-group">
-										  <label class="col-md-3 control-label" for="radios">Tipo</label>
-										  <div class="col-md-9"> 
-										    <label class="radio-inline" for="radios-0">
-										      <input type="radio" name="tipo_radios" id="tipo-1" value="0" checked="checked">
-										      Producto
-										    </label> 
-										    <label class="radio-inline" for="radios-1">
-										      <input type="radio" name="tipo_radios" id="tipo-2" value="1">
-										      Servicio
-										    </label>
-										  </div>
-										</div>
-
-										<div class="form-group">
-											<label class="col-md-2 control-label">Cuenta</label>
-											<div class="col-md-10">
-											{{ Form::select('catalogo_id', array('' => 'Escoja la cuenta a la que pertence el serviproducto!') + $cuentas, array('title' => 'Escoja la cuenta a la que pertence el serviproducto!')) }}
-											{!! $errors->first('catalogo_id', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>
-
-							</fieldset>				
+		
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Agregar serviproducto</h4>
+				</div>
+				<div class="modal-body">
+	
+					{{ Form::open(array('class' => 'form-horizontal', 'route' => 'serviproductos.store')) }}
+						<fieldset>
 							
-							<div class="form-actions">
-								{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
-								<button type="button" class="btn btn-default" data-dismiss="modal">
-									Cancel
-								</button>
+							<!-- Multiple Radios (inline) -->
+							<div class="form-group">
+							  <label class="col-md-3 control-label" for="radios">Tipo</label>
+							  <div class="col-md-9"> 
+							    <label class="radio-inline" for="radios-0">
+							      <input type="radio" name="tipo_radios" id="tipo-1" value="0" checked="checked">
+							      Producto
+							    </label> 
+							    <label class="radio-inline" for="radios-1">
+							      <input type="radio" name="tipo_radios" id="tipo-2" value="1">
+							      Servicio
+							    </label>
+							  </div>
 							</div>
-						{{ Form::close() }}
-				</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
+							
+							<div class="form-group">
+								<label class="col-md-3 control-label">Nombre</label>
+								<div class="col-md-9">
+									{{ Form::text('nombre', old('nombre'),
+										array(
+										    'class' => 'form-control',
+										    'id' => 'nombre',
+										    'placeholder' => 'Escriba el nombre del serviproducto!',
+												'autocomplete' => 'off',
+										))
+									}} 
+									{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label">Cuenta</label>
+								<div class="col-md-9">
+									{{ Form::select('catalogo_id', ['' => 'Escoja la cuenta a la que pertence el serviproducto!'] + $cuentas, 0, ['class' => 'form-control']) }}
+									{!! $errors->first('catalogo_id', '<li style="color:red">:message</li>') !!}
+								</div>
+							</div>
+
+						</fieldset>				
+						
+						<div class="form-actions">
+							{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
+							<button type="button" class="btn btn-default" data-dismiss="modal">
+								Cancel
+							</button>
+						</div>
+					{{ Form::close() }}
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->	
+
 @stop
 
 @section('relatedplugins')

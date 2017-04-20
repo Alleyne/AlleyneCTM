@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Session, DB;
 use App\library\Sity;
+use Carbon\Carbon;
 
 use App\Cajachica;
 use App\Org;
@@ -81,6 +82,33 @@ class CajachicasController extends Controller
         'user_id' => 'required|Numeric|min:1'
       ));
 
+      // encuentra el periodo mas antiguo abierto
+      $periodo= Pcontable::where('cerrado', 0)->orderBy('id')->first();
+      //dd($periodo);
+
+      if (!$periodo) {
+        Session::flash('danger', '<< ERROR >> No existe ningun periodo contable abierto, debera crear un nuevo periodo para poder crear o reabrir una Caja chica!');
+        return back()->withInput();
+      }
+
+      // convierte la fecha string a carbon/carbon
+      $f_cajachica = Carbon::parse($request->fecha);   
+      $month= $f_cajachica->month;    
+      $year= $f_cajachica->year; 
+      
+      // determina el periodo al que corresponde la fecha de pago    
+      $pdo= Sity::getMonthName($month).'-'.$year;
+      
+      // encuentra el periodo mas antiguo abierto
+      $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+      //dd($periodo);
+
+      // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+      if ($pdo != $periodo->periodo) {
+        Session::flash('danger', '<< ERROR >> Solamente se permite crear una Caja chica si su fecha correspondan al periodo vigente de '.$periodo->periodo);
+        return back()->withInput();
+      }
+      
       // calcula el saldo actual de la caja chica
       $montoActual = Dte_cajachica::all()->last();
       if ($montoActual) {
@@ -111,10 +139,6 @@ class CajachicasController extends Controller
       $dte_cajachica->cajachica_id = $cajachica->id;
       $dte_cajachica->save();   
      
-      // encuentra el periodo mas antiguo abierto
-      $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
-      //dd($periodo);
-      
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
@@ -133,7 +157,7 @@ class CajachicasController extends Controller
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle = 'Para registrar deposito bancario por creacion de caja chica, chq no. '.$request->doc_no;
+      $dato->detalle = 'Para registrar deposito bancario por creacion de caja chica #'.$cajachica->id.', chq #'.$request->doc_no;
       $dato->save(); 
       
       Sity::registraEnCuentas(
@@ -142,7 +166,7 @@ class CajachicasController extends Controller
         1,
         30,
         $request->fecha,
-        'Para registrar deposito bancario por creacion de caja chica, chq no. '.$request->doc_no,
+        'Para registrar deposito bancario por creacion de caja chica #'.$cajachica->id.', chq #'.$request->doc_no,
         $request->monto,
         Null,
         Null,
@@ -158,7 +182,7 @@ class CajachicasController extends Controller
         1,
         8,
         $request->fecha,
-        Catalogo::find(8)->nombre.', '. 'Para registrar deposito bancario por creacion de caja, chq no. '.$request->doc_no,
+        'Para registrar deposito bancario por creacion de caja chica #'.$cajachica->id.', chq #'.$request->doc_no,
         $request->monto,
         Null,
         Null,

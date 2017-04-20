@@ -34,14 +34,14 @@
                             La Caja chica no tiene saldo!
                         </div>  
                     @else
-                        <div class="alert alert-success alert-dismissible" role="alert">
+                        <div class="alert alert-info alert-dismissible" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <strong>ATENCION! </strong>
                             Caja chica saldo actual <strong> B/.{{ $saldoCajaChica }} </strong>
                         </div>  
                     @endif
 
-                <div class="jarviswidget jarviswidget-color-greenLight" id="wid-id-1" data-widget-editbutton="true" data-widget-deletebutton="false">
+                <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-fullscreenbutton="false" data-widget-togglebutton="false" data-widget-editbutton="true" data-widget-deletebutton="false">
                     <!-- widget options:
                     usage: <div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false">
     

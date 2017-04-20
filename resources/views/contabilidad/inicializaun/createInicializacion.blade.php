@@ -45,21 +45,16 @@
 											</div>
 										</div>
 										
-										<div class="form-group">
-											<label class="col-md-3 control-label">Total de meses</label>
-											<div class="col-md-9">
-												{{ Form::text('meses', old('meses'),
-													array(
-													    'class' => 'form-control',
-													    'id' => 'meses',
-													    'placeholder' => 'Escriba en numero de meses acordados con el propietario para cancelar la deuda!',
-														'autocomplete' => 'off'
-													))
-												}} 
-												{!! $errors->first('meses', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>	
-										
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Total de meses</label>
+                        <div class="col-md-9">
+                            <input class="form-control spinner-left"  id="spinner3" name="meses" value= "1" min="1" max="6" type="number">
+                            <p class="text-left">Escriba en numero de meses acordados con el propietario para cancelar la deuda! (1 a 6 meses) </p>
+                            {!! $errors->first('meses', '<li style="color:red">:message</li>') !!}
+                        </div>
+                    </div>
+
+
 										<div class="form-group">
 											<label class="col-md-3 control-label">Monto total adeudado</label>
 											<div class="col-md-9">
@@ -131,5 +126,15 @@
 	      return true;
 	    })
 	  })
+    
+    // Spinners
+    $("#spinner3").spinner({
+        min: 1,
+        max: 6,
+        step: 1,
+        start: 1,
+        numberFormat: "C"
+    }); 
+
 	</script>
 @stop

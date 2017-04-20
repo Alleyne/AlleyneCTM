@@ -61,8 +61,8 @@ class DesembolsosController extends Controller
 		public function store()
 		{
 				
-			DB::beginTransaction();
-			try {
+			//DB::beginTransaction();
+			//try {
 
 				//dd(Input::all());
 				$input = Input::all();
@@ -120,22 +120,22 @@ class DesembolsosController extends Controller
 
 						Session::flash('success', 'Se registrado un nuevo desembolso de caja chica!');
 						DB::commit();       
-						return redirect()->route('desembolsos.index');
+						return redirect()->route('verDesembolsos');
 					
 					} else {
 						Session::flash('danger', '<< ATENCION >> No se puede crear el desembolso ya que no existe ningun servicio o producto pagados por caja chica!');
-						return redirect()->route('desembolsos.index');
+						return redirect()->route('cajachicas.index');
 					}
 				}       
 		
 				Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
 				return back()->withInput()->withErrors($validation);
 
-			} catch (\Exception $e) {
-				DB::rollback();
-				Session::flash('warning', ' Ocurrio un error en el modulo DesembolsosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-				return back()->withInput()->withErrors($validation);
-			}
+			//} catch (\Exception $e) {
+				//DB::rollback();
+				//Session::flash('warning', ' Ocurrio un error en el modulo DesembolsosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+				//return back()->withInput()->withErrors($validation);
+			//}
 		}
 
 		/**

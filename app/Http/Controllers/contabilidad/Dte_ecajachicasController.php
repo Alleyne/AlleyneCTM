@@ -29,23 +29,43 @@ class Dte_ecajachicasController extends Controller {
 	{
     $datos = Dte_ecajachica::where('ecajachica_id', $ecajachica_id)
     				->join('serviproductos', 'serviproductos.id', '=', 'dte_ecajachicas.serviproducto_id')
-            ->select('dte_ecajachicas.id','serviproductos.catalogo_id','serviproductos.nombre','dte_ecajachicas.cantidad','dte_ecajachicas.precio','dte_ecajachicas.itbms')
+            ->select('dte_ecajachicas.id','serviproductos.catalogo_id','serviproductos.nombre','serviproductos.tipo', 'dte_ecajachicas.cantidad','dte_ecajachicas.precio','dte_ecajachicas.itbms')
             ->get();
     //dd($datos->toArray());		
 
-		// encuentra todos los productos y servicios registrados en el egreso de caja chica
-		$datos_2= $datos->pluck('nombre', 'id')->all();       
-		//dd($datos_2);
-   
     // encuentra los datos generales del encabezado de egreso de caja chica
     $ecajachica= Ecajachica::find($ecajachica_id);
 		//dd($ecajachica->toArray());
-    
-    // encuentra los serviproductos asignados a un determinado proveedor
-		$serviproductos = Org::find($ecajachica->org_id)->serviproductos;
-		$datos_1= $serviproductos->pluck('nombre', 'id')->all();   
-    //dd($datos_1, $datos_2);
 
+    //Obtiene todos los productos registrados en la factura de egresos de caja chica
+    $datos_1= $datos->where('tipo', 0);
+    $datos_1= $datos_1->pluck('nombre', 'id')->all();       
+    //dd($datos_2);
+        
+    //Obtiene todos los servicios registrados en la factura de egresos de caja chica
+    $datos_2= $datos->where('tipo', 1);
+    $datos_2= $datos_2->pluck('nombre', 'id')->all();       
+   
+    // encuentra todos los productos asignados a un determinado proveedor
+		$datos_3 = Org::find($ecajachica->org_id)->serviproductos()->where('tipo', 0);
+    $datos_3= $datos_3->pluck('nombre', 'serviproductos.id')->all();   
+    
+    // encuentra todos los servicios asignados a un determinado proveedor
+		$datos_4 = Org::find($ecajachica->org_id)->serviproductos()->where('tipo', 1);
+    $datos_4= $datos_4->pluck('nombre', 'serviproductos.id')->all(); 
+
+    // Subtrae de la lista total de productos de la tabla serviproductos,
+    // todos los productos ya registrados en la factura de egresos de caja chica.
+    // para evitar asignar productos previamente asignadas
+		$productos = array_diff($datos_3, $datos_1);		
+		//dd($productos);  
+    
+    // Subtrae de la lista total de servicios de la tabla serviproductos,
+    // todos los servicios ya registrados en la factura de egresos de caja chica.
+    // para evitar asignar servicios previamente asignadas
+    $servicios = array_diff($datos_4, $datos_2);    
+    //dd($servicios); 		
+ 		
 		// calcula y agrega el total
 		$i=0;		
 		$subTotal = 0;
@@ -57,21 +77,16 @@ class Dte_ecajachicasController extends Controller {
 		    $subTotal = $subTotal + ($dato->cantidad * $dato->precio);
 		    $totalItbms = $totalItbms + $dato->itbms;		    
 		    $i++;
-		}        
-
-    // Subtrae de la lista total de productos y servicios registrados toda aquellas
-    // que ya están asignadas a un egreso de caja chica
-    // para evitar asignar productos y servicios previamente asignadas
-		$serviproductos = array_diff($datos_1, $datos_2);		
-		//dd($serviproductos);  
+		}      
 
 		return view('contabilidad.dte_ecajachicas.show')
-				 ->with('serviproductos', $serviproductos)
+				 ->with('productos', $productos)
+				 ->with('servicios', $servicios)
 				 ->with('ecajachica', $ecajachica)
 				 ->with('subTotal', $subTotal)
 				 ->with('totalItbms', $totalItbms)
-				 ->with('datos', $datos);     	
-	}	
+				 ->with('datos', $datos);
+	}
 
   /*************************************************************************************
    * Almacena un nuevo registro en la base de datos
@@ -81,14 +96,27 @@ class Dte_ecajachicasController extends Controller {
         
 		DB::beginTransaction();
 		try {
+      
       //dd(Input::all());
       $input = Input::all();
-      $rules = array(
-        'serviproducto_id'	=> 'required',
-        'cantidad'  				=> 'Required|Numeric',
-        'precio'    				=> 'required|Numeric|min:0.01',
-        'itbms'    					=> 'required|Numeric|min:0'
-      );
+      
+			if (Input::get('tipo_radios') == 0) {
+	      // es un producto
+	      $rules = array(
+	        'producto_id'	=> 'required',
+	        'cantidad'  	=> 'Required|Numeric',
+	        'precio'    	=> 'required|Numeric|min:0.01',
+	        'itbms'    		=> 'required|Numeric|min:0'
+	      );
+			
+			} else {
+	      // es un servicio
+	      $rules = array(
+	        'servicio_id'	=> 'required',
+	        'precio'    	=> 'required|Numeric|min:0.01',
+	        'itbms'    		=> 'required|Numeric|min:0'
+	      );
+			}
   
       $messages = [
         'required'	=> 'Informacion requerida!',
@@ -105,13 +133,22 @@ class Dte_ecajachicasController extends Controller {
       	$ecajachica= Ecajachica::find(Input::get('ecajachica_id'));
       	$totalecajachica= $ecajachica->total;
 
+				if (Input::get('tipo_radios') == 0) {
+					$serviproducto_id = Input::get('producto_id');
+					$cantidad = Input::get('cantidad');
+
+				} else {
+					$serviproducto_id = Input::get('servicio_id');
+					$cantidad = 1;
+				}				
+
 				// encuentra los datos del serviproducto
-      	$serviproducto= Serviproducto::find(Input::get('serviproducto_id'));
-				
+      	$serviproducto= Serviproducto::find($serviproducto_id);				
+
 				$dato = new Dte_ecajachica;
-				$dato->serviproducto_id  	= Input::get('serviproducto_id');
+				$dato->serviproducto_id  	= $serviproducto_id;
 				$dato->nombre					  	= $serviproducto->nombre;
-				$dato->cantidad 	       	= Input::get('cantidad');
+				$dato->cantidad 	       	= $cantidad;
 				$dato->precio 	       		= Input::get('precio');
 				$dato->itbms 	       			= Input::get('itbms');
 				$dato->ecajachica_id	  	= Input::get('ecajachica_id');
@@ -138,7 +175,7 @@ class Dte_ecajachicasController extends Controller {
 				//dd($detalles->toArray());
 				
 				foreach ($detalles as $detalle) {
-					$totaldetalles = $totaldetalles + ($detalle->precio + $detalle->itbms);
+					$totaldetalles = $totaldetalles + (($detalle->cantidad * $detalle->precio) + $detalle->itbms);
 				}
 				//dd((float)$totalecajachica, (float)$totaldetalles);
 		    

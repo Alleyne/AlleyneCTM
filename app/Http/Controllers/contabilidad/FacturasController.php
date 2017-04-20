@@ -157,7 +157,7 @@ class FacturasController extends Controller {
       } catch (\Exception $e) {
           DB::rollback();
           Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-          return back()->withInput()->withErrors($validation);
+          return back()->withInput();
       }
   }
 
@@ -265,7 +265,7 @@ class FacturasController extends Controller {
 						6,
 						$cuenta->catalogo_id,
 						$f_factura,
-						$dato->cuenta,
+						'Egreso por Caja general, factura #'.$factura->doc_no.' - '.$factura->afavorde,
 						$monto,
 						Null,
 						Null,
@@ -273,7 +273,7 @@ class FacturasController extends Controller {
 						$factura->org_id,
 						Null,
 						Null
-						);
+					);
 				
         if ($itbms > 0) {
 				 	Sity::registraEnCuentas(
@@ -282,7 +282,7 @@ class FacturasController extends Controller {
 						6,
 						15,
 						$f_factura,
-						Catalogo::find(15)->nombre.', factura No. '.$factura->doc_no.', proveedor No. '.$factura->org_id,
+						'Egreso por Caja general, factura #'.$factura->doc_no.' - '.$factura->afavorde,
 						$itbms,
 						Null,
 						Null,
@@ -290,7 +290,7 @@ class FacturasController extends Controller {
 						$factura->org_id,
 						Null,
 						Null
-						);	        
+					);	        
 				}
 	        
         // registra en Ctdiario principal
@@ -321,32 +321,32 @@ class FacturasController extends Controller {
 			// se anota el total de la factura a credito incluyendo el itbms en
 			// libro Mayor Auxiliar de Cuentas por Pagar
 		 	Sity::registraEnCuentas(
-					$periodo->id,
-					'mas',
-					2, 
-					6,
-					$f_factura,
-					'   Cuentas por pagar a proveedores. Factura No. '.$factura->doc_no.', Proveedor No. '.$factura->org_id,
-					$montoTotal + $itbmsTotal,
-					Null,
-					Null,
-					Null,
-					$factura->org_id,
-					Null,
-					Null
+				$periodo->id,
+				'mas',
+				2, 
+				6,
+				$f_factura,
+				'Egreso por Caja general, factura #'.$factura->doc_no.' - '.$factura->afavorde,
+				$montoTotal + $itbmsTotal,
+				Null,
+				Null,
+				Null,
+				$factura->org_id,
+				Null,
+				Null
 			);
 
 	    // registra en Ctdiario principal
 	    $diario = new Ctdiario;
 	    $diario->pcontable_id  = $periodo->id;
-	    $diario->detalle = '   Cuentas por pagar a proveedores. '.$factura->org_id;
+	    $diario->detalle = Catalogo::find(6)->nombre;
 	    $diario->credito = $montoTotal + $itbmsTotal;
 	    $diario->save(); 
 	    
 	    // registra en Ctdiario principal
 	    $diario = new Ctdiario;
 	    $diario->pcontable_id  = $periodo->id;
-	    $diario->detalle = 'Para registrar factura No. '.$factura->doc_no;
+	    $diario->detalle = 'Para registrar egreso por Caja general, factura #'.$factura->doc_no.' - '.$factura->afavorde;
 	    $diario->save(); 
 
 			// cambia la factura de etapa pagar			
@@ -369,7 +369,7 @@ class FacturasController extends Controller {
 		} catch (\Exception $e) {
 		  DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.contabilizaDetallesFactura, la transaccion ha sido cancelada! '.$e->getMessage());
-			return back()->withInput()->withErrors($validation);
+			return back()->withInput();
 		}  
 	}
 } 

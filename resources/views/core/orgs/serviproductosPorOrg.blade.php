@@ -124,25 +124,21 @@
 								  </div>
 								</div>
 
-								<div class="row productos">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="productos"> Productos</label>
-											{{ Form::select('producto_id', array('' => 'Escoja el serviproducto que desea vincular...') + $productos, array('title' => 'Escoja el serviproducto que desea vincular')) }}
-											{!! $errors->first('producto_id', '<li style="color:red">:message</li>') !!}
-										</div>
-									</div>
+							<div class="form-group productos">
+								<label class="col-md-3 control-label">Productos</label>
+								<div class="col-md-9">
+									{{ Form::select('producto_id', ['' => 'Escoja el producto que desea vincular!'] + $productos, 0, ['class' => 'form-control']) }}
+									{!! $errors->first('producto_id', '<li style="color:red">:message</li>') !!}
 								</div>
-								
-								<div class="row servicios" style="display: none;">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="servicios"> Servicios</label>
-											{{ Form::select('servicio_id', array('' => 'Escoja el serviproducto que desea vincular...') + $servicios, array('title' => 'Escoja el serviproducto que desea vincular')) }}
-											{!! $errors->first('servicio_id', '<li style="color:red">:message</li>') !!}
-										</div>
-									</div>
+							</div>
+
+							<div class="form-group servicios" style="display: none;">
+								<label class="col-md-3 control-label">Servicios</label>
+								<div class="col-md-9">
+									{{ Form::select('servicio_id', ['' => 'Escoja el servicio que desea vincular!'] + $servicios, 0, ['class' => 'form-control']) }}
+									{!! $errors->first('servicio_id', '<li style="color:red">:message</li>') !!}
 								</div>
+							</div>
 
 							</fieldset>				
 							

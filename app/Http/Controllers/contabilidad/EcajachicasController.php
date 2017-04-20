@@ -174,42 +174,8 @@ class EcajachicasController extends Controller
 			} catch (\Exception $e) {
 				DB::rollback();
 				Session::flash('warning', ' Ocurrio un error en el modulo EcajachicasController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-				return back()->withInput()->withErrors($validation);
+				return back()->withInput();
 			}
-		}
-
-		/**
-		 * Display the specified resource.
-		 *
-		 * @param  int  $id
-		 * @return \Illuminate\Http\Response
-		 */
-		public function show($id)
-		{
-				//
-		}
-
-		/**
-		 * Show the form for editing the specified resource.
-		 *
-		 * @param  int  $id
-		 * @return \Illuminate\Http\Response
-		 */
-		public function edit($id)
-		{
-				//
-		}
-
-		/**
-		 * Update the specified resource in storage.
-		 *
-		 * @param  \Illuminate\Http\Request  $request
-		 * @param  int  $id
-		 * @return \Illuminate\Http\Response
-		 */
-		public function update(Request $request, $id)
-		{
-				//
 		}
 
 		/**
@@ -282,12 +248,12 @@ class EcajachicasController extends Controller
 				
 				foreach ($datos as $dato) {
 						$dte_desembolso = new Dte_desembolso;
-						$dte_desembolso->doc_no  = $dato->ecajachica->doc_no;
-						$dte_desembolso->serviproducto = $dato->nombre;
-						$dte_desembolso->cantidad   = $dato->cantidad;
-						$dte_desembolso->codigo   = $dato->codigo;
-						$dte_desembolso->precio   = $dato->precio;
-						$dte_desembolso->itbms   = $dato->itbms;
+						$dte_desembolso->doc_no  				= $dato->ecajachica->doc_no;
+						$dte_desembolso->serviproducto 	= $dato->nombre;
+						$dte_desembolso->cantidad   		= $dato->cantidad;
+						$dte_desembolso->codigo   			= $dato->codigo;
+						$dte_desembolso->precio   			= $dato->precio;
+						$dte_desembolso->itbms   				= $dato->itbms;
 						$dte_desembolso->save(); 
 				}
 
@@ -330,7 +296,7 @@ class EcajachicasController extends Controller
 							6,
 							$cuenta->catalogo_id,
 							$f_ecajachica,
-							$dato->cuenta,
+							'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
 							$monto,
 							Null,
 							Null,
@@ -347,7 +313,7 @@ class EcajachicasController extends Controller
 								6,
 								15,
 								$f_ecajachica,
-								Catalogo::find(15)->nombre.', egreso de caja chica No. '.$ecajachica->doc_no.', proveedor No. '.$ecajachica->org_id,
+								'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
 								$itbms,
 								Null,
 								Null,
@@ -393,7 +359,7 @@ class EcajachicasController extends Controller
 					2, 
 					6,
 					$f_ecajachica,	
-					'   Cuentas por pagar a proveedores. Egreso de caja chica No. '.$ecajachica->doc_no.', Proveedor No. '.$ecajachica->org_id,
+					'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
 					$montoTotal + $itbmsTotal,
 					Null,
 					Null,
@@ -406,14 +372,14 @@ class EcajachicasController extends Controller
 				// registra en Ctdiario principal
 				$diario = new Ctdiario;
 				$diario->pcontable_id  = $periodo->id;
-				$diario->detalle = '   Cuentas por pagar a proveedores. '.$ecajachica->org_id;
+				$diario->detalle = Catalogo::find(6)->nombre;
 				$diario->credito = $montoTotal + $itbmsTotal;
 				$diario->save(); 
 				
 				// registra en Ctdiario principal
 				$diario = new Ctdiario;
 				$diario->pcontable_id  = $periodo->id;
-				$diario->detalle = 'Para registrar egreso de caja chica No. '.$ecajachica->doc_no;
+				$diario->detalle = 'Para registrar egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde;
 				$diario->save(); 
 
 				// cambia la factura de etapa pagar         
@@ -422,14 +388,13 @@ class EcajachicasController extends Controller
 				$ecajachica->save();   
 			
 				// registra en libros el pago inmediato de la factura
-				
 				Sity::registraEnCuentas(
 					$periodo->id,
 					'menos',
 					2, 
 					6,
 					$f_ecajachica,	
-					'   Cuentas por pagar a proveedores. Egreso de caja chica No. '.$ecajachica->doc_no.', Proveedor No. '.$ecajachica->org_id,
+					'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
 					$montoTotal + $itbmsTotal,
 					Null,
 					Null,
@@ -445,7 +410,7 @@ class EcajachicasController extends Controller
           1,
           30,
 					$f_ecajachica,
-          'Egreso de caja chica No. '.$ecajachica->doc_no.', Proveedor No. '.$ecajachica->org_id,
+					'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
 					$montoTotal + $itbmsTotal,
           Null,
           Null,
@@ -459,7 +424,7 @@ class EcajachicasController extends Controller
 				$diario = new Ctdiario;
 				$diario->pcontable_id  = $periodo->id;
 				$diario->fecha = $f_ecajachica;
-				$diario->detalle = 'Cuentas por pagar a proveedores. '.$ecajachica->org_id;
+				$diario->detalle = 'Cuentas por pagar a proveedores';
 				$diario->debito = $montoTotal + $itbmsTotal;
 				$diario->save(); 
 				
@@ -472,7 +437,7 @@ class EcajachicasController extends Controller
 				// registra en Ctdiario principal
 				$diario = new Ctdiario;
 				$diario->pcontable_id  = $periodo->id;
-				$diario->detalle = 'Para registrar pago por caja chica No. '.$ecajachica->doc_no;
+				$diario->detalle = 'Para registrar egreso de caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde;
 				$diario->save(); 
 
 			  // actualiza cajachicas para que refleje nuevo saldo
@@ -482,7 +447,7 @@ class EcajachicasController extends Controller
 				// agrega nuevo registro a dte_cajachicas
 				$dte = new Dte_cajachica;
 				$dte->fecha = $f_ecajachica;
-				$dte->descripcion = 'Registra factura de caja chica, no. '.$ecajachica->doc_no;
+				$dte->descripcion = 'Registra egreso de caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde;
 				$dte->doc_no = $ecajachica->doc_no;
 				$dte->disminuye = $montoTotal + $itbmsTotal;
 				$dte->saldo = Dte_cajachica::all()->last()->saldo - ($montoTotal + $itbmsTotal);

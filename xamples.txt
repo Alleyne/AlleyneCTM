@@ -2144,3 +2144,33 @@ Work::with(
   if (number_format($montoRecibido,2) >= number_format($dato->importe,2)) {
     code ...
   }
+
+  /*************************************************************************************
+   * Boton de confirmacion en un renglon de una tabla
+   ************************************************************************************/
+    <td col width="40px" align="right">
+    <ul class="demo-btns">
+      <li>
+        {{ Form::open(array(
+          'route' => array('dte_ecajachicas.destroy', $dato->id),
+          'method' => 'DELETE',
+          'style' => 'display:inline'
+          ))
+        }}
+
+        {{ Form::button('Borrar', array(
+          'class' => 'btn btn-danger btn-xs',
+          'data-toggle' => 'modal',
+          'data-target' => '#confirmDelete',
+          'data-title' => 'Borrar detalle de egreso de caja chica',
+          'data-message' => 'Esta seguro(a) que desea borrar el presente detalle de egreso de caja chica?',
+          'data-btncancel' => 'btn-default',
+          'data-btnaction' => 'btn-danger',
+          'data-btntxt' => 'Borrar detalle'
+          ))
+        }}
+
+        {{ Form::close() }}
+      </li>
+    </ul>
+  </td>

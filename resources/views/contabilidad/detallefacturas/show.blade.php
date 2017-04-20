@@ -128,14 +128,38 @@
 						<fieldset>
 							{{ Form::hidden('factura_id', $factura->id) }}
 							
-							<div class="form-group">
-								<label class="col-md-3 control-label">Serviproducto</label>
+								<!-- Multiple Radios (inline) -->
+								<div class="form-group">
+								  <label class="col-md-3 control-label" for="radios">Tipo</label>
+								  <div class="col-md-9"> 
+								    <label class="radio-inline" for="radios-0">
+								      <input type="radio" name="tipo_radios" id="tipo-1" value="0" checked="checked">
+								      Producto
+								    </label> 
+								    <label class="radio-inline" for="radios-1">
+								      <input type="radio" name="tipo_radios" id="tipo-2" value="1">
+								      Servicio
+								    </label>
+								  </div>
+								</div>
+
+							<div class="form-group productos">
+								<label class="col-md-3 control-label">Productos</label>
 								<div class="col-md-9">
-									{{ Form::select('serviproducto_id', ['' => 'Selecione un serviproducto ...'] + $serviproductos, 0, ['class' => 'form-control']) }}
-									{!! $errors->first('serviproducto_id', '<li style="color:red">:message</li>') !!}
+									{{ Form::select('producto_id', ['' => 'Escoja el producto que desea vincular!'] + $productos, 0, ['class' => 'form-control']) }}
+									{!! $errors->first('producto_id', '<li style="color:red">:message</li>') !!}
 								</div>
 							</div>
-							<div class="form-group">
+
+							<div class="form-group servicios" style="display: none;">
+								<label class="col-md-3 control-label">Servicios</label>
+								<div class="col-md-9">
+									{{ Form::select('servicio_id', ['' => 'Escoja el servicio que desea vincular!'] + $servicios, 0, ['class' => 'form-control']) }}
+									{!! $errors->first('servicio_id', '<li style="color:red">:message</li>') !!}
+								</div>
+							</div>
+							
+							<div class="form-group cantidad">
 								<label class="col-md-3 control-label">Cantidad</label>
 								<div class="col-md-9">
 									{{ Form::text('cantidad', old('cantidad'),
@@ -149,6 +173,7 @@
 									{!! $errors->first('cantidad', '<li style="color:red">:message</li>') !!}
 								</div>
 							</div>
+							
 							<div class="form-group">
 								<label class="col-md-3 control-label">Precio</label>
 								<div class="col-md-9">
@@ -163,6 +188,7 @@
 									{!! $errors->first('precio', '<li style="color:red">:message</li>') !!}
 								</div>
 							</div>	
+							
 							<div class="form-group">
 								<label class="col-md-3 control-label">Itbms</label>
 								<div class="col-md-9">
@@ -178,8 +204,8 @@
 								</div>
 							</div>	
 
-						</fieldset>				
-						
+						</fieldset>
+					
 						<div class="form-actions">
 							{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
 							<button type="button" class="btn btn-default" data-dismiss="modal">
@@ -190,4 +216,23 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+@stop
+
+@section('relatedplugins')
+  
+  <script>	
+	   $("#tipo-1").click(function(){
+	       $(".productos").show();
+	       $(".servicios").hide();
+	       $(".cantidad").show();	   
+	   });
+
+	   $("#tipo-2").click(function(){
+	       $(".productos").hide();
+	       $(".servicios").show();
+	       $(".cantidad").hide();	  
+	   });
+
+	</script>
+
 @stop

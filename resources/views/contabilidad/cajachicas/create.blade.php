@@ -13,7 +13,7 @@
 			<article class="col-sm-12 col-md-12 col-lg-12">
 	
 				<!-- Widget ID (each widget will need unique ID)-->
-				<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
+				<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-fullscreenbutton="false" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-deletebutton="false">
 					<!-- widget options:
 					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 	
@@ -54,7 +54,7 @@
                         <label class="col-md-3 control-label">Fecha</label>
                         <div class="col-md-9">
 													<div class="input-group">
-														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura de egreso de caja chica!" class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 													</div>
                         	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 

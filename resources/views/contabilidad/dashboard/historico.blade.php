@@ -265,7 +265,7 @@
 
 						<!-- widget content -->
 						<div class="widget-body no-padding">
-							<div id="gastosTotales" style="margin: 0 auto"></div>
+							<div id="gastosTotales" style="min-width: 310px; height: 900px; margin: 0 auto"></div>
 						</div>
 						<!-- end widget content -->
 
@@ -357,9 +357,7 @@
 
 						<!-- widget content -->
 						<div class="widget-body no-padding">
-
-							<div id="gastos" style="margin: 0 auto"></div>
-						
+							<div id="gastos" style="min-width: 310px; height: 900px; margin: 0 auto"></div>
 						</div>
 						<!-- end widget content -->
 
