@@ -117,7 +117,7 @@
                           <strong><tr>
                               <th col width="40px">No</th>
                               <th>Detalle</th>
-                              <th col width="90px" class="text-center">Monto</th>                     
+                              <th col width="90px" class="text-right">Monto</th>                     
                           </tr></strong>
                         </thead>
                         <tbody>

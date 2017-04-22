@@ -192,7 +192,7 @@
 
                             <div class="row">
                                   <div class="col-xs-10">
-                                    <p class="text-right"><strong>Deuda acumulada a cancelar</strong></p>
+                                    <p class="text-right"><strong>Monto bruto adeudado</strong></p>
                                   </div>
                                   <div class="col-xs-2">
                                     <p class="text-right"><strong>{{ $data['total'] }}</strong></p>
@@ -219,7 +219,7 @@
                             
                             <div class="row">
                                   <div class="col-xs-10">
-                                    <p class="text-right"><strong>Total de la deuda</strong></p>
+                                    <p class="text-right"><strong>Monto neto adeudado</strong></p>
                                   </div>
                                   <div class="col-xs-2">
                                     <p class="text-right"><strong>{{ $data['total_adeudado'] }}</strong></p>
@@ -227,7 +227,7 @@
                             </div>
                       </div>
 
-                      @if ($data['anticipado']>0)
+                      @if ($data['anticipado'] > 0)
                         <HR WIDTH=100% ALIGN=CENTER COLOR="BLACK">
                         <div class="row">
                               <div class="col-xs-10 col-md-offset-1">

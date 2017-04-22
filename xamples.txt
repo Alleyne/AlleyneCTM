@@ -2174,3 +2174,25 @@ Work::with(
       </li>
     </ul>
   </td>
+
+
+  /*************************************************************************************
+   * Tecnica para trabajar con dinero en php
+   ************************************************************************************/
+  
+  // asegurarce de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
+  // especialmente antes de comparar una con otra
+  // Ejemplo
+
+  $montoRecibido = round((float)$montoRecibido, 2);
+  $saldocpa = round((float)$saldocpa, 2);
+  $extra = round((float)$dato->extra, 2);
+
+  // cada vez que se ejecute una operacion matematica que involucre las variables anteriores
+  // tales como resta, division o multiplicacion, se debera redondear el resultado a dos decimales
+  // para eliminar decimales ocultos no deseados 
+
+  // Ejemplo
+  // Actualiza el nuevo monto disponible para continuar pagando
+  // redondeo el resultado para eliminar decimales extras producto de la resta
+  $montoRecibido = round(($montoRecibido - $extra), 2);

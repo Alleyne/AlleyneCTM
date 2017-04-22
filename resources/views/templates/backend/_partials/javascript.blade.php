@@ -10,8 +10,8 @@
 		<!-- CUSTOM NOTIFICATION -->
 		<script src="{{ URL::asset('assets/backend/js/notification/SmartNotification.min.js') }}"></script>
 		
-		<!-- JARVIS WIDGETS -->
-		<script src="{{ URL::asset('assets/backend/js/smartwidgets/jarvis.widget.min.js') }}"></script>
+		<!-- JARVIS WIDGETS
+		<script src="{{ URL::asset('assets/backend/js/smartwidgets/jarvis.widget.min.js') }}"></script> -->
 		
 		<!-- EASY PIE CHARTS
 		<script src="{{ URL::asset('assets/backend/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js') }}"></script> --> 

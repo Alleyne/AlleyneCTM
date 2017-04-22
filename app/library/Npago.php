@@ -105,8 +105,10 @@ class Npago {
     //dd($sobrante, $dineroFresco);
     
     //Prioridad no 4, verifica si se trata de un pago anticipado con el proposito de obtener descuento
-    $sobrante= Desc::verificaDescuento($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago);
-    //dd($sobrante);
+    $datos = Desc::verificaDescuento($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago);
+    $sobrante = $datos['sobrante'];
+    $dineroFresco = $datos['dineroFresco'];
+    //dd($sobrante, $dineroFresco);
 
     //Prioridad no 5, si al final de todo el proceso hay un sobrante entonces se registra como Pago anticipado
     // si sobra dinero y es fresco se tiene que registrar en el banco o caja chica segun el tipo de pago que se hizo
@@ -124,7 +126,7 @@ class Npago {
   * Este proceso se encarga de cobrar todas las facturaciones posibles dependiendo del monto disponible.
   * @param  integer     $periodo        3
   * @param  string      $un_id          "1"
-  * @param  decimal     $montoRecibido  100.25
+  * @param  float       $montoRecibido  100.25
   * @param  integer     $pago_id        16
   * @param  string      $f_pago         "2016-01-30"  
   * @param  string      $tipoPago       Null, "1"  
@@ -143,14 +145,19 @@ class Npago {
     //dd($datos->toArray());
 
     // incializa variables a utilizar
-    $dineroFresco = true;    
-    $regresa =array();
+    if ($montoRecibido > 0) {
+      $dineroFresco = true;
+    } else {
+      $dineroFresco = false;
+    }
+  
+    $regresa = array();
 
     // si hay cuotas de mantenimiento regulares por cobrar continua proceso, si no hay regresa
     // if #1
     if (!$datos->isEmpty()) { 
       // encuentra el saldo de la cuenta de Pagos anticipados antes del ejercicio
-      $saldocpa= Pant::getSaldoCtaPagosAnticipados($un_id, $periodo);  
+      $saldocpa = Pant::getSaldoCtaPagosAnticipados($un_id, $periodo);  
       // dd($saldocpa);
 
       // incializa variables a utilizar
@@ -161,22 +168,26 @@ class Npago {
       $i = 0;
       $hayPie = false;
 
+      // me aseguro de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
+      $montoRecibido = round((float)$montoRecibido, 2);
+      $saldocpa = round((float)$saldocpa, 2);
+      
       foreach ($datos as $dato) {
-        $importe= $dato->importe;         
-        $ocobro= $dato->ocobro;
+        $importe = round((float)$dato->importe, 2);         
+        $ocobro = $dato->ocobro;
         $mesAnio = $dato->mes_anio;
 
         // if #2
-        //  Log::info([number_format($montoRecibido,2), number_format($dato->importe,2), $saldocpa]);          
-        if ((number_format($montoRecibido,2) + $saldocpa) >= number_format($importe,2)) {
+        //  Log::info([$montoRecibido, $dato->importe, $saldocpa]);          
+        if (($montoRecibido + $saldocpa) >= $importe) {
           // hay suficiente dinero para pagar por lo menos una cuota regular
           // por lo tanto, registra la cuota regular como pagada
           $dto = ctdasm::find($dato->id);
-          $dto->pagada= 1;
+          $dto->pagada = 1;
           $dto->save();  
         
           // if #3
-          if (number_format($montoRecibido,2) >= number_format($importe,2)) {
+          if ($montoRecibido >= $importe) {
             // se recibio suficiente dinero para pagar por lo menos una cuota,
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
@@ -235,8 +246,9 @@ class Npago {
             Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento extraordinaria '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
 
             // Actualiza el nuevo monto disponible para continuar pagando
-            $montoRecibido = $montoRecibido - $importe;
-
+            // redondeo el resultado para eliminar decimales extras producto de la resta
+            $montoRecibido = round(($montoRecibido - $importe), 2);
+            
             // si hay dinero sobrante quiere decir que este dinero es fresco no proviene de cuentas de pagos anticipados
             if ($montoRecibido > 0) {
               $dineroFresco = true;
@@ -248,7 +260,8 @@ class Npago {
             // de Pagos anticipados para realizar el pago
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa= $saldocpa - $importe;
+            // redondeo el resultado para eliminar decimales extras producto de la resta
+            $saldocpa = round(($saldocpa - $importe), 2);
 
             // registra en el diario
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"  
@@ -295,7 +308,8 @@ class Npago {
             // quiere decir que se necesita hacer uso del saldo acumulado de la cuenta de Pagos anticipados para completar el pago
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa = $saldocpa - ($importe - $montoRecibido);
+            // redondeo el resultado para eliminar decimales extras producto de la resta
+            $saldocpa = round(($saldocpa - ($importe - $montoRecibido)), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
             // 2= Transferencia 3= ACH  4= Banca en linea
@@ -401,7 +415,7 @@ class Npago {
     } else {
       // regresa arreglo de datos
       $regresa["sobrante"] = $montoRecibido;
-      $regresa["dineroFresco"] = true;    
+      $regresa["dineroFresco"] = $dineroFresco;    
 
       return $regresa; 
     
@@ -433,14 +447,19 @@ class Npago {
     //dd($datos->toArray());
 
     // incializa variables a utilizar
-    $dineroFresco = true;    
-    $regresa =array();
+    if ($montoRecibido > 0) {
+      $dineroFresco = true;
+    } else {
+      $dineroFresco = false;
+    }
+  
+    $regresa = array();
 
     // si hay recargos en cuotas de mantenimiento regulares por cobrar continua proceso, si no hay regresa
     // if #1
     if (!$datos->isEmpty()) { 
       // encuentra el saldo de la cuenta de Pagos anticipados antes del ejercicio
-      $saldocpa= Pant::getSaldoCtaPagosAnticipados($un_id, $periodo);  
+      $saldocpa = Pant::getSaldoCtaPagosAnticipados($un_id, $periodo);  
       // dd($saldocpa);
 
       // incializa variables a utilizar
@@ -451,13 +470,18 @@ class Npago {
       $i = 0;
       $hayPie = false;
 
+      // me aseguro de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
+      $montoRecibido = round((float)$montoRecibido, 2);
+      $saldocpa = round((float)$saldocpa, 2);
+      
       foreach ($datos as $dato) {
-        $recargo= $dato->recargo;       
-        $ocobro= $dato->ocobro;
+        $recargo = round((float)$dato->recargo, 2); 
+        $ocobro = $dato->ocobro;
         $mesAnio = $dato->mes_anio;
 
         // if #2
-        if ((number_format($montoRecibido,2) + $saldocpa) >= number_format($recargo,2)) {
+        //  Log::info([$montoRecibido, $dato->recargo, $saldocpa]);  
+        if (($montoRecibido + $saldocpa) >= $recargo) {
           // hay suficiente dinero para pagar por lo menos un recargo
           // por lo tanto, registra el recargo como pagada
           $dto = ctdasm::find($dato->id);
@@ -465,7 +489,7 @@ class Npago {
           $dto->save();  
           
           // if #3
-          if (number_format($montoRecibido,2) >= number_format($recargo,2)) {
+          if ($montoRecibido >= $recargo) {
             // se recibio suficiente dinero para pagar por lo menos un recargo,
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
@@ -524,7 +548,8 @@ class Npago {
             Self::registraDetallepago($periodo, $ocobro, 'Paga recargo en cuota de mantenimiento regular '. $mesAnio, $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
 
             // Actualiza el nuevo monto disponible para continuar pagando
-            $montoRecibido = $montoRecibido - $recargo;
+            // redondeo el resultado para eliminar decimales extras producto de la resta
+            $montoRecibido = round(($montoRecibido - $recargo), 2);
 
             // si hay dinero sobrante quiere decir que este dinero es fresco no proviene de cuentas de pagos anticipados
             if ($montoRecibido > 0) {
@@ -537,7 +562,8 @@ class Npago {
             // de Pagos anticipados para realizar el pago
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa= $saldocpa - $recargo;
+            // redondeo el resultado para eliminar decimales extras producto de la resta
+            $saldocpa = round(($saldocpa - $recargo), 2);
 
             // registra en el diario
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"  
@@ -584,7 +610,8 @@ class Npago {
             // quiere decir que se necesita hacer uso del saldo acumulado de la cuenta de Pagos anticipados para completar el pago
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa = $saldocpa - ($recargo - $montoRecibido);
+            // redondeo el resultado para eliminar decimales extras producto de la resta
+            $saldocpa = round(($saldocpa - ($recargo - $montoRecibido)), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
             // 2= Transferencia 3= ACH  4= Banca en linea
@@ -690,7 +717,7 @@ class Npago {
     } else {
       // regresa arreglo de datos
       $regresa["sobrante"] = $montoRecibido;
-      $regresa["dineroFresco"] = true;    
+      $regresa["dineroFresco"] = $dineroFresco;    
 
       return $regresa; 
     
@@ -722,14 +749,19 @@ class Npago {
     //dd($datos->toArray());
 
     // incializa variables a utilizar
-    $dineroFresco = true;    
-    $regresa =array();
+    if ($montoRecibido > 0) {
+      $dineroFresco = true;
+    } else {
+      $dineroFresco = false;
+    }
+  
+    $regresa = array();
 
     // si hay cuotas de mantenimiento extraordinarias por cobrar continua proceso, si no hay regresa
     // if #1
     if (!$datos->isEmpty()) { 
       // encuentra el saldo de la cuenta de Pagos anticipados antes del ejercicio
-      $saldocpa= Pant::getSaldoCtaPagosAnticipados($un_id, $periodo);  
+      $saldocpa = Pant::getSaldoCtaPagosAnticipados($un_id, $periodo);  
       // dd($saldocpa);
 
       // incializa variables a utilizar
@@ -740,13 +772,18 @@ class Npago {
       $i = 0;
       $hayPie = false;
 
+      // me aseguro de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
+      $montoRecibido = round((float)$montoRecibido, 2);
+      $saldocpa = round((float)$saldocpa, 2);
+
       foreach ($datos as $dato) {
-        $extra= $dato->extra;         
-        $ocobro= $dato->ocobro;
+        $extra = round((float)$dato->extra, 2); 
+        $ocobro = $dato->ocobro;
         $mesAnio = $dato->mes_anio;
 
         // if #2
-        if ((number_format($montoRecibido,2) + $saldocpa) >= number_format($extra,2)) {
+        //  Log::info([$montoRecibido, $dato->extra, $saldocpa]);  
+        if (($montoRecibido + $saldocpa) >= $extra) {
           // hay suficiente dinero para pagar por lo menos una cuota extraordinaria
           // por lo tanto, registra la cuota extraordinaria como pagada
           $dto = ctdasm::find($dato->id);
@@ -754,7 +791,7 @@ class Npago {
           $dto->save();  
 
           // if #3
-          if (number_format($montoRecibido,2) >= number_format($extra,2)) {
+          if ($montoRecibido >= $extra) {
             // se recibio suficiente dinero para pagar por lo menos una cuota,
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
@@ -813,7 +850,8 @@ class Npago {
             Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento extraordinaria '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $extra, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
 
             // Actualiza el nuevo monto disponible para continuar pagando
-            $montoRecibido = $montoRecibido - $extra;
+            // redondeo el resultado para eliminar decimales extras producto de la resta
+            $montoRecibido = round(($montoRecibido - $extra), 2);
 
             // si hay dinero sobrante quiere decir que este dinero es fresco no proviene de cuentas de pagos anticipados
             if ($montoRecibido > 0) {
@@ -826,7 +864,8 @@ class Npago {
             // de Pagos anticipados para realizar el pago
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa= $saldocpa - $extra;
+            // redondeo el resultado para eliminar decimales extras producto de la resta
+            $saldocpa = round(($saldocpa - $extra), 2);
 
             // registra en el diario
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"  
@@ -873,7 +912,7 @@ class Npago {
             // quiere decir que se necesita hacer uso del saldo acumulado de la cuenta de Pagos anticipados para completar el pago
 
             // disminuye el saldo de la cuenta Pagos anticipados
-            $saldocpa = $saldocpa - ($extra - $montoRecibido);
+            $saldocpa = round(($saldocpa - ($extra - $montoRecibido)), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
             // 2= Transferencia 3= ACH  4= Banca en linea
@@ -979,7 +1018,7 @@ class Npago {
     } else {
       // regresa arreglo de datos
       $regresa["sobrante"] = $montoRecibido;
-      $regresa["dineroFresco"] = true;    
+      $regresa["dineroFresco"] = $dineroFresco;    
 
       return $regresa; 
     
@@ -1019,7 +1058,7 @@ class Npago {
       // registra en el diario
       // registra un aumento en la cuenta Banco por "Anticipos recibidos de propietarios"
       $diario = new Ctdiario;
-      $diario->pcontable_id  = $periodo;
+      $diario->pcontable_id = $periodo;
       $diario->fecha   = $f_pago; 
       $diario->detalle = $cuenta_8;
       $diario->debito  = $sobrante;
