@@ -12,31 +12,19 @@ use Event;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Jenssegers\Date\Date;
-use Mail;
-use App\Mail\sendnuevoEcuentas;
-use DB;
-use App\Notifications\emailNuevaOcobro;
-use App\Notifications\emailUsoDeCuentaAnticipados;
 
 use App\Bitacora;
 use App\User;
 use App\Un;
 use App\Ctdasm;
 use App\Blqadmin;
-use App\Ctdiario;
-use App\Ctdiariohi;
-use App\Detallepago;
-use App\Pago;
 use App\Ctmayore;
-use App\Ctmayorehi;
-use App\Pcontable;
 use App\Catalogo;
-use App\Ht;
-use App\Detalledescuento;
 use App\Prop;
 use App\Seccione;
 use App\Ph;
-use App\Secapto;
+use App\Dte_desembolso;
+use App\Desembolso;
 
 class Sity {
 
@@ -215,33 +203,6 @@ class Sity {
     return $bug->user_id;
   }
 
-/****************************************************************************************
- * Esta function registra en Ctdiario principal el resumen de la facturacion del mes
- *****************************************************************************************/
-public static function xxxregistraRecargosEnCtdiario($recargo, $periodo_id, $ocobro)
-{
-       
-    // registra en Ctdiario principal
-    $dato = new Ctdiario;
-    $dato->pcontable_id  = $periodo_id;
-    $dato->fecha   = Carbon::today();
-    $dato->detalle = 'Recargo por cobrar en cuota de mantenimiento';
-    $dato->debito  = $recargo;
-    $dato->save(); 
-    
-    // registra en Ctdiario principal
-    $dato = new Ctdiario;
-    $dato->pcontable_id  = $periodo_id;
-    $dato->detalle = '   Ingresos por cuota de mantenimiento';
-    $dato->credito = $recargo;
-    $dato->save(); 
-    
-    // registra en Ctdiario principal
-    $dato = new Ctdiario;
-    $dato->pcontable_id  = $periodo_id;
-    $dato->detalle = 'Para registrar recargo en cuotas de mantenimiento de la unidad '.$ocobro;
-    $dato->save(); 
-}
 
   /***********************************************************************************
   * Proceso de recoger la data de un estado de cuentas
@@ -341,6 +302,55 @@ public static function xxxregistraRecargosEnCtdiario($recargo, $periodo_id, $oco
     //dd($imps->toArray(),$recs->toArray(),$total_importe,$total_recargo);
     return array('imps'=>$imps,'recs'=>$recs,'data'=>$data);  
   }
+
+
+  /****************************************************************************************
+  * Verifica si la caja chica en estudio tiene algun desembolso sin aprobar,
+  * Si no exite lo crea y le vincula los detalles del presente egreso de caja chica.
+  
+  * Si existe, entonces actualiza la fecha con la fecha del presente egreso de caja y
+  * le vincula los detalles del presente egreso de caja chica.
+   *****************************************************************************************/
+  public static function analizaDesembolsos($ccchica_id)
+  {
+ 
+    //verifica si hay algun desembolso sin aprobar en la presente caja chica
+    $desembolso = Desembolso::where('cajachica_id', $ccchica_id)->where('aprobado', 0)->first();
+    //dd($desembolso);      
+    
+    //verifica si hay detalles de desembolsos por asignar
+    $dte_desembolso = Dte_desembolso::where('desembolso_id', 0)->first();
+    //dd($desembolso, $dte_desembolso, $cchicaCerrada);
+
+    // si no existe ningun desembolso por aprobar, entonces crea un nuevo desembolso
+    // true, null, null
+    if (is_null($desembolso)) {
+      // crea un nuevo desembolso
+      $desemb = new Desembolso;
+      $desemb->fecha = Carbon::today();
+      $desemb->cajachica_id = $ccchica_id;
+      $desemb->save();
+      
+      $desembolso_id = $desemb->id;
+    
+    } elseif ($desembolso && $dte_desembolso) {
+      // actualiza la fecha del desembolos
+      $desemb = Desembolso::find($desembolso->id);
+      $desemb->fecha = Carbon::today();
+      $desemb->save();
+
+      $desembolso_id = $desembolso->id;
+    }
+
+    //encuentra todos los detalles de desembolso que tengan desembolso_id igual a cero y se los asigna
+    // al recien creado desembolso
+    Dte_desembolso::where('desembolso_id', 0)
+                  ->update(['desembolso_id' => $desembolso_id]);       
+    
+    return;
+  }
+
+
 
 
 

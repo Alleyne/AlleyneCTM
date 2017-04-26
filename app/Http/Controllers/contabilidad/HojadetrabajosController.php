@@ -94,6 +94,7 @@ class HojadetrabajosController extends Controller {
       // permitir ajustes 
       if ($p1==0 && $p2==1) {
         $permitirAjustes= 'Si';
+      
       } else {
         $permitirAjustes= 'No';
       }
@@ -143,20 +144,21 @@ class HojadetrabajosController extends Controller {
     //dd($permitirCerrar);
     
     $viewData=[
-              'periodo' => $periodo,
-              'permitirAjustes' => $permitirAjustes,
-              'permitirCerrar' => $permitirCerrar,
-              'datos' => $datos,
-              'totalDebito' => number_format($totalDebito,2),
-              'totalCredito' => number_format($totalCredito,2),
-              'totalAjusteDebito' => number_format($totalAjusteDebito,2),
-              'totalAjusteCredito' => number_format($totalAjusteCredito,2),
-              'totalAjustadoDebito' => number_format($totalAjustadoDebito,2),
-              'totalAjustadoCredito' => number_format($totalAjustadoCredito,2)
-          ];
+      'periodo' => $periodo,
+      'permitirAjustes' => $permitirAjustes,
+      'permitirCerrar' => $permitirCerrar,
+      'datos' => $datos,
+      'totalDebito' => number_format($totalDebito,2),
+      'totalCredito' => number_format($totalCredito,2),
+      'totalAjusteDebito' => number_format($totalAjusteDebito,2),
+      'totalAjusteCredito' => number_format($totalAjusteCredito,2),
+      'totalAjustadoDebito' => number_format($totalAjustadoDebito,2),
+      'totalAjustadoCredito' => number_format($totalAjustadoCredito,2)
+    ];
     
     if (Grupo::esAdmin()) {
       return view('contabilidad.hojadetrabajos.show', $viewData);  
+    
     } elseif (Grupo::esPropietario() || Grupo::esAdminDeBloque()) {
       return view('contabilidad.hojadetrabajos.showFrontend', $viewData); 
     }
@@ -386,12 +388,23 @@ class HojadetrabajosController extends Controller {
   /***********************************************************************************
   * Despliega el mayor auxiliar de una determinada cuenta
   ************************************************************************************/   
-  public function verMayorAux($periodo, $cuenta) {
-    $datos= Ctmayore::where('pcontable_id', $periodo)
-                   ->where('cuenta', $cuenta)
-                   ->get();
-    //dd($datos->toArray());        
+  public function verMayorAux($periodo, $cuenta, $un_id) {
     
+    if ($un_id != 0) {
+      $unCodigo = Un::find($un_id)->codigo;
+      $datos= Ctmayore::where('pcontable_id', $periodo)
+                     ->where('cuenta', $cuenta)
+                     ->where('un_id', $un_id)
+                     ->get();
+
+    } else {
+      $unCodigo = '';
+      $datos= Ctmayore::where('pcontable_id', $periodo)
+                     ->where('cuenta', $cuenta)
+                     ->get();
+    }
+    //dd($datos->toArray());    
+        
     $data=array();    
     $i=1;
     
@@ -450,6 +463,7 @@ class HojadetrabajosController extends Controller {
     $cuenta= Catalogo::find($cuenta);
     return view('contabilidad.hojadetrabajos.verMayorAux')
             ->with('datas', $datas)
+            ->with('unCodigo', $unCodigo)
             ->with('cuenta', $cuenta);
   }
 

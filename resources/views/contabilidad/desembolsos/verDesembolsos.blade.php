@@ -26,11 +26,7 @@
                 <h2>Desembolsos de Caja Chica</h2>
                 <div class="widget-toolbar">
                     <a href="{{ URL::route('cajachicas.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
-                    @if (Cache::get('esAdminkey'))
-                        @if ($cchicaCerrada == 0)
-                            <a href="{{ URL::route('desembolsos.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Crear Desembolso</a>
-                        @endif 
-                    @endif  
+
                 </div>  
             </header>
 
@@ -66,7 +62,7 @@
                                     <td col width="40px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
                                     @if (Cache::get('esAdminkey'))
 
-                                        <td col width="220px" align="right">
+                                        <td col width="170px" align="right">
                                             @if($dato->aprobado == 0)
                                                 <ul class="demo-btns">
                                                     <li>
@@ -74,9 +70,6 @@
                                                     </li>                
                                                     <li>
                                                         <a href="{{ URL::route('aprobarInforme', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Desembolso</a>
-                                                    </li> 
-                                                    <li>
-                                                        <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Borrar</a>
                                                     </li> 
                                                 </ul>
                                             @else

@@ -89,11 +89,12 @@
                                                         <a href="{{ URL::route('cerrarCajachicaCreate') }}" class="btn btn-danger btn-xs"><i class="fa fa-lock"></i></a>
                                                     </li> 
                                                     <li>
-                                                        <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-warning btn-xs"> Detalles</a>
+                                                        <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-warning btn-xs"> Diario</a>
                                                     </li>
                                                 @else    
+
                                                     <li>
-                                                        <a href="{{ URL::route('verDesembolsos', $dato->id) }}" class="btn btn-default btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
+                                                        <a href="{{ URL::route('verDesembolsos', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
                                                     </li> 
                                                     <li>
                                                         <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-default btn-xs"> Historial de Caja Chica</a>

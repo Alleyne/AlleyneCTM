@@ -195,6 +195,7 @@ class Hojat {
       $data[$i]["tipo"]= $cta->tipo;
       $data[$i]["codigo"]= $cta->codigo;
       $data[$i]["clase"]= $cta->corriente_siono;
+      $data[$i]["un_id"]= 0;
       $data[$i]["cta_nombre"]= $cta->nombre;
       $data[$i]["saldo_debito"]= 0;
       $data[$i]["saldo_credito"]= 0;
@@ -548,6 +549,7 @@ class Hojat {
       $data[$i]["codigo"]= $cta->codigo;
       $data[$i]["clase"]= $cta->corriente_siono;
       $data[$i]["cta_nombre"]= $cta->nombre.' '.$cod;
+      $data[$i]["un_id"]= $un->un_id;
       $data[$i]["saldo_debito"]= 0;
       $data[$i]["saldo_credito"]= 0;
       $data[$i]["saldoAjuste_debito"]= 0;

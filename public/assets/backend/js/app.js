@@ -243,7 +243,7 @@ $(document).ready(function() {
 		}, function(ButtonPressed) {
 			if (ButtonPressed == "Yes") {
 				$.root_.addClass('animated fadeOutUp');
-				setTimeout(logout, 800)
+				setTimeout(logout, 10)
 			}
 
 		});
@@ -266,7 +266,7 @@ $(document).ready(function() {
 		}, function(ButtonPressed) {
 			if (ButtonPressed == "Yes") {
 				$.root_.addClass('animated fadeOutUp');
-				setTimeout(logout, 800)
+				setTimeout(logout, 10)
 			}
 
 		});
@@ -289,7 +289,7 @@ $(document).ready(function() {
 		}, function(ButtonPressed) {
 			if (ButtonPressed == "Yes") {
 				$.root_.addClass('animated fadeOutUp');
-				setTimeout(logout, 800)
+				setTimeout(logout, 10)
 			}
 
 		});
@@ -312,7 +312,7 @@ $(document).ready(function() {
 		}, function(ButtonPressed) {
 			if (ButtonPressed == "Yes") {
 				$.root_.addClass('animated fadeOutUp');
-				setTimeout(logout, 800)
+				setTimeout(logout, 10)
 			}
 
 		});
@@ -335,7 +335,7 @@ $(document).ready(function() {
 		}, function(ButtonPressed) {
 			if (ButtonPressed == "Yes") {
 				$.root_.addClass('animated fadeOutUp');
-				setTimeout(logout, 800)
+				setTimeout(logout, 10)
 			}
 
 		});
@@ -358,7 +358,7 @@ $(document).ready(function() {
 		}, function(ButtonPressed) {
 			if (ButtonPressed == "Yes") {
 				$.root_.addClass('animated fadeOutUp');
-				setTimeout(logout, 800)
+				setTimeout(logout, 10)
 			}
 
 		});

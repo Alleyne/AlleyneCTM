@@ -207,7 +207,7 @@
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
-						<td colspan="3" align="left">Tarjetas Clave</td>
+						<td colspan="3" align="left">Tarjetas Debito</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
 						<td class="simple">{{ number_format($totalClaves,2) }}</td>

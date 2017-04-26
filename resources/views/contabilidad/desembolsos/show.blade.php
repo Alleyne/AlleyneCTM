@@ -24,23 +24,26 @@
 		<div class="contenedor-principal">
 			<div class="well well-sm">
 				<div class="card card-outline-danger text-center">
-			    <h4 class="card-title">Informe para desembolso de Caja Chica</h4>
+			    <h4 class="card-title">INFORME PARA DESEMBOLSO DE CAJA CHICA</h4>
 				  <div class="row">
-				    <div class="col-md-2">
-							12/12/2017
+				    <div class="col-md-3">
+							Caja Chica No: {{ $cchica->id}}							
 				    </div>
-				    <div class="col-md-8">
-				      Responsable: German Barrios
-				    </div>
-				    <div class="col-md-2">
-							No: 123456
+				    <div class="col-md-3">
+				      Responsable: {{ $cchica->responsable }}
+				    </div> 
+				    <div class="col-md-3">
+				      Saldo actual: {{ $cchica->saldo }}
+				    </div> 
+				    <div class="col-md-3">
+				    	Fecha: {{ $f_actual }}
 				    </div>
 				  </div>		
 				</div>	
 			</div>
 
 				<div class="pull-right">
-					<a href="{{ URL::route('desembolsos.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
+					<a href="{{ URL::route('verDesembolsos', $cchica->id) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 				</div>
 
 				<table class="table table-condensed table-hover">
@@ -49,9 +52,9 @@
 							<th>ID</th>
 							<th>SERVIPRODUCTO</th>
 							<th>GASTO</th>
-							<th>CANT</th>
-							<th>PRECIO</th>
-							<th>ITBMS</th>
+							<th class="text-right">CANT</th>
+							<th class="text-right">PRECIO</th>
+							<th class="text-right">ITBMS</th>
 							<th class="text-right">TOTAL</th>
 						</tr>
 					</thead>
@@ -59,11 +62,11 @@
 						@foreach ($datos as $dato)
 							<tr>
 								<td col width="40px">{{ $dato->id }}</td>
-								<td><strong>{{ $dato->serviproducto }}</strong></td>
+								<td col width="540px"><strong>{{ $dato->serviproducto }}</strong></td>
 								<td>{{ $dato->codigo }}</td>
-								<td col width="60px">{{ $dato->cantidad }}</td>
-								<td col width="60px">{{ $dato->precio }}</td>
-								<td col width="60px">{{ $dato->itbms }}</td>
+								<td col width="60px" class="text-right">{{ $dato->cantidad }}</td>
+								<td col width="60px" class="text-right">{{ $dato->precio }}</td>
+								<td col width="60px" class="text-right">{{ $dato->itbms }}</td>
 								<td col width="60px" class="text-right"><strong>{{ $dato->total }}</strong></td>
 							</tr>
 						@endforeach

@@ -45,25 +45,38 @@
                                 <th>ID</th>
                                 <th>FECHA</th>  
                                 <th>APROBADO</th>
+                                <th>DEPOSITADO</th>
+                                <th>APROBADO POR</th>
                                 <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($datos as $dato)
                                 <tr>
-                                    <td col width="60px"><strong>{{ $dato->id }}</strong></td>
+                                    <td col width="50px"><strong>{{ $dato->id }}</strong></td>
                                     <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
-                                    <td col width="70px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
-                                    
+                                    <td col width="90px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
+                                    <td col width="90px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
+                                    <td><strong>{{ $dato->aprobadopor }}</strong></td>
+
                                     @if (Cache::get('esAdminkey'))
-                                        <td col width="210px" align="right">
+                                        <td col width="340px" align="right">
                                             <ul class="demo-btns">
-                                                <li>
-                                                    <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
-                                                </li>                
-                                                <li>
-                                                    <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Ajustar</a>
-                                                </li> 
+                                                @if ($dato->aprobado == 0)
+                                                    <li>
+                                                        <a href="{{ URL::route('diariocajas.edit', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Depositar</a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
+                                                    </li>                
+                                                    <li>
+                                                        <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Ajustar</a>
+                                                    </li> 
+                                                @else
+                                                    <li>
+                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
+                                                    </li>  
+                                                @endif
                                             </ul>
                                         </td>
                                     @endif
@@ -87,12 +100,12 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
     
     <script type="text/javascript">
-    $(document).ready(function() {
-        pageSetUp();
- 
-        $('#dt_basic').dataTable({
-            "sPaginationType" : "bootstrap_full"
-        });
-    })
+        $(document).ready(function() {
+            pageSetUp();
+     
+            $('#dt_basic').dataTable({
+                "sPaginationType" : "bootstrap_full"
+            });
+        })
     </script>
 @stop

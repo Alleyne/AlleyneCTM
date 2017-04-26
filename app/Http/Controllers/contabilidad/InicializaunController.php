@@ -206,7 +206,7 @@ class InicializaunController extends Controller {
         $dato->save(); 
         
         Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $f_periodo, 'Pago anticipado por inicializacion del sistema, unidad '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
-        Sity::registraEnCuentas($periodo->id, 'mas', 2, 5, $f_periodo, 'Pago anticipado por inicializacion del sistema, unidad '.Un::find(Input::get('un_id'))->codigo, Input::get('anticipados'), Input::get('un_id'));
+        Sity::registraEnCuentas($periodo->id, 'mas', 2, 5, $f_periodo, 'Pago anticipado por inicializacion del sistema', Input::get('anticipados'), Input::get('un_id'));
       
         // Encuentra todas las unidades activas
         $uns= Un::where('activa', 1)->get();

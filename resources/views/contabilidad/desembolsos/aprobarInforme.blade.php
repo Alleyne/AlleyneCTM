@@ -47,17 +47,6 @@
 									<fieldset>
 	 									{{ csrf_field() }}
                    	{{ Form::hidden('desembolso_id', $desembolso_id) }}
-                    
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Fecha</label>
-                        <div class="col-md-9">
-													<div class="input-group">
-														<input type="text" name="fecha" placeholder="Seleccione la fecha de aprobacion ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
-														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-													</div>
-                        	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
-                        </div>
-                    </div>  
 										
 										<div class="form-group">
 											<label class="col-md-3 control-label">Aprobado por:</label>

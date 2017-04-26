@@ -461,8 +461,18 @@ class EcajachicasController extends Controller
 																'org_id= '.$ecajachica->org_id.', '.
 																'fecha= '.$f_ecajachica;
 
+   				
+
+				// Verifica si la caja chica en estudio tiene algun desembolso sin aprobar,
+				// Si no exite lo crea y le vincula los detalles del presente egreso de caja chica.
+				
+				// Si existe, entonces actualiza la fecha con la fecha del presente egreso de caja y
+				// le vincula los detalles del presente egreso de caja chica.
+				Sity::analizaDesembolsos($cchica->id);
+				
 				Sity::RegistrarEnBitacora(15, 'ecajachica', $ecajachica->doc_no, $detalle);
-				DB::commit();       
+				
+				DB::commit();    
 				Session::flash('success', 'El egreso de caja chica No. ' .$ecajachica->doc_no. ' ha sido cotabilizado.');
 				return Redirect()->route('ecajachicas.index');
 

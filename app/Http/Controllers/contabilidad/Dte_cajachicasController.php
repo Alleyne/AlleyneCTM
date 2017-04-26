@@ -1,10 +1,8 @@
 <?php namespace App\Http\Controllers\contabilidad;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Session;
-use Validator;
+use Carbon\Carbon;
+use Jenssegers\Date\Date;
 
 use App\Cajachica;
 use App\Dte_cajachica;
@@ -31,6 +29,7 @@ class Dte_cajachicasController extends Controller {
 
 		return view('contabilidad.dte_cajachicas.show')
 				 ->with('cajachica', $cajachica)
-				 ->with('datos', $datos);     	
+         ->with('f_actual', Date::parse(Carbon::today())->toFormattedDateString())
+         ->with('datos', $datos);     	
 	}	
 } 

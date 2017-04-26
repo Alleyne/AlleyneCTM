@@ -32,7 +32,7 @@
 		    white-space: normal;
 		    line-height: normal;
 		    font-weight: normal;
-		    font-size: 12px;
+		    font-size: 13px;
 		    font-variant: normal;
 		    font-style: normal;
 		    color: -internal-quirk-inherit;
@@ -50,7 +50,12 @@
 		<div class="contenedor">		
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<td width="81%" align="left">
-				  {{ $cuenta->nombre }}</td>
+				  @if ($unCodigo)
+				  	{{ $cuenta->nombre.', unidad '.$unCodigo }}
+				  @else
+				  	{{ $cuenta->nombre }}
+				  @endif
+				</td>
 				<td width="17%"><div align="right"><strong>{{ $cuenta->codigo }}</strong></div></td>
 		    </table>
 			<div>

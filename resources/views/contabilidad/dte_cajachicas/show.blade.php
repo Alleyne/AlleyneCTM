@@ -6,16 +6,16 @@
 
 	<div class="well well-sm">
 		<div class="card card-outline-danger text-center">
-	    <h4 class="card-title">Diario de Caja Chica</h4>
+	    <h4 class="card-title">Diario de Caja Chica #{{ $cajachica->id }}</h4>
 		  <div class="row">
-		    <div class="col-md-2">
-					12/12/2017
+		    <div class="col-md-4">
+					Caja Chica No: {{ $cajachica->id }}							
 		    </div>
-		    <div class="col-md-8">
-		      xxxxxxxxxxxxxxxxxxx
-		    </div>
-		    <div class="col-md-2">
-					xxxxxxxxxxxxxxxxx
+		    <div class="col-md-4">
+		      Responsable: {{ $cajachica->responsable }}
+		    </div> 
+		    <div class="col-md-4">
+		    	Fecha: {{ $f_actual }}
 		    </div>
 		  </div>		
 		</div>	

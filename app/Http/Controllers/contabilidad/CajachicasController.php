@@ -13,6 +13,7 @@ use App\Pcontable;
 use App\Ctdiario;
 use App\Catalogo;
 use App\Dte_cajachica;
+use App\Desembolso;
 
 class CajachicasController extends Controller
 {
@@ -37,14 +38,14 @@ class CajachicasController extends Controller
     } else {
       $cerrada = 1;
     }
-
     //dd($datos->toArray(), $cerrada);
-
+         
     return view('contabilidad.cajachicas.index')
           ->with('cerrada', $cerrada)
           ->withDatos($datos);
   }
  
+  
   /**
   * Show the form for creating a new resource.
   *
@@ -130,7 +131,7 @@ class CajachicasController extends Controller
       // registra nuevo detalle en dte_cajachicas
       $dte_cajachica = new Dte_cajachica;
       $dte_cajachica->fecha = $request->fecha;
-      $dte_cajachica->descripcion = 'Se abre nueva caja chica, cheque no. '.$request->doc_no;
+      $dte_cajachica->descripcion = 'Se abre nueva caja chica #'.$cajachica->id.', cheque no. '.$request->doc_no;
       $dte_cajachica->doc_no = $request->doc_no;
       $dte_cajachica->aumenta = $request->monto;
       $dte_cajachica->saldo = $request->monto + $montoActual;
@@ -143,7 +144,7 @@ class CajachicasController extends Controller
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
       $dato->fecha        = $request->fecha;
-      $dato->detalle      =  'Caja chica';
+      $dato->detalle      =  'Caja chica #'.$cajachica->id;
       $dato->debito       = $request->monto;
       $dato->save(); 
 
@@ -252,7 +253,7 @@ class CajachicasController extends Controller
       // registra nuevo detalle en dte_cajachicas
       $dte_cajachica = new Dte_cajachica;
       $dte_cajachica->fecha = $request->fecha;
-      $dte_cajachica->descripcion = 'Se aumenta saldo de caja chica, chq no. '.$request->doc_no;
+      $dte_cajachica->descripcion = 'Se aumenta saldo de caja chica #'.$cajachica->id.', chq no. '.$request->doc_no;
       $dte_cajachica->doc_no = $request->doc_no;
       $dte_cajachica->aumenta = $request->monto;
       $dte_cajachica->saldo = $request->monto + $montoActual;
@@ -274,7 +275,7 @@ class CajachicasController extends Controller
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
       $dato->fecha        = $request->fecha;
-      $dato->detalle      =  'Caja chica';
+      $dato->detalle      =  'Caja chica #'.$cajachica->id;
       $dato->debito       = $request->monto;
       $dato->save(); 
 
@@ -288,7 +289,7 @@ class CajachicasController extends Controller
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle = 'Para registrar deposito bancario por aumento de caja chica, chq no. '.$request->doc_no;
+      $dato->detalle = 'Para registrar deposito bancario por aumento de caja chica #'.$cajachica->id.', chq no. '.$request->doc_no;
       $dato->save(); 
       
       Sity::registraEnCuentas(
@@ -297,7 +298,7 @@ class CajachicasController extends Controller
         1,
         30,
         $request->fecha,
-        'Para registrar deposito bancario por aumento de caja chica, chq no. '.$request->doc_no,
+        'Para registrar deposito bancario por aumento de caja chica #'.$cajachica->id.', chq no. '.$request->doc_no,
         $request->monto,
         Null,
         Null,
@@ -313,7 +314,7 @@ class CajachicasController extends Controller
         1,
         8,
         $request->fecha,
-        Catalogo::find(8)->nombre.', '.'Para registrar deposito bancario por aumento de caja chica, chq no. '.$request->doc_no,
+        Catalogo::find(8)->nombre.', '.'Para registrar deposito bancario por aumento de caja chica #'.$cajachica->id.', chq no. '.$request->doc_no,
         $request->monto,
         Null,
         Null,
@@ -409,13 +410,13 @@ class CajachicasController extends Controller
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle      =  'Caja chica';
+      $dato->detalle      =  'Caja chica #'.$cajachica->id;
       $dato->credito      = $request->monto;
       $dato->save(); 
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle = 'Para registrar deposito bancario por disminucion de caja chica';
+      $dato->detalle = 'Para registrar deposito bancario por disminucion de caja chica #'.$cajachica->id;
       $dato->save(); 
       
       Sity::registraEnCuentas(
@@ -424,7 +425,7 @@ class CajachicasController extends Controller
         1,
         8,
         $request->fecha,
-        Catalogo::find(8)->nombre.', '.'Para registrar deposito bancario por disminucion de caja chica',
+        Catalogo::find(8)->nombre.', '.'Para registrar deposito bancario por disminucion de caja chica #'.$cajachica->id,
         $request->monto,
         Null,
         Null,
@@ -440,7 +441,7 @@ class CajachicasController extends Controller
         1,
         30,
         $request->fecha,
-        'Para registrar deposito bancario por disminucion de caja chica',
+        'Para registrar deposito bancario por disminucion de caja chica #'.$cajachica->id,
         $request->monto,
         Null,
         Null,
@@ -496,6 +497,17 @@ class CajachicasController extends Controller
         'aprueba_id' => 'required'
       ));
 
+      // ecuentra el id de la caja a cerrar
+      $cchica_id = Cajachica::all()->last()->id;
+
+      // no permite cerrar la caja chica si tiene algun desemboso por aprobar
+      $desembolsos = Desembolso::where('cajachica_id', $cchica_id)->where('aprobado', 0)->first();
+
+      if ($desembolsos) {
+        Session::flash('warning', 'No se puede cerrar la presente Caja chica ya que la misma tiene por lo menos un desembolso sin aprobar!');
+        return redirect()->route('cajachicas.index');
+      }
+      
       // calcula el saldo actual de la caja chica
       $montoActual = Dte_cajachica::all()->last();
       if ($montoActual) {
@@ -509,12 +521,12 @@ class CajachicasController extends Controller
       // registra nuevo detalle en dte_cajachicas
       $dte_cajachica = new Dte_cajachica;
       $dte_cajachica->fecha = $request->fecha;
-      $dte_cajachica->descripcion = 'Cierre de caja chica';
+      $dte_cajachica->descripcion = 'Cierre de caja chica #'.$cajachica->id;
       $dte_cajachica->disminuye =  $montoActual;
       $dte_cajachica->saldo = 0;
       $dte_cajachica->aprueba_id = $request->aprueba_id;
       $dte_cajachica->aprueba = User::find($request->aprueba_id)->nombre_completo;
-      $dte_cajachica->cajachica_id = Cajachica::all()->last()->id;
+      $dte_cajachica->cajachica_id = $cchica_id;
       $dte_cajachica->save();   
      
       // Actualiza el saldo de cajachicas
@@ -539,14 +551,14 @@ class CajachicasController extends Controller
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle      =  'Caja chica';
+      $dato->detalle      =  'Caja chica #'.$cajachica->id;
       $dato->credito      = $montoActual;
       $dato->save(); 
       
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle = 'Para registrar deposito bancario por cierre de caja chica';
+      $dato->detalle = 'Para registrar deposito bancario por cierre de caja chica #'.$cajachica->id;
       $dato->save(); 
       
       Sity::registraEnCuentas(
@@ -555,7 +567,7 @@ class CajachicasController extends Controller
         1,
         8,
         $request->fecha,
-        Catalogo::find(8)->nombre.', '. 'Para registrar deposito bancario por cierre de caja chica',
+        Catalogo::find(8)->nombre.', '. 'Para registrar deposito bancario por cierre de caja chica #'.$cajachica->id,
         $montoActual,
         Null,
         Null,
@@ -571,7 +583,7 @@ class CajachicasController extends Controller
         1,
         30,
         $request->fecha,
-        'Para registrar deposito bancario por cierre de caja chica',
+        'Para registrar deposito bancario por cierre de caja chica #'.$cajachica->id,
         $montoActual,
         Null,
         Null,

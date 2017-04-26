@@ -47,9 +47,10 @@
 						<td col width="70px" align="right">
 							<ul class="demo-btns">
 								<li>
-									<a href="{{ URL::route('verMayorAux', array($dato['periodo'],
+									<a href="{{ URL::route('verMayorAux',
+																 array($dato['periodo'],
 																		  $dato['cuenta'],
-																		  $dato['codigo']
+																			$dato['un_id']
 																		)) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-book"></i></a>
 								</li>
 							</ul>												

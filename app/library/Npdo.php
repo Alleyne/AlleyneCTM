@@ -76,7 +76,7 @@ class Npdo {
       $dato->cuenta        = $cuenta->id;
       $dato->codigo        = $cuenta->codigo;
       $dato->fecha         = $fecha;
-      $dato->detalle       = 'Inicializa la cuenta de ingreso '.$cuenta->codigo.' en cero por inicio de periodo contable '.$periodo;
+      $dato->detalle       = 'Inicializa cuenta '.$cuenta->codigo.' en cero por inicio de periodo contable '.$periodo;
       $dato->debito        = 0;
       $dato->credito       = 0;
       $dato->save();
@@ -97,7 +97,7 @@ class Npdo {
       $dato->cuenta       = $cuenta->id;
       $dato->codigo       = $cuenta->codigo;
       $dato->fecha        = $fecha;
-      $dato->detalle      = 'Inicializa la cuenta de gasto '.$cuenta->codigo.' en cero por inicio de periodo contable '.$periodo;
+      $dato->detalle      = 'Inicializa cuenta '.$cuenta->codigo.' en cero por inicio de periodo contable '.$periodo;
       $dato->debito       = 0;
       $dato->credito      = 0;
       $dato->save();

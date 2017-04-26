@@ -2175,6 +2175,26 @@ Work::with(
     </ul>
   </td>
 
+  Confirmation before deleting an item
+  Submitted by ismaeltoe - 2 years ago
+  When user clicks on "delete" button, open a confirmation box before deleting an item.
+
+  @foreach (items as item)
+      <form class="delete" action="{{ route('item.destroy', $item->id) }}" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+          <input type="submit" value="Delete">
+      </form>
+  @endforeach
+
+  <script>
+      $(".delete").on("submit", function(){
+          return confirm("Do you want to delete this item?");
+      });
+  </script>   
+  
+
+
 
   /*************************************************************************************
    * Tecnica para trabajar con dinero en php
@@ -2196,3 +2216,33 @@ Work::with(
   // Actualiza el nuevo monto disponible para continuar pagando
   // redondeo el resultado para eliminar decimales extras producto de la resta
   $montoRecibido = round(($montoRecibido - $extra), 2);
+
+
+  /*************************************************************************************
+   * Tecnica para trabajar con dinero en php (Mejor tecnica)
+   ************************************************************************************/
+   Almacenar en la base de datos las cantidades que representan dinero en decimal(12,2)
+
+   Para hacer los calculos se debe transformar todo a cents y luego ejecutar la operacion matematica o comparacion
+   
+   $cents = (integer) ($dollars * 100);
+
+   Se formatea a dolares para mostrar al usuario
+   $dollars = number_format(($cents / 100), 2);
+
+   Por ultimo se transforma a dolares para almacenar en la base de datos
+   $dollars = $cents / 100;
+
+   More details
+
+    For storing a field in a MySQL database, something like DECIMAL(12,2) makes perfect sense.
+    This is a numeric value that has the correct percision (two decimal digits) and allows you to store any monetary value
+    up to 9999999999.99.
+
+    Cents are great for calculations, because it allows you to treat your monetary values as integers in calculations,
+    which is more practical to work with (especially for divisions and multiplications),
+    and which is typically the level you want your monetary values to be rounded up or down to.
+
+    No matter how you store your data in the database or how you do your calculations,
+    you want your users to see the amounts in a format they're familiar with. For example,
+    US dollars would usually formatted as $1,000.50 and Euros as 1.000,50€.

@@ -13,10 +13,11 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th class="text-left">FECHA</th> 
                 <th>TIPO</th>  
                 <th>NO</th>
                 <th>BANCO</th>                          
-                <th class="text-left">FECHA</th>                                   
+                                                  
                 <th class="text-right">MONTO</th> 
                 <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
             </tr>
@@ -25,10 +26,10 @@
             @foreach ($datos as $dato)
                 <tr>
                     <td col width="60px"><strong>{{ $dato->id }}</strong></td>
+                    <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_pago)->format('M j\\, Y') }}</td>
                     <td col width="130px" align="left">{{ $dato->trantipo->nombre }}</td>
                     <td col width="70px"><strong>{{ $dato->trans_no }}</strong></td>
-                    <td>{{ $dato->banco->nombre }}</td>
-                    <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_pago)->format('M j\\, Y') }}</td>
+                    <td>{{{ $dato->banco->nombre or '' }}}</td>
                     <td col width="90px" align="right">{{ $dato->monto }}</td>
                     <td col width="75px" align="right">
                         <a href="{{ URL::route('showRecibo', $dato->id) }}" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-list"></i></a>

@@ -185,7 +185,7 @@ class Desc {
           // registra un aumento en la cuenta de anticipos comprometidos  
           $diario = new Ctdiario;
           $diario->pcontable_id  = $periodo;
-          $diario->detalle = $cuenta_14;
+          $diario->detalle = $cuenta_14.', paga por adelantado cuota regular '.$mes_anio;
           $diario->debito = Null;
           $diario->credito = ($cuota_mant - $descuento);
           $diario->save();
@@ -269,12 +269,12 @@ class Desc {
           $diario->save();
 
           // registra una disminucion en la cuenta de Pagos anticipados 
-          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.', '.$un->codigo.', Pago #'.$pago_id, $totalDescontarPa, $un_id, $pago_id);    
+          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.', Pago #'.$pago_id, $totalDescontarPa, $un_id, $pago_id);    
 
           // registra un aumento en la cuenta de anticipos comprometidos  
           $diario = new Ctdiario;
           $diario->pcontable_id  = $periodo;
-          $diario->detalle = $cuenta_14;
+          $diario->detalle = $cuenta_14.', paga por adelantado cuota regular '.$mes_anio;
           $diario->debito = Null;
           $diario->credito = ($cuota_mant - $descuento);
           $diario->save();
@@ -325,13 +325,13 @@ class Desc {
           $diario->save();
           
           // registra una disminucion en la cuenta de Pagos anticipados 
-          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.', '.$un->codigo.', Pago #'.$pago_id, $totalDescontarPa, $un_id, $pago_id);    
+          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.', Pago #'.$pago_id, $totalDescontarPa, $un_id, $pago_id);    
 
           // registra en el diario
           // registra un aumento en la cuenta de anticipos comprometidos  
           $diario = new Ctdiario;
           $diario->pcontable_id  = $periodo;
-          $diario->detalle = $cuenta_14;
+          $diario->detalle = $cuenta_14.', paga por adelantado cuota regular '.$mes_anio;
           $diario->debito = Null;
           $diario->credito = ($cuota_mant - $descuento);
           $diario->save();

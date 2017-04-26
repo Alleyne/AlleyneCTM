@@ -10,4 +10,9 @@ class Desembolso extends Model
     {
   	 return $this->hasMany('App\Dte_desembolso');    
     }
+
+    public function cajachica()
+    {
+    	return $this->belongsTo('App\Cajachica');
+    }
 }
