@@ -131,7 +131,7 @@ class CajachicasController extends Controller
       // registra nuevo detalle en dte_cajachicas
       $dte_cajachica = new Dte_cajachica;
       $dte_cajachica->fecha = $request->fecha;
-      $dte_cajachica->descripcion = 'Se abre nueva caja chica #'.$cajachica->id.', cheque no. '.$request->doc_no;
+      $dte_cajachica->descripcion = 'Se abre nueva caja chica #'.$cajachica->id.', chq #'.$request->doc_no;
       $dte_cajachica->doc_no = $request->doc_no;
       $dte_cajachica->aumenta = $request->monto;
       $dte_cajachica->saldo = $request->monto + $montoActual;
@@ -144,7 +144,7 @@ class CajachicasController extends Controller
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
       $dato->fecha        = $request->fecha;
-      $dato->detalle      =  'Caja chica #'.$cajachica->id;
+      $dato->detalle      =  'Caja chica';
       $dato->debito       = $request->monto;
       $dato->save(); 
 
@@ -210,13 +210,14 @@ class CajachicasController extends Controller
   *
   * @return \Illuminate\Http\Response
   */  
-  public function aumentarCajachicaCreate()
+  public function aumentarCajachicaCreate($cajachica_id)
   {
     //Encuentra todos los usuarios candidatos a responsabilizarse por el nuevo fondo de caja chica
     $usuarios = User::orderBy('nombre_completo')->pluck('nombre_completo', 'id')->All();
     //dd($usuarios);
     
    return view('contabilidad.cajachicas.aumentar')
+          ->with('cajachica_id', $cajachica_id)
           ->with('usuarios', $usuarios);
   } 
   
@@ -253,17 +254,17 @@ class CajachicasController extends Controller
       // registra nuevo detalle en dte_cajachicas
       $dte_cajachica = new Dte_cajachica;
       $dte_cajachica->fecha = $request->fecha;
-      $dte_cajachica->descripcion = 'Se aumenta saldo de caja chica #'.$cajachica->id.', chq no. '.$request->doc_no;
+      $dte_cajachica->descripcion = 'Se aumenta saldo de caja chica #'.$request->cajachica_id.', chq #'.$request->doc_no;
       $dte_cajachica->doc_no = $request->doc_no;
       $dte_cajachica->aumenta = $request->monto;
       $dte_cajachica->saldo = $request->monto + $montoActual;
       $dte_cajachica->aprueba_id = $request->aprueba_id;
       $dte_cajachica->aprueba = User::find($request->aprueba_id)->nombre_completo;
-      $dte_cajachica->cajachica_id = Cajachica::all()->last()->id;
+      $dte_cajachica->cajachica_id = $request->cajachica_id;
       $dte_cajachica->save();   
      
       // Actualiza el saldo de cajachicas
-      $cajachica = Cajachica::all()->last();
+      $cajachica = Cajachica::find($request->cajachica_id);
       $cajachica->saldo = $request->monto + $montoActual;
       $cajachica->save();
 
@@ -275,7 +276,7 @@ class CajachicasController extends Controller
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
       $dato->fecha        = $request->fecha;
-      $dato->detalle      =  'Caja chica #'.$cajachica->id;
+      $dato->detalle      = 'Caja chica';
       $dato->debito       = $request->monto;
       $dato->save(); 
 
@@ -289,7 +290,7 @@ class CajachicasController extends Controller
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle = 'Para registrar deposito bancario por aumento de caja chica #'.$cajachica->id.', chq no. '.$request->doc_no;
+      $dato->detalle = 'Para registrar deposito bancario por aumento de caja chica #'.$request->cajachica_id.', chq #'.$request->doc_no;
       $dato->save(); 
       
       Sity::registraEnCuentas(
@@ -298,7 +299,7 @@ class CajachicasController extends Controller
         1,
         30,
         $request->fecha,
-        'Para registrar deposito bancario por aumento de caja chica #'.$cajachica->id.', chq no. '.$request->doc_no,
+        'Para registrar deposito bancario por aumento de caja chica #'.$request->cajachica_id.', chq #'.$request->doc_no,
         $request->monto,
         Null,
         Null,
@@ -314,7 +315,7 @@ class CajachicasController extends Controller
         1,
         8,
         $request->fecha,
-        Catalogo::find(8)->nombre.', '.'Para registrar deposito bancario por aumento de caja chica #'.$cajachica->id.', chq no. '.$request->doc_no,
+        'Para registrar deposito bancario por aumento de caja chica #'.$request->cajachica_id.', chq #'.$request->doc_no,
         $request->monto,
         Null,
         Null,
@@ -324,7 +325,7 @@ class CajachicasController extends Controller
         Null
       );
 
-      Session::flash('success', 'Se aumentado el saldo de la caja chica!');
+      Session::flash('success', 'Se aumentado el saldo de la caja chica #'.$request->cajachica_id);
       DB::commit();  
       return redirect()->route('cajachicas.index');
     
@@ -340,13 +341,14 @@ class CajachicasController extends Controller
   *
   * @return \Illuminate\Http\Response
   */  
-  public function disminuirCajachicaCreate()
+  public function disminuirCajachicaCreate($cajachica_id)
   {
     //Encuentra todos los usuarios candidatos a responsabilizarse por el nuevo fondo de caja chica
     $usuarios = User::orderBy('nombre_completo')->pluck('nombre_completo', 'id')->All();
     //dd($usuarios);
     
    return view('contabilidad.cajachicas.disminuir')
+          ->with('cajachica_id', $cajachica_id)
           ->with('usuarios', $usuarios);
   } 
   
@@ -382,16 +384,16 @@ class CajachicasController extends Controller
       // registra nuevo detalle en dte_cajachicas
       $dte_cajachica = new Dte_cajachica;
       $dte_cajachica->fecha = $request->fecha;
-      $dte_cajachica->descripcion = 'Se disminuye saldo de caja chica';
+      $dte_cajachica->descripcion = 'Se disminuye saldo de caja chica #'.$request->cajachica_id;
       $dte_cajachica->disminuye = $request->monto;
       $dte_cajachica->saldo = $montoActual - $request->monto;
       $dte_cajachica->aprueba_id = $request->aprueba_id;
       $dte_cajachica->aprueba = User::find($request->aprueba_id)->nombre_completo;
-      $dte_cajachica->cajachica_id = Cajachica::all()->last()->id;
+      $dte_cajachica->cajachica_id = $request->cajachica_id;
       $dte_cajachica->save();   
      
       // Actualiza el saldo de cajachicas
-      $cajachica = Cajachica::all()->last();
+      $cajachica = Cajachica::find($request->cajachica_id);
       $cajachica->saldo = $montoActual - $request->monto;
       $cajachica->save();
 
@@ -402,7 +404,7 @@ class CajachicasController extends Controller
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->fecha        = $request->fecha;
+      $dato->fecha = $request->fecha;
       $dato->detalle = Catalogo::find(8)->nombre;
       $dato->debito = $request->monto;
       $dato->save(); 
@@ -410,13 +412,13 @@ class CajachicasController extends Controller
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle      =  'Caja chica #'.$cajachica->id;
+      $dato->detalle      =  'Caja chica';
       $dato->credito      = $request->monto;
       $dato->save(); 
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle = 'Para registrar deposito bancario por disminucion de caja chica #'.$cajachica->id;
+      $dato->detalle = 'Para registrar deposito bancario por disminucion de caja chica #'.$request->cajachica_id;
       $dato->save(); 
       
       Sity::registraEnCuentas(
@@ -425,7 +427,7 @@ class CajachicasController extends Controller
         1,
         8,
         $request->fecha,
-        Catalogo::find(8)->nombre.', '.'Para registrar deposito bancario por disminucion de caja chica #'.$cajachica->id,
+        'Para registrar deposito bancario por disminucion de caja chica #'.$request->cajachica_id,
         $request->monto,
         Null,
         Null,
@@ -441,7 +443,7 @@ class CajachicasController extends Controller
         1,
         30,
         $request->fecha,
-        'Para registrar deposito bancario por disminucion de caja chica #'.$cajachica->id,
+        'Para registrar deposito bancario por disminucion de caja chica #'.$request->cajachica_id,
         $request->monto,
         Null,
         Null,
@@ -451,7 +453,7 @@ class CajachicasController extends Controller
         Null
       );
 
-      Session::flash('success', 'Se disminuyo el saldo de la caja chica!');
+      Session::flash('success', 'Se disminuyo el saldo de la caja chica #'.$request->cajachica_id);
       DB::commit();  
       return redirect()->route('cajachicas.index');
     
@@ -468,13 +470,14 @@ class CajachicasController extends Controller
   *
   * @return \Illuminate\Http\Response
   */  
-  public function cerrarCajachicaCreate()
+  public function cerrarCajachicaCreate($cajachica_id)
   {
     //Encuentra todos los usuarios candidatos a responsabilizarse por el nuevo fondo de caja chica
     $usuarios = User::orderBy('nombre_completo')->pluck('nombre_completo', 'id')->All();
     //dd($usuarios);
     
    return view('contabilidad.cajachicas.cerrar')
+          ->with('cajachica_id', $cajachica_id)
           ->with('usuarios', $usuarios);
   } 
   
@@ -497,11 +500,8 @@ class CajachicasController extends Controller
         'aprueba_id' => 'required'
       ));
 
-      // ecuentra el id de la caja a cerrar
-      $cchica_id = Cajachica::all()->last()->id;
-
-      // no permite cerrar la caja chica si tiene algun desemboso por aprobar
-      $desembolsos = Desembolso::where('cajachica_id', $cchica_id)->where('aprobado', 0)->first();
+       // no permite cerrar la caja chica si tiene algun desemboso por aprobar
+      $desembolsos = Desembolso::where('cajachica_id', $request->cajachica_id)->where('aprobado', 0)->first();
 
       if ($desembolsos) {
         Session::flash('warning', 'No se puede cerrar la presente Caja chica ya que la misma tiene por lo menos un desembolso sin aprobar!');
@@ -521,16 +521,16 @@ class CajachicasController extends Controller
       // registra nuevo detalle en dte_cajachicas
       $dte_cajachica = new Dte_cajachica;
       $dte_cajachica->fecha = $request->fecha;
-      $dte_cajachica->descripcion = 'Cierre de caja chica #'.$cajachica->id;
+      $dte_cajachica->descripcion = 'Cierre de caja chica #'.$request->cajachica_id;
       $dte_cajachica->disminuye =  $montoActual;
       $dte_cajachica->saldo = 0;
       $dte_cajachica->aprueba_id = $request->aprueba_id;
       $dte_cajachica->aprueba = User::find($request->aprueba_id)->nombre_completo;
-      $dte_cajachica->cajachica_id = $cchica_id;
+      $dte_cajachica->cajachica_id = $request->cajachica_id;
       $dte_cajachica->save();   
      
       // Actualiza el saldo de cajachicas
-      $cajachica = Cajachica::all()->last();
+      $cajachica = Cajachica::find($request->cajachica_id);
       $cajachica->saldo = 0;
       $cajachica->f_cierre = $request->fecha;
       $cajachica->cerrada = 1;
@@ -543,7 +543,7 @@ class CajachicasController extends Controller
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->fecha        = $request->fecha;
+      $dato->fecha = $request->fecha;
       $dato->detalle = Catalogo::find(8)->nombre;
       $dato->debito = $montoActual;
       $dato->save(); 
@@ -551,14 +551,14 @@ class CajachicasController extends Controller
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle      =  'Caja chica #'.$cajachica->id;
+      $dato->detalle      = 'Caja chica';
       $dato->credito      = $montoActual;
       $dato->save(); 
       
       // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
-      $dato->detalle = 'Para registrar deposito bancario por cierre de caja chica #'.$cajachica->id;
+      $dato->detalle = 'Para registrar deposito bancario por cierre de caja chica #'.$request->cajachica_id;
       $dato->save(); 
       
       Sity::registraEnCuentas(
@@ -567,7 +567,7 @@ class CajachicasController extends Controller
         1,
         8,
         $request->fecha,
-        Catalogo::find(8)->nombre.', '. 'Para registrar deposito bancario por cierre de caja chica #'.$cajachica->id,
+        'Para registrar deposito bancario por cierre de caja chica #'.$request->cajachica_id,
         $montoActual,
         Null,
         Null,
@@ -583,7 +583,7 @@ class CajachicasController extends Controller
         1,
         30,
         $request->fecha,
-        'Para registrar deposito bancario por cierre de caja chica #'.$cajachica->id,
+        'Para registrar deposito bancario por cierre de caja chica #'.$request->cajachica_id,
         $montoActual,
         Null,
         Null,
@@ -593,7 +593,7 @@ class CajachicasController extends Controller
         Null
       );
 
-      Session::flash('success', 'Se cierra la caja chica!');
+      Session::flash('success', 'Se cierra la caja chica #'.$request->cajachica_id);
       DB::commit();  
       return redirect()->route('cajachicas.index');
     

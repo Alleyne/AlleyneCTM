@@ -207,9 +207,9 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador CajachicasController
 	//---------------------------------------------------------// 
- 	Route::get('cerrarCajachicaCreate', 'CajachicasController@cerrarCajachicaCreate')->name('cerrarCajachicaCreate');
- 	Route::get('disminuirCajachicaCreate', 'CajachicasController@disminuirCajachicaCreate')->name('disminuirCajachicaCreate');
-  Route::get('aumentarCajachicaCreate', 'CajachicasController@aumentarCajachicaCreate')->name('aumentarCajachicaCreate');
+ 	Route::get('cerrarCajachicaCreate/{cajachica_id}', 'CajachicasController@cerrarCajachicaCreate')->name('cerrarCajachicaCreate');
+ 	Route::get('disminuirCajachicaCreate/{cajachica_id}', 'CajachicasController@disminuirCajachicaCreate')->name('disminuirCajachicaCreate');
+  Route::get('aumentarCajachicaCreate/{cajachica_id}', 'CajachicasController@aumentarCajachicaCreate')->name('aumentarCajachicaCreate');
 	
 	Route::post('cerrarCajachicaStore', 'CajachicasController@cerrarCajachicaStore')->name('cerrarCajachicaStore');
  	Route::post('disminuirCajachicaStore', 'CajachicasController@disminuirCajachicaStore')->name('disminuirCajachicaStore');

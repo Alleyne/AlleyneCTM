@@ -200,10 +200,6 @@ class DiariocajasController extends Controller
                     })
                   ->get(['pagos.id as pagoNo', 'trantipos.id as trantipo_id', 'trantipos.nombre','codigo','trans_no','detalle','debito as monto']);
         //dd($ingresoEfectivos->toArray()); 
-        
-        // calcula el total de ingresos recibidos por efectivo y cheques
-        //$totalIngresoEfectivos = $ingresoEfectivos->sum('monto');  
-        //dd($totalIngresoEfectivos); 
 
         // calcula el total de ingresos recibidos por efectivo solamente
         $totalEfectivos = $ingresoEfectivos->where('trantipo_id', 5)->sum('monto');  
@@ -212,40 +208,7 @@ class DiariocajasController extends Controller
         // calcula el total de ingresos recibidos por cheque solamente
         $totalCheques = $ingresoEfectivos->where('trantipo_id', 1)->sum('monto');  
         //dd($totalCheques);
-
-        // calcula el total de ingresos recibidos por tarjetas clave
-        //$totalClaves= $ingresoEfectivos->Where('trantipo_id', 6)->sum('monto');  
-        //dd($totalClaves);  
-
-        // calcula el total de ingresos recibidos por tarjetas de credito solamente
-        //$totalTarjetas= $ingresoEfectivos->Where('trantipo_id', 7)->sum('monto');       
-        //dd($totalTarjetas);      
-
-        // encuentra los datos para la seccion de Ingresos de efectivo del Informe de caja diario (Cheque y Efectivo)
-        // 1. encuentra la cantidad de efectivo desembolsado
- /*       $desembolsoEfectivos = Detallepagofactura::where('detallepagofacturas.fecha', $fecha)
-                  ->where(function($query){
-                                            return $query
-                                              ->where('trantipo_id', 1)
-                                              ->orwhere('trantipo_id', 5);
-                                          })                
-                  ->join('ctmayores', function($join)
-                    {
-                      $join->on('detallepagofacturas.id', '=', 'ctmayores.detallepagofactura_id')
-                           ->where('tipo', 1)
-                           ->where('credito', '>', 0);
-                    })
-                  ->join('trantipos', function($join)
-                    {
-                      $join->on('detallepagofacturas.trantipo_id', '=', 'trantipos.id');
-                    })
-                  ->get(['detallepagofacturas.id as pagoNo','trantipos.id as trantipo_id', 'trantipos.nombre as trantipo','codigo','ctmayores.detalle','credito as monto']);*/
-        //dd($desembolsoEfectivos->toArray()); 
-
-        // calcula el total desembolsado en efectivo solamente      
-        //$totalDesembolsoEfectivos= $desembolsoEfectivos->sum('monto');  
-        //dd($totalDesembolsoEfectivos);
-        
+       
         $total = $totalEfectivos + $totalCheques;
         
         // encuentra el periodo mas antiguo abierto

@@ -159,7 +159,7 @@ class DesembolsosController extends Controller
 
   				// salva la informacion
 					$desembolso = Desembolso::find(Input::get('desembolso_id'));
-					
+
 					$desembolso->fecha = Carbon::today();
 					$desembolso->cheque = Input::get('cheque');
 					$desembolso->monto = Input::get('monto');
@@ -189,7 +189,7 @@ class DesembolsosController extends Controller
 		      // registra en Ctdiario principal
 		      $dato = new Ctdiario;
 		      $dato->pcontable_id = $periodo->id;
-	        $dato->detalle = 'Para registrar el cheque No. '.Input::get('cheque').' y reponer el fondo de caja chica';
+	        $dato->detalle = 'Para registrar el chq #'.Input::get('cheque').' y reponer el fondo de caja chica #'.$desembolso->cajachica->id;
 		      $dato->save(); 
 		      
 	        Sity::registraEnCuentas(
@@ -198,7 +198,7 @@ class DesembolsosController extends Controller
 	          1,
 	          30,
 	          Carbon::today(),
-	          'Caja chica',
+	          'Para reponer fondo de caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque'),
 	          Input::get('monto'),
 	          Null,
 	          Null,
@@ -214,7 +214,7 @@ class DesembolsosController extends Controller
 	          1,
 	          8,
 	          Carbon::today(),
-	          Catalogo::find(8)->nombre,
+	          'Para reponer fondo de caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque'),
 	          Input::get('monto'),
 	          Null,
 	          Null,
@@ -233,34 +233,27 @@ class DesembolsosController extends Controller
 		      }
 		      //dd($montoActual);
 
-		      // encuentra los datos de la ultima caja chica
-		      $cchica = Cajachica::all()->last();
-
 		      // registra nuevo detalle en dte_cajachicas
 		      $dte_cajachica = new Dte_cajachica;
 		      $dte_cajachica->fecha = Carbon::today();
-		      $dte_cajachica->descripcion = 'Reponer fondo de caja chica, cheque no. '.Input::get('cheque');
+		      $dte_cajachica->descripcion = 'Para reponer fondo de caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque');
 		      $dte_cajachica->doc_no = Input::get('cheque');
 		      $dte_cajachica->aumenta = Input::get('monto');
 		      $dte_cajachica->saldo = Input::get('monto') + $montoActual;
 		      $dte_cajachica->aprueba_id = Input::get('user_id');
 		      $dte_cajachica->aprueba = User::find(Input::get('user_id'))->nombre_completo;
-		      $dte_cajachica->cajachica_id = $cchica->id;
+		      $dte_cajachica->cajachica_id = $desembolso->cajachica->id;
 		      $dte_cajachica->save();   
 		     
 		      // Actualiza el saldo de cajachicas
+		      $cchica = Cajachica::find($desembolso->cajachica->id);
 		      $cchica->saldo = Input::get('monto') + $montoActual;
 		      $cchica->save();
 
-					// actualiza del diario de caja chica para que refleje nuevo saldo
-					//$cajachica = new Cajachica;
-					//$cajachica->saldo = Cajachica::all()->last()->saldo - Input::get('monto');
-					//$cajachica->save();
-
-					Session::flash('success', 'Se ha registrado la aprobacion de informe de caja chica!');
+					Session::flash('success', 'Se ha registrado la aprobacion de informe de caja chica #'.$desembolso->cajachica->id);
 					DB::commit();       
 
-					return redirect()->route('verDesembolsos', $cchica->id);
+					return redirect()->route('verDesembolsos', $desembolso->cajachica->id);
 				}       
 		
 				Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');

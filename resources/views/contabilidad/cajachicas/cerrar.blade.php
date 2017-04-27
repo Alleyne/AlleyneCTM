@@ -47,7 +47,8 @@
 									
 									<fieldset>
 	 									{{ csrf_field() }}
-                
+                		{{ Form::hidden('cajachica_id', $cajachica_id) }}
+									
 									<!-- Form Name -->
 										<legend>Cerrar Caja Chica</legend>
 

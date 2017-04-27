@@ -80,13 +80,13 @@
                                                         <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
                                                     </li>
                                                     <li>
-                                                        <a href="{{ URL::route('aumentarCajachicaCreate') }}" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>
+                                                        <a href="{{ URL::route('aumentarCajachicaCreate', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>
                                                     </li>
                                                     <li>
-                                                        <a href="{{ URL::route('disminuirCajachicaCreate') }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-minus"></i></a>
+                                                        <a href="{{ URL::route('disminuirCajachicaCreate', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-minus"></i></a>
                                                     </li>                                       
                                                     <li>
-                                                        <a href="{{ URL::route('cerrarCajachicaCreate') }}" class="btn btn-danger btn-xs"><i class="fa fa-lock"></i></a>
+                                                        <a href="{{ URL::route('cerrarCajachicaCreate', $dato->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-lock"></i></a>
                                                     </li> 
                                                     <li>
                                                         <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-warning btn-xs"> Diario</a>
