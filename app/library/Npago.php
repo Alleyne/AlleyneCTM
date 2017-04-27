@@ -90,25 +90,25 @@ class Npago {
     $datos = self::cobraFacturas($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo);
     $sobrante = $datos['sobrante'];
     $dineroFresco = $datos['dineroFresco'];
-    //dd($sobrante, $dineroFresco);    
+    dd($sobrante, $dineroFresco);    
     
     //Prioridad no 2, verifica si hay recargos pendiente por pagar.
     $datos = self::cobraRecargos($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago, $unCodigo);
     $sobrante = $datos['sobrante'];
     $dineroFresco = $datos['dineroFresco'];
-    //dd($sobrante, $dineroFresco);
+    dd($sobrante, $dineroFresco);
     
     //Prioridad no 3, verifica si hay cuotas extraordinarias por pagar.
     $datos = self::cobraCuotaExtraordinaria($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago, $unCodigo);
     $sobrante = $datos['sobrante'];
     $dineroFresco = $datos['dineroFresco'];
-    //dd($sobrante, $dineroFresco);
+    dd($sobrante, $dineroFresco);
     
     //Prioridad no 4, verifica si se trata de un pago anticipado con el proposito de obtener descuento
     $datos = Desc::verificaDescuento($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago);
     $sobrante = $datos['sobrante'];
     $dineroFresco = $datos['dineroFresco'];
-    //dd($sobrante, $dineroFresco);
+    dd($sobrante, $dineroFresco);
 
     //Prioridad no 5, si al final de todo el proceso hay un sobrante entonces se registra como Pago anticipado
     // si sobra dinero y es fresco se tiene que registrar en el banco o caja chica segun el tipo de pago que se hizo

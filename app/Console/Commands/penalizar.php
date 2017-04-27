@@ -66,7 +66,7 @@ class penalizar extends Command
     *===========================================================================================*/
     public function penalizarTipo3($today)
     {
-      dd($today);
+      //dd($today);
 
       // clona $fecha para mantener su valor original
       $f_limite = clone $today;
