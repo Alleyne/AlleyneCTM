@@ -29,7 +29,7 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Agregar Propietario</h2>
+						<h2>Vincular Propietario</h2>
 	
 					</header>
 	
@@ -67,7 +67,15 @@
 									</fieldset>
 									
 									<div class="form-actions">
-										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
+							      {{Form::button('Salvar', array(
+							          'class' => 'btn btn-success btn-large',
+							          'data-toggle' => 'modal',
+							          'data-target' => '#confirmAction',
+							          'data-title' => 'Vincular propietario',
+							          'data-message' => 'Esta seguro(a) que desea vincular el presente propietario?',
+							          'data-btntxt' => 'Si, vincular propietario',
+							          'data-btncolor' => 'btn-success'
+							      ))}}
 										<a href="{{ URL::route('indexprops', array($un_id, $seccione_id)) }}" class="btn btn-large">Cancelar</a>
 										<!-- <a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a> -->
 									</div>
@@ -78,6 +86,9 @@
 					<!-- end widget div -->
 				</div>
 				<!-- end widget -->
+		    <!-- Incluye la modal box -->
+		    @include('templates.backend._partials.modal_confirm')
+
 			</article>
 			<!-- WIDGET END -->
 	
@@ -148,6 +159,8 @@
 
 @section('relatedplugins')
 <!-- PAGE RELATED PLUGIN(S) -->
+<!-- Incluye javascript -->
+<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
 
 <script type="text/javascript">
 // DO NOT REMOVE : GLOBAL FUNCTIONS!

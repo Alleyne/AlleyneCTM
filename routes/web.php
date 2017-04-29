@@ -227,7 +227,7 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------// 
   Route::get('verDesembolsos/{cajachica_id}', 'DesembolsosController@verDesembolsos')->name('verDesembolsos');
   Route::post('storeAprobarInforme', 'DesembolsosController@storeAprobarInforme')->name('storeAprobarInforme');
-  Route::get('aprobarInforme/{desembolso_id}', 'DesembolsosController@aprobarInforme')->name('aprobarInforme');
+  Route::get('aprobarInforme/{desembolso_id}, {cajachica_id}', 'DesembolsosController@aprobarInforme')->name('aprobarInforme');
   Route::resource('desembolsos', 'DesembolsosController');
 
 	//---------------------------------------------------------//

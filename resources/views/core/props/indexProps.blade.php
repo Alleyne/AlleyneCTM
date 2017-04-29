@@ -11,7 +11,7 @@
 			<div class="row">
 		
 				<!-- NEW WIDGET START -->
-				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
+				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<!-- Widget ID (each widget will need unique ID)-->
 					<div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="true" data-widget-deletebutton="false">
 						<!-- widget options:
@@ -68,7 +68,22 @@
 												<td col width="150px" align="center">
 													<ul class="demo-btns">
 														<li>
-															<a href="{{ URL::route('desvincularprop', array($dato->user_id, $dato->un_id)) }}" class="btn btn-warning btn-xs"><i class="fa fa-search"></i> Desvincular</a>
+											        {{Form::open(array(
+											            'route' => array('desvincularprop', $dato->user_id, $dato->un_id),
+											            'method' => 'GET',  // or DELETE
+											            'style' => 'display:inline'
+											        ))}}
+
+											        {{Form::button('Desvincular', array(
+											            'class' => 'btn btn-warning btn-xs',
+											            'data-toggle' => 'modal',
+											            'data-target' => '#confirmAction',
+											            'data-title' => 'Desvincular propietario',
+											            'data-message' => 'Esta seguro(a) que desea desvincular el presente propietario?',
+											            'data-btntxt' => 'SI, desvincular',
+											            'data-btncolor' => 'btn-success'
+											        ))}}
+											        {{Form::close()}}  
 														</li>															
 														<li>
 															<a href="{{ URL::route('users.show', $dato->user_id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
@@ -79,6 +94,9 @@
 										@endforeach
 									</tbody>
 								</table>
+						    <!-- Incluye la modal box -->
+						    @include('templates.backend._partials.modal_confirm')
+  
 							</div>
 							<!-- end widget content -->
 		
@@ -94,14 +112,13 @@
 		
 		</section>
 		<!-- end widget grid -->
-
-
 @stop
 
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
     
     <script type="text/javascript">
     $(document).ready(function() {

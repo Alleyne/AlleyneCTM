@@ -146,24 +146,12 @@ class CatalogosController extends Controller {
   public function update(Request $request, $id)
 	{
 		$cuenta= Catalogo::find($id);
-		if($cuenta->tipo=='1' || $cuenta->tipo=='2') {      
-			$this->validate($request, array(
-      'nombre' => 'required'
-    	));			
-		}
-			
-		elseif($cuenta->tipo=='6') {
-			$this->validate($request, array(
-      'nombre' => 'required',
-      'nombre_factura' => 'required'    
-    	));		
-		}
+   
+		$this->validate($request, array(
+    'nombre' => 'required'
+  	));			
 
 		$cuenta->nombre = $request->nombre;		
-		$cuenta->nombre_factura = $request->nombre_factura;					
-		$cuenta->corriente_siono = $request->corriente_siono;		
-		$cuenta->enfactura = $request->enfactura;
-		$cuenta->activa = $request->activa;
 		$cuenta->save();
 		
 		Session::flash('success', 'La cuenta ' .$cuenta->nombre. ' ha sido editada con exito');

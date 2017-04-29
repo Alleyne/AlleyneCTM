@@ -87,62 +87,73 @@
 															<span class="label label-warning">Registrando</span>
 														</li>
 														<li>
-															<a href="{{ URL::route('detallefacturas.show', array($dato->id)) }}" class="btn btn-info btn-xs"> Detalles</a>
+															<a href="{{ URL::route('detallefacturas.show', array($dato->id)) }}" class="btn btn-primary btn-xs"> Detalles</a>
 														</li>					
 														<li>
-															{{Form::open(array(
-																'route' => array('facturas.destroy', $dato->id),
-																'method' => 'DELETE',
-																'style' => 'display:inline'
-															))}}
+                              {{Form::open(array(
+																	'route' => array('facturas.destroy', $dato->id),
+																	'method' => 'DELETE',
+                                  'style' => 'display:inline'
+                              ))}}
 
-																{{Form::button('Borrar', array(
-																	'class' => 'btn btn-danger btn-xs',
-																	'data-toggle' => 'modal',
-																	'data-target' => '#confirmDelete',
+                              {{Form::button('Borrar', array(
+                                  'class' => 'btn btn-danger btn-xs',
+                                  'data-toggle' => 'modal',
+                                  'data-target' => '#confirmAction',
 																	'data-title' => 'Borrar factura',
 																	'data-message' => 'Esta seguro(a) que desea borrar el presente de factura?',
-																	'data-btncancel' => 'btn-default',
-																	'data-btnaction' => 'btn-danger',
-																	'data-btntxt' => 'Borrar factura'
-																))}}
-															{{Form::close()}}
+																	'data-btntxt' => 'Borrar factura',
+                                  'data-btncolor' => 'btn-danger'
+                              ))}}
+                              {{Form::close()}}
 														</li>
 													
 													@elseif ($dato->etapa==2)
 														<li>
-															<div id="ask_5">
-																<a href="{{ URL::route('contabilizaDetallesFactura', $dato->id) }}" class="btn btn-success btn-xs"> Contabilizar</a>
-															</div>
+                              {{Form::open(array(
+                                  'route' => array('contabilizaDetallesFactura', $dato->id),
+                                  'method' => 'GET',
+                                  'style' => 'display:inline'
+                              ))}}
+
+                              {{Form::button('Cantabilizar', array(
+                                  'class' => 'btn btn-warning btn-xs',
+                                  'data-toggle' => 'modal',
+                                  'data-target' => '#confirmAction',
+                                  'data-title' => 'Contabilizar factura de egreso',
+                                  'data-message' => 'Esta seguro(a) que desea contabilizar factura de egreso por Caja General?',
+                                  'data-btntxt' => 'Contabilizar egreso de Caja general',
+                                  'data-btncolor' => 'btn-info'
+                              ))}}
+                              {{Form::close()}}  
 														</li>
 														<li>
 															<a href="{{ URL::route('detallefacturas.show', $dato->id) }}" class="btn btn-info btn-xs"> Detalles</a>
 														</li>					
 														<li>
-															{{Form::open(array(
-																'route' => array('facturas.destroy', $dato->id),
-																'method' => 'DELETE',
-																'style' => 'display:inline'
-															))}}
+                              {{Form::open(array(
+																	'route' => array('facturas.destroy', $dato->id),
+																	'method' => 'DELETE',
+                                  'style' => 'display:inline'
+                              ))}}
 
-																{{Form::button('Borrar', array(
-																	'class' => 'btn btn-danger btn-xs',
-																	'data-toggle' => 'modal',
-																	'data-target' => '#confirmDelete',
+                              {{Form::button('Cantabilizar', array(
+                                  'class' => 'btn btn-danger btn-xs',
+                                  'data-toggle' => 'modal',
+                                  'data-target' => '#confirmAction',
 																	'data-title' => 'Borrar factura',
 																	'data-message' => 'Esta seguro(a) que desea borrar el presente de factura?',
-																	'data-btncancel' => 'btn-default',
-																	'data-btnaction' => 'btn-danger',
-																	'data-btntxt' => 'Borrar factura'
-																))}}
-															{{Form::close()}}
+																	'data-btntxt' => 'Borrar factura',
+                                  'data-btncolor' => 'btn-danger'
+                              ))}}
+                              {{Form::close()}}
 														</li>
 													@elseif ($dato->etapa==3)
 														<li>
 															<span class="label label-success">Contabilizada</span>
 														</li>															
 														<li>
-															<a href="{{ URL::route('detallefacturas.show', $dato->id) }}" class="btn btn-info btn-xs"> Detalles</a>
+															<a href="{{ URL::route('detallefacturas.show', $dato->id) }}" class="btn btn-primary btn-xs"> Detalles</a>
 														</li>
 													@endif	
 												</ul>												
@@ -175,7 +186,8 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
-    
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>  
+
     <script type="text/javascript">
     $(document).ready(function() {
         pageSetUp();

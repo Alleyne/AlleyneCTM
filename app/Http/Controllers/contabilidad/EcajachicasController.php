@@ -118,11 +118,19 @@ class EcajachicasController extends Controller
 				{
 
 					// encuentra le saldo actual de la caja chica
-					$saldoCajaChica = Cajachica::all()->last()->saldo;
-					//dd((float)$saldoCajaChica, (float)Input::get('monto'));
+					$cchica = Cajachica::all()->last();
 					
-					if ((float)$saldoCajaChica < (float)Input::get('monto')) {
-	          Session::flash('danger', '<< ERROR >> El monto sobre pasa el saldo actual de la caja chica de B/.'. $saldoCajaChica);
+					//dd((float)$cchica->monto_maximo, (float)Input::get('monto'));
+					
+					// verifica que el total de la factura de egreso de caja chica no sobrepase el monto maximo permitido
+					if ((float)$cchica->monto_maximo < (float)Input::get('monto')) {
+	          Session::flash('danger', '<< ERROR >> El monto total sobrepasa el maximo permitido de B/.'. $cchica->monto_maximo);
+						return back()->withInput()->withErrors($validation);
+					} 
+
+					// verifica que el total de la factura de egreso de caja chica no sobrepase el saldo actual de la caja chica
+					if ((float)$cchica->saldo < (float)Input::get('monto')) {
+	          Session::flash('danger', '<< ERROR >> El monto total sobrepasa el saldo actual de la caja chica de B/.'. $cchica->saldo);
 						return back()->withInput()->withErrors($validation);
 					} 
 

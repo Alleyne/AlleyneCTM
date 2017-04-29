@@ -69,7 +69,7 @@
                                                         <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
                                                     </li>                
                                                     <li>
-                                                        <a href="{{ URL::route('aprobarInforme', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Desembolso</a>
+                                                        <a href="{{ URL::route('aprobarInforme', array($dato->id, $cajachica_id)) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Desembolso</a>
                                                     </li> 
                                                 </ul>
                                             @else

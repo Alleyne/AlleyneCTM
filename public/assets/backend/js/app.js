@@ -201,32 +201,6 @@ $(document).ready(function() {
 		e.preventDefault();
 	});
 	
-	// Javascript functions to control modal data injection -->
-	  $('#confirmDelete').on('show.bs.modal', function (e) {
-	      $message = $(e.relatedTarget).attr('data-message');
-	      $(this).find('.modal-body p').text($message);
-	      $title = $(e.relatedTarget).attr('data-title');
-	      $(this).find('.modal-title t').text($title);
-	      
-	      // Grab custom settings from submission
-	      // Button Text for action button
-	      $btntxt = $(e.relatedTarget).attr('data-btntxt');
-	      $(this).find('.modal-footer x').text($btntxt);
-	      // Cancel Button Class
-	      $btncan = $(e.relatedTarget).attr('data-btncancel');
-	      // Primary Action Button Class
-	      $btnac = $(e.relatedTarget).attr('data-btnaction');
-	 
-	      // Pass form reference to modal for submission on yes/ok
-	      var form = $(e.relatedTarget).closest('form');
-	      $(this).find('.modal-footer #confirm').data('form', form);
-	  });
-	 
-	  <!-- Form confirm (yes/ok) handler, submits form -->
-	  $('#confirmDelete').find('.modal-footer #confirm').on('click', function(){
-	      $(this).data('form').submit();
-	  });
-
 	// PREGUNTAR SI DESEA DESVINCULAR ADMINISTRADOR DE BLOQUE
 	$('#ask_1 a').click(function(e) {
 		//get the link

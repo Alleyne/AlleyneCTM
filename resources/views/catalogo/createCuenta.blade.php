@@ -27,7 +27,7 @@
 					
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear una nueva cuenta de Activos</h2>
+						<h2>Crear una nueva cuenta contable</h2>
 	
 					</header>
 	
@@ -97,7 +97,15 @@
 									</fieldset>
 									
 									<div class="form-actions">
-										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
+							      {{Form::button('Salvar', array(
+							          'class' => 'btn btn-success btn-large',
+							          'data-toggle' => 'modal',
+							          'data-target' => '#confirmAction',
+							          'data-title' => 'Crear nueva cuenta contable',
+							          'data-message' => 'Esta seguro(a) que desea crear una nueva cuenta contable?',
+							          'data-btntxt' => 'SI, crear nueva cuenta',
+							          'data-btncolor' => 'btn-success'
+							      ))}}
 										<a href="{{ URL::route('catalogos.index') }}" class="btn btn-large">Cancelar</a>
 									</div>
 								{{ Form::close() }}
@@ -111,14 +119,17 @@
 			</article>
 			<!-- WIDGET END -->
 		</div>
-	
 		<!-- end row -->
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')
+    
 	</section>
 	<!-- end widget grid -->
 @stop
 
 @section('relatedplugins')
 <!-- PAGE RELATED PLUGIN(S) -->
+<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
 
 <script type="text/javascript">
 // DO NOT REMOVE : GLOBAL FUNCTIONS!

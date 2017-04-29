@@ -8,6 +8,10 @@ use App\library\Sity;
 use App\Http\Helpers\Grupo;
 use Validator;
 
+
+use Jenssegers\Date\Date;
+
+
 use App\Ecajachica;
 use App\Dte_ecajachica;
 use App\Catalogo;
@@ -35,6 +39,7 @@ class Dte_ecajachicasController extends Controller {
 
     // encuentra los datos generales del encabezado de egreso de caja chica
     $ecajachica= Ecajachica::find($ecajachica_id);
+    $ecajachica['fecha'] = Date::parse($ecajachica->fecha)->toFormattedDateString();
 		//dd($ecajachica->toArray());
 
     //Obtiene todos los productos registrados en la factura de egresos de caja chica

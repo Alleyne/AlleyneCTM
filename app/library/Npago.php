@@ -90,7 +90,6 @@ class Npago {
     $datos = self::cobraFacturas($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo);
     $sobrante = $datos['sobrante'];
     $dineroFresco = $datos['dineroFresco'];
-    
     //dd($sobrante, $dineroFresco);    
     
     //Prioridad no 2, verifica si hay recargos pendiente por pagar.

@@ -38,12 +38,8 @@ class DesembolsosController extends Controller
 			// encuentra todos los desembolsos que pertenecen a una determinada caja chica
 			$datos = Desembolso::where('cajachica_id', $cajachica_id)->get();
 			
-			// encuentra las generales de la caja chica
-			$cchica = Cajachica::find($cajachica_id);
-			//dd($cchica);
-
 			return view('contabilidad.desembolsos.verDesembolsos')
-						->with('cchica', $cchica)
+						->with('cajachica_id', $cajachica_id)
 						->with('datos', $datos);
 		}
 
@@ -94,17 +90,22 @@ class DesembolsosController extends Controller
 		 * @param  int  $id
 		 * @return \Illuminate\Http\Response
 		 */
-		public function aprobarInforme($desembolso_id) {
+		public function aprobarInforme($desembolso_id, $cchica_id) {
 
 			// encuentra los datos del desembolso
-			//$datos= Desembolso::find($desembolso_id);
+			//$cchica_id= Desembolso::find($desembolso_id)->$desembolso->cajachica->id;
 	    
+	    // encuentrea las generales de la cajachica a la que pertenece el desembolso
+	    //$cchica = $desembolso->cajachica;
+	    //dd($cchica);
+
 	    //Encuentra todos los proveedores registrados
 			$aprobadores = User::orderBy('nombre_completo')->pluck('nombre_completo', 'id')->All();
 		  //dd($aprobadores);
 
 			return view('contabilidad.desembolsos.aprobarInforme')
 						->with('aprobadores', $aprobadores)
+					  ->with('cchica_id', $cchica_id)
 						->with('desembolso_id', $desembolso_id);
 		}
 

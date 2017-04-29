@@ -51,7 +51,6 @@
                                 <th>MONTO</th> 
                                 <th>UNIDAD</th>
                                 <th>PROPIETARIOS</th>
-                                <th>IDENT</th>
                                 <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>   
                             </tr>
                         </thead>
@@ -64,20 +63,38 @@
                                     <td col width="50px" align="left">{{ $dato->monto }}</td>  
                                     <td col width="80px"><strong>{{ $dato->codigo }}</strong></td>
                                     <td>{{ $dato->propietarios }}</td>
-                                    <td col width="50px">{{ $dato->identificado ? "Si" : 'No' }}</td>
                                     @if (Cache::get('esAdminkey'))
                                         <td col width="125px" align="right">
                                             <ul class="demo-btns">
-                                                @if ($dato->contabilizado == 0)
+                                                @if ($dato->identificado == 0 && $dato->contabilizado == 0)
                                                     <li>
-                                                        <a href="{{ URL::route('identificarPagoCreate', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
+                                                        <a href="{{ URL::route('identificarPagoCreate', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> </a>
+                                                    </li> 
+                                                @elseif ($dato->identificado == 1 && $dato->contabilizado == 0)
+                                                    <li>
+                                                        <a href="{{ URL::route('identificarPagoCreate', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> </a>
                                                     </li> 
                                                     <li>
-                                                        <a href="{{ URL::route('contabilizaPagonoid', array($dato->id, $dato->f_pago, $dato->un_id, $dato->monto, $dato->banco_id, $dato->doc_no)) }}" class="btn btn-warning btn-xs">Contabilizar</a>
+                                                        {{Form::open(array(
+                                                            'route' => array('contabilizaPagonoid',$dato->id, $dato->f_pago, $dato->un_id, $dato->monto, $dato->banco_id, $dato->doc_no),
+                                                            'method' => 'GET',
+                                                            'style' => 'display:inline'
+                                                        ))}}
+
+                                                        {{Form::button('Contabilizar', array(
+                                                            'class' => 'btn btn-warning btn-xs',
+                                                            'data-toggle' => 'modal',
+                                                            'data-target' => '#confirmAction',
+                                                            'data-title' => 'Contabilizar pago identificado',
+                                                            'data-message' => 'Esta seguro(a) que desea contabilizar el presente pago identificado?',
+                                                            'data-btntxt' => 'SI, contabilizar pago',
+                                                            'data-btncolor' => 'btn-success'
+                                                        ))}}
+                                                        {{Form::close()}} 
                                                     </li>
-                                                @else
+                                                @elseif ($dato->identificado == 1 && $dato->contabilizado == 1)
                                                     <li>
-                                                        <span class="label label-success">Pago contabilizado</span>
+                                                        <span class="label label-success">Contabilizado</span>
                                                     </li>
                                                 @endif
                                             </ul>
@@ -88,6 +105,8 @@
                                                            
                         </tbody>
                     </table>
+                    <!-- Incluye la modal box -->
+                    @include('templates.backend._partials.modal_confirm')
                 
                 </div><!-- end widget content -->
             </div><!-- end widget div -->
@@ -102,7 +121,8 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
-    
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
+
     <script type="text/javascript">
     $(document).ready(function() {
         pageSetUp();

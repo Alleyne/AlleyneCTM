@@ -18,51 +18,29 @@
 									{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 								</div>
 							</div>
-							
-							@if ($cuenta->tipo=='1' || $cuenta->tipo=='2') 
-								<div class="form-group">
-									<label class="col-md-3 control-label">Corriente si no</label>
-									<div class="col-md-9">
-										{{ Form::checkbox('corriente_siono') }}
-										{!! $errors->first('corriente_siono', '<li style="color:red">:message</li>') !!}
-									</div>
-								</div>
-							@endif
-							
-							@if ($cuenta->tipo=='6') 	
-								<div class="form-group">
-									<label class="col-md-3 control-label">Nombre en factura</label>
-									<div class="col-md-9">
-										{{ Form::text('nombre_factura', $cuenta->nombre_factura, array('class' => 'form-control input-sm', 'title' => 'Descripcion en factura...', 'autocomplete' => 'off')) }}
-										{!! $errors->first('nombre_factura', '<li style="color:red">:message</li>') !!}
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label class="col-md-3 control-label">Visible en factura</label>
-									<div class="col-md-9">
-										{{ Form::checkbox('enfactura') }}
-										{!! $errors->first('enfactura', '<li style="color:red">:message</li>') !!}
-									</div>
-								</div>	
-							@endif
-
-							<div class="form-group">
-								<label class="col-md-3 control-label">Estatus</label>
-								<div class="col-md-9">
-									{{ Form::checkbox('activa') }}
-									{!! $errors->first('activa', '<li style="color:red">:message</li>') !!}
-								</div>
-							</div>
-						</fieldset>
+  					</fieldset>
 						
 						<div class="form-actions">
-							{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
+				      {{Form::button('Salvar', array(
+				          'class' => 'btn btn-success btn-large',
+				          'data-toggle' => 'modal',
+				          'data-target' => '#confirmAction',
+				          'data-title' => 'Editar cuenta contable',
+				          'data-message' => 'Esta seguro(a) que desea editar la cuenta contable?',
+				          'data-btntxt' => 'SI, editar cuenta',
+				          'data-btncolor' => 'btn-success'
+				      ))}}
 							<a href="{{ URL::route('catalogos.index') }}" class="btn btn-large">Cancelar</a>
 						</div>
 			{{ Form::close() }}
-
 		</div>
 	</div>
 
+	<!-- Incluye la modal box -->
+	@include('templates.backend._partials.modal_confirm')
 @endsection
+ 
+@section('relatedplugins')
+	<!-- PAGE RELATED PLUGIN(S) -->
+	<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
+@stop

@@ -6,18 +6,22 @@
 
 	<div class="well well-sm">
 		<div class="card card-outline-danger text-center">
-	    <h4 class="card-title">Egreso de Caja Chica</h4>
-		  <div class="row">
-		    <div class="col-md-2">
-					12/12/2017
-		    </div>
-		    <div class="col-md-8">
-		      Veneficiario: Mi compania
-		    </div>
-		    <div class="col-md-2">
-					Factura no: 123456
-		    </div>
-		  </div>		
+	    <h4 class="card-title">Factura por egreso de Caja Chica</h4>
+			  <hr>
+			  <div class="row">
+			    <div class="col-md-3">
+						Factura No: {{ $ecajachica->doc_no }}							
+			    </div>
+			    <div class="col-md-3">
+			      A Favor de: {{ $ecajachica->afavorde }}
+			    </div> 
+			    <div class="col-md-3">
+			      Saldo actual B/.: {{ $ecajachica->total }}
+			    </div> 
+			    <div class="col-md-3">
+			    	Fecha: {{ $ecajachica->fecha }}
+			    </div>
+			  </div>				
 		</div>	
 	</div>
 

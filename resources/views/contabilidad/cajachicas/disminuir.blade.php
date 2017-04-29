@@ -56,7 +56,7 @@
                         <label class="col-md-3 control-label">Fecha</label>
                         <div class="col-md-9">
 													<div class="input-group">
-														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+														<input type="text" name="fecha" placeholder="Seleccione la fecha en que se efectua la disminucion!" class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 													</div>
                         	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
@@ -83,7 +83,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Aprobado por</label>
 											<div class="col-md-9">
-												{{ Form::select('aprueba_id', ['' => 'Selecione una persona responsable por aprobar el aumento de caja chica ...'] + $usuarios, 0, ['class' => 'form-control']) }}
+												{{ Form::select('aprueba_id', ['' => 'Selecione una persona responsable por aprobar la disminucion de caja chica ...'] + $usuarios, 0, ['class' => 'form-control']) }}
 												{!! $errors->first('aprueba_id', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
@@ -91,8 +91,16 @@
 									</fieldset>
 									
 									<div class="form-actions">
-										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
-										<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
+						        {{Form::button('Salvar', array(
+						            'class' => 'btn btn-success btn-large',
+						            'data-toggle' => 'modal',
+						            'data-target' => '#confirmAction',
+						            'data-title' => 'Disminuir saldo de Caja chica',
+						            'data-message' => 'Esta seguro(a) que desea disminuir el saldo de la Caja chica?',
+						            'data-btntxt' => 'SI, disminuir saldo',
+						            'data-btncolor' => 'btn-success'
+						        ))}}
+										<a href="{{ URL::route('cajachicas.index') }}" class="btn btn-large">Cancelar</a>
 									</div>
 								{{ Form::close() }}
 							</div>
@@ -104,23 +112,18 @@
 			</article>
 			<!-- WIDGET END -->
 		</div>
-	
 		<!-- end row -->
-	
-		<!-- row -->
-	
-		<div class="row">
-	
-		</div>
-	
-		<!-- end row -->
-	
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')	
 	</section>
 	<!-- end widget grid -->
 @stop
 
+
 @section('relatedplugins')
 <!-- PAGE RELATED PLUGIN(S) -->
+<!-- Incluye javascript -->
+<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
 
 <script type="text/javascript">
 // DO NOT REMOVE : GLOBAL FUNCTIONS!

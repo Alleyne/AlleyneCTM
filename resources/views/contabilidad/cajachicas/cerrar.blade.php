@@ -76,8 +76,16 @@
 									</fieldset>
 									
 									<div class="form-actions">
-										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
-										<a href="{{ URL::previous() }}" class="btn btn-large">Cancelar</a>
+						        {{Form::button('Salvar', array(
+						            'class' => 'btn btn-success btn-large',
+						            'data-toggle' => 'modal',
+						            'data-target' => '#confirmAction',
+						            'data-title' => 'Cerrar Caja chica',
+						            'data-message' => 'Esta seguro(a) que desea cerrar la Caja chica?',
+						            'data-btntxt' => 'SI, cerrar Caja chica',
+						            'data-btncolor' => 'btn-success'
+						        ))}}
+										<a href="{{ URL::route('cajachicas.index') }}" class="btn btn-large">Cancelar</a>
 									</div>
 								{{ Form::close() }}
 							</div>
@@ -89,16 +97,18 @@
 			</article>
 			<!-- WIDGET END -->
 		</div>
-	
 		<!-- end row -->
-		<!-- end row -->
-	
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')
+
 	</section>
 	<!-- end widget grid -->
 @stop
 
 @section('relatedplugins')
 <!-- PAGE RELATED PLUGIN(S) -->
+<!-- Incluye javascript -->
+<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
 
 <script type="text/javascript">
 // DO NOT REMOVE : GLOBAL FUNCTIONS!
