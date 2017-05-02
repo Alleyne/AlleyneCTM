@@ -47,11 +47,11 @@ class DetallefacturasController extends Controller {
     $datos_2= $datos_2->pluck('nombre', 'id')->all();       
    
     // encuentra todos los productos asignados a un determinado proveedor
-		$datos_3 = Org::find($factura->org_id)->serviproductos()->where('tipo', 0);
+		$datos_3 = Org::find($factura->org_id)->serviproductos()->where('tipo', 0)->where('activo', 1);
     $datos_3= $datos_3->pluck('nombre', 'serviproductos.id')->all();   
     
     // encuentra todos los servicios asignados a un determinado proveedor
-		$datos_4 = Org::find($factura->org_id)->serviproductos()->where('tipo', 1);
+		$datos_4 = Org::find($factura->org_id)->serviproductos()->where('tipo', 1)->where('activo', 1);
     $datos_4= $datos_4->pluck('nombre', 'serviproductos.id')->all();   
     
     // Subtrae de la lista total de productos de la tabla serviproductos,

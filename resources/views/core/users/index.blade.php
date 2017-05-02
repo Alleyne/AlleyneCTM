@@ -59,6 +59,7 @@
 											<th>NOMBRE</th>
 											<th>USUARIO</th>
 											<th>E-MAIL</th>										
+											<th>ACTIVADO</th>	
 											<th>ACCIONES</th>
 										</tr>
 									</thead>
@@ -70,7 +71,8 @@
 												<td><strong>{{ $dato->fullname }}</strong></td>
 												<td>{{ $dato->username }}</td>
 												<td>{{ $dato->email }}</td>
-												<td col width="150px" align="right">
+												<td col width="60px" align="center">{{ $dato->activated ? 'Si' : 'No' }}</td>
+												<td col width="100px" align="right">
 													<ul class="demo-btns">
 														<li>
 															<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-unlock-o"></i></a>

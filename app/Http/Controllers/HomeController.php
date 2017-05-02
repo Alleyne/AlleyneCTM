@@ -6,6 +6,7 @@ use App\library\Grupo;
 use Session;
 use Cache;
 use App\Un;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -27,14 +28,22 @@ class HomeController extends Controller
     public function index()
     {
 
+        Cache::flush();
         if (Grupo::esAdmin()) {
             Cache::forever('esAdminkey', Grupo::esAdmin());
-        } elseif (Grupo::esAdminDeBloque()) {
-            Cache::forever('esAdminDeBloquekey', Grupo::esAdminDeBloque());
+       
         } elseif (Grupo::esJuntaDirectiva()) {
             Cache::forever('esJuntaDirectivakey', Grupo::esJuntaDirectiva());
+
+        } elseif (Grupo::esAdministrador()) {
+            Cache::forever('esAdministradorkey', Grupo::esAdministrador());        
+      
         } elseif (Grupo::esPropietario()) {
             Cache::forever('esPropietariokey', Grupo::esPropietario());
+        
+        } elseif (Grupo::esContador()) {
+            Cache::forever('esContadorkey', Grupo::esContador());
+        
         } else {
             Session::flash('warning', '<< ATENCION >> Usuario no pertenece a ningun grupo!');
             return redirect()->route('frontend');

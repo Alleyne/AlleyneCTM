@@ -13,6 +13,9 @@ $(document).ready(function() {
 
         $btncolor = $(e.relatedTarget).attr('data-btncolor');
         $(this).find('.btn-action').addClass($btncolor);           
+        
+        //$btnicono = $(e.relatedTarget).attr('data-btnicono');
+        //$(this).find('.fa-icono').addClass($btnicono); 
 
         // Pass form reference to modal for submission on yes/ok
         var form = $(e.relatedTarget).closest('form');

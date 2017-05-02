@@ -63,44 +63,19 @@
 						
 										@foreach ($datos as $dato)
 											<tr>
-												@if (Cache::get('esAdminkey'))												
-													<td><strong>{{ $dato->id }}</strong></td>
-													<td><strong>{{ $dato->name }}</strong></td>
-													<td><strong>{{ $dato->description }}</strong></td>
-													<td col width="250px" align="right">
-														<ul class="demo-btns">
+												<td><strong>{{ $dato->id }}</strong></td>
+												<td><strong>{{ $dato->name }}</strong></td>
+												<td><strong>{{ $dato->description }}</strong></td>
+												<td col width="250px" align="right">
+													<ul class="demo-btns">
+														@if (Cache::get('esAdminkey'))
 															<a href="{{ URL::route('usuariosPorRole', $dato->id) }}" class="btn btn-success btn-xs"><i class="fa fa-search"></i> Asignar usuario</a>
 															<a href="{{ URL::route('permisPorRole', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar permisos</a>
-														</ul>
-													</td>
-
-												@elseif (Cache::get('esAdminDeBloquekey'))												
-													<td><strong>{{ $dato->nombre }}</strong></td>
-													<td col width="380px" align="right">
-														<ul class="demo-btns">
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Bloques</a>
-															</li>
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-															</li>				
-														</ul>
-													</td>
-												
-												@elseif (Cache::get('esJuntaDirectivakey'))
-													<td col width="40px"><strong>{{ $dato->jd->id }}</strong></td>
-													<td><strong>{{ $dato->jd->nombre }}</strong></td>
-													<td col width="160px" align="center">
-														<ul class="demo-btns">
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Bloques</a>
-															</li>
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-															</li>				
-														</ul>
-													</td>
-												@endif	
+														@elseif (Cache::get('esJuntaDirectivakey'))
+															<a href="{{ URL::route('usuariosPorRole', $dato->id) }}" class="btn btn-success btn-xs"><i class="fa fa-search"></i> Asignar usuario</a>
+														@endif
+													</ul>
+												</td>
 											</tr>
 										@endforeach
 							
@@ -121,8 +96,6 @@
 		
 		</section>
 		<!-- end widget grid -->
-
-
 @stop
 
 @section('relatedplugins')

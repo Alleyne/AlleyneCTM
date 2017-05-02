@@ -30,19 +30,20 @@ class User extends Authenticatable
      *
      * @return bool
      */
-    public function getfullnameAttribute()
+    public function getFullNameAttribute()
     {
         return $this->attributes['first_name'] .' '. $this->attributes['last_name'];
     }
-
+    // echo User::find(1)->full_name;
+    
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $appends = ['fullname'];
+    protected $appends = ['full_name'];
 
-    
+
     /**
      * The roles that belong to the user.
      */

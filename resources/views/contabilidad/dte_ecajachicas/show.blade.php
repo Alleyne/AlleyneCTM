@@ -65,26 +65,24 @@
 							<td col width="40px" align="right">
 								<ul class="demo-btns">
 									<li>
-										{{ Form::open(array(
-											'route' => array('dte_ecajachicas.destroy', $dato->id),
-											'method' => 'DELETE',
-											'style' => 'display:inline'
-											))
-										}}
+						        
+						        {{Form::open(array(
+						            'route' => array('dte_ecajachicas.destroy', $dato->id),
+						            'method' => 'DELETE', 
+						            'style' => 'display:inline'
+						        ))}}
 
-										{{ Form::button('Borrar', array(
-											'class' => 'btn btn-danger btn-xs',
-											'data-toggle' => 'modal',
-											'data-target' => '#confirmDelete',
-											'data-title' => 'Borrar detalle de egreso de caja chica',
-											'data-message' => 'Esta seguro(a) que desea borrar el presente detalle de egreso de caja chica?',
-											'data-btncancel' => 'btn-default',
-											'data-btnaction' => 'btn-danger',
-											'data-btntxt' => 'Borrar detalle'
-											))
-										}}
+						        {{Form::button('Borrar', array(
+						            'class' => 'btn btn-danger btn-xs',
+						            'data-toggle' => 'modal',
+						            'data-target' => '#confirmAction',
+												'data-title' => 'Borrar detalle de egreso de caja chica',
+												'data-message' => 'Esta seguro(a) que desea borrar el presente detalle de egreso de caja chica?',
+						            'data-btntxt' => 'SI, borrar detalle',
+						            'data-btncolor' => 'btn-danger'
+						        ))}}
+						        {{Form::close()}}    
 
-										{{ Form::close() }}
 									</li>
 								</ul>
 							</td>
@@ -93,6 +91,9 @@
 				@endforeach
 			</tbody>
 		</table>
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')
+
 	</div>		  
 	
 	<div class="invoice-footer">
@@ -223,7 +224,8 @@
 @stop
 
 @section('relatedplugins')
-  
+  <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
+
   <script>	
 	   $("#tipo-1").click(function(){
 	       $(".productos").show();

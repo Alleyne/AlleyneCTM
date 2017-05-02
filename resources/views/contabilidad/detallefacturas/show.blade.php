@@ -61,34 +61,33 @@
 						<td col width="40px" align="right">
 							<ul class="demo-btns">
 								<li>
-									{{ Form::open(array(
+					        {{Form::open(array(
 										'route' => array('detallefacturas.destroy', $dato->id),
-										'method' => 'DELETE',
-										'style' => 'display:inline'
-										))
-									}}
+					            'method' => 'DELETE',
+					            'style' => 'display:inline'
+					        ))}}
 
-									{{ Form::button('Borrar', array(
-										'class' => 'btn btn-danger btn-xs',
-										'data-toggle' => 'modal',
-										'data-target' => '#confirmDelete',
-										'data-title' => 'Borrar detalle de egreso de factura',
-										'data-message' => 'Esta seguro(a) que desea borrar el presente detalle de egreso de factura?',
-										'data-btncancel' => 'btn-default',
-										'data-btnaction' => 'btn-danger',
-										'data-btntxt' => 'Borrar detalle'
-										))
-									}}
-
-									{{ Form::close() }}
-								</li>
+					        {{Form::button('Eliminar', array(
+					            'class' => 'btn btn-danger btn-xs',
+					            'data-toggle' => 'modal',
+					            'data-target' => '#confirmAction',
+											'data-title' => 'Eliminar detalle de egreso de factura',
+											'data-message' => 'Esta seguro(a) que desea eliminar el presente detalle de egreso de factura?',
+					            'data-btntxt' => 'SI, eliminiar',
+					            'data-btncolor' => 'btn-danger'
+					        ))}}
+					        {{Form::close()}}                                                    
+    						</li>
 							</ul>
 						</td>
 					@endif
 				</tr>
 			@endforeach
 		</tbody>
+	
 	</table>
+  <!-- Incluye la modal box -->
+  @include('templates.backend._partials.modal_confirm')
 </div>
 	
 	<div class="invoice-footer">
@@ -219,7 +218,9 @@
 @stop
 
 @section('relatedplugins')
-  
+  <!-- Incluye javascript -->
+  <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>   
+ 
   <script>	
 	   $("#tipo-1").click(function(){
 	       $(".productos").show();

@@ -79,6 +79,24 @@
                                                 @endif
                                             </ul>
                                         </td>
+                                    @elseif (Cache::get('esAdministradorkey'))
+                                        <td col width="340px" align="right">
+                                            <ul class="demo-btns">
+                                                @if ($dato->aprobado == 0)
+                                                    <li>
+                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
+                                                    </li>                
+                                                    <li>
+                                                        <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Ajustar</a>
+                                                    </li> 
+                                                @else
+                                                    <li>
+                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
+                                                    </li>  
+                                                @endif
+                                            </ul>
+                                        </td>
+
                                     @endif
                                 </tr>
                             @endforeach

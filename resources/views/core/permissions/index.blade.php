@@ -67,58 +67,45 @@
 						
 										@foreach ($datos as $dato)
 											<tr>
-												@if (Cache::get('esAdminkey'))												
-													<td><strong>{{ $dato->id }}</strong></td>
-													<td><strong>{{ $dato->name }}</strong></td>
-													<td><strong>{{ $dato->description }}</strong></td>
-													<td col width="80px" align="right">
-														<ul class="demo-btns">
-															<li>
-																<a href="{{ URL::route('permissions.show', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-															</li>				
-															<li>
-																<a href="{{ URL::route('permissions.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
-															</li>
-															<li>
-																{{ Form::open(array('route' => array('permissions.destroy', $dato->id), 'method' => 'delete', 'data-confirm' => 'Deseas borrar el permiso '. $dato->name. ' permanentemente?')) }}
-																	<button type="submit" href="{{ URL::route('permissions.destroy', $dato->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
-																{{ Form::close() }}										
-															</li>
-														</ul>
-													</td>
+												<td>{{ $dato->id }}</td>
+												<td><strong>{{ $dato->name }}</strong></td>
+												<td>{{ $dato->description }}</td>
+												<td col width="80px" align="right">
+													<ul class="demo-btns">
+														<li>
+															<a href="{{ URL::route('permissions.show', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
+														</li>				
+														<li>
+															<a href="{{ URL::route('permissions.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
+														</li>
+														<li>
+									
+											        {{Form::open(array(
+											            'route' => array('permissions.destroy', $dato->id),
+											            'method' => 'DELETE',  // or DELETE
+											            'style' => 'display:inline'
+											        ))}}
 
-												@elseif (Cache::get('esAdminDeBloquekey'))												
-													<td><strong>{{ $dato->nombre }}</strong></td>
-													<td col width="380px" align="right">
-														<ul class="demo-btns">
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Bloques</a>
-															</li>
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-															</li>				
-														</ul>
-													</td>
-												
-												@elseif (Cache::get('esJuntaDirectivakey'))
-													<td col width="40px"><strong>{{ $dato->jd->id }}</strong></td>
-													<td><strong>{{ $dato->jd->nombre }}</strong></td>
-													<td col width="160px" align="center">
-														<ul class="demo-btns">
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Bloques</a>
-															</li>
-															<li>
-																<a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-															</li>				
-														</ul>
-													</td>
-												@endif	
+											        {{Form::button('<i class="fa fa-times"></i>', array(
+											            'class' => 'btn btn-danger btn-xs',
+											            'data-toggle' => 'modal',
+											            'data-target' => '#confirmAction',
+											            'data-title' => 'Eliminar permiso permanentemente',
+											            'data-message' => 'Esta seguro(a) que desea eliminar el presente permiso?',
+											            'data-btntxt' => 'SI, eliminar',
+											            'data-btncolor' => 'btn-danger'
+											        ))}}
+											        {{Form::close()}}  
+
+														</li>
+													</ul>
+												</td>
 											</tr>
 										@endforeach
 							
 									</tbody>
 								</table>
+   							@include('templates.backend._partials.modal_confirm')
 							</div>
 							<!-- end widget content -->
 		
@@ -142,7 +129,7 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
-    
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
     <script type="text/javascript">
     $(document).ready(function() {
         pageSetUp();

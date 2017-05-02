@@ -57,7 +57,9 @@
                                 <th>ESTATUS</th>                                   
                                 <th>PROPIETARIOS</th> 
                                 <th>ACTIVA</th>
-                                <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
+                                @if (Cache::get('esAdminkey'))
+                                    <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -84,55 +86,6 @@
                                                 <li>
                                                      <a href="{{ URL::route('uns.show', $dato->id) }}" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-folder-open"></i></a>
                                                 </li>                
-                                            </ul>
-                                        </td>
-                                    @elseif (Cache::get('esAdminDeBloquekey'))
-                                        <td col width="70px" align="right">
-                                            <ul class="demo-btns">
-                                                <li>
-                                                    <a href="{{ URL::route('createPago', $dato->id) }}" class="btn bg-color-yellow txt-color-white btn-xs" rel="tooltip" data-placement="top" data-original-title="Registrar pago"><i class="glyphicon glyphicon-edit"></i></a>
-                                                </li>
-
-                                                <li>
-                                                    <a href="{{ URL::route('ecuentas', array($dato->id, 'completo')) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-file"></i></a>
-                                                </li>                                                
-                                                
-                                                <li>
-                                                     <a href="{{ URL::route('indexprops', array($dato->id, $seccion->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-male"></i></a>
-                                                </li>        
-
-                                                <li>
-                                                     <a href="{{ URL::route('uns.show', $dato->id) }}" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a>
-                                                </li>                
-                                                
-                                                <li>
-                                                     <a href="{{ URL::route('uns.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                   
-                                    @elseif (Cache::get('esJuntaDirectivakey'))
-                                        <td col width="170px" align="right">
-                                            <ul class="demo-btns">
-                                                <li>
-                                                    <a href="{{ URL::route('createPago', $dato->id) }}" class="btn bg-color-yellow txt-color-white btn-xs" rel="tooltip" data-placement="top" data-original-title="Registrar pago"><i class="glyphicon glyphicon-edit"></i></a>
-                                                </li>
-
-                                                <li>
-                                                    <a href="{{ URL::route('ecuentas', array($dato->id, 'completo')) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-file"></i></a>
-                                                </li>                                                
-                                                
-                                                <li>
-                                                     <a href="{{ URL::route('indexprops', array($dato->id, $seccion->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-male"></i></a>
-                                                </li>        
-
-                                                <li>
-                                                     <a href="{{ URL::route('uns.show', $dato->id) }}" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a>
-                                                </li>                
-                                                
-                                                <li>
-                                                     <a href="{{ URL::route('uns.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
-                                                </li>
                                             </ul>
                                         </td>
                                     @endif

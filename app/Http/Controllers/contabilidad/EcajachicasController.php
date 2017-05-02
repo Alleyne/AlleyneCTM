@@ -186,16 +186,44 @@ class EcajachicasController extends Controller
 			}
 		}
 
-		/**
-		 * Remove the specified resource from storage.
-		 *
-		 * @param  int  $id
-		 * @return \Illuminate\Http\Response
-		 */
-		public function destroy($id)
-		{
-				echo('en construccion!');
-		}
+  /*************************************************************************************
+   * Borra registro de la base de datos
+   ************************************************************************************/	
+	public function destroy($ecajachica_id)
+	{
+
+		DB::beginTransaction();
+		try {
+			$dato = Dte_ecajachica::where('ecajachica_id', $ecajachica_id)->first();		
+			
+			if($dato) {
+				Session::flash('warning', '<< ATENCION >> Esta factura no puede ser borrada porque tiene detalles!');
+				return Redirect()->route('ecajachicas.index');
+			}
+			
+			else {
+				$dato = Ecajachica::find($ecajachica_id);
+				$dato->delete();			
+
+				// Registra en bitacoras
+				$detalle =	'Borra el Factura '.$dato->no. ', '.
+										'a favor de= '. $dato->afavorde. ', '.
+										'fecha= '. 			$dato->fecha;
+				
+				Sity::RegistrarEnBitacora(3, 'ecajachicas', $dato->id, $detalle);
+				Session::flash('success', 'La factura No' .$dato->doc_no. ' ha sido borrada permanentemente de la base de datos.');
+				DB::commit();				
+				return Redirect()->route('ecajachicas.index');
+			}
+
+		} catch (\Exception $e) {
+	    DB::rollback();
+    	Session::flash('warning', ' Ocurrio un error en el modulo EcajachicasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
+
+    	return back();
+		}		
+	}
+		
 
 		/*************************************************************************************
 		 * Despliega un grupo de registros en formato de tabla

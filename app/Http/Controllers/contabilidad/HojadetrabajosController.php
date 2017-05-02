@@ -6,11 +6,10 @@ use App\library\Sity;
 use App\library\Npdo;
 use App\library\Fact;
 use App\library\Hojat;
-use App\library\Grupo;
 use App\library\Ppago;
 
 use Input, Session, Carbon\Carbon;
-use Validator, DB;
+use Validator, DB, Cache;
 
 use App\Ctmayore;
 use App\Catalogo;
@@ -156,10 +155,10 @@ class HojadetrabajosController extends Controller {
       'totalAjustadoCredito' => number_format($totalAjustadoCredito,2)
     ];
     
-    if (Grupo::esAdmin()) {
+    if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey') || Cache::get('esJuntaDirectivakey')) {
       return view('contabilidad.hojadetrabajos.show', $viewData);  
     
-    } elseif (Grupo::esPropietario() || Grupo::esAdminDeBloque()) {
+    } elseif (Grupo::esPropietario()) {
       return view('contabilidad.hojadetrabajos.showFrontend', $viewData); 
     }
   }	

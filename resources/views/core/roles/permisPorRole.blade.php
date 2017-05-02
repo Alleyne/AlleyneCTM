@@ -65,9 +65,9 @@
 									<tbody>
 										@foreach ($datos as $dato)
 											<tr>
-												<td><strong>{{ $dato->id }}</strong></td>
+												<td>{{ $dato->id }}</td>
 												<td><strong>{{ $dato->name }}</strong></td>
-												<td><strong>{{ $dato->value }}</strong></td>
+												<td>{{ $dato->value }}</td>
 												<td col width="160px" align="center">
 													<ul class="demo-btns">
 														<li>

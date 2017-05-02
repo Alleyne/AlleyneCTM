@@ -54,8 +54,8 @@ class BloquesController extends Controller {
 	    /*----------------------------------------------------------------------------------
 	    api setup
 	    $datos = Jd::find($jd_id)->load('bloques');
-        return response()->json($datos->toArray()); 
-        -----------------------------------------------------------------------------------*/
+      return response()->json($datos->toArray()); 
+      -----------------------------------------------------------------------------------*/
 	}	
 
 	/*************************************************************************************
@@ -73,8 +73,8 @@ class BloquesController extends Controller {
 		//dd($jd->toArray(), $bloque->toArray(), $blqadmins->toArray());
 
 		return view('core.bloques.showblqplus')->with('jd', $jd)
-																					->with('bloque', $bloque)
-																					->with('blqadmins', $blqadmins);
+																					 ->with('bloque', $bloque)
+																					 ->with('blqadmins', $blqadmins);
 
 		/*----------------------------------------------------------------------------------
 		api setup 

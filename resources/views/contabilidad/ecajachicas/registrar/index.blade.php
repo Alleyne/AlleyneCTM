@@ -59,7 +59,7 @@
                         <h2>Facturas de Egreso de Caja</h2>
                         <div class="widget-toolbar">
                             @if ($status == 4)                                          
-                                @if (Cache::get('esAdminkey'))
+                                @if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
                                     <a href="{{ URL::route('ecajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Registrar factura de egreso de Caja Chica</a>
                                 @endif
                             @endif
@@ -117,7 +117,7 @@
                                                     </li>   
                                                     <li>
                                                       {{Form::open(array(
-                                                        'route' => array('facturas.destroy', $dato->id),
+                                                        'route' => array('ecajachicas.destroy', $dato->id),
                                                         'method' => 'DELETE',
                                                           'style' => 'display:inline'
                                                       ))}}
@@ -127,8 +127,8 @@
                                                           'data-toggle' => 'modal',
                                                           'data-target' => '#confirmAction',
                                                           'data-title' => 'Borrar factura',
-                                                          'data-message' => 'Esta seguro(a) que desea borrar el presente de factura?',
-                                                          'data-btntxt' => 'Borrar factura',
+                                                          'data-message' => 'Esta seguro(a) que desea borrar el presente de factura de egreso de Caja chica?',
+                                                          'data-btntxt' => 'SI, borrar factura',
                                                           'data-btncolor' => 'btn-danger'
                                                       ))}}
                                                       {{Form::close()}}
@@ -158,7 +158,7 @@
                                                     </li>                   
                                                     <li>
                                                       {{Form::open(array(
-                                                        'route' => array('facturas.destroy', $dato->id),
+                                                        'route' => array('ecajachicas.destroy', $dato->id),
                                                         'method' => 'DELETE',
                                                           'style' => 'display:inline'
                                                       ))}}
@@ -168,8 +168,8 @@
                                                           'data-toggle' => 'modal',
                                                           'data-target' => '#confirmAction',
                                                           'data-title' => 'Borrar factura',
-                                                          'data-message' => 'Esta seguro(a) que desea borrar el presente de factura?',
-                                                          'data-btntxt' => 'Borrar factura',
+                                                          'data-message' => 'Esta seguro(a) que desea borrar el presente de factura de egreso de Caja chica?',
+                                                          'data-btntxt' => 'SI, borrar factura',
                                                           'data-btncolor' => 'btn-danger'
                                                       ))}}
                                                       {{Form::close()}}

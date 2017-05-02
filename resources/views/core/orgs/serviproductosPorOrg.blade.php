@@ -70,15 +70,33 @@
 												<td><strong>{{ $dato->nombre }}</strong></td>
 												<td align="right">
 													<ul class="demo-btns">
-														<div id="ask_1" class="btn btn-warning btn-xs">
-															<a href="{{ URL::route('desvincularServiproducto', array($org_id, $dato->id)) }}" title="Desvincular"><i class="fa fa-search"></i> Desvincular</a>
-														</div>
+												    <li>
+												        {{Form::open(array(
+												            'route' => array('desvincularServiproducto', $org_id, $dato->id),
+												            'method' => 'GET',
+												            'style' => 'display:inline'
+												        ))}}
+
+												        {{Form::button('Desvincular', array(
+												            'class' => 'btn btn-warning btn-xs',
+												            'data-toggle' => 'modal',
+												            'data-target' => '#confirmAction',
+												            'data-title' => 'Desvincular serviproducto de la Organizacion',
+												            'data-message' => 'Esta seguro(a) que desea desvincular el presente serviproducto de la organizacion?',
+												            'data-btntxt' => 'SI, desvincular',
+												            'data-btncolor' => 'btn-warning'
+												        ))}}
+												        {{Form::close()}}                                                    
+												    </li>
 													</ul>
 												</td>
 											</tr>
 										@endforeach
 									</tbody>
 								</table>
+						    <!-- Incluye la modal box -->
+						    @include('templates.backend._partials.modal_confirm')
+
 							</div>
 							<!-- end widget content -->
 		
@@ -158,6 +176,7 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
     
     <script type="text/javascript">
     $(document).ready(function() {

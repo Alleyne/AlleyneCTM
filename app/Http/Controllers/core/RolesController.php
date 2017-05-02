@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\core;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Grupo;
@@ -188,6 +189,11 @@ class RolesController extends Controller
 	public function desvincularUsuario($role_id, $user_id)
 	{
 		
+		if ($user_id == Auth::user()->id) {
+			Session::flash('warning', 'Usted mismo(a) no se puede desvincular del presente role, solamente el Super administrador o la Junta Directiva lo pueden hacer');
+			return back();
+    }
+
 		$role=Role::find($role_id);
 		$role->users()->detach($user_id);		
 

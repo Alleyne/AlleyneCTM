@@ -51,12 +51,12 @@ class OrgsController extends Controller
     //dd($datos_1);
 
     //Obtiene solo los productos registrados en la tabla serviproductos
-    $datos_2= Serviproducto::where('tipo', 0)->orderBy('nombre')->get();
+    $datos_2= Serviproducto::where('tipo', 0)->where('activo', 1)->orderBy('nombre')->get();
     $datos_2= $datos_2->pluck('nombre', 'id')->all();       
     //dd($datos_1, $datos_2);
         
     //Obtiene solo los servicios registrados en la tabla serviproductos
-    $datos_3= Serviproducto::where('tipo', 1)->orderBy('nombre')->get();
+    $datos_3= Serviproducto::where('tipo', 1)->where('activo', 1)->orderBy('nombre')->get();
     $datos_3= $datos_3->pluck('nombre', 'id')->all();       
     //dd($datos_1, $datos_2, $datos_3);    
 

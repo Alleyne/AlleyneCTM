@@ -186,7 +186,7 @@ class FacturasController extends Controller {
 										'fecha= '. 			$dato->fecha;
 				
 				Sity::RegistrarEnBitacora(3, 'facturas', $dato->id, $detalle);
-				Session::flash('success', 'La factura No' .$dato->no. ' ha sido borrada permanentemente de la base de datos.');
+				Session::flash('success', 'La factura No' .$dato->doc_no. ' ha sido borrada permanentemente de la base de datos.');
 				DB::commit();				
 				return Redirect()->route('facturas.index');
 			}
@@ -195,7 +195,7 @@ class FacturasController extends Controller {
 	    DB::rollback();
     	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
 
-    	return back()->withInput()->withErrors($validation);
+    	return back();
 		}		
 	}
 

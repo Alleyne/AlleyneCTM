@@ -29,7 +29,7 @@
 						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 						<h2>Artículos </h2>
 						<div class="widget-toolbar">
-							@if (Cache::get('esAdminkey'))
+							@if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
 								<a href="{{ route('posts.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Crear articulo</a>
 							@endif	
 						</div>

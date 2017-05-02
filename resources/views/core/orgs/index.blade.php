@@ -30,7 +30,7 @@
 						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 						<h2>Proveedores de Productos y Servicios</h2>
 						<div class="widget-toolbar">
-							@if (Cache::get('esAdminkey'))
+							@if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
 								<a href="{{ URL::route('orgs.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Proveedor</a>
 							@endif	
 						</div>	
@@ -66,7 +66,7 @@
 					
 									@foreach ($datos as $dato)
 										<tr>
-											@if (Cache::get('esAdminkey'))												
+											@if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
 												<td><strong>{{ $dato->nombre }}</strong></td>
 												<td col width="80px">{{ $dato->ruc }}</td>
 												<td col width="250px" align="right">
@@ -84,25 +84,7 @@
 														</li>
 													</ul>
 												</td>
-
-											@elseif (Cache::get('esAdminDeBloquekey'))												
-												<td><strong>{{ $dato->nombre }}</strong></td>
-												<td col width="80px">{{ $dato->ruc }}</td>
-												<td col width="100px" align="right">
-													<ul class="demo-btns">
-														<a href="{{ URL::route('serviproductosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar serviproducto</a>
-													</ul>
-												</td>
-											
-											@elseif (Cache::get('esJuntaDirectivakey'))
-												<td><strong>{{ $dato->nombre }}</strong></td>
-												<td col width="80px">{{ $dato->ruc }}</td>
-												<td col width="100px" align="right">
-													<ul class="demo-btns">
-														<a href="{{ URL::route('serviproductosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar serviproducto</a>
-													</ul>
-												</td>
-											@endif	
+											@endif
 										</tr>
 									@endforeach
 						

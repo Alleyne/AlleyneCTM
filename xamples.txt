@@ -2000,8 +2000,8 @@ Work::with(
             'method' => 'GET',  // or DELETE
             'style' => 'display:inline'
         ))}}
-
-        {{Form::button('Cantabilizar', array(
+        
+        {{Form::button('Cantabilizar', array(     // {{Form::button('<i class="fa fa-times"></i> Eliminar', array(
             'class' => 'btn btn-warning btn-xs',
             'data-toggle' => 'modal',
             'data-target' => '#confirmAction',
@@ -2302,3 +2302,37 @@ Work::with(
     No matter how you store your data in the database or how you do your calculations,
     you want your users to see the amounts in a format they're familiar with. For example,
     US dollars would usually formatted as $1,000.50 and Euros as 1.000,50€.
+
+
+  /*************************************************************************************
+   * Usar checkbox en edit form para que el valor almacenado en la base de datos
+   ************************************************************************************/
+  <div class="form-group">
+    <label class="col-md-2 control-label">Activa</label>
+    <div class="col-md-10">
+      {{ Form::checkbox('activo') }}
+    </div>
+  </div>  
+  
+  donde 'activo' es el nombre del campo en la base de datos con valor de 1 o 0
+
+  //default uncheck
+  <div class="form-group">
+    <label class="col-md-4 control-label">Encargado</label>
+    <div class="col-md-8">
+    {{ Form::checkbox('encargado','1', false) }}
+   </div>
+ </div>
+
+  // en el controlador
+  $dato = Serviproducto::find($id);
+  $dato->nombre = Input::get('nombre');
+  $dato->activo = Input::has('activo');;
+  $dato->save();
+
+
+  /*************************************************************************************
+   * full_name
+   ************************************************************************************/
+  
+  dd(User::find(1)->full_name);

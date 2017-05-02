@@ -59,7 +59,7 @@
                                         @endif
                                         <td>{{ $dato->propietarios }}</td>
                                         <td col width="10px">{{ $dato->activa ? '' : 'inactiva' }}</td>
-                                        @if (Cache::get('esAdminkey') || Cache::get('esAdminDeBloquekey'))
+                                        @if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
                                             <td col width="70px" align="right">
                                                 <ul class="demo-btns">
                                                     <li>

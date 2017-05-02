@@ -174,11 +174,13 @@ class DashboardController extends Controller
                   'totalGastos' => $totalGastos                                  
                  ];
     
-      if (Grupo::esAdmin()) {
-        return view('contabilidad.dashboard.historico', $viewData); 
-      } elseif (Grupo::esPropietario() || Grupo::esAdminDeBloque()) {
-        return view('contabilidad.dashboard.historicoFrontend', $viewData); 
-      }
+    if (Grupo::esPropietario() ) {
+      return view('contabilidad.dashboard.historicoFrontend', $viewData); 
+    
+    } else {
+      return view('contabilidad.dashboard.historico', $viewData);  
+    }
+
   } // end function
 
   /*************************************************************************************
@@ -331,10 +333,11 @@ class DashboardController extends Controller
                 'gastos' => $gastos
               ]; 
   
-    if (Grupo::esAdmin()) {
-      return view('contabilidad.dashboard.vigente', $viewData);  
-    } elseif (Grupo::esPropietario() || Grupo::esAdminDeBloque()) {
+    if (Grupo::esPropietario() ) {
       return view('contabilidad.dashboard.vigenteFrontend', $viewData); 
+    
+    } else {
+      return view('contabilidad.dashboard.vigente', $viewData); 
     }
 
   } // end function

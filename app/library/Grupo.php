@@ -15,7 +15,7 @@ class Grupo {
 	public static function esAdmin()	{
 		if (Auth::check()) {
 			$roles = Auth::user()->roles;
-			return $roles->contains('name', 'Admin');
+			return $roles->contains('name', 'Admin') ? True : False;
 		}
 	}
 
@@ -27,7 +27,7 @@ class Grupo {
 	public static function esJuntaDirectiva()	{ 
 		if (Auth::check()) {
 			$roles = Auth::user()->roles;
-			return $roles->contains('name', 'JuntaDirectiva');
+			return $roles->contains('name', 'JuntaDirectiva') ? True : False;
 		}
 	}       
 
@@ -36,10 +36,10 @@ class Grupo {
 	|- Determina si el usuario logueado tiene role de AdminDeBloque
 	|-------------------------------------------------------------------------------------
 	*/
-	public static function esAdminDeBloque()	{ 
+	public static function esAdministrador()	{ 
 		if (Auth::check()) {
 			$roles = Auth::user()->roles;
-			return $roles->contains('name', 'AdminDeBloque');
+			return $roles->contains('name', 'Administrador') ? True : False;
 		}
 	}       
 
@@ -51,7 +51,7 @@ class Grupo {
 	public static function esPropietario()	{ 
 		if (Auth::check()) {
 			$roles = Auth::user()->roles;
-			return $roles->contains('name', 'Propietarios');
+			return $roles->contains('name', 'Propietario') ? True : False;
 		}
 	} 
 
@@ -60,10 +60,10 @@ class Grupo {
 	|- Determina si el usuario logueado tiene role de Proveedor
 	|-------------------------------------------------------------------------------------
 	*/
-	public static function esProveedor()	{  
+	public static function esContador()	{  
 		if (Auth::check()) {
 			$roles = Auth::user()->roles;
-			return $roles->contains('name', 'Proveedor');
+			return $roles->contains('name', 'Contador') ? True : False;
 		}
 	} 
 }

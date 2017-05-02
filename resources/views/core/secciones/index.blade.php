@@ -108,26 +108,6 @@
                                     </ul>
                                 </td>
                             @elseif (Cache::get('esJuntaDirectivakey'))
-                                <td col width="160px" align="center">
-                                    <ul class="demo-btns">
-                                        <li>
-                                            @if($seccion->tipo==1 or $seccion->tipo==2 or $seccion->tipo==3 or $seccion->tipo==4)    
-                                                <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Uns</a>
-                                            @elseif($seccion->tipo==5 or $seccion->tipo==6)    
-                                                <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Amenidades</a>
-                                            @elseif($seccion->tipo==7)    
-                                                <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Estacionamientos</a>
-                                            @endif    
-                                        </li>
-                                        <li>
-                                            <a href="#" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-                                        </li>                
-                                        <li>
-                                            <a href="#" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
-                                        </li>
-                                    </ul>
-                                </td>
-                           @elseif (Cache::get('esAdminDeBloquekey'))
                                 <td col width="150px" align="right">
                                     <ul class="demo-btns">
                                         <li>
@@ -142,7 +122,27 @@
                                         <li>
                                             <a href="{{ URL::route('showsecplus', array($seccion->id)) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
                                         </li>                
-                                     </ul>
+                                        <li>
+                                            <a href="{{ URL::route('secciones.edit', array($seccion->id)) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                           @elseif (Cache::get('esAdministradorkey'))
+                                <td col width="150px" align="right">
+                                    <ul class="demo-btns">
+                                        <li>
+                                            @if($seccion->tipo==1 or $seccion->tipo==2 or $seccion->tipo==3 or $seccion->tipo==4)    
+                                                <a href="{{ URL::route('indexunplus', array($seccion->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Uns</a>
+                                            @elseif($seccion->tipo==5 or $seccion->tipo==6)    
+                                                <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Ame</a>
+                                            @elseif($seccion->tipo==7)    
+                                                <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Est</a>
+                                            @endif    
+                                        </li>
+                                        <li>
+                                            <a href="{{ URL::route('showsecplus', array($seccion->id)) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
+                                        </li>                
+                                    </ul>
                                 </td>
                             @endif
                         </tr>

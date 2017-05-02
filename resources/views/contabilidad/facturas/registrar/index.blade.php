@@ -30,7 +30,7 @@
 						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 						<h2>Facturas </h2>
 						<div class="widget-toolbar">
-							@if (Cache::get('esAdminkey'))
+							@if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
 								<a href="{{ URL::route('facturas.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Crear factura</a>
 							@endif	
 						</div>
@@ -80,7 +80,7 @@
 											@else
 												<td col width="60px"><mark>{{ $dato->totaldetalle }}</mark></td>
 											@endif
-											<td col width="200px" align="right">
+											<td col width="210px" align="right">
 												<ul class="demo-btns">
 													@if ($dato->etapa==1)
 														<li>
@@ -137,13 +137,13 @@
                                   'style' => 'display:inline'
                               ))}}
 
-                              {{Form::button('Cantabilizar', array(
+                              {{Form::button('Eliminar', array(
                                   'class' => 'btn btn-danger btn-xs',
                                   'data-toggle' => 'modal',
                                   'data-target' => '#confirmAction',
-																	'data-title' => 'Borrar factura',
-																	'data-message' => 'Esta seguro(a) que desea borrar el presente de factura?',
-																	'data-btntxt' => 'Borrar factura',
+																	'data-title' => 'Eliminar factura',
+																	'data-message' => 'Esta seguro(a) que desea eliminar la presente de factura?',
+																	'data-btntxt' => 'Eliminar factura',
                                   'data-btncolor' => 'btn-danger'
                               ))}}
                               {{Form::close()}}

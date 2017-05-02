@@ -141,15 +141,7 @@
 		</div>
 	
 		<!-- end row -->
-	
-		<!-- row -->
-	
-		<div class="row">
-	
-		</div>
-	
-		<!-- end row -->
-	
+		
 	</section>
 	<!-- end widget grid -->
 @stop

@@ -59,6 +59,7 @@
 											<th col width="15px">ID</th>
 											<th>NOMBRE</th>
 											<th col width="35px">TIPO</th>
+											<th col width="35px">ACTIVO</th>
 											<th col width="130px" class="text-center"><i class="fa fa-gear fa-lg"></i></th>								
 										</tr>
 									</thead>
@@ -68,20 +69,40 @@
 												<td><strong>{{ $dato->id }}</strong></td>
 												<td><strong>{{ $dato->nombre }}</strong></td>
 												<td>{{ $dato->tipo ? 'Servicio' : 'Producto' }}</td>
+												<td align="center">{{ $dato->activo ? 'Si' : 'No' }}</td>
 												<td align="right">
 													<ul class="demo-btns">
-														<div id="ask_1" class="btn btn-warning btn-xs">
-															<a href="#" title="Desvincular"><i class="fa fa-search"></i> Editar</a>
-														</div>
-														<div id="ask_1" class="btn btn-warning btn-xs">
-															<a href="#" title="Desvincular"><i class="fa fa-search"></i> Eliminar</a>
-														</div>
+															<li>
+																<a href="{{ URL::route('serviproductos.edit', $dato->id) }}" class="btn btn-info btn-xs"> Editar</a>
+															</li>	
+													    <li>
+												        {{Form::open(array(
+												            'route' => array('serviproductos.destroy', $dato->id),
+												            'method' => 'DELETE',
+												            'style' => 'display:inline'
+												        ))}}
+
+												        {{Form::button('Eliminar', array(
+												            'class' => 'btn btn-danger btn-xs',
+												            'data-toggle' => 'modal',
+												            'data-target' => '#confirmAction',
+												            'data-title' => 'Eliminar serviproducto permanentemente',
+												            'data-message' => 'Esta seguro(a) que desea eliminar permanentemente el presente serviproducto?',
+												            'data-btntxt' => 'SI, eliminar permanentemente',
+												            'data-btncolor' => 'btn-danger'
+												        ))}}
+												        {{Form::close()}}                                                    
+													    </li>
 													</ul>
 												</td>
 											</tr>
 										@endforeach
 									</tbody>
 								</table>
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')
+    
+  
 							</div>
 							<!-- end widget content -->
 		
@@ -170,6 +191,7 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>  
     
     <script type="text/javascript">
     $(document).ready(function() {

@@ -69,23 +69,26 @@
 						<td align="right"><strong>{{ $totalAjustadoDebito }}</strong></td>	
 						<td align="right"><strong>{{ $totalAjustadoCredito }}</strong></td> 
 						<td class="text-center">
-							@if ($permitirAjustes=='Si')
-								<div class="col-md-6">
-									<a href="{{ URL::route('createAjustes', $periodo->id) }}" class="btn bg-color-blue txt-color-white btn-xs"><i class="glyphicon glyphicon-wrench"></i></a>
-								</div>
-							@endif	
-							
-							@if ($permitirCerrar=='Si')
-								<div id="ask_3" class="col-md-6">
-									<a href="{{ URL::route('cierraPeriodo', array($periodo->id, $periodo->periodo, $periodo->fecha)) }}" class="btn bg-color-red txt-color-white btn-xs"><i class="glyphicon glyphicon-lock"></i></a>
-								</div>
-							@endif	
+							@if (Cache::get('esAdminkey') || Cache::get('esContadorkey'))
+								@if ($permitirAjustes=='Si')
+									<div class="col-md-6">
+										<a href="{{ URL::route('createAjustes', $periodo->id) }}" class="btn bg-color-blue txt-color-white btn-xs"><i class="glyphicon glyphicon-wrench"></i></a>
+									</div>
+								@endif	
+								
+								@if ($permitirCerrar=='Si')
+									<div id="ask_3" class="col-md-6">
+										<a href="{{ URL::route('cierraPeriodo', array($periodo->id, $periodo->periodo, $periodo->fecha)) }}" class="btn bg-color-red txt-color-white btn-xs"><i class="glyphicon glyphicon-lock"></i></a>
+									</div>
+								@endif	
+							@endif								
 							
 							@if ($totalAjustadoDebito==$totalAjustadoCredito) 
 								<i style="color:green" class="glyphicon glyphicon-ok"></i> 
 							@else
 								<i style="color:red" class="glyphicon glyphicon-remove"></i>
 							@endif	
+
 						</td>
 					</tr>
 			</tbody>
