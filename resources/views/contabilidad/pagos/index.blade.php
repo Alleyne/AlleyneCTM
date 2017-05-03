@@ -26,7 +26,7 @@
                 <h2>Pagos </h2>
                 <div class="widget-toolbar">
                     <a href="{{ Cache::get('indexunallkey') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
-                    @if (Cache::get('esAdminkey'))
+                    @if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
                         <div class="btn-group">
                             <a class="btn btn-info btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Otros ingresos</a>
                             <a class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
@@ -100,7 +100,7 @@
                                     <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_pago)->format('M j\\, Y') }}</td>
                                     <td col width="90px" align="right">{{ $dato->monto }}</td>
                                     
-                                    @if (Cache::get('esAdminkey'))
+                                    @if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
                                         <td col width="175px" align="right">
                                             <ul class="demo-btns">
                                                 
@@ -124,16 +124,7 @@
                                                 <div id="ask_4" class="btn btn-default btn-xs">
                                                     <a href="{{ URL::route('eliminaPagoCheque', $dato->id) }}" title="Eliminar pago"><i class="fa fa-search"></i> Eliminar</a>
                                                 </div>
-
                                             @endif
-                                            </ul>
-                                        </td>
-                                    @elseif (Cache::get('esAdminDeBloquekey'))
-                                        <td col width="60px" align="right">
-                                            <ul class="demo-btns">
-                                                <li>
-                                                     <a href="{{ URL::route('showRecibo', $dato->id) }}" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-folder-open"></i></a>
-                                                </li>                
                                             </ul>
                                         </td>
                                     @endif

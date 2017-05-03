@@ -102,6 +102,28 @@
                                                 @endif
                                             </ul>
                                         </td>
+                                    @elseif (Cache::get('esContadorkey'))
+                                        <td col width="235px" align="right">
+                                            <ul class="demo-btns">
+                                                @if(is_null($dato->f_cierre))
+                                                    <li>
+                                                        <a href="{{ URL::route('verDesembolsos', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-warning btn-xs"> Diario</a>
+                                                    </li>
+                                                @else    
+
+                                                    <li>
+                                                        <a href="{{ URL::route('verDesembolsos', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Desembolsos</a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="{{ URL::route('dte_cajachicas.show', $dato->id) }}" class="btn btn-default btn-xs"> Historial de Caja Chica</a>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </td>
+
                                     @endif
                                 </tr>
                             @endforeach

@@ -61,7 +61,6 @@
                                     <td col width="60px"><strong>{{ $dato->monto }}</strong></td>                                    
                                     <td col width="40px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
                                     @if (Cache::get('esAdminkey'))
-
                                         <td col width="170px" align="right">
                                             @if($dato->aprobado == 0)
                                                 <ul class="demo-btns">
@@ -79,6 +78,14 @@
                                                     </li>                
                                                 </ul>
                                             @endif
+                                        </td>
+                                    @elseif (Cache::get('esContadorkey'))
+                                        <td col width="100px" align="right">
+                                            <ul class="demo-btns">
+                                                <li>
+                                                    <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
+                                                </li>                
+                                            </ul>
                                         </td>
                                     @endif
                                 </tr>

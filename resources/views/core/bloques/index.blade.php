@@ -45,49 +45,10 @@
 				<tbody>
 					@foreach ($bloques as $bloque)
 						<tr>
-							@if (Cache::get('esAdminkey') || Cache::get('esJuntaDirectivakey'))
+							@if (Cache::get('esAdminkey'))
 								<td col width="60px" ><strong>{{ $bloque->codigo }}</strong></td>
 								<td>{{ $bloque->nombre }}</td>
-								<td col width="390px" align="right">
-									<ul class="demo-btns">
-										@if (Cache::get('esAdminkey'))
-											<li>
-												<a href="{{ URL::route('indexsecplus', array($bloque->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Secciones</a>
-											</li>
-											<li>
-												<a href="{{ URL::route('indexblqadmin', array($bloque->id)) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> Admins</a>
-											</li>										
-											<li>
-												<a href="{{ URL::route('showblqplus', array($bloque->id)) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-											</li>				
-											<li>
-												<a href="{{ URL::route('bloques.edit', array($bloque->id)) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
-											</li>
-											<li>
-												{{ Form::open(array('route' => array('bloques.destroy', $bloque->id), 'method' => 'delete', 'data-confirm' => 'Deseas borrar el Bloque '. $bloque->nombre. ' permanentemente?')) }}
-													<button type="submit" href="{{ URL::route('bloques.destroy', $bloque->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
-												{{ Form::close() }}										
-											</li>				
-										
-										@elseif (Cache::get('esJuntaDirectivakey'))
-											<li> 
-												<a href="{{ URL::route('indexsecplus', array($bloque->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Secciones</a>
-											</li>
-											<li>
-												<a href="{{ URL::route('indexblqadmin', array($bloque->id)) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> Admins</a>
-											</li>										
-										
-										@elseif (Cache::get('esAdministradorkey'))
-											<li> 
-												<a href="{{ URL::route('indexsecplus', array($bloque->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Secciones</a>
-											</li>
-										@endif
-									</ul>
-								</td>
-							@elseif (Cache::get('esAdministradorkey'))
-								<td col width="60px" ><strong>{{ $bloque->codigo }}</strong></td>
-								<td>{{ $bloque->nombre }}</td>
-								<td col width="390px" align="right">
+								<td col width="290px" align="right">
 									<ul class="demo-btns">
 										<li>
 											<a href="{{ URL::route('indexsecplus', array($bloque->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Secciones</a>
@@ -99,13 +60,41 @@
 											<a href="{{ URL::route('showblqplus', array($bloque->id)) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
 										</li>				
 										<li>
+											<a href="{{ URL::route('bloques.edit', array($bloque->id)) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
+										</li>
+										<li>
 											{{ Form::open(array('route' => array('bloques.destroy', $bloque->id), 'method' => 'delete', 'data-confirm' => 'Deseas borrar el Bloque '. $bloque->nombre. ' permanentemente?')) }}
 												<button type="submit" href="{{ URL::route('bloques.destroy', $bloque->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
 											{{ Form::close() }}										
 										</li>				
+							@elseif (Cache::get('esAdministradorkey'))
+								<td col width="60px" ><strong>{{ $bloque->codigo }}</strong></td>
+								<td>{{ $bloque->nombre }}</td>
+								<td col width="190px" align="right">
+									<ul class="demo-btns">
+										<li>
+											<a href="{{ URL::route('indexsecplus', array($bloque->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Secciones</a>
+										</li>
+										<li>
+											<a href="{{ URL::route('showblqplus', array($bloque->id)) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
+										</li>				
+							@elseif (Cache::get('esJuntaDirectiva'))
+								<td col width="60px" ><strong>{{ $bloque->codigo }}</strong></td>
+								<td>{{ $bloque->nombre }}</td>
+								<td col width="190px" align="right">
+									<ul class="demo-btns">
+										<li>
+											<a href="{{ URL::route('indexsecplus', array($bloque->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Secciones</a>
+										</li>
+										<li>
+											<a href="{{ URL::route('indexblqadmin', array($bloque->id)) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> Admins</a>
+										</li>										
+										<li>
+											<a href="{{ URL::route('showblqplus', array($bloque->id)) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
+										</li>				
+							@endif
 									</ul>
 								</td>
-							@endif	
 						</tr>
 					@endforeach
 				</tbody>

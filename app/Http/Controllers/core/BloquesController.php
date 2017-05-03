@@ -43,7 +43,7 @@ class BloquesController extends Controller {
 		    //Obtiene los bloques que pertenecen a un determinado blqadmin	    
 			$bloques = Bloque::join('blqadmins', 'blqadmins.bloque_id', '=', 'bloques.id')
 				 ->where('blqadmins.user_id', Auth::user()->id)
-				 ->select('bloques.id','bloques.nombre')
+				 ->select('bloques.id','bloques.codigo','bloques.nombre')
 				 ->get();
 				//dd($jd->toArray(), $bloques->toArray());
 	    }

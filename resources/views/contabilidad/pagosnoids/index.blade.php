@@ -25,7 +25,7 @@
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                 <h2>Pagos no indentificados </h2>
                 <div class="widget-toolbar">
-                    @if (Cache::get('esAdminkey'))
+                    @if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
                         <a href="{{ URL::route('pagosnoids.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Registrar pago no identificado</a>
                     @endif  
                 </div>
@@ -63,7 +63,7 @@
                                     <td col width="50px" align="left">{{ $dato->monto }}</td>  
                                     <td col width="80px"><strong>{{ $dato->codigo }}</strong></td>
                                     <td>{{ $dato->propietarios }}</td>
-                                    @if (Cache::get('esAdminkey'))
+                                    @if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
                                         <td col width="125px" align="right">
                                             <ul class="demo-btns">
                                                 @if ($dato->identificado == 0 && $dato->contabilizado == 0)
@@ -91,6 +91,24 @@
                                                             'data-btncolor' => 'btn-success'
                                                         ))}}
                                                         {{Form::close()}} 
+                                                    </li>
+                                                @elseif ($dato->identificado == 1 && $dato->contabilizado == 1)
+                                                    <li>
+                                                        <span class="label label-success">Contabilizado</span>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </td>
+                                    @elseif (Cache::get('esContadorkey'))
+                                        <td col width="125px" align="right">
+                                            <ul class="demo-btns">
+                                                @if ($dato->identificado == 0)
+                                                    <li>
+                                                        <span class="label label-warning">Pendiente identificar</span>
+                                                    </li>
+                                                @elseif ($dato->identificado == 1 && $dato->contabilizado == 0)
+                                                    <li>
+                                                        <span class="label label-info">Pendiente contabilizar</span>
                                                     </li>
                                                 @elseif ($dato->identificado == 1 && $dato->contabilizado == 1)
                                                     <li>

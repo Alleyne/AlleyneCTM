@@ -155,10 +155,10 @@ class HojadetrabajosController extends Controller {
       'totalAjustadoCredito' => number_format($totalAjustadoCredito,2)
     ];
     
-    if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey') || Cache::get('esJuntaDirectivakey')) {
+    if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey') || Cache::get('esJuntaDirectivakey') || Cache::get('esContadorkey')) {
       return view('contabilidad.hojadetrabajos.show', $viewData);  
     
-    } elseif (Grupo::esPropietario()) {
+    } elseif (Cache::get('esPropietariokey')) {
       return view('contabilidad.hojadetrabajos.showFrontend', $viewData); 
     }
   }	

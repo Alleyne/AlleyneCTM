@@ -180,12 +180,18 @@ class OrgsController extends Controller
 		//dd($org->facturas);
 	
     if (!$org->facturas->isEmpty()) {
-			Session::flash('warning', 'La organizacion ' .$org->nombre. ' no puede ser borrada porque tiene por lo menos una factura acreditada.');
+			Session::flash('warning', 'La organizacion ' .$org->nombre. ' no puede ser borrada porque tiene por lo menos una factura por Caja general acreditada.');
 			return back();
 		}
     
-    if (!$org->catalogos->isEmpty()) {
-			Session::flash('warning', 'La organizacion ' .$org->nombre. ' no puede ser borrada porque tiene por lo menos una cuenta contable asignada.');
+    if (!$org->ecajachicas->isEmpty()) {
+      Session::flash('warning', 'La organizacion ' .$org->nombre. ' no puede ser borrada porque tiene por lo menos una factura por Caja chica acreditada.');
+      return back();
+    }
+    
+
+    if (!$org->serviproductos->isEmpty()) {
+			Session::flash('warning', 'La organizacion ' .$org->nombre. ' no puede ser borrada porque tiene por lo menos un serviproducto asignado.');
 			return back();
 		}    
 

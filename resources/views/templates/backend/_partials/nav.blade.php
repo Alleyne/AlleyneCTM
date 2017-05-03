@@ -267,7 +267,7 @@
 		<a href="{{ URL::route('bitacoras.index') }}"><i class="fa fa-archive"></i> <span class="menu-item-parent">Bitácora</span></a>
 	</li>
 
-@elseif (Cache::get('esContador'))
+@elseif (Cache::get('esContadorkey'))
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
 		<ul>

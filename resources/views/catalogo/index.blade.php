@@ -30,7 +30,7 @@
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 							<h2>Cuentas </h2>
 							<div class="widget-toolbar">
-								@if (Cache::get('esAdminkey'))
+								@if (Cache::get('esAdminkey') || Cache::get('esContadorkey'))
 									<div class="btn-group">
 					                    <a class="btn btn-success btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Crear nueva cuenta de:</a>
 					                    <a class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
@@ -95,14 +95,11 @@
 												<td col width="80px">
 													{{ $dato->activa ? 'Activa': 'Inactiva' }}
 												</td>
-												<td col width="70px" align="right">
+												<td col width="40px" align="right">
 													<ul class="demo-btns">
 														<li>
 															<a href="{{ URL::route('catalogos.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
 														</li>
-														<li>
-										
-														</li>				
 													</ul>
 												</td>
 											</tr>
