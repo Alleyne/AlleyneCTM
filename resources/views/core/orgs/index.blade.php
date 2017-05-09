@@ -72,15 +72,29 @@
 												<td col width="250px" align="right">
 													<ul class="demo-btns">
 														<li>
-															<a href="{{ URL::route('serviproductosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Asignar serviproducto</a>
+															<a href="{{ URL::route('serviproductosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Vinvular serviproducto</a>
 														</li>
 														<li>
 															<a href="{{ URL::route('orgs.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
 														</li>
 														<li>
-															{{ Form::open(array('route' => array('orgs.destroy', $dato->id), 'method' => 'delete', 'data-confirm' => 'Deseas borrar la Organizacion '. $dato->nombre. ' permanentemente?')) }}
-																<button type="submit" href="{{ URL::route('orgs.destroy', $dato->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
-															{{ Form::close() }}		
+											        {{Form::open(array(
+											            'route' => array('orgs.destroy', $dato->id),
+											            'method' => 'DELETE', 
+											            'style' => 'display:inline'
+											        ))}}
+											        
+											        {{Form::button('<i class="fa fa-times"></i>', array(
+											            'class' => 'btn btn-danger btn-xs',
+											            'data-toggle' => 'modal',
+											            'data-target' => '#confirmAction',
+											            'data-title' => 'Eliminar organizacion',
+											            'data-message' => 'Esta seguro(a) que desea eliminar la presente organizacion?',
+											            'data-btntxt' => 'SI, eliminar',
+											            'data-btncolor' => 'btn-danger'
+											        ))}}
+											        {{Form::close()}}  
+
 														</li>
 													</ul>
 												</td>
@@ -90,6 +104,8 @@
 						
 								</tbody>
 							</table>
+					    <!-- Incluye la modal box -->
+					    @include('templates.backend._partials.modal_confirm')
 						</div>
 						<!-- end widget content -->
 	
@@ -112,6 +128,7 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
     
     <script type="text/javascript">
     $(document).ready(function() {

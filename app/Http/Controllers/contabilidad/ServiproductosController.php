@@ -41,8 +41,8 @@ class ServiproductosController extends Controller
   /*************************************************************************************
    * Despliega formulario para crear un nuevo registro
    ************************************************************************************/	
-	public function edit($serviproducto_id)
-	{
+	public function edit($serviproducto_id) {
+  
     $dato = Serviproducto::find($serviproducto_id);
     return view('contabilidad.serviproductos.edit')->with('dato', $dato);
 	} 
@@ -58,12 +58,12 @@ class ServiproductosController extends Controller
       //dd(Input::get());
       $input = Input::all();
       $rules = array(
-          'nombre'      => 'required'
+        'nombre'      => 'required'
       );
 
       $messages = [
-          'required' => 'El campo :attribute es requerido!',
-          'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+        'required' => 'El campo :attribute es requerido!',
+        'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
       ];        
           
       $validation = \Validator::make($input, $rules, $messages);        
@@ -72,18 +72,16 @@ class ServiproductosController extends Controller
         $dato = Serviproducto::find($id);
         $dato->nombre = Input::get('nombre');
         $dato->activo = Input::has('activo');;
+        Sity::RegistrarEnBitacora($dato, Input::get(), 'Serviproducto', 'Actualiza serviproducto');        
         $dato->save();      
-        
-        // Registra en bitacoras
-        $detalle =  'nombre= '. $dato->nombre;
 
-        Sity::RegistrarEnBitacora(2, 'serviproductos', $dato->id, $detalle);
-        Session::flash('success', 'El nombre del serviproducto No. ' .$id. ' ha sido editado con éxito.');
-        
         DB::commit();
+        
+        Session::flash('success',' El serviproducto "' .$dato->nombre. '" ha sido actualizado con exito');
         return redirect()->route('serviproductos.index');
       }
-      Session::flash('danger', 'Se encontraron errores en su formulario, intente nuevamente.');
+
+      Session::flash('danger', ' Se encontraron errores en su formulario, intente nuevamente.');
       return back()->withInput()->withErrors($validation);
     
     } catch (\Exception $e) {
@@ -109,18 +107,21 @@ class ServiproductosController extends Controller
     try {
 
       $this->validate($request, array(
-        'nombre'    	 => 'required',
+        'nombre'    	=> 'required',
         'catalogo_id' => 'required'
       ));
   		
-  		$serviproducto= new Serviproducto;
+  		$serviproducto = new Serviproducto;
   		$serviproducto->nombre = $request->nombre;		
   		$serviproducto->tipo = $request->tipo_radios;					
   		$serviproducto->catalogo_id = $request->catalogo_id;		
-  		$serviproducto->save();
-  		
+      $serviproducto->save();
+      
+      Sity::RegistrarEnBitacora($serviproducto, $request, 'Serviproducto', 'Registra nuevo serviproducto');
+
   		DB::commit();  
-      Session::flash('success', 'El serviproducto ' .$serviproducto->nombre. ' ha sido creada con exito');
+      
+      Session::flash('success', ' El serviproducto "' .$serviproducto->nombre. '" ha sido registrado con exito');
       return redirect()->route('serviproductos.index');
     
     } catch (\Exception $e) {
@@ -159,12 +160,11 @@ class ServiproductosController extends Controller
         $dato = Serviproducto::find($serviproducto_id);
         $dato->delete();      
 
-        // Registra en bitacoras
-        $detalle =  'Elimina serviproducto '.$dato->nombre;
+        Sity::RegistrarEnBitacora($dato, Null, 'Serviproducto', 'Elimina serviproducto');   
+        DB::commit();         
+
+        Session::flash('success', ' El serviproducto "' .$dato->nombre.'" ha sido eliminado permanentemente de la base de datos.');
         
-        Sity::RegistrarEnBitacora(3, 'serviproductos', $dato->id, $detalle);
-        Session::flash('success', 'El serviproducto' .$dato->nombre. ' ha sido eliminado permanentemente de la base de datos.');
-        DB::commit();       
         return Redirect()->route('serviproductos.index');
       }
 
@@ -175,7 +175,5 @@ class ServiproductosController extends Controller
       return back();
     }   
   }
-
-
 
 }

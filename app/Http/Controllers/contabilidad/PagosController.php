@@ -2,12 +2,9 @@
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Auth;
+use Auth, Session, DB, Grupo, Validator;
 use App\library\Sity;
 use App\library\Npago;
-use Session, DB;
-use Grupo;
-use Validator;
 use Carbon\Carbon;
 use Jenssegers\Date\Date;
 
@@ -237,10 +234,10 @@ class PagosController extends Controller {
 					Npago::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo, $tipoPago);
 
 					// Registra en bitacoras
-					$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $dato->monto;  
-		      Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
+  				Sity::RegistrarEnBitacora($dato, Input::get(), 'Pago', 'Registra pago de propietario');
+
 					DB::commit();		            
-		      Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado y procesado con éxito.');
+		      Session::flash('success', 'El pago ' .$dato->id. ' ha sido registrado con éxito.');
 				}
 				return redirect()->route('indexPagos',  Input::get('un_id'));
 			}

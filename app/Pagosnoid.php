@@ -7,7 +7,7 @@ class Pagosnoid extends Model
   public $timestamps = false;    
 
   public function un() {
-      return $this->belongsTo('App\Un');
+    return $this->belongsTo('App\Un');
   }
 
 }

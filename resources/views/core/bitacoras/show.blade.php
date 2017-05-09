@@ -66,7 +66,7 @@
 												<div class="form-group">
 													<label class="col-md-2 control-label">Usuario</label>
 													<div class="col-md-10">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $usuario }}">
+														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $usuario->fullName }}">
 													</div>
 												</div>		
 												<div class="form-group">
@@ -78,7 +78,7 @@
 												<div class="form-group">
 													<label class="col-md-2 control-label">Acción</label>
 													<div class="col-md-10">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $accion }}">
+														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $bitacora->accion }}">
 													</div>
 												</div>				
 												<div class="form-group">
@@ -155,7 +155,7 @@
 							<!-- widget content -->
 							<div class="widget-body">
 				              	<p>
-								<img style="height: 310px; border-radius: 8px;" src="{{asset($imagen)}}" class="img-responsive" alt="Responsive image">
+								<img style="height: 310px; border-radius: 8px;" src="{{asset($usuario->imagen)}}" class="img-responsive" alt="Responsive image">
 				             	</p>
 			             	</div>
 							<!-- end widget content -->

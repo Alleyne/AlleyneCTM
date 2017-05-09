@@ -67,7 +67,7 @@
 												<button type="submit" href="{{ URL::route('bloques.destroy', $bloque->id) }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
 											{{ Form::close() }}										
 										</li>				
-							@elseif (Cache::get('esAdministradorkey'))
+							@elseif (Cache::get('esAdministradorkey') || Cache::get('esContadorkey'))
 								<td col width="60px" ><strong>{{ $bloque->codigo }}</strong></td>
 								<td>{{ $bloque->nombre }}</td>
 								<td col width="190px" align="right">

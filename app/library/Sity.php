@@ -12,6 +12,7 @@ use Event;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Jenssegers\Date\Date;
+use Illuminate\Support\Facades\Input;
 
 use App\Bitacora;
 use App\User;
@@ -25,6 +26,7 @@ use App\Seccione;
 use App\Ph;
 use App\Dte_desembolso;
 use App\Desembolso;
+use App\Bloque;
 
 class Sity {
 
@@ -65,6 +67,7 @@ class Sity {
     //dd($sa);    
     return $sa;
   }
+
 
   /****************************************************************************************
    * Registra en ctmayores
@@ -174,7 +177,7 @@ class Sity {
   /*****************************************************************************************
    *  Registra en Bitacoras.
    *****************************************************************************************/
-  public static function RegistrarEnBitacora($accione_id, $tabla, $registro=Null, $detalle) {
+/*  public static function RegistrarEnBitacora($accione_id, $tabla, $registro=Null, $detalle) {
       $bitacora = new Bitacora;
       $bitacora->fecha           = Carbon::today();       
       $bitacora->hora            = Carbon::now('America/Panama');
@@ -188,7 +191,85 @@ class Sity {
       $bitacora->ip              = $_SERVER["REMOTE_ADDR"];
       $bitacora->save();
       return 'nada';
+  }   */ 
+
+  /*****************************************************************************************
+  *  Registra en Bitacoras tipo resource store, update y destroy.
+  *****************************************************************************************/
+  public static function RegistrarEnBitacora($dato, $input = Null, $modelo, $accion) {      
+    //dd($dato, $input);
+   
+    if($dato->isDirty()){
+      // se trata de un update     
+      //dd('se trata de un update', $dato, $input);
+      $attributes = array_keys($dato->toArray());
+      
+      $detalle = '';
+      foreach ($attributes as $attribute) {
+        if ($dato->isDirty($attribute)){
+          if (Input::get($attribute) != $dato->getOriginal($attribute)) {
+            $detalle = $detalle.' "'.$attribute.'" cambia de "'.$dato->getOriginal($attribute).'" a "'.Input::get($attribute).'", ';
+          }
+        }
+      }
+      
+      $tabla = $dato->getTable();
+      $registro = $dato->id;
+    
+    } elseif(!$dato->isDirty() && $input){
+      // se trata de un create 
+      //dd('se trata de un create', $dato, $input);
+      $detalle = $dato;
+      $tabla = $dato->getTable();
+      $modelName = 'App\\'.$modelo;
+      $registro = $dato->id;
+    
+    } elseif(!$dato->isDirty() && $input == Null){
+      // se trata de un delete
+      //dd('se trata de un delete', $dato, $input);
+      $detalle = $dato;
+      $tabla = $dato->getTable();
+      $registro = $dato->id;
+    
+    } else {
+      dd('ninguna de las ateriores');      
+    }
+
+    $bitacora = new Bitacora;
+    $bitacora->fecha           = Carbon::today();       
+    $bitacora->hora            = Carbon::now('America/Panama');
+    $bitacora->accion          = $accion;
+    $bitacora->tabla           = $tabla;
+    $bitacora->registro        = $registro;            
+    $bitacora->detalle         = $detalle;
+    if (Auth::check()) {
+        $bitacora->user_id     = Auth::user()->id;            
+    }
+    $bitacora->ip              = $_SERVER["REMOTE_ADDR"];
+    $bitacora->save();
+    return 'nada';
   }    
+
+  /*****************************************************************************************
+  *  Registra en Bitacoras tipo especial vincula, desvincula, subir imagen
+  *****************************************************************************************/
+  public static function RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion) {      
+    //dd($detalle, $tabla, $accion);
+
+    $bitacora = new Bitacora;
+    $bitacora->fecha           = Carbon::today();       
+    $bitacora->hora            = Carbon::now('America/Panama');
+    $bitacora->accion          = $accion;
+    $bitacora->tabla           = $tabla;
+    $bitacora->registro        = $registro;            
+    $bitacora->detalle         = $detalle;
+    if (Auth::check()) {
+        $bitacora->user_id     = Auth::user()->id;            
+    }
+    $bitacora->ip              = $_SERVER["REMOTE_ADDR"];
+    $bitacora->save();
+    return 'nada';
+  }  
 
   /****************************************************************************************
    * Esta function encuentra el user_id del administrador encargado del bloque al cual

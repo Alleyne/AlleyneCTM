@@ -5,12 +5,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Session;
+use Session, Validator, Image, Cache, DB;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
-use Validator;
-use Image;
-use Cache;
 
 use App\Jd;
 use App\Bitacora;
@@ -20,42 +17,43 @@ use App\Blqadmin;
 use App\Seccione;
 
 class BloquesController extends Controller {
-    
-    public function __construct()
-    {
-       	$this->middleware('hasAccess');    
-    }
-    
-    /*************************************************************************************
-     * Despliega todos los bloques que pertenecen a un determinada Junta Diretiva.
-     ************************************************************************************/	
+		
+	public function __construct()
+	{
+		$this->middleware('hasAccess');    
+	}
+	
+	/*************************************************************************************
+	 * Despliega todos los bloques que pertenecen a un determinada Junta Diretiva.
+	 ************************************************************************************/	
 	public function indexblqplus()
 	{
-		if (Cache::get('esAdminkey') || Cache::get('esJuntaDirectivakey')) {
-		    //Obtiene los datos del la Justa Directiva y de todos los bloques registrados
-		    $jd = Jd::first();
-		    $bloques = Bloque::All();
-				//dd($jd->toArray(), $bloques->toArray());
-	    } else {
-		    //Obtiene los datos del la Justa Directiva	    
-		    $jd = Jd::first();
-		    
-		    //Obtiene los bloques que pertenecen a un determinado blqadmin	    
+		if (Cache::get('esAdminkey') || Cache::get('esJuntaDirectivakey') || Cache::get('esContadorkey')) {
+			//Obtiene los datos del la Justa Directiva y de todos los bloques registrados
+			$jd = Jd::first();
+			$bloques = Bloque::All();
+			//dd($jd->toArray(), $bloques->toArray());
+		
+		} else {
+			//Obtiene los datos del la Justa Directiva	    
+			$jd = Jd::first();
+			
+			//Obtiene los bloques que pertenecen a un determinado blqadmin	    
 			$bloques = Bloque::join('blqadmins', 'blqadmins.bloque_id', '=', 'bloques.id')
-				 ->where('blqadmins.user_id', Auth::user()->id)
-				 ->select('bloques.id','bloques.codigo','bloques.nombre')
-				 ->get();
-				//dd($jd->toArray(), $bloques->toArray());
-	    }
-	    
-	    return view('core.bloques.indexblqplus')->with('jd', $jd)
-	    										   ->with('bloques', $bloques);
+							 ->where('blqadmins.user_id', Auth::user()->id)
+							 ->select('bloques.id','bloques.codigo','bloques.nombre')
+							 ->get();
+			//dd($jd->toArray(), $bloques->toArray());
+		}
+		
+		return view('core.bloques.indexblqplus')->with('jd', $jd)
+													 									->with('bloques', $bloques);
 
-	    /*----------------------------------------------------------------------------------
-	    api setup
-	    $datos = Jd::find($jd_id)->load('bloques');
-      return response()->json($datos->toArray()); 
-      -----------------------------------------------------------------------------------*/
+		/*----------------------------------------------------------------------------------
+		api setup
+		$datos = Jd::find($jd_id)->load('bloques');
+		return response()->json($datos->toArray()); 
+		-----------------------------------------------------------------------------------*/
 	}	
 
 	/*************************************************************************************
@@ -90,73 +88,80 @@ class BloquesController extends Controller {
 	 ************************************************************************************/	
 	public function createblq($jd_id)
 	{
-	    return view('core.bloques.createblq')
+		return view('core.bloques.createblq')
 					->with('jd_id', $jd_id);        			
 	} 
 
-    /*************************************************************************************
-     * Almacena un nuevo registro en la base de datos
-     ************************************************************************************/	
+	/*************************************************************************************
+	 * Almacena un nuevo registro en la base de datos
+	 ************************************************************************************/	
 	public function store()
 	{
-        //dd(Input::all());
-        $input = Input::all();
-        $rules = array(
-            'nombre'    	=> 'required',
-         	'codigo'    	=> 'Required|Min:4|Max:4|Alpha_num',
-            'descripcion' 	=> 'required'
-        );
-    
-        $messages = [
-            'required' => 'El campo :attribute es requerido!',
-            'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
-        ];        
-            
-        $validation = \Validator::make($input, $rules, $messages);      	
+	  //DB::beginTransaction();
+	  //try {		
+			//dd(Input::all());
+			$input = Input::all();
+			$rules = array(
+				'nombre'    	=> 'required',
+				'codigo'    	=> 'Required|Min:4|Max:4|Alpha_num',
+				'descripcion' => 'required'
+			);
 
-		if ($validation->passes())
-		{
-			$dato = new Bloque;
-			$dato->nombre         = Input::get('nombre');
-			$dato->codigo         = strtoupper(Input::get('codigo'));
-			$dato->descripcion    = Input::get('descripcion');
-	    $dato->jd_id 	  	  = Input::get('jd_id'); 
-	    $dato->save(); 
-			
-			// agrega un administrador temporal
-			$blqadmin = new Blqadmin;
-			$blqadmin->bloque_id         = $dato->id;			
-			$blqadmin->user_id  		 = Auth::user()->id;
-			$blqadmin->cargo             = 0;					
-			$blqadmin->encargado		 = 1;			
-			$blqadmin->save();
+			$messages = [
+				'required' => 'El campo :attribute es requerido!',
+				'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+			];        
+					
+			$validation = \Validator::make($input, $rules, $messages);      	
 
-			// Actualiza la ruta de la imagen del Administrador
-			$img_path = Bloque::find($dato->id);
-			$img_path->imagen_L = "assets/img/bloques/bloq_L".$dato->id.".jpg";
-			$img_path->imagen_M = "assets/img/bloques/bloq-M".$dato->id.".jpg";
-			$img_path->imagen_S = "assets/img/bloques/bloq-S".$dato->id.".jpg";
+			if ($validation->passes())
+			{
+				$dato = new Bloque;
+				$dato->nombre      = Input::get('nombre');
+				$dato->codigo      = strtoupper(Input::get('codigo'));
+				$dato->descripcion = Input::get('descripcion');
+				$dato->jd_id 	  	 = Input::get('jd_id'); 
+				$dato->save(); 
+				
+				Sity::RegistrarEnBitacora($dato, Input::get(), 'Bloque', 'Registra nuevo bloque');				
+				
+				// agrega un administrador temporal
+				$blqadmin = new Blqadmin;
+				$blqadmin->bloque_id = $dato->id;			
+				$blqadmin->user_id   = Auth::user()->id;
+				$blqadmin->cargo     = 0;					
+				$blqadmin->encargado = 1;			
+				$blqadmin->save();
 
-			$img_path->save();			
-			
-			// Registra en bitacoras
-			$detalle =	'Crea Bloque '. $dato->nombre. 'codigo '.$dato->codigo.', con la siguiente descripcion: '.  $dato->descripcion;  
-			
-			Sity::RegistrarEnBitacora(1, 'bloques', $dato->id, $detalle);
-			Session::flash('success', 'El Bloque administrativo ' .$dato->nombre. ' ha sido creado con éxito.');
-		  return redirect()->route('indexblqplus', Input::get('jd_id'));
-		}
+				// Actualiza la ruta de la imagen del Administrador
+				$img_path = Bloque::find($dato->id);
+				$img_path->imagen_L = "assets/img/bloques/bloq_L".$dato->id.".jpg";
+				$img_path->imagen_M = "assets/img/bloques/bloq-M".$dato->id.".jpg";
+				$img_path->imagen_S = "assets/img/bloques/bloq-S".$dato->id.".jpg";
 
-    return back()->withInput()->withErrors($validation);
+				$img_path->save();			
+				
+	  		DB::commit();
+				
+				Session::flash('success', 'El Bloque administrativo ' .$dato->nombre. ' ha sido creado con éxito.');
+				return redirect()->route('indexblqplus', Input::get('jd_id'));
+			}
+			return back()->withInput()->withErrors($validation);
+
+/*	  } catch (\Exception $e) {
+	    DB::rollback();
+	    Session::flash('warning', ' Ocurrio un error en BloquesController.store, la transaccion ha sido cancelada!');
+	    return back()->withInput();
+	  }	*/
 	}
 
-    /*************************************************************************
-     * Despliega el registro especificado en formato formulario para edición
-     *************************************************************************/	
+	/*************************************************************************
+	 * Despliega el registro especificado en formato formulario para edición
+	 *************************************************************************/	
 	public function edit($bloque_id)
 	{
 		return view('core.bloques.edit')
-			 ->with('bloque', Bloque::find($bloque_id));
+					 ->with('bloque', Bloque::find($bloque_id));
 	}
 
 	/*************************************************************************
@@ -164,144 +169,162 @@ class BloquesController extends Controller {
 	 ************************************************************************/
 	public function update($id)
 	{
-	    //dd(Input::get());
-	    $input = Input::all();
-	    $rules = array(
-	        'nombre'    	=> 'required',
-	        'descripcion' 	=> 'required'
-	    );
-
-	    $messages = [
-	        'required' => 'El campo :attribute es requerido!',
-	        'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
-	    ];        
-	        
-	    $validation = \Validator::make($input, $rules, $messages);      	
-
-		if ($validation->passes())
-		{
-			$dato = Bloque::find($id);
-			$dato->nombre       	= Input::get('nombre');
-			$dato->descripcion      = Input::get('descripcion');
-			$dato->save();			
-			//dd($dato->toArray());
+	  DB::beginTransaction();
+	  try {
 			
-			// Registra en bitacoras
-			$detalle =	'nombre= '.		   $dato->nombre. ', '.
-						'descripcion= '.   $dato->descripcion;  
+			//dd(Input::get());
+			$input = Input::all();
+			$rules = array(
+				'nombre'    	=> 'required',
+				'descripcion' 	=> 'required'
+			);
+
+			$messages = [
+				'required' => 'El campo :attribute es requerido!',
+				'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+			];        
+					
+			$validation = \Validator::make($input, $rules, $messages);      	
 			
-			Sity::RegistrarEnBitacora(2, 'bloques', $dato->id, $detalle);
-			Session::flash('success', 'El Bloque administrativo No. ' .$id. ' ha sido editado con éxito.');
-		    
-			return redirect()->route('indexblqplus', $dato->jd_id);
-		}
-	    return back()->withInput()->withErrors($validation);
+			if ($validation->passes())
+			{
+				$dato = Bloque::find($id);
+				$dato->nombre       	= Input::get('nombre');
+				$dato->descripcion      = Input::get('descripcion');
+				
+				Sity::RegistrarEnBitacora($dato, Input::get(), 'Bloque', 'Actualiza bloque');
+				$dato->save();		  		
+	  		
+	  		DB::commit();
+				
+				Session::flash('success', 'El Bloque administrativo No. ' .$id. ' ha sido editado con éxito.');
+				return redirect()->route('indexblqplus', $dato->jd_id);
+			}
+			return back()->withInput()->withErrors($validation);
+
+	  } catch (\Exception $e) {
+	    DB::rollback();
+	    Session::flash('warning', ' Ocurrio un error en BloquesController.update, la transaccion ha sido cancelada!');
+	    return back()->withInput();
+	  }
 	}
 
-    /*************************************************************************************
-     * Borra registro de la base de datos
-     ************************************************************************************/	
+	/*************************************************************************************
+	 * Borra registro de la base de datos
+	 ************************************************************************************/	
 	public function destroy($bloque_id)
 	{
-		//dd($bloque_id);
-		/*No se permitirá borrar aquellos Bloques administrativos que cumplan con por lo menos una de siguientes condiciones:
-			1. Que tenga por lo menos una sección asigna al mismo.
-			2. Que tenga por lo menso un Administrador asignado al mismo.*/
-		
-		$bloque = Bloque::find($bloque_id);
-		
-		$secciones = Seccione::where('bloque_id', $bloque_id)->first();
-		//dd($secciones);
-		
-		// Revisa si hay algún usuario vinculado al bloque
-		$users= Blqadmin::where('bloque_id', $bloque_id)
-							   	   ->first();		
-		
-		if(!empty($users)) {
-			Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos un administrador vinculado al mismo.');
-			return back();
-		}
-		
-		elseif(!empty($secciones)) {
-			Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos una sección asignada al mismo.');
-			return back();
-		}
-		
-		else {
-
-			$bloque->delete();
-
-			// Registra en bitacoras
-			$detalle =	'Borra el Bloque '. $bloque->nombre. ', con la siguiente descripcion: '.  $bloque->descripcion;       
+  	DB::beginTransaction();
+	  try {
+			//dd($bloque_id);
+			/*No se permitirá borrar aquellos Bloques administrativos que cumplan con por lo menos una de siguientes condiciones:
+				1. Que tenga por lo menos una sección asigna al mismo.
+				2. Que tenga por lo menso un Administrador asignado al mismo.*/
 			
-			Sity::RegistrarEnBitacora(3, 'bloques', $bloque->id, $detalle);
-			Session::flash('success', 'El Bloque administrativo ' .$bloque->nombre. ' ha sido borrado permanentemente de la base de datos.');			
-			return back();
-		}
+			$bloque = Bloque::find($bloque_id);
+			
+			$secciones = Seccione::where('bloque_id', $bloque_id)->first();
+			//dd($secciones);
+			
+			// Revisa si hay algún usuario vinculado al bloque
+			$users= Blqadmin::where('bloque_id', $bloque_id)->first();		
+			
+			if(!empty($users)) {
+				Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos un administrador vinculado al mismo.');
+				return back();
+			}
+			
+			elseif(!empty($secciones)) {
+				Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos una sección asignada al mismo.');
+				return back();
+			}
+			
+			else {
+				$bloque->delete();
+
+				Sity::RegistrarEnBitacora($bloque, Null, 'Bloque', 'Elimina bloque');	
+  			DB::commit();
+				
+				Session::flash('success', 'El Bloque administrativo ' .$bloque->nombre. ' ha sido borrado permanentemente de la base de datos.');			
+				return back();
+			}
+
+	  } catch (\Exception $e) {
+	    DB::rollback();
+	    Session::flash('warning', ' Ocurrio un error en BloquesController.destroy, la transaccion ha sido cancelada!');
+	    return back();
+	  }	
+
 	}
 
-   /*************************************************************************************
-     * Sube una imagen a la carpeta de bloques
-     ************************************************************************************/	
+  /*************************************************************************************
+	 * Sube una imagen a la carpeta de bloques
+	 ************************************************************************************/	
 	public function subirImagenBloque($id)
 	{
-        $input = Input::all();
-        $rules = array(
-       		'file' => 'required|image|max:10000|mimes:jpeg,jpg,gif,png,bmp'
-        );
+	  DB::beginTransaction();
+	  try {
+			$input = Input::all();
+			$rules = array(
+				'file' => 'required|image|max:10000|mimes:jpeg,jpg,gif,png,bmp'
+			);
 
-		$messages = array(
-		    'required' => 'Debe seleccinar una imagen',
-		    'image' => 'El archivo no es una imagen',
-		    'max' => 'La imagen sobrepasa el tamaño máximo de 300',
-		    'mimes' => 'La imagen deberá tener una de las siguienes extensiones jpg,gif,png,bmp'
-        );
+			$messages = array(
+					'required' => 'Debe seleccinar una imagen',
+					'image' => 'El archivo no es una imagen',
+					'max' => 'La imagen sobrepasa el tamaño máximo de 300',
+					'mimes' => 'La imagen deberá tener una de las siguienes extensiones jpg,gif,png,bmp'
+			);
 
-        $validation = Validator::make($input, $rules, $messages);
-        if ($validation->fails())
-        {
-        	return back()->withInput()->withErrors($validation);
-        }
+				$validation = Validator::make($input, $rules, $messages);
+				if ($validation->fails()) {
+					return back()->withInput()->withErrors($validation);
+				}
 
-        $file = Input::file('file'); 
-        $destinationPath = "assets/img/bloques";
-        $filename = "bloq-L".$id.".jpg";
+				$file = Input::file('file'); 
+				$destinationPath = "assets/img/bloques";
+				$filename = "bloq-L".$id.".jpg";
 
-        $uploadSuccess = Input::file('file')->move($destinationPath, $filename);
-        if( $uploadSuccess ) {
-			// Actualiza la ruta de la imagen del nuevo producto
-			$img_path = Bloque::find($id);
-			$img_path->imagen_L = "assets/img/bloques/bloq-L".$id.".jpg";
-			$img_path->imagen_M = "assets/img/bloques/bloq-M".$id.".jpg";
-			$img_path->imagen_S = "assets/img/bloques/bloq-S".$id.".jpg";
-			$img_path->save();
-			
-			// crea imagen normal
-			// resize the image to a height of 300 and constrain aspect ratio (auto width)
-			$img = Image::make($img_path->imagen_L)->resize(null, 500, true);
-			$img->save("assets/img/bloques/bloq-L".$id.".jpg");
-			
-			// crea thumpnail No 1
-			// resize the image to a height of 189 and constrain aspect ratio (auto width)
-			$img = Image::make($img_path->imagen_L)->resize(189, null, true);
-			$img->save("assets/img/bloques/bloq-M".$id.".jpg");
+				$uploadSuccess = Input::file('file')->move($destinationPath, $filename);
+				if( $uploadSuccess ) {
+					// Actualiza la ruta de la imagen del bloque
+					$img_path = Bloque::find($id);
+					$img_path->imagen_L = "assets/img/bloques/bloq-L".$id.".jpg";
+					$img_path->imagen_M = "assets/img/bloques/bloq-M".$id.".jpg";
+					$img_path->imagen_S = "assets/img/bloques/bloq-S".$id.".jpg";
+  				Sity::RegistrarEnBitacora($img_path, $input, 'Bloque', 'Actualiza imagen de bloque');	
+					$img_path->save();
+					
+					// crea imagen normal
+					// resize the image to a height of 300 and constrain aspect ratio (auto width)
+					$img = Image::make($img_path->imagen_L)->resize(null, 500, true);
+					$img->save("assets/img/bloques/bloq-L".$id.".jpg");
+					
+					// crea thumpnail No 1
+					// resize the image to a height of 189 and constrain aspect ratio (auto width)
+					$img = Image::make($img_path->imagen_L)->resize(189, null, true);
+					$img->save("assets/img/bloques/bloq-M".$id.".jpg");
 
-			// crea thumpnail No 2 
-			// resize the image to a height of 90 and constrain aspect ratio (auto width)
-			$img = Image::make($img_path->imagen_L)->resize(null, 90, true);
-			$img->save("assets/img/bloques/bloq-S".$id.".jpg");			
-			
-			// Registra en bitacoras
-			$detalle =	'Usuario cambió la imagen del bloque';       
-			
-			Sity::RegistrarEnBitacora(2, 'bloques', $id, $detalle);
-			Session::flash('success', 'La imagen se actualizó con éxito.');
-			return back()->withInput();
-		}
-		else {
-      Session::flash('danger', 'La imagen no se pudo subir.');
-			return back()->withInput();
-		}
+					// crea thumpnail No 2 
+					// resize the image to a height of 90 and constrain aspect ratio (auto width)
+					$img = Image::make($img_path->imagen_L)->resize(null, 90, true);
+					$img->save("assets/img/bloques/bloq-S".$id.".jpg");			
+  			
+	  			DB::commit();
+					
+					Session::flash('success', 'La imagen se actualizó con éxito.');
+					return back()->withInput();
+				
+				} else {
+					Session::flash('danger', 'La imagen no se pudo subir.');
+					return back()->withInput();
+				}
+
+	  } catch (\Exception $e) {
+	    DB::rollback();
+	    Session::flash('warning', ' Ocurrio un error en BloquesController.subirImagenBloque, la transaccion ha sido cancelada!');
+	    return back()->withInput();
+	  }
 	}
 
 } 

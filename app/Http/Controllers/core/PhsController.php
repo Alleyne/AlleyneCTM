@@ -16,83 +16,83 @@ use App\Ph;
 use App\Seccione;
 
 class PhsController extends Controller {
-    
-    public function __construct()
-    {
-       	$this->middleware('hasAccess');    
-    }
-    
-    /*************************************************************************************
-     * Despliega un grupo de registros en formato de tabla
-     ************************************************************************************/	
+		
+	public function __construct()
+	{
+			$this->middleware('hasAccess');    
+	}
+		
+	/*************************************************************************************
+	 * Despliega un grupo de registros en formato de tabla
+	 ************************************************************************************/	
 	public function index()
 	{
-        //Obtiene todos los Phs actualmente registrados en la base de datos.
-        $datos = Ph::orderBy('nombre', 'asc')->get();
-        //dd($datoss->toArray());
-  		
-  		return view('core.phs.index')->with('datos', $datos);     	
+		//Obtiene todos los Phs actualmente registrados en la base de datos.
+		$datos = Ph::orderBy('nombre', 'asc')->get();
+		//dd($datoss->toArray());
+
+		return view('core.phs.index')->with('datos', $datos);     	
 	}	
 
-    /*************************************************************************************
-     * Despliega el registro especificado en formato formulario sólo lectura
-     ************************************************************************************/	
+		/*************************************************************************************
+		 * Despliega el registro especificado en formato formulario sólo lectura
+		 ************************************************************************************/	
 	public function show($id)
 	{
 
-	    $dato = Ph::find($id);
-	    if(!empty($dato)) {
+		$dato = Ph::find($id);
+		if(!empty($dato)) {
 			return view('core.phs.show')->with('dato', $dato);
-		}
-	    else {
+		
+		} else {
 			Session::flash('danger', 'El Ph backendistrativo No. ' .$id. ' no existe.');
 			return redirect()->route('phs.index');	    	
-	    }
+		}
 	}
-   
-   /*************************************************************************************
-     * Despliega formulario para crear un nuevo registro
-     ************************************************************************************/	
+	 
+	 /*************************************************************************************
+		 * Despliega formulario para crear un nuevo registro
+		 ************************************************************************************/	
 	public function create()
 	{
-        return view('core.phs.create');
+		return view('core.phs.create');
 	}     
-    
-    /*************************************************************************************
-     * Almacena un nuevo registro en la base de datos
-     ************************************************************************************/	
+		
+		/*************************************************************************************
+		 * Almacena un nuevo registro en la base de datos
+		 ************************************************************************************/	
 	public function store()
 	{
-        //dd(Input::all());
-        $input = Input::all();
-        $rules = array(
-            'tipo'			=> 'required',
-            'nombre'    	=> 'required',
-        	'codigo'    	=> 'Required|Min:6|Max:6|Alpha'
-        );
-    
-        $messages = [
-            'required' => 'El campo :attribute es requerido!',
-            'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
-        ];        
-            
-        $validation = \Validator::make($input, $rules, $messages);      	
+		//dd(Input::all());
+		$input = Input::all();
+		$rules = array(
+				'tipo'			=> 'required',
+				'nombre'    => 'required',
+				'codigo'    => 'Required|Min:6|Max:6|Alpha'
+		);
+
+		$messages = [
+				'required' => 'El campo :attribute es requerido!',
+				'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+		];        
+				
+		$validation = \Validator::make($input, $rules, $messages);      	
 
 		if ($validation->passes())
 		{
 			
 			$dato = new Ph;
 			$dato->nombre       	= Input::get('nombre');
-			$dato->codigo		    = strtoupper(Input::get('codigo'));
-			$dato->tipo			    = Input::get('tipo');
+			$dato->codigo		    	= strtoupper(Input::get('codigo'));
+			$dato->tipo			    	= Input::get('tipo');
 			$dato->pais 	       	= Input::get('pais');
-			$dato->provincia	    = Input::get('provincia');
-			$dato->distrito       	= Input::get('distrito');
-			$dato->corregimiento    = Input::get('corregimiento');
-			$dato->comunidad       	= Input::get('comunidad');
-			$dato->calle 		    = Input::get('calle');
-			$dato->telefono       	= Input::get('telefono');
-			$dato->celular	        = Input::get('celular');
+			$dato->provincia	   	= Input::get('provincia');
+			$dato->distrito      	= Input::get('distrito');
+			$dato->corregimiento	= Input::get('corregimiento');
+			$dato->comunidad      = Input::get('comunidad');
+			$dato->calle 		    	= Input::get('calle');
+			$dato->telefono       = Input::get('telefono');
+			$dato->celular	      = Input::get('celular');
 			$dato->email 	       	= Input::get('email');
 			$dato->save();	
 			
@@ -102,97 +102,97 @@ class PhsController extends Controller {
 			$img_path->save();			
 			
 			// Registra en bitacoras
-			$detalle =	'nombre= '.		    $dato->nombre. ', '.
-						'codigo= '.   		$dato->codigo. ', '.
-						'tipo= '.   		$dato->descripcion. ', '.
-						'pais= '. 			$dato->pais. ', '.
-						'provincia= '. 		$dato->provincia. ', '.
-						'distrito= '. 		$dato->distrito. ', '.
-						'corregimiento= '. 	$dato->corregimiento. ', '.
-						'comunidad= '. 		$dato->comunidad. ', '.
-						'calle= '. 			$dato->calle. ', '.
-						'telefono= '. 		$dato->telefono. ', '. 
-						'celular= '. 		$dato->celular. ', '.
-						'email= '. 			$dato->email;  
-    
+			$detalle =	'nombre= '.		$dato->nombre. ', '.
+						'codigo= '.   			$dato->codigo. ', '.
+						'tipo= '.   				$dato->descripcion. ', '.
+						'pais= '. 					$dato->pais. ', '.
+						'provincia= '. 			$dato->provincia. ', '.
+						'distrito= '. 			$dato->distrito. ', '.
+						'corregimiento= '.	$dato->corregimiento. ', '.
+						'comunidad= '. 			$dato->comunidad. ', '.
+						'calle= '. 					$dato->calle. ', '.
+						'telefono= '. 			$dato->telefono. ', '. 
+						'celular= '. 				$dato->celular. ', '.
+						'email= '. 					$dato->email;  
+		
 			Sity::RegistrarEnBitacora(1, 'phs', $dato->id, $detalle);
 			Session::flash('success', 'El Ph administrativo No. ' .$dato->id. ' ha sido creado con éxito.');
 
 			return redirect()->route('phs.index');
 		}
-        return back()->withInput()->withErrors($validation);
+				return back()->withInput()->withErrors($validation);
 	}
-    
-    
-    /*************************************************************************************
-     * Despliega el registro especificado en formato formulario para edición
-     ************************************************************************************/	
+		
+		
+		/*************************************************************************************
+		 * Despliega el registro especificado en formato formulario para edición
+		 ************************************************************************************/	
 	public function edit($id)
 	{
 		return view('core.phs.edit')->with('dato', Ph::find($id));
 	}
 
 
-    /*************************************************************************************
-     * Actualiza registro
-     ************************************************************************************/
+		/*************************************************************************************
+		 * Actualiza registro
+		 ************************************************************************************/
 	public function update($id)
 	{
-        //dd(Input::get());
-        $input = Input::all();
-        $rules = array(
-            'tipo'			=> 'required',
-            'nombre'    	=> 'required'
-        );
-    
-        $messages = [
-            'required' => 'El campo :attribute es requerido!',
-            'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
-        ];        
-            
-        $validation = \Validator::make($input, $rules, $messages);      	
+		//dd(Input::get());
+		$input = Input::all();
+		$rules = array(
+				'tipo'			=> 'required',
+				'nombre'    => 'required'
+		);
+
+		$messages = [
+				'required' => 'El campo :attribute es requerido!',
+				'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+		];        
+				
+		$validation = \Validator::make($input, $rules, $messages);      	
 
 		if ($validation->passes())
 		{
 			$dato = Ph::find($id);
 			$dato->nombre       	= Input::get('nombre');
-			$dato->tipo			    = Input::get('tipo');
+			$dato->tipo			    	= Input::get('tipo');
 			$dato->pais 	       	= Input::get('pais');
 			$dato->provincia	    = Input::get('provincia');
-			$dato->distrito       	= Input::get('distrito');
-			$dato->corregimiento    = Input::get('corregimiento');
-			$dato->comunidad       	= Input::get('comunidad');
-			$dato->calle 		    = Input::get('calle');
-			$dato->telefono       	= Input::get('telefono');
-			$dato->celular	        = Input::get('celular');
+			$dato->distrito       = Input::get('distrito');
+			$dato->corregimiento	= Input::get('corregimiento');
+			$dato->comunidad     	= Input::get('comunidad');
+			$dato->calle 		    	= Input::get('calle');
+			$dato->telefono       = Input::get('telefono');
+			$dato->celular	      = Input::get('celular');
 			$dato->email 	       	= Input::get('email');
 			$dato->save();			
 			
 			// Registra en bitacoras
-			$detalle =	'nombre= '.		    $dato->nombre. ', '.
-						'tipo= '.   		$dato->descripcion. ', '.
-						'pais= '. 			$dato->pais. ', '.
-						'provincia= '. 		$dato->provincia. ', '.
-						'distrito= '. 		$dato->distrito. ', '.
-						'corregimiento= '. 	$dato->corregimiento. ', '.
-						'comunidad= '. 		$dato->comunidad. ', '.
-						'calle= '. 			$dato->calle. ', '.
-						'telefono= '. 		$dato->telefono. ', '. 
-						'celular= '. 		$dato->celular. ', '.
-						'email= '. 			$dato->email;
+			$detalle =	'nombre= '.		$dato->nombre. ', '.
+						'tipo= '.   				$dato->descripcion. ', '.
+						'pais= '. 					$dato->pais. ', '.
+						'provincia= '. 			$dato->provincia. ', '.
+						'distrito= '. 			$dato->distrito. ', '.
+						'corregimiento= '.	$dato->corregimiento. ', '.
+						'comunidad= '. 			$dato->comunidad. ', '.
+						'calle= '. 					$dato->calle. ', '.
+						'telefono= '. 			$dato->telefono. ', '. 
+						'celular= '. 				$dato->celular. ', '.
+						'email= '. 					$dato->email;
 
 			Sity::RegistrarEnBitacora(2, 'phs', $dato->id, $detalle);
 			Session::flash('success', 'El Ph administrativo No. ' .$id. ' ha sido editado con éxito.');
 			
 			return redirect()->route('phs.index');
 		}
-        return back()->withInput()->withErrors($validation);
-  	}
-  
-  
-    /*************************************************************************************
-     * Borra registro de la base de datos
-     ************************************************************************************/	
+				return back()->withInput()->withErrors($validation);
+	}
+	
+	
+	/*************************************************************************************
+	 * Borra registro de la base de datos
+	 ************************************************************************************/	
 	public function destroy($ph_id)
 	{
 		//dd($id);
@@ -214,17 +214,17 @@ class PhsController extends Controller {
 			$dato->delete();			
 
 			// Registra en bitacoras
-			$detalle =	'Borra el Ph '.	    $dato->nombre. ', '.
-						'tipo= '.   		$dato->descripcion. ', '.
-						'pais= '. 			$dato->pais. ', '.
-						'provincia= '. 		$dato->provincia. ', '.
-						'distrito= '. 		$dato->distrito. ', '.
-						'corregimiento= '. 	$dato->corregimiento. ', '.
-						'comunidad= '. 		$dato->comunidad. ', '.
-						'calle= '. 			$dato->calle. ', '.
-						'telefono= '. 		$dato->telefono. ', '. 
-						'celular= '. 		$dato->celular. ', '.
-						'email= '. 			$dato->email;  
+			$detalle = 'Borra el Ph '.$dato->nombre. ', '.
+						'tipo= '.   				$dato->descripcion. ', '.
+						'pais= '. 					$dato->pais. ', '.
+						'provincia= '. 			$dato->provincia. ', '.
+						'distrito= '. 			$dato->distrito. ', '.
+						'corregimiento= '.	$dato->corregimiento. ', '.
+						'comunidad= '. 			$dato->comunidad. ', '.
+						'calle= '. 					$dato->calle. ', '.
+						'telefono= '. 			$dato->telefono. ', '. 
+						'celular= '. 				$dato->celular. ', '.
+						'email= '. 					$dato->email;  
 			
 			Sity::RegistrarEnBitacora(3, 'phs', $dato->id, $detalle);
 			Session::flash('success', 'El Ph administrativo ' .$dato->nombre. ' ha sido borrado permanentemente de la base de datos.');
@@ -232,39 +232,38 @@ class PhsController extends Controller {
 		return redirect()->route('phs.index');
 	}
 
-    //=====================================================================================
-    //= Funciones especiales del controlador
-    //=====================================================================================    
-    
-    /*************************************************************************************
-     * Sube una imagen a la carpeta de phs
-     ************************************************************************************/	
+		//=====================================================================================
+		//= Funciones especiales del controlador
+		//=====================================================================================    
+		
+		/*************************************************************************************
+		 * Sube una imagen a la carpeta de phs
+		 ************************************************************************************/	
 	public function subirImagenPh($id)
 	{
-        $input = Input::all();
-        $rules = array(
-       		'file' => 'required|image|max:10000|mimes:jpeg,jpg,gif,png,bmp'
-        );
+		$input = Input::all();
+		$rules = array(
+			'file' => 'required|image|max:10000|mimes:jpeg,jpg,gif,png,bmp'
+		);
 
 		$messages = array(
-		    'required' => 'Debe seleccinar una imagen',
-		    'image' => 'El archivo no es una imagen',
-		    'max' => 'La imagen sobrepasa el tamaño máximo de 300',
-		    'mimes' => 'La imagen deberá tener una de las siguienes extensiones jpg,gif,png,bmp'
-        );
+			'required' => 'Debe seleccinar una imagen',
+			'image' => 'El archivo no es una imagen',
+			'max' => 'La imagen sobrepasa el tamaño máximo de 300',
+			'mimes' => 'La imagen deberá tener una de las siguienes extensiones jpg,gif,png,bmp'
+		);
 
-        $validation = Validator::make($input, $rules, $messages);
-        if ($validation->fails())
-        {
-        	return back()->withInput()->withErrors($validation);
-        }
+		$validation = Validator::make($input, $rules, $messages);
+		if ($validation->fails()) {
+			return back()->withInput()->withErrors($validation);
+		}
 
-        $file = Input::file('file'); 
-        $destinationPath = "assets/img/phs";
-        $filename = "bloq-L".$id.".jpg";
+		$file = Input::file('file'); 
+		$destinationPath = "assets/img/phs";
+		$filename = "bloq-L".$id.".jpg";
 
-        $uploadSuccess = Input::file('file')->move($destinationPath, $filename);
-        if( $uploadSuccess ) {
+		$uploadSuccess = Input::file('file')->move($destinationPath, $filename);
+		if( $uploadSuccess ) {
 			// Actualiza la ruta de la imagen del nuevo producto
 			$img_path = Ph::find($id);
 			$img_path->imagen_L = "assets/img/phs/bloq-L".$id.".jpg";
@@ -293,9 +292,8 @@ class PhsController extends Controller {
 			Sity::RegistrarEnBitacora(2, 'phs', $id, $detalle);
 			Session::flash('success', 'La imagen se actualizó con éxito.');
 			return back()->withInput();
-		}
-		else {
-        	Session::flash('danger', 'La imagen no se pudo subir.');
+		} else {
+			Session::flash('danger', 'La imagen no se pudo subir.');
 			return back()->withInput();
 		}
 	}

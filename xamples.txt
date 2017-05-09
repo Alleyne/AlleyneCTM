@@ -1773,10 +1773,9 @@ Work::with(
   DB::commit();
 
   } catch (\Exception $e) {
-      DB::rollback();
-        Session::flash('warning', ' Ocurrio un error en el Command penalizar.php, la transaccion ha sido cancelada!');
-
-        return back()->withInput()->withErrors($validation);
+    DB::rollback();
+    Session::flash('warning', ' Ocurrio un error en penalizar.php, la transaccion ha sido cancelada!');
+    return back()->withInput();
   }
 
 
@@ -1972,85 +1971,6 @@ Work::with(
    // return $request->only($this->username(), 'password');
    return array_merge($request->only($this->username(), 'password'), ['activated' => 1]);
   }
-
- 
-  /*************************************************************************************
-   * Boton de confirmacion en un renglon de una tabla
-   ************************************************************************************/
-  Ejemplo no 1
-    When user clicks on "delete" button, open a confirmation box before deleting an item.
-    @foreach (items as item)
-        <form class="delete" action="{{ route('item.destroy', $item->id) }}" method="POST">
-            <input type="hidden" name="_method" value="DELETE">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-            <input type="submit" value="Delete">
-        </form>
-    @endforeach
-
-    <script>
-        $(".delete").on("submit", function(){
-            return confirm("Do you want to delete this item?");
-        });
-    </script>
-
-  Ejemplo no 2    
-    <li>
-        {{Form::open(array(
-            'route' => array('contabilizaDetallesEcajachica', $dato->id),
-            'method' => 'GET',  // or DELETE
-            'style' => 'display:inline'
-        ))}}
-        
-        {{Form::button('Cantabilizar', array(     // {{Form::button('<i class="fa fa-times"></i> Eliminar', array(
-            'class' => 'btn btn-warning btn-xs',
-            'data-toggle' => 'modal',
-            'data-target' => '#confirmAction',
-            'data-title' => 'Contabilizar egreso de Caja chica',
-            'data-message' => 'Esta seguro(a) que desea contabilizar el presente egreso de Caja chica?',
-            'data-btntxt' => 'SI, contabilizar egreso de caja Chica',
-            'data-btncolor' => 'btn-info'
-        ))}}
-        {{Form::close()}}                                                    
-    </li>
-
-    <!-- Incluye la modal box -->
-    @include('templates.backend._partials.modal_confirm')
-    
-    <!-- Incluye javascript -->
-    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>    
-
-    NOTA IMPORTANTE
-    Para rutas con multiples parametros utilizar este formato
-    
-    {{Form::open(array(
-        'route' => array('contabilizaPagonoid',$dato->id, $dato->f_pago, $dato->un_id, $dato->monto, $dato->banco_id, $dato->doc_no),
-        'method' => 'GET',  // or DELETE
-        'style' => 'display:inline'
-    ))}}
-
-  /*************************************************************************************
-   * Boton de confirmacion en un formulario
-   ************************************************************************************/
-    <div class="form-actions">
-      
-      {{Form::button('Salvar', array(
-          'class' => 'btn btn-success btn-large',
-          'data-toggle' => 'modal',
-          'data-target' => '#confirmAction',
-          'data-title' => 'Disminuir saldo de Caja chica',
-          'data-message' => 'Esta seguro(a) que desea disminuir el saldo de la Caja chica?',
-          'data-btntxt' => 'SI, disminuir saldo',
-          'data-btncolor' => 'btn-success'
-      ))}}
-
-      <a href="{{ URL::route('cajachicas.index') }}" class="btn btn-large">Cancelar</a>
-    </div>
-    
-    <!-- Incluye la modal box -->
-    @include('templates.backend._partials.modal_confirm')
-    
-    <!-- Incluye javascript -->
-    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
 
 
   /*************************************************************************************
@@ -2334,5 +2254,122 @@ Work::with(
   /*************************************************************************************
    * full_name
    ************************************************************************************/
-  
   dd(User::find(1)->full_name);
+
+  
+  /*************************************************************************************
+   * bitacora tipo resouce store, update y destroy
+   ************************************************************************************/
+  // store 
+  $dato = new Bloque;
+  $dato->nombre      = Input::get('nombre');
+  $dato->codigo      = strtoupper(Input::get('codigo'));
+  $dato->descripcion = Input::get('descripcion');
+  $dato->jd_id       = Input::get('jd_id'); 
+  $dato->save(); 
+  
+  Sity::RegistrarEnBitacora($dato, Input::get(), 'Bloque', 'Crea nuevo bloque');
+
+  // update
+  $dato = Bloque::find($id);
+  $dato->nombre         = Input::get('nombre');
+  $dato->descripcion      = Input::get('descripcion');
+  
+  Sity::RegistrarEnBitacora($dato, Input::get(), 'Bloque', 'Actualiza bloque');
+  $dato->save();
+
+  // destroy
+  $bloque = Bloque::find($bloque_id);
+  $bloque->delete();
+
+  Sity::RegistrarEnBitacora($bloque, Null, 'Bloque', 'Elimina bloque');   
+
+  /*************************************************************************************
+   * bitacora especial vincular, desvincular, subir imagen
+   ************************************************************************************/
+  // Registra en bitacoras
+  $detalle = 'El serviproducto "'.$serviproductonombre.'" ha sido desvinculado del proveedor '.$org->nombre;
+  $tabla = 'org_serviproducto';
+  $registro = 1;
+  $accion = 'Desvincula serviproducto de organizacion';
+  
+  Sity::RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion);
+
+
+  /*************************************************************************************
+  * Boton de confirmacion en un renglon de una tabla
+  ************************************************************************************/
+  Ejemplo no 1
+    When user clicks on "delete" button, open a confirmation box before deleting an item.
+    @foreach (items as item)
+        <form class="delete" action="{{ route('item.destroy', $item->id) }}" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+          <input type="submit" value="Delete">
+        </form>
+    @endforeach
+
+    <script>
+        $(".delete").on("submit", function(){
+            return confirm("Do you want to delete this item?");
+        });
+    </script>
+
+  Ejemplo no 2    
+    <li>
+        {{Form::open(array(
+          'route' => array('contabilizaDetallesEcajachica', $dato->id),
+          'method' => 'GET',  // or DELETE
+          'style' => 'display:inline'
+        ))}}
+        
+        {{Form::button('Cantabilizar', array(     // {{Form::button('<i class="fa fa-times"></i> Eliminar', array(
+          'class' => 'btn btn-warning btn-xs',
+          'data-toggle' => 'modal',
+          'data-target' => '#confirmAction',
+          'data-title' => 'Contabilizar egreso de Caja chica',
+          'data-message' => 'Esta seguro(a) que desea contabilizar el presente egreso de Caja chica?',
+          'data-btntxt' => 'SI, contabilizar egreso de caja Chica',
+          'data-btncolor' => 'btn-info'
+        ))}}
+        {{Form::close()}}                                                    
+    </li>
+
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')
+    
+    <!-- Incluye javascript -->
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>    
+
+    NOTA IMPORTANTE
+    Para rutas con multiples parametros utilizar este formato
+    
+    {{Form::open(array(
+      'route' => array('contabilizaPagonoid',$dato->id, $dato->f_pago, $dato->un_id, $dato->monto, $dato->banco_id, $dato->doc_no),
+      'method' => 'GET',  // or DELETE
+      'style' => 'display:inline'
+    ))}}
+
+  /*************************************************************************************
+   * Boton de confirmacion en un formulario
+   ************************************************************************************/
+    <div class="form-actions">
+      
+      {{Form::button('Salvar', array(
+        'class' => 'btn btn-success btn-large',
+        'data-toggle' => 'modal',
+        'data-target' => '#confirmAction',
+        'data-title' => 'Disminuir saldo de Caja chica',
+        'data-message' => 'Esta seguro(a) que desea disminuir el saldo de la Caja chica?',
+        'data-btntxt' => 'SI, disminuir saldo',
+        'data-btncolor' => 'btn-success'
+      ))}}
+
+      <a href="{{ URL::route('cajachicas.index') }}" class="btn btn-large">Cancelar</a>
+    </div>
+    
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')
+    
+    <!-- Incluye javascript -->
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>

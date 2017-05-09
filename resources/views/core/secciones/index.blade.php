@@ -127,7 +127,7 @@
                                         </li>
                                     </ul>
                                 </td>
-                           @elseif (Cache::get('esAdministradorkey'))
+                           @elseif (Cache::get('esAdministradorkey') || Cache::get('esContadorkey'))
                                 <td col width="150px" align="right">
                                     <ul class="demo-btns">
                                         <li>

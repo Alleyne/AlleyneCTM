@@ -66,7 +66,7 @@
 										<tr>
 											<td>{{ $bitacora->id }}</td>
 											<td><a href="{{ URL::route('bitacoras.show', $bitacora->id) }}">{{ $bitacora->fecha }}</a></td>
-											<td>{{ $bitacora->accione->nombre }}</td>
+											<td>{{ $bitacora->accion }}</td>
 											<td>{{ $bitacora->tabla }}</td>
 											<td>{{ $bitacora->registro }}</td>				
 										</tr>

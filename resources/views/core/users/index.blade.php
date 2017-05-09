@@ -84,7 +84,23 @@
 															<a href="{{ URL::route('users.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
 														</li>
 														<li>
-															<button type="submit" href="" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
+											        {{Form::open(array(
+											            'route' => array('users.destroy', $dato->id),
+											            'method' => 'DELETE',
+											            'style' => 'display:inline'
+											        ))}}
+											        
+											        {{Form::button('<i class="fa fa-times"></i>', array(
+											            'class' => 'btn btn-danger btn-xs',
+											            'data-toggle' => 'modal',
+											            'data-target' => '#confirmAction',
+											            'data-title' => 'Eliminar usuario',
+											            'data-message' => 'Esta seguro(a) que desea eliminar el presente usuario?',
+											            'data-btntxt' => 'SI, eliminar',
+											            'data-btncolor' => 'btn-danger'
+											        ))}}
+											        {{Form::close()}}  
+
 														</li>
 													</ul>
 												</td>
@@ -93,6 +109,9 @@
 							
 									</tbody>
 								</table>
+						    <!-- Incluye la modal box -->
+						    @include('templates.backend._partials.modal_confirm')
+  
 							</div>
 							<!-- end widget content -->
 		
@@ -114,6 +133,7 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
     
     <script type="text/javascript">
     $(document).ready(function() {

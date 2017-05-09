@@ -48,6 +48,14 @@ class Npdo {
     Npdo::ingresoEsperadoCuotaExtraordinaria(1, $fecha, $periodo->id, $periodo->periodo);
     Npdo::ingresoEsperadoCuotaExtraordinaria(16, $fecha, $periodo->id, $periodo->periodo);
     
+    // Registra en bitacoras
+    $detalle = 'Registra periodo contable de '.$periodo->periodo;
+    $tabla = 'pcontables';
+    $registro = $periodo->id;
+    $accion = 'Registra periodo contable';
+    
+    Sity::RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion);
+    
     return 'Nuevo periodo de '.$periodo->periodo.' han sido creado!' ;
   }
 

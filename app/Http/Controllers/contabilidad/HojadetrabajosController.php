@@ -550,10 +550,18 @@ class HojadetrabajosController extends Controller {
 
         // cierra el periodo contable
         $pc= Pcontable::find($pcontable_id);
-        $pc->cerrado= 1;
-        $pc->f_cierre= $fecha->endOfMonth();
+        $pc->cerrado = 1;
+        $pc->f_cierre = $fecha->endOfMonth();
         $pc->save();
-
+        
+        // Registra en bitacoras
+        $detalle = 'Cierra periodo contable de '.$periodo;
+        $tabla = 'pcontables';
+        $registro = $pcontable_id;
+        $accion = 'Cierra periodo contable';
+        
+        Sity::RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion);
+        
         // migra los datos de ctmayores a la tabla de datos historicos ctmayorehi y 
         // posteriormente los borra de la tabla ctmayores
         Hojat::migraDatosCtmayorehis($pcontable_id);
@@ -565,11 +573,8 @@ class HojadetrabajosController extends Controller {
         // crea el nuevo periodo contable
         Npdo::periodo($fechaNuevoPeriodo);
 
-        DB::commit();            
-
-        // registra en bitacoras
-        Sity::RegistrarEnBitacora(17, 'pcontables', $pcontable_id, 'Cierra periodo contable de '.$periodo);
-
+        DB::commit();    
+        
         // verifica si se creo con exito el nuevo periodo
         $newPeriodo= Pcontable::find($pcontable_id + 1);        
         //dd($newPeriodo);
@@ -586,8 +591,6 @@ class HojadetrabajosController extends Controller {
           // facturacion para las secciones que generan las ordenes de cobro los dias 16
           Fact::facturar(Carbon::createFromDate($year, $month, 16));
 
-
-
           // Encuentra todas las unidades que pertenecen a la seccion 
           $uns= Un::where('activa', 1)->get();
           // dd($uns->toArray());
@@ -599,10 +602,6 @@ class HojadetrabajosController extends Controller {
           }  
 
           DB::commit();         
-
-          // Registra en bitacoras
-          $detalle =  'Se crea periodo contable de '.$newPeriodo->periodo;
-          Sity::RegistrarEnBitacora(1, 'pcontables', 1, $detalle);
 
           Session::flash('success', 'Periodo '.$periodo.' ha sido cerrado permanentemente!');
           return redirect()->route('pcontables.index');        
