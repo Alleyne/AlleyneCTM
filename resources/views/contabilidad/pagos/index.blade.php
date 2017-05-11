@@ -109,9 +109,24 @@
                                                      <a href="{{ URL::route('showRecibo', $dato->id) }}" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-list"></i></a>
                                                 </li>                
                                                 @if ($dato->anulado==0) 
-                                                    <div id="ask_2" class="btn btn-default btn-xs">
-                                                        <a href="{{ URL::route('procesaAnulacionPago', array($dato->id, $un_id)) }}" title="Anular pago"><i class="fa fa-search"></i> Anular pago</a>
-                                                    </div>
+                                                    <li>
+                                                        {{Form::open(array(
+                                                          'route' => array('procesaAnulacionPago',$dato->id, $un_id),
+                                                          'method' => 'GET',  // or DELETE
+                                                          'style' => 'display:inline'
+                                                        ))}}
+
+                                                        {{Form::button('<i class="fa fa-search"></i> Anular pago', array(
+                                                          'class' => 'btn btn-warning btn-xs',
+                                                          'data-toggle' => 'modal',
+                                                          'data-target' => '#confirmAction',
+                                                          'data-title' => 'Anular pago de propietario',
+                                                          'data-message' => 'Esta seguro(a) que desea anular el presente pago?',
+                                                          'data-btntxt' => 'SI, anular',
+                                                          'data-btncolor' => 'btn-warning'
+                                                        ))}}
+                                                        {{Form::close()}}                                                    
+                                                    </li>
                                                 @else
                                                     <li>
                                                         <span class="label label-warning">Anulado</span>
@@ -132,7 +147,8 @@
                             @endforeach
                         </tbody>
                     </table>
-                
+                    <!-- Incluye la modal box -->
+                    @include('templates.backend._partials.modal_confirm')
                 </div><!-- end widget content -->
             </div><!-- end widget div -->
         </div>
@@ -146,6 +162,7 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
     
     <script type="text/javascript">
     $(document).ready(function() {

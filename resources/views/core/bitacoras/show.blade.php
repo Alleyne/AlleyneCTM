@@ -96,7 +96,7 @@
 												<div class="form-group">
 													<label class="col-md-2 control-label">Detalle</label>
 													<div class="col-md-10">
-														{{ Form::textarea('detalle', $bitacora->detalle, array('class' => 'form-control input-sm', 'rows' => '4', 'readonly' => 'readonly')) }}
+														{{ Form::textarea('detalle', $bitacora->detalle, array('class' => 'form-control input-sm', 'rows' => '8', 'readonly' => 'readonly')) }}
 													</div>
 												</div>	
 											</fieldset>

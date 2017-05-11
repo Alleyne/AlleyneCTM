@@ -56,8 +56,8 @@ class AjustesController extends Controller {
 	 ************************************************************************************/  
 	public function store() {
 			
-		DB::beginTransaction();
-		try {
+		//DB::beginTransaction();
+		//try {
 				//dd(Input::all());
 				$input = Input::all();
 			 
@@ -335,25 +335,43 @@ class AjustesController extends Controller {
 					$diario->detalle = Input::get('descripcion');
 					$diario->save();
 					
+					$detalle = "";
+					$i= 0;
+					foreach ($datas as $data) {    
+						if ($datas[$i]['tipo'] == '1') {
+  						$detalle = $detalle.$datas[$i]['cuenta->nombre'].' => debito:'.$datas[$i]['monto'].', ';
+						}
+						$i++;
+					}
+					
+					$i= 0;
+					foreach ($datas as $data) {    
+						if ($datas[$i]['tipo'] == '2') {
+  						$detalle = $detalle.$datas[$i]['cuenta->nombre'].' => credito:'.$datas[$i]['monto'].', ';
+						}
+						$i++;
+					}
+					//dd($detalle);
+			    
 			    // Registra en bitacoras
-			    $detalle = 'Hace ajustes a periodo contable de '.$periodo->periodo;
+			    $detalle = 'Hace ajustes a periodo contable de '.$periodo->periodo.': '.$detalle;
 			    $tabla = 'n/a';
 			    $registro = $periodo->id;
 			    $accion = 'Ajustes a periodo contable';
 			    
 			    Sity::RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion);
-					
-					Session::flash('success', 'El ajuste ha sido creado con éxito.');
+  				
+  				Session::flash('success', 'El ajuste ha sido creado con éxito.');
 					DB::commit();                
 					return redirect()->route('hojadetrabajos.show', $periodo->id);
 				}       
 				return back()->withInput()->withErrors($validation);
 		
-		} catch (\Exception $e) {
-			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo AjustesController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+		//} catch (\Exception $e) {
+			//DB::rollback();
+			//Session::flash('warning', ' Ocurrio un error en el modulo AjustesController.store, la transaccion ha sido cancelada! '.$e->getMessage());
 
-			return back()->withInput()->withErrors($validation);
-		}
+			//return back()->withInput()->withErrors($validation);
+		//}
 	} // fin de function
 }

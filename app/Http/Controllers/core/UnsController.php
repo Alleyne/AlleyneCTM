@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Session, Grupo, Validator, Image, URL, Cache;
+use Session, Grupo, Validator, Image, URL, Cache, DB;
 
 use App\Jd;
 use App\Bloque;
@@ -323,19 +323,12 @@ class UnsController extends Controller {
 				$dato->documento     	  = Input::get('documento');
 				$dato->caracteristicas  = Input::get('caracteristicas');			
 				$dato->activa			  		= Input::has('activa');	
+				Sity::RegistrarEnBitacora($dato, Input::get(), 'Un', 'Actualiza unidad');
 				$dato->save();			
-				
-				// Registra en bitacoras
-				$detalle =	'codigo= '.		  $dato->codigo. ', '.
-							'finca= '.   		  		$dato->finca. ', '.
-							'documento= '.   	  	$dato->documento. ', '.
-							'caracteristicas= '.	$dato->caracteristicas. ', '.
-							'activa= '.	    			$dato->activa;
-				
+			
 				// refresca el cache para que refleje los cambios
 				Cache::forever('unsAllkey', Un::all());
 
-				Sity::RegistrarEnBitacora(2, 'uns', $dato->id, $detalle);
   			DB::commit();
 
 				Session::flash('success', 'La Unidad administrada No. ' .$id. ' ha sido editada con éxito.');

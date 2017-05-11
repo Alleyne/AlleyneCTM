@@ -3,7 +3,26 @@
 @section('title', '| Detalle de pagos')
 
 @section('content')
-
+<div class="well well-sm">
+	<div class="card card-outline-danger text-center">
+		    <h4 class="card-title">Egreso de Caja General</h4>
+			  <div class="row">
+			    <div class="col-md-3">
+						Factura No: {{ $factura->doc_no }}							
+			    </div>
+			    <div class="col-md-3">
+			      A Favor de: {{ $factura->afavorde }}
+			    </div> 
+			    <div class="col-md-3">
+			    	Fecha: {{ $factura->fecha }}
+			    </div>
+			    <div class="col-md-3">
+			      <strong>Total B/.: {{ $factura->total }}</strong>
+			    </div> 
+			  </div>	
+	</div>
+</div>
+		
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
 

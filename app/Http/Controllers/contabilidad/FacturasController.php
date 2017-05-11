@@ -3,10 +3,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Session, DB;
+use Session, DB, Validator;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
-use Validator;
 use Carbon\Carbon;
 use Jenssegers\Date\Date;
 
@@ -82,83 +81,84 @@ class FacturasController extends Controller {
   public function store()
   {
       
-      DB::beginTransaction();
-      try {
+    DB::beginTransaction();
+    try {
 
-		      //dd(Input::all());
-		      $input = Input::all();
-		      $f_final=Carbon::today()->addDay(1);
+	      //dd(Input::all());
+	      $input = Input::all();
+	      $f_final=Carbon::today()->addDay(1);
 
-          $rules = array(
-              'fecha' => 'required|date',          
-              'org_id' => 'required|Numeric|min:1',
-              'no' => 'required|Numeric|min:1',
-              'descripcion' => 'required',
-              'monto' => 'required|Numeric|min:0.01'
-          );
+        $rules = array(
+            'fecha' => 'required|date',          
+            'org_id' => 'required|Numeric|min:1',
+            'no' => 'required|Numeric|min:1',
+            'descripcion' => 'required',
+            'monto' => 'required|Numeric|min:0.01'
+        );
+  
+        $messages = [
+            'required'      => 'Informacion requerida!',
+            'before'        => 'La fecha de la factura debe ser anterior o igual a fecha del dia de hoy!',
+            'digits_between'=> 'El numero de la factura debe tener de uno a diez digitos!',
+            'numeric'       => 'Solo se admiten valores numericos!',
+            'date'          => 'Fecha invalida!',
+            'min'           => 'Se requiere un valor mayor que cero!'
+        ];                
+
+        $validation = \Validator::make($input, $rules, $messages);  
+
+        if ($validation->passes())
+        {
+
+				    // verifica que exista un periodo de acuerdo a la fecha de pago
+				    $year= Carbon::parse(Input::get('fecha'))->year;
+				    $month= Carbon::parse(Input::get('fecha'))->month;
+				    $pdo= Sity::getMonthName($month).'-'.$year;    
+
+					  // encuentra el periodo mas antiguo abierto
+						$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+					  //dd($periodo);
+					    
+				    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+				    if ($pdo != $periodo->periodo) {
+		          Session::flash('danger', '<< ERROR >> Solamente se permite registrar facturas de gastos que correspondan al periodo vigente de '.$periodo->periodo);
+		      		return back()->withInput()->withErrors($validation);
+				    }
+
+            $factura = new Factura;
+            $factura->fecha = Input::get('fecha');
+            $factura->org_id = Input::get('org_id');
+            $factura->afavorde = Org::find(Input::get('org_id'))->nombre;
+
+            if (Input::get('tipodoc_radios') == 1) {
+                $factura->tipodoc = 1;
+                $factura->doc_no = Input::get('no');        
+            
+            } elseif (Input::get('tipodoc_radios') == 2) {
+                $factura->tipodoc = 2;
+            }
+
+            $factura->descripcion = Input::get('descripcion');
+            $factura->total = Input::get('monto');
+            $factura->etapa = 1;
+            $factura->save();
+						
+						Sity::RegistrarEnBitacora($factura, Input::get(), 'Factura', 'Registra factura de egreso de Caja general');
+					
+						Session::flash('success', 'La factura No. ' .$factura->doc_no. ' ha sido creada con éxito.');
+            DB::commit();       
+
+            return redirect()->route('facturas.index');
+        }       
     
-          $messages = [
-              'required'      => 'Informacion requerida!',
-              'before'        => 'La fecha de la factura debe ser anterior o igual a fecha del dia de hoy!',
-              'digits_between'=> 'El numero de la factura debe tener de uno a diez digitos!',
-              'numeric'       => 'Solo se admiten valores numericos!',
-              'date'          => 'Fecha invalida!',
-              'min'           => 'Se requiere un valor mayor que cero!'
-          ];                
+        Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
+        return back()->withInput()->withErrors($validation);
 
-          $validation = \Validator::make($input, $rules, $messages);  
-
-          if ($validation->passes())
-          {
-
-					    // verifica que exista un periodo de acuerdo a la fecha de pago
-					    $year= Carbon::parse(Input::get('fecha'))->year;
-					    $month= Carbon::parse(Input::get('fecha'))->month;
-					    $pdo= Sity::getMonthName($month).'-'.$year;    
-
-						  // encuentra el periodo mas antiguo abierto
-							$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
-						  //dd($periodo);
-						    
-					    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
-					    if ($pdo != $periodo->periodo) {
-			          Session::flash('danger', '<< ERROR >> Solamente se permite registrar facturas de gastos que correspondan al periodo vigente de '.$periodo->periodo);
-			      		return back()->withInput()->withErrors($validation);
-					    }
-
-              $factura = new Factura;
-              $factura->fecha = Input::get('fecha');
-              $factura->org_id = Input::get('org_id');
-              $factura->afavorde = Org::find(Input::get('org_id'))->nombre;
-
-              if (Input::get('tipodoc_radios') == 1) {
-                  $factura->tipodoc = 1;
-                  $factura->doc_no = Input::get('no');        
-              
-              } elseif (Input::get('tipodoc_radios') == 2) {
-                  $factura->tipodoc = 2;
-              }
-
-              $factura->descripcion = Input::get('descripcion');
-              $factura->total = Input::get('monto');
-              $factura->etapa = 1;
-              $factura->save();
-	
-							Sity::RegistrarEnBitacora(1, 'facturas', $factura->id, $factura->tojson());								
-							Session::flash('success', 'La factura No. ' .$factura->doc_no. ' ha sido creada con éxito.');
-              DB::commit();       
-
-              return redirect()->route('facturas.index');
-          }       
-      
-          Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
-          return back()->withInput()->withErrors($validation);
-
-      } catch (\Exception $e) {
-          DB::rollback();
-          Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-          return back()->withInput();
-      }
+    } catch (\Exception $e) {
+        DB::rollback();
+        Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+        return back()->withInput();
+    }
   }
 
   /*************************************************************************************
@@ -181,11 +181,8 @@ class FacturasController extends Controller {
 				$dato->delete();			
 
 				// Registra en bitacoras
-				$detalle =	'Borra el Factura '.$dato->no. ', '.
-										'org_id= '.   		$dato->org_id. ', '.
-										'fecha= '. 			$dato->fecha;
+				Sity::RegistrarEnBitacora($dato, Null, 'Factura', 'Elimina factura de egreso de Caja general');   
 				
-				Sity::RegistrarEnBitacora(3, 'facturas', $dato->id, $detalle);
 				Session::flash('success', 'La factura No' .$dato->doc_no. ' ha sido borrada permanentemente de la base de datos.');
 				DB::commit();				
 				return Redirect()->route('facturas.index');
@@ -194,7 +191,6 @@ class FacturasController extends Controller {
 		} catch (\Exception $e) {
 	    DB::rollback();
     	Session::flash('warning', ' Ocurrio un error en el modulo FacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
-
     	return back();
 		}		
 	}
@@ -314,8 +310,8 @@ class FacturasController extends Controller {
 				}
         
         //acumula los totales finales
-        $montoTotal= $montoTotal + $monto;
-        $itbmsTotal= $itbmsTotal + $itbms;
+        $montoTotal = $montoTotal + $monto;
+        $itbmsTotal = $itbmsTotal + $itbms;
 			}
 			
 			// se anota el total de la factura a credito incluyendo el itbms en
@@ -350,19 +346,15 @@ class FacturasController extends Controller {
 	    $diario->save(); 
 
 			// cambia la factura de etapa pagar			
-			$factura= Factura::find($factura_id);
+			$factura = Factura::find($factura_id);
 			$factura->etapa = 3;
 			$factura->save();	
 		  
-			// Registra en bitacoras
-			$detalle =	'Contabiliza factura '.$factura_id. ', '.
-									'pcontable_id= '.$pdo.', '.
-									'no= '.$factura->doc_no.', '.
-									'org_id= '.$factura->org_id.', '.
-									'fecha= '.$f_factura;
-
-			Sity::RegistrarEnBitacora(15, 'facturas', $factura_id, $detalle);
+		  // Registra en bitacoras
+  		Sity::RegistrarEnBitacora($factura, Null, 'Factura', 'Contabiliza factua de egreso de Caja general'); 
+			
 			DB::commit();		
+			
 			Session::flash('success', 'La factura No. ' .$factura->doc_no. ' ha sido cotabilizada.');
 			return Redirect()->route('facturas.index');
 

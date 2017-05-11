@@ -8,16 +8,19 @@
 	<div class="card card-outline-danger text-center">
 		    <h4 class="card-title">Egreso de Caja General</h4>
 			  <div class="row">
-			    <div class="col-md-2">
-						12/12/2017
+			    <div class="col-md-3">
+						Factura No: {{ $factura->doc_no }}							
 			    </div>
-			    <div class="col-md-8">
-			      Veneficiario: Mi compania
+			    <div class="col-md-3">
+			      A Favor de: {{ $factura->afavorde }}
+			    </div> 
+			    <div class="col-md-3">
+			    	Fecha: {{ $factura->fecha }}
 			    </div>
-			    <div class="col-md-2">
-						Factura no: 123456
-			    </div>
-			  </div>
+			    <div class="col-md-3">
+			      <strong>Total B/.: {{ $factura->total }}</strong>
+			    </div> 
+			  </div>	
 	</div>
 </div>
 
@@ -41,8 +44,7 @@
 				<th>PRECIO</th>
 				<th>ITBMS</th>
 				<th>TOTAL</th>
-
-				@if ($factura->etapa < 2)
+				@if ($factura->etapa <= 2)
 					<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>	
 				@endif
 			</tr>

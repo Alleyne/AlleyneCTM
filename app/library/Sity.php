@@ -72,7 +72,7 @@ class Sity {
   /****************************************************************************************
    * Registra en ctmayores
    ****************************************************************************************/
-  public static function registraEnCuentas($pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id=Null, $pago_id=Null, $detallepagofactura_id=Null, $org_id=Null, $ctdasm_id=Null, $anula=Null)
+  public static function registraEnCuentas($pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id = Null, $pago_id = Null, $detallepagofactura_id = Null, $org_id = Null, $ctdasm_id = Null, $anula = Null)
   {
     //dd($pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id=Null, $pago_id=Null, $detallepagofactura_id, $org_id=Null, $ctdasm_id=Null, $anula=Null);
     
@@ -85,23 +85,23 @@ class Sity {
     //dd($cta->toArray());      
   
     // encuentra saldos
-    $saldocta= Sity::getSaldoCuenta($cuenta, $pcontable_id);
+    $saldocta = Sity::getSaldoCuenta($cuenta, $pcontable_id);
 
     // determina si los saldos aumentan o disminuyen en cuentas permanentes
-    if (($tipo==1 || $tipo==6) && $mas_menos=='mas') {  
+    if (($tipo == 1 || $tipo == 6) && $mas_menos == 'mas') {  
       //$saldocta= $saldocta+$monto;
       $debito = $monto;
       
-    } elseif (($tipo==1 || $tipo==6) && $mas_menos=='menos') {  
+    } elseif (($tipo == 1 || $tipo == 6) && $mas_menos == 'menos') {  
       //$saldocta= $saldocta-$monto;
-      $credito =abs($monto);
+      $credito = abs($monto);
     
     // determina si los saldos aumentan o disminuyen en cuentas temporales
-    } elseif (($tipo==2 || $tipo==3 || $tipo==4) && $mas_menos=='mas') {  
+    } elseif (($tipo == 2 || $tipo == 3 || $tipo == 4) && $mas_menos == 'mas') {  
       //$saldocta= $saldocta+$monto;
-      $credito =$monto;    
+      $credito = $monto;    
 
-    } elseif (($tipo==2 || $tipo==3 || $tipo==4) && $mas_menos=='menos') {  
+    } elseif (($tipo == 2 || $tipo == 3 || $tipo == 4) && $mas_menos == 'menos') {  
       //$saldocta= $saldocta-$monto;
       $debito = abs($monto);
     
@@ -135,80 +135,62 @@ class Sity {
   public static function getMonthName($month) {
       switch ($month) {
           case 1:
-              $monthName='Ene';
+              $monthName = 'Ene';
               break;
           case 2:
-              $monthName='Feb';
+              $monthName = 'Feb';
               break;
           case 3:
-              $monthName='Mar';
+              $monthName = 'Mar';
               break;
           case 4:
-              $monthName='Abr';
+              $monthName = 'Abr';
               break;
           case 5:
-              $monthName='May';
+              $monthName = 'May';
               break;
           case 6:
-              $monthName='Jun';
+              $monthName = 'Jun';
               break;       
          case 7:
-              $monthName='Jul';
+              $monthName = 'Jul';
               break;
           case 8:
-              $monthName='Ago';
+              $monthName = 'Ago';
               break;
           case 9:
-              $monthName='Sep';
+              $monthName = 'Sep';
               break;
           case 10:
-              $monthName='Oct';
+              $monthName = 'Oct';
               break;
           case 11:
-              $monthName='Nov';
+              $monthName = 'Nov';
               break;
           case 12:
-              $monthName='Dic';
+              $monthName = 'Dic';
               break;       
       }
   return $monthName;
   }
  
   /*****************************************************************************************
-   *  Registra en Bitacoras.
-   *****************************************************************************************/
-/*  public static function RegistrarEnBitacora($accione_id, $tabla, $registro=Null, $detalle) {
-      $bitacora = new Bitacora;
-      $bitacora->fecha           = Carbon::today();       
-      $bitacora->hora            = Carbon::now('America/Panama');
-      $bitacora->accione_id      = $accione_id;
-      $bitacora->tabla           = $tabla;
-      $bitacora->registro        = $registro;            
-      $bitacora->detalle         = $detalle;
-      if (Auth::check()) {
-          $bitacora->user_id     = Auth::user()->id;            
-      }
-      $bitacora->ip              = $_SERVER["REMOTE_ADDR"];
-      $bitacora->save();
-      return 'nada';
-  }   */ 
-
-  /*****************************************************************************************
   *  Registra en Bitacoras tipo resource store, update y destroy.
   *****************************************************************************************/
   public static function RegistrarEnBitacora($dato, $input = Null, $modelo, $accion) {      
     //dd($dato, $input);
    
+    $attributes = array_keys($dato->toArray());
+    $detalle = '';
+
     if($dato->isDirty()){
       // se trata de un update     
       //dd('se trata de un update', $dato, $input);
-      $attributes = array_keys($dato->toArray());
-      
-      $detalle = '';
+
       foreach ($attributes as $attribute) {
-        if ($dato->isDirty($attribute)){
+        if ($dato->isDirty($attribute)) {
           if (Input::get($attribute) != $dato->getOriginal($attribute)) {
-            $detalle = $detalle.' "'.$attribute.'" cambia de "'.$dato->getOriginal($attribute).'" a "'.Input::get($attribute).'", ';
+            $detalle = $detalle.' "'.strtoupper($attribute).'" cambia de "'.$dato->getOriginal($attribute).'" a "'.Input::get($attribute).'", ';
           }
         }
       }
@@ -219,7 +201,12 @@ class Sity {
     } elseif(!$dato->isDirty() && $input){
       // se trata de un create 
       //dd('se trata de un create', $dato, $input);
-      $detalle = $dato;
+      foreach ($attributes as $attribute) {
+        if ($dato[$attribute]) {
+          $detalle = $detalle.strtoupper($attribute).' => '.$dato[$attribute].', ';
+        }
+      }
+
       $tabla = $dato->getTable();
       $modelName = 'App\\'.$modelo;
       $registro = $dato->id;
@@ -227,7 +214,12 @@ class Sity {
     } elseif(!$dato->isDirty() && $input == Null){
       // se trata de un delete
       //dd('se trata de un delete', $dato, $input);
-      $detalle = $dato;
+      foreach ($attributes as $attribute) {
+        if ($dato[$attribute]) {
+          $detalle = $detalle.strtoupper($attribute).' => '.$dato[$attribute].', ';
+        }
+      }
+      
       $tabla = $dato->getTable();
       $registro = $dato->id;
     
@@ -303,22 +295,22 @@ class Sity {
                       ->get();
 
     // inicializa los contadores
-    $total_importe=0;
-    $total_recargo=0;
+    $total_importe = 0;
+    $total_recargo = 0;
 
     foreach ($imps as $imp) {
-      $imp->f_vencimiento= Date::parse($imp->f_vencimiento)->toFormattedDateString();
+      $imp->f_vencimiento = Date::parse($imp->f_vencimiento)->toFormattedDateString();
 
       // Acumula el total de importe a pagar
-      if ($imp->pagada==0) {
+      if ($imp->pagada == 0) {
         $total_importe  = $total_importe + $imp->importe;  
       }
     }       
 
     foreach ($recs as $rec) {
       // Acumula el total de recargos a pagar
-      if ($rec->recargo_siono==1 && $rec->recargo_pagado==0) {
-        $total_recargo  = $total_recargo + $rec->recargo;  
+      if ($rec->recargo_siono == 1 && $rec->recargo_pagado == 0) {
+        $total_recargo = $total_recargo + $rec->recargo;  
       }      
     }     
 
@@ -343,13 +335,13 @@ class Sity {
     
     // Encuentra saldo pagados por anticipado
     $pagos_anticipados = Sity::getSaldoCtaPagosAnticipados($un_id, Null);
-    $total=number_format(($total_importe + $total_recargo), 2);
+    $total = number_format(($total_importe + $total_recargo), 2);
     
-    if ($total==0) {
-      $total_adeudado=(number_format(0, 2));
+    if ($total == 0) {
+      $total_adeudado = (number_format(0, 2));
     }
     else {
-      $total_adeudado=abs(number_format($total-$pagos_anticipados, 2));      
+      $total_adeudado = abs(number_format($total-$pagos_anticipados, 2));      
     }
 
     // Prepara datos del encabezado del Estado de cuenta
@@ -430,9 +422,5 @@ class Sity {
     
     return;
   }
-
-
-
-
 
 } //fin de Sity

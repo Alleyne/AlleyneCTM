@@ -59,7 +59,7 @@
 											<th col width="70px">FECHA</th>
 											<th col width="20px">TOTALFAC</th>
 											<th col width="20px">TOTALPDO</th>
-											<th col width="175px" class="text-center"><i class="fa fa-gear fa-lg"></i></th>							
+											<th col width="185px" class="text-center"><i class="fa fa-gear fa-lg"></i></th>							
 									</tr>
 								</thead>
 								<tbody>
@@ -91,7 +91,7 @@
 																<span class="label label-success">Factura pagada</span>
 															</li>
 															<li>
-																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-info btn-xs"> Programacion de pagos</a>
+																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-success btn-xs"> Ver Programacion</a>
 															</li>									
 														@endif	
 													</ul>												

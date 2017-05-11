@@ -157,16 +157,7 @@ class DetallefacturasController extends Controller {
 				$dato->cuenta	  					= $serviproducto->catalogo->nombre;
 				$dato->save();
 				
-				// Registra en bitacoras
-				$det=	'serviproducto_id= '.	$dato->serviproducto_id. ', '.
-							'nombre= '				  .	$dato->nombre. ', '.
-							'cantidad= '				.	$dato->cantidad. ', '.
-							'precio= '					.	$dato->precio. ', '.
-							'itbms= '					  .	$dato->itbms. ', '.
-							'factura_id= '			.	$dato->factura_id. ', '.
-							'catalogo_ido= '		.	$dato->catalogo_id. ', '.
-							'codigo= '				  .	$dato->codigo. ', '.
-							'cuenta= '				  .	$dato->cuenta;
+  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Detallefactura', 'Registra detalle de factura de egreso de Caja general');
 
 				$totaldetalles= 0;
 
@@ -194,10 +185,10 @@ class DetallefacturasController extends Controller {
 					$factura->etapa= 2;
 					$factura->save();		
 		    }
-			    
-				Sity::RegistrarEnBitacora(1, 'detallefacturas', $dato->id, $det);
+		    
+		    DB::commit();				    
+				
 				Session::flash('success', 'El detalle de factura No. ' .$dato->id. ' ha sido creado con éxito.');
-		    DB::commit();				
 				return redirect()->route('detallefacturas.show', $dato->factura_id);
 			}
 	        
@@ -224,14 +215,6 @@ class DetallefacturasController extends Controller {
 			$dato = Detallefactura::find($detallefactura_id);
 			$dato->delete();			
 
-			// Registra en bitacoras
-			$det =	'Borra detalle de Factura '.$dato->no. ', '.
-					'cantidad= '.   		$dato->cantidad. ', '.
-					'detalle= '.   			$dato->detalle. ', '.
-					'precio= '.   			$dato->precio. ', '.
-					'itbms= '.   			$dato->itbms. ', '.
-					'factura_id= '. 		$dato->factura_id;
-			
 			$totaldetalles=0;
 
 	    //calcula el total de detallefacturas para la presente factura
@@ -253,7 +236,7 @@ class DetallefacturasController extends Controller {
 			$factura->save();
 	    }
 			
-			Sity::RegistrarEnBitacora(3, 'detallefacturas', $dato->id, $det);
+			Sity::RegistrarEnBitacora($dato, Null, 'Detallefactura', 'Elimina detalle de egreso de factura de Caja general');   
 			Session::flash('success', 'El detalle "' .$dato->detalle .'" ha sido borrado permanentemente de la base de datos.');
 			DB::commit();
 			return redirect()->route('detallefacturas.show', $dato->factura_id);
@@ -261,7 +244,6 @@ class DetallefacturasController extends Controller {
 		} catch (\Exception $e) {
 	    DB::rollback();
     	Session::flash('warning', ' Ocurrio un error en el modulo DetallefacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
-
     	return back()->withInput()->withErrors($validation);
 		}
 	}

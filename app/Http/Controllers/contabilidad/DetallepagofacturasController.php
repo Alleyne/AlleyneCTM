@@ -119,8 +119,10 @@ class DetallepagofacturasController extends Controller {
 					$dato->detalle 	      = Input::get('detalle');
 					$dato->monto 	       	= Input::get('monto');
 					$dato->trantipo_id   	= Input::get('trantipo_id');
-					$dato->pagotipo				= 1;
+					$dato->pagotipo				= 'completo';
 					$dato->save();	
+  				
+  				Sity::RegistrarEnBitacora($dato, Input::get(), 'Detallepagofactura', 'Programa pago completo de factura de egreso de Caja general');
 					
 					// actualiza el monto de los detalles en la factura
 					$factura->totalpagodetalle= Input::get('monto');
@@ -145,9 +147,11 @@ class DetallepagofacturasController extends Controller {
 					$dato->detalle 	      = Input::get('detalle');
 					$dato->monto 	       	= Input::get('monto');
 					$dato->trantipo_id   	= Input::get('trantipo_id');
-					$dato->pagotipo				= 0;
+					$dato->pagotipo				= 'parcial';
 					$dato->save();	
 			    
+					Sity::RegistrarEnBitacora($dato, Input::get(), 'Detallepagofactura', 'Programa pago parcial de factura de egreso de Caja general');
+
 					// actualiza el monto de los detalles en la factura
 					$factura->totalpagodetalle= $totaldetalles;
 					$factura->save();
@@ -216,7 +220,7 @@ class DetallepagofacturasController extends Controller {
 		try {
 
 	    // encuentra los datos del detalle de pago en estudio
-	    $dato= Detallepagofactura::find($detallepagofactura_id);
+	    $dato = Detallepagofactura::find($detallepagofactura_id);
 	    //dd($dato->toArray());
 	    
 			// verifica si existe registro para informe de diario de caja para el dia de hoy,
@@ -226,18 +230,18 @@ class DetallepagofacturasController extends Controller {
 
 		    if (!$diariocaja) {
 		    	$dto = new Diariocaja; 
-			    $dto->fecha= $dato->fecha; 		    
+			    $dto->fecha = $dato->fecha; 		    
 			    $dto->save();
 		    }
 			}	    
 
 	    // verifica que exista un periodo de acuerdo a la fecha de pago
-	    $year= Carbon::parse($dato->fecha)->year;
-	    $month= Carbon::parse($dato->fecha)->month;
-	    $pdo= Sity::getMonthName($month).'-'.$year;
+	    $year = Carbon::parse($dato->fecha)->year;
+	    $month = Carbon::parse($dato->fecha)->month;
+	    $pdo = Sity::getMonthName($month).'-'.$year;
 
 		  // encuentra el periodo mas antiguo abierto
-			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+			$periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
 	    //dd($periodo);
 	    
 	    // solamente se permite registrar pagos de facturas que correspondan al periodo mas antiguo abierto
@@ -247,29 +251,29 @@ class DetallepagofacturasController extends Controller {
 	    }
 
 	    // verifica si existe algun detalle de pago anterior al presente que no haya sido contabilizado
-/*			$exiteAnterior= Detallepagofactura::where('id', '<', $detallepagofactura_id)->where('contabilizado', 0)->first();
+			$exiteAnterior= Detallepagofactura::where('id', '<', $detallepagofactura_id)->where('contabilizado', 0)->first();
 		    if ($exiteAnterior) {
           Session::flash('danger', '<< ERROR >> Debe contabilizar los detalles de pago en orden cronologico!');
       		return back();
-		    }*/
+		    }
 		    
 	    // encuentra el proveedor de la factura
-	    $factura= Factura::find($dato->factura_id);
+	    $factura = Factura::find($dato->factura_id);
 	    //dd($factura->doc_no);
 	    
 	    // almacena el total de la factura 
-	    $totalfactura= round(floatval($factura->total),2);
+	    $totalfactura = round(floatval($factura->total),2);
 	    
 	    // encuentra los datos de la organizacion
-	    $org= Org::find($factura->org_id);
+	    $org = Org::find($factura->org_id);
 	    //dd($org->toArray());    
 
 	    // verifica si se trata de un pago completo o parcial
-	    if ($dato->pagotipo==1) {
-	    	$pagotipo='completo';
+	    if ($dato->pagotipo == 1) {
+	    	$pagotipo = 'completo';
 	    
 	    } else {
-	    	$pagotipo='parcial';
+	    	$pagotipo = 'parcial';
 	    } 
  
 			// registra en ctmayores una disminucion en la cuenta de Cuetas por pagar a proveedores
@@ -323,7 +327,7 @@ class DetallepagofacturasController extends Controller {
 	    
 	    // registra en Ctdiario principal
 	    $diario = new Ctdiario;
-	    $diario->pcontable_id  = $periodo->id;
+	    $diario->pcontable_id = $periodo->id;
 	    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura No.'. $factura->doc_no.' '.$periodo->periodo;
 	    $diario->save(); 
 
@@ -332,36 +336,30 @@ class DetallepagofacturasController extends Controller {
 			$dato->save();
 			
 			// verifica si hay algun detalle que no ha sido contabilizado
-	    $sinContabilizar= Detallepagofactura::where('factura_id', $factura->id)
+	    $sinContabilizar = Detallepagofactura::where('factura_id', $factura->id)
 											->where('contabilizado', 0)
 	    								->count('contabilizado');		    
 			//dd($sinContabilizar);
 
 		  // calcula el monto total de los detalles de la presente factura
-			$totaldetalles= Detallepagofactura::where('factura_id', $factura->id)->sum('monto');		    
-			$totaldetalles=round(floatval($totaldetalles),2);
+			$totaldetalles = Detallepagofactura::where('factura_id', $factura->id)->sum('monto');		    
+			$totaldetalles =round(floatval($totaldetalles),2);
 			//dd($totaldetalles, $sinContabilizar, $totalfactura, $factura->id);	
 
 	    // si el total de la factura es igual al total de los detalles y no exiten detalles por contabilizar
 	    // entonces registra la factura como pagada en su totalidad
-	    if (($totalfactura == $totaldetalles) && $sinContabilizar==0) {
-				$factura->pagada= 1;
+	    if (($totalfactura == $totaldetalles) && $sinContabilizar == 0) {
+				$factura->pagada = 1;
 				$factura->save();		
 	    	
 	    } elseif ($totaldetalles < $totalfactura) {
-				$factura->pagada= 0;
+				$factura->pagada = 0;
 				$factura->save();
 	    }
 
 			// Registra en bitacoras
-			$detalle =	'Registra pago '.$pagotipo. 
-									' de la factura '.$factura->doc_no. 
-									' de '. $org->nombre. 
-									' por la suma de '.$dato->monto. 
-									', periodo contable '.$periodo->periodo.
-									', fecha= '.$dato->fecha;
-
-			Sity::RegistrarEnBitacora(18, 'detallepagofacturas', $factura->id, $detalle);
+  		Sity::RegistrarEnBitacora($dato, Null, 'Detallepagofactura', 'Contabiliza pago de factura de egreso de Caja general'); 
+			
 			DB::commit();			
 			Session::flash('success', 'Detalle de pago de factura No. ' .$factura->doc_no. ' ha sido cotabilizado.');
 

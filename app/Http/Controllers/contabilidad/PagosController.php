@@ -205,9 +205,8 @@ class PagosController extends Controller {
 			    $dato->save();
 					
 					// Registra en bitacoras
-					$detalle =	'Registra pago de cuota de mantenimiento No.'.$dato->id.' con monto de B/.'.$montoRecibido.' no contabiliza';  
-		            
-		      Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
+					Sity::RegistrarEnBitacora($dato, Input::get(), 'Pago', 'Registra pago de propietario');
+
 					DB::commit();	
 		      Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado con éxito.');			
 			
@@ -333,7 +332,9 @@ class PagosController extends Controller {
 			
 			// procede a anular el pago
 	    Npago::anulaPago($pago_id);
+			
 			DB::commit();	    	
+    	
     	Session::flash('warning', 'Pago '.$pago_id. ' ha sido anulado.');	   
 	    return redirect()->route('indexPagos', $un_id);
 		
