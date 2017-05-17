@@ -71,14 +71,29 @@
 						<td class="text-center">
 							@if (Cache::get('esAdminkey') || Cache::get('esContadorkey'))
 								@if ($permitirAjustes=='Si')
-									<div class="col-md-6">
+									<div class="col-md-4">
 										<a href="{{ URL::route('createAjustes', $periodo->id) }}" class="btn bg-color-blue txt-color-white btn-xs"><i class="glyphicon glyphicon-wrench"></i></a>
 									</div>
 								@endif	
 								
 								@if ($permitirCerrar=='Si')
-									<div id="ask_3" class="col-md-6">
-										<a href="{{ URL::route('cierraPeriodo', array($periodo->id, $periodo->periodo, $periodo->fecha)) }}" class="btn bg-color-red txt-color-white btn-xs"><i class="glyphicon glyphicon-lock"></i></a>
+									<div class="col-md-4">
+							        {{Form::open(array(
+							          'route' => array('cierraPeriodo',$periodo->id, $periodo->periodo, $periodo->fecha),
+							          'method' => 'GET',
+							          'style' => 'display:inline'
+							        ))}}
+							        
+							        {{Form::button('<i class="glyphicon glyphicon-lock"></i>', array(
+							          'class' => 'btn btn-danger btn-xs',
+							          'data-toggle' => 'modal',
+							          'data-target' => '#confirmAction',
+							          'data-title' => 'Cerrar periodo contable',
+							          'data-message' => 'Esta seguro(a) que desea cerrar el presente periodo contable?',
+							          'data-btntxt' => 'SI, cerrar periodo contable',
+							          'data-btncolor' => 'btn-danger'
+							        ))}}
+							        {{Form::close()}}                                                    
 									</div>
 								@endif	
 							@endif								
@@ -93,5 +108,11 @@
 					</tr>
 			</tbody>
 		</table>	
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')
 	</div><!-- end row -->
+@stop
+
+@section('relatedplugins')
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
 @stop

@@ -96,13 +96,13 @@
                                   'style' => 'display:inline'
                               ))}}
 
-                              {{Form::button('Borrar', array(
+                              {{Form::button('Eliminar', array(
                                   'class' => 'btn btn-danger btn-xs',
                                   'data-toggle' => 'modal',
                                   'data-target' => '#confirmAction',
-																	'data-title' => 'Borrar factura',
-																	'data-message' => 'Esta seguro(a) que desea borrar el presente de factura?',
-																	'data-btntxt' => 'Borrar factura',
+																	'data-title' => 'Eliminar factura de egreso de Caja general',
+																	'data-message' => 'Esta seguro(a) que desea eliminar la presente factura?',
+																	'data-btntxt' => 'SI, eliminar factura',
                                   'data-btncolor' => 'btn-danger'
                               ))}}
                               {{Form::close()}}
@@ -120,10 +120,10 @@
                                   'class' => 'btn btn-warning btn-xs',
                                   'data-toggle' => 'modal',
                                   'data-target' => '#confirmAction',
-                                  'data-title' => 'Contabilizar factura de egreso',
-                                  'data-message' => 'Esta seguro(a) que desea contabilizar factura de egreso por Caja General?',
-                                  'data-btntxt' => 'Contabilizar egreso de Caja general',
-                                  'data-btncolor' => 'btn-info'
+                                  'data-title' => 'Contabilizar factura de egreso de Caja general',
+                                  'data-message' => 'Esta seguro(a) que desea contabilizar la factura?',
+                                  'data-btntxt' => 'SI, contabilizar factura',
+                                  'data-btncolor' => 'btn-warning'
                               ))}}
                               {{Form::close()}}  
 														</li>
@@ -141,9 +141,9 @@
                                   'class' => 'btn btn-danger btn-xs',
                                   'data-toggle' => 'modal',
                                   'data-target' => '#confirmAction',
-																	'data-title' => 'Eliminar factura',
+																	'data-title' => 'Eliminar factura de egreso de Caja general',
 																	'data-message' => 'Esta seguro(a) que desea eliminar la presente de factura?',
-																	'data-btntxt' => 'Eliminar factura',
+																	'data-btntxt' => 'SI, eliminar factura',
                                   'data-btncolor' => 'btn-danger'
                               ))}}
                               {{Form::close()}}

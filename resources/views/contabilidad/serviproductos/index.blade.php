@@ -99,8 +99,8 @@
 										@endforeach
 									</tbody>
 								</table>
-    <!-- Incluye la modal box -->
-    @include('templates.backend._partials.modal_confirm')
+						    <!-- Incluye la modal box -->
+						    @include('templates.backend._partials.modal_confirm')
     
   
 							</div>

@@ -244,7 +244,8 @@ class Ppago {
       foreach ($datos as $dato) {
         $recargo= round(floatval($dato->recargo),2);
         $ocobro= $dato->ocobro;
-          
+        $mesAnio = $dato->mes_anio;
+        
         if ($saldocpa >= $recargo) {   
           // hay suficiente dinero para pagar por lo menos un recargo en cuota de  mantenimiento
           // por lo tanto, registra el recargo como pagado
@@ -338,6 +339,7 @@ class Ppago {
       foreach ($datos as $dato) {
         $importe= round(floatval($dato->importe),2);               
         $ocobro= $dato->ocobro;
+        $mesAnio = $dato->mes_anio;
         
         if ($saldocpa >= $importe) {    
           // hay suficiente dinero para pagar por lo menos una cuota de extraordinaria

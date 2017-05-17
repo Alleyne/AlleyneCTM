@@ -56,8 +56,8 @@ class AjustesController extends Controller {
 	 ************************************************************************************/  
 	public function store() {
 			
-		//DB::beginTransaction();
-		//try {
+		DB::beginTransaction();
+		try {
 				//dd(Input::all());
 				$input = Input::all();
 			 
@@ -367,11 +367,11 @@ class AjustesController extends Controller {
 				}       
 				return back()->withInput()->withErrors($validation);
 		
-		//} catch (\Exception $e) {
-			//DB::rollback();
-			//Session::flash('warning', ' Ocurrio un error en el modulo AjustesController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+		} catch (\Exception $e) {
+			DB::rollback();
+			Session::flash('warning', ' Ocurrio un error en el modulo AjustesController.store, la transaccion ha sido cancelada! '.$e->getMessage());
 
-			//return back()->withInput()->withErrors($validation);
-		//}
+			return back()->withInput()->withErrors($validation);
+		}
 	} // fin de function
 }

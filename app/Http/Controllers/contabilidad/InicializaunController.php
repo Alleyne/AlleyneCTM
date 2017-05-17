@@ -72,45 +72,45 @@ class InicializaunController extends Controller {
       if ($validation->passes())
       {
         // encuentra los datos de la unidad y marca la unidad como inicializada
-        $un= Un::find(Input::get('un_id'));      
+        $un = Un::find(Input::get('un_id'));      
         //dd($un->toArray());      
         
-        $un->inicializada= 1;
+        $un->inicializada = 1;
         $un->save();
         
         // encuentra la fecha del periodo contable mas antiguo abierto
-        $periodo= Pcontable::where('cerrado', 0)->orderBy('id', 'asc')->first();
+        $periodo = Pcontable::where('cerrado', 0)->orderBy('id', 'asc')->first();
         //dd($periodo->fecha);      
         
         // convierte la fecha string a carbon/carbon
-        $f_periodo= Carbon::parse($periodo->fecha);   
+        $f_periodo = Carbon::parse($periodo->fecha);   
         //dd($f_periodo);      
         
         // hace una copia de la fecha original para evitar que $f_periodo cambie
         $fecha = clone $f_periodo;
         
-        $seccion= Seccione::find($un->seccione_id);
-        $blqAdmin= Blqadmin::where('bloque_id', $seccion->bloque_id)->first();
-        $secapto= Secapto::where('seccione_id', $seccion->id)->first();
+        $seccion = Seccione::find($un->seccione_id);
+        $blqAdmin = Blqadmin::where('bloque_id', $seccion->bloque_id)->first();
+        $secapto = Secapto::where('seccione_id', $seccion->id)->first();
         //dd($secapto->toArray());          
         
-        $meses= floatval(Input::get('meses'));  // 3        5       3
-        $monto= floatval(Input::get('monto'));  // 250.00   355.00  272.00            
+        $meses = floatval(Input::get('meses'));  // 3        5       3
+        $monto = floatval(Input::get('monto'));  // 250.00   355.00  272.00            
         
-        $n= round(($monto/$meses),2) * $meses;  // 249.99   355.00  272.01
+        $n = round(($monto/$meses),2) * $meses;  // 249.99   355.00  272.01
         $cuotaMesual= round(($monto/$meses),2); //  83.33    71.00  90.67
         $fraction = round($monto - $n,2);       //   0.01     0.00  -0.01
         //dd($n, $cuotaMesual, $fraction);
 
-        for ($x= 1; $x <= $meses; $x++) {
+        for ($x = 1; $x <= $meses; $x++) {
 
-          $fecha= $fecha->subMonth();
-          $month= $fecha->month;    
-          $year= $fecha->year; 
-          $dia= $secapto->d_registra_cmpc == 1 ? '01' : '16';
+          $fecha = $fecha->subMonth();
+          $month = $fecha->month;    
+          $year = $fecha->year; 
+          $dia = $secapto->d_registra_cmpc == 1 ? '01' : '16';
           
           // Registra facturacion mensual de la unidad en estudio en el Ctdiario auxiliar de servicios de mantenimiento
-          $dto= new Ctdasm;
+          $dto = new Ctdasm;
           $dto->pcontable_id     = $periodo->id;
           $dto->fecha            = $fecha;
           $dto->ocobro           = $un->codigo.' '.Sity::getMonthName($month).$dia.'-'.$year;
@@ -118,10 +118,10 @@ class InicializaunController extends Controller {
           $dto->mes_anio         = Sity::getMonthName($month).'-'.$year;
           $dto->detalle          = 'Cuota de mantenimiento Unidad No ' . Input::get('un_id');
           
-          if ($x==1 && $fraction>=0) {
+          if ($x == 1 && $fraction >= 0) {
             $dto->importe = $cuotaMesual + abs($fraction);
 
-          } elseif ($x==1 && $fraction<0) {
+          } elseif ($x == 1 && $fraction < 0) {
             $dto->importe = $cuotaMesual - abs($fraction);
           
           } else {
@@ -217,9 +217,13 @@ class InicializaunController extends Controller {
         Ppago::iniciaPago(Input::get('un_id'), $f_periodo, $periodo->id, $periodo->periodo);
 
         // Registra en bitacoras
-        $detalle =  'Inicializa unidad '.Input::get('un_id').' con '.Input::get('meses').' meses adeudados, saldo de '.Input::get('monto').' y B/.'.Input::get('anticipados').' en pagos anticipados.';  
-              
-        Sity::RegistrarEnBitacora(1, 'ctdasms', Null, $detalle);
+        $detalle =  'Inicializa unidad '.$un->codigo.' con '.Input::get('meses').' meses adeudados, saldo de '.Input::get('monto').' y B/.'.Input::get('anticipados').' en pagos anticipados.';  
+        $tabla = 'Ctdasm, Un';
+        $registro = 0;
+        $accion = 'Inicializa unidad';
+        
+        Sity::RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion);
+
         DB::commit();          
         Session::flash('success', 'Unidad '.$un->codigo. ' ha sido inicializada con éxito.');     
         

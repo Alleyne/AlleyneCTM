@@ -614,7 +614,7 @@ class HojadetrabajosController extends Controller {
 
     } catch (\Exception $e) {
       DB::rollback();
-      Session::flash('warning', ' Ocurrio un error en el modulo HojadetrabajosController.cierraPeriodo, la transaccion ha sido cancelada! '.$e->getMessage());
+      Session::flash('warning', ' Ocurrio un error en el modulo HojadetrabajosController.cierraPeriodoxxx, la transaccion ha sido cancelada! '.$e->getMessage());
       return back();
     }
   }

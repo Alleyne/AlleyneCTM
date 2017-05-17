@@ -168,7 +168,9 @@ class DesembolsosController extends Controller
 					$desembolso->aprobadopor = User::find(Input::get('user_id'))->nombre_completo;
 					$desembolso->aprobado = 1;
 					$desembolso->save();
-
+ 					
+ 					Sity::RegistrarEnBitacora($desembolso, Input::get(), 'Desembolso', 'Aprueba desembolso de Caja chica');
+					
 					// encuentra el periodo mas antiguo abierto
 		      $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
 		      //dd($periodo);

@@ -100,10 +100,25 @@
 													<td col width="140px" align="right">
 														<ul class="demo-btns">
 															<li>
-																<div id="ask_6">
-																	<a href="{{ URL::route('contabilizaDetallePagoFactura', $dato->id) }}" class="btn btn-warning btn-xs"> Contabilizar</a>
-																</div>
-															</li>
+																{{Form::open(array(
+																	'route' => array('contabilizaDetallePagoFactura', $dato->id),
+																	'method' => 'GET',
+																	'style' => 'display:inline'
+																	))
+																}}
+
+																{{Form::button('Contabilizar', array(
+												          'class' => 'btn btn-warning btn-xs',
+												          'data-toggle' => 'modal',
+												          'data-target' => '#confirmAction',
+																	'data-title' => 'Contabilizar pago programado de factura de egreso de Caja general',
+																	'data-message' => 'Esta seguro(a) que desea contabilizar pago programado?',
+																	'data-btntxt' => 'SI, contabilizar pago',
+												          'data-btncolor' => 'btn-warning'
+																	))
+																}}
+																{{Form::close()}}
+ 															</li>
 															<li>
 																{{Form::open(array(
 																	'route' => array('detallepagofacturas.destroy', $dato->id),
@@ -112,15 +127,14 @@
 																	))
 																}}
 
-																{{Form::button('Borrar', array(
+																{{Form::button('Eliminar', array(
 																	'class' => 'btn btn-danger btn-xs',
 																	'data-toggle' => 'modal',
-																	'data-target' => '#confirmDelete',
-																	'data-title' => 'Borrar detalle de factura',
-																	'data-message' => 'Esta seguro(a) que desea borrar el presente detalle de factura?',
-																	'data-btncancel' => 'btn-default',
-																	'data-btnaction' => 'btn-danger',
-																	'data-btntxt' => 'Borrar detalle'
+												          'data-target' => '#confirmAction',
+																	'data-title' => 'Eliminar pago programado de factura de egreso de Caja general',
+																	'data-message' => 'Esta seguro(a) que desea eliminar pago programado?',
+																	'data-btntxt' => 'SI, eliminar pago',
+												          'data-btncolor' => 'btn-danger'
 																	))
 																}}
 
@@ -217,7 +231,7 @@
                 
                 <div class="form-group">
                   <label class="col-md-3 control-label">Fecha</label>
-                  <div class="col-md-4">
+                  <div class="col-md-9">
 										<div class="input-group">
 											<input type="text" class="Form-control datepicker" name="fecha" placeholder="Seleccione la fecha del pago de la factura ..." data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -273,6 +287,7 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
+    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>  
     
     <script type="text/javascript">
 	    $(document).ready(function() {

@@ -82,11 +82,7 @@
 																	</button>
 																	<ul class="dropdown-menu">
 																		<li>
-																			<a href="{{ URL::route('diariocajas.index') }}">Diario de Caja General</a>
-																		</li>
-																		<li class="divider"></li>																					
-																		<li>
-																			<a href="javascript:void(0);">Diario de Caja Chica</a>
+																			<a href="{{ URL::route('diariocajas.index') }}">Informes de Caja General</a>
 																		</li>
 																		<li class="divider"></li>	
 																		<li>

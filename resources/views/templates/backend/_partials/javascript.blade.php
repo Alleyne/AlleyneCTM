@@ -45,3 +45,7 @@
 		
 		<!-- MAIN APP JS FILE-->
 		<script src="{{ URL::asset('assets/backend/js/app.js') }}"></script> 
+		
+		
+		<!-- Bootstrap plugin for on-place confirm boxes using Popover.
+		<script src="{{ URL::asset('assets/backend/js/bootstrap-confirmation.min') }}"></script> -->

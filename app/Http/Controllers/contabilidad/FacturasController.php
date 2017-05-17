@@ -32,13 +32,19 @@ class FacturasController extends Controller {
     // encuentra todas las facturas que aun no han sido contabilizadas
     $datos = Factura::where('etapa','!=', 3)->get();
 		
+    //Encuentra todos los proveedores registrados
+		$proveedores = Org::orderBy('nombre')->pluck('nombre', 'id')->All();
+	  //dd($proveedores);
+
 		// formatea la fecha
 		$datos = $datos->each(function ($dato, $key) {
 			return $dato->fecha= Date::parse($dato->fecha)->toFormattedDateString();
 		});
     //dd($datos->toArray());
 
-		return view('contabilidad.facturas.registrar.index')->with('datos', $datos);     	
+		return view('contabilidad.facturas.registrar.index')
+					->with('proveedores', $proveedores)
+					->with('datos', $datos);     	
 	}	
 
   /*************************************************************************************
@@ -351,7 +357,7 @@ class FacturasController extends Controller {
 			$factura->save();	
 		  
 		  // Registra en bitacoras
-  		Sity::RegistrarEnBitacora($factura, Null, 'Factura', 'Contabiliza factua de egreso de Caja general'); 
+  		Sity::RegistrarEnBitacora($factura, Null, 'Factura', 'Contabiliza factura de egreso de Caja general'); 
 			
 			DB::commit();		
 			

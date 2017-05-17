@@ -166,11 +166,17 @@ class DiariocajasController extends Controller
         $diariocaja = Diariocaja::find($diariocaja_id);
         $diariocaja->aprobado = $aprobado;
         $diariocaja->aprobadopor = Cache::get('userFullNamekey');
-        Sity::RegistrarEnBitacora($diariocaja, $request, 'Diariocaja', 'Aprueba informe de Caja General');
         $diariocaja->save();
+  
+        // Registra en bitacoras
+        $detalle = 'Aprueba informe de Caja General el dia '.$diariocaja->fecha;
+        $tabla = 'diariocajas';
+        $registro = $diariocaja->id;
+        $accion = 'Aprueba informe de Caja General';
+        
+        Sity::RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion);
 
         // contabiliza deposito en Banco        
-        
         // incializa variables a utilizar
         $cuenta_8 = Catalogo::find(8)->nombre;    // 1020.00 Banco Nacional
         $cuenta_32 = Catalogo::find(32)->nombre;  // 1000.00 Caja general

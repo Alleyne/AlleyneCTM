@@ -126,6 +126,7 @@ class CajachicasController extends Controller
       $cajachica->responsable_id = $request->user_id;
       $cajachica->responsable = User::find($request->user_id)->nombre_completo;
       $cajachica->saldo = $request->monto + $montoActual;
+      $cajachica->monto_maximo = $request->monto_maximo;
       $cajachica->save();
       
       // registra nuevo detalle en dte_cajachicas
@@ -139,8 +140,10 @@ class CajachicasController extends Controller
       $dte_cajachica->aprueba = User::find($request->aprueba_id)->nombre_completo;
       $dte_cajachica->cajachica_id = $cajachica->id;
       $dte_cajachica->save();   
+      
+      Sity::RegistrarEnBitacora($dte_cajachica, $request, 'Dte_cajachica', 'Se abre nueva caja chica');      
      
-      // registra en Ctdiario principal
+     // registra en Ctdiario principal
       $dato = new Ctdiario;
       $dato->pcontable_id = $periodo->id;
       $dato->fecha        = $request->fecha;
@@ -262,7 +265,9 @@ class CajachicasController extends Controller
       $dte_cajachica->aprueba = User::find($request->aprueba_id)->nombre_completo;
       $dte_cajachica->cajachica_id = $request->cajachica_id;
       $dte_cajachica->save();   
-     
+      
+      Sity::RegistrarEnBitacora($dte_cajachica, $request, 'Dte_cajachica', 'Se aumenta saldo de caja chica');
+      
       // Actualiza el saldo de cajachicas
       $cajachica = Cajachica::find($request->cajachica_id);
       $cajachica->saldo = $request->monto + $montoActual;
@@ -392,6 +397,8 @@ class CajachicasController extends Controller
       $dte_cajachica->cajachica_id = $request->cajachica_id;
       $dte_cajachica->save();   
      
+      Sity::RegistrarEnBitacora($dte_cajachica, $request, 'Dte_cajachica', 'Se disminuye saldo de caja chica');
+
       // Actualiza el saldo de cajachicas
       $cajachica = Cajachica::find($request->cajachica_id);
       $cajachica->saldo = $montoActual - $request->monto;
@@ -529,6 +536,8 @@ class CajachicasController extends Controller
       $dte_cajachica->cajachica_id = $request->cajachica_id;
       $dte_cajachica->save();   
      
+      Sity::RegistrarEnBitacora($dte_cajachica, $request, 'Dte_cajachica', 'Cierre de caja chica');
+
       // Actualiza el saldo de cajachicas
       $cajachica = Cajachica::find($request->cajachica_id);
       $cajachica->saldo = 0;

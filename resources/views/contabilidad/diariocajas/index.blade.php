@@ -64,11 +64,11 @@
                                             <ul class="demo-btns">
                                                 @if ($dato->aprobado == 0)
                                                     <li>
-                                                        <a href="{{ URL::route('diariocajas.edit', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Depositar</a>
+                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
                                                     </li> 
                                                     <li>
-                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
-                                                    </li>                
+                                                        <a href="{{ URL::route('diariocajas.edit', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Depositar</a>
+                                                    </li> 
                                                     <li>
                                                         <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Ajustar</a>
                                                     </li> 

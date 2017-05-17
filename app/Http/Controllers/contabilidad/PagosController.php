@@ -380,7 +380,7 @@ class PagosController extends Controller {
 		DB::beginTransaction();
 		try {
 			// Procesa el pago recibido			
-			$dato= Pago::where('pagos.id', $pago_id)
+			$dato = Pago::where('pagos.id', $pago_id)
 	                    ->select('un_id','monto','id','f_pago')
 	                    ->first();
 			//dd($dato->toArray());
@@ -397,10 +397,14 @@ class PagosController extends Controller {
 			$dato1->entransito = 0;
 		  $dato1->save(); 
 
-			// Registra en bitacoras
-			$detalle =	'Pago No '. $dato->id. ', se ha registrado con exito.';  
-			
-			Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
+				// Registra en bitacoras
+			$detalle = 'Pago No '.$dato1->id.', con cheque No '.$dato1->trans_no.' se ha registrado con exito.';
+			$tabla = 'pagos';
+			$registro = $dato1->id;
+			$accion = 'Contabiliza pago por cheque';
+
+			Sity::RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion);
+
 			DB::commit();    
 			Session::flash('success', 'El pago No.' .$dato->id. ' ha sido registrado con éxito.');
 			return redirect()->route('indexPagos',  $dato->un_id);

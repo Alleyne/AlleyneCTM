@@ -196,13 +196,13 @@ class UnsController extends Controller {
 		//dd($seccion->toArray());			
 		
 		// encuentra a los propietarios
-		$props=Prop::where('un_id', $un_id)
-					->with('user')
-					->get();
+		$props = Prop::where('un_id', $un_id)
+						->with('user')
+						->get();
 		
 
 		if ($seccion->tipo == 1) {
-			$secapto=Secapto::where('seccione_id', $dato->seccione_id)->first();
+			$secapto = Secapto::where('seccione_id', $dato->seccione_id)->first();
 			//dd($secapto->toArray());
 		
 			return view('core.uns.show')
@@ -212,7 +212,7 @@ class UnsController extends Controller {
 			            ->with('seccion', $seccion);
 			
 			} elseif ($seccion->tipo == 2) {
-				$secre=Secre::where('seccione_id', $dato->seccione_id)->first();
+				$secre = Secre::where('seccione_id', $dato->seccione_id)->first();
 				//dd($secre->toArray());
 			
 				return view('core.uns.show')
@@ -221,7 +221,7 @@ class UnsController extends Controller {
 				            ->with('seccion', $seccion);
 			
 			}	elseif ($seccion->tipo == 3) {
-				$seclced=Seclced::where('seccione_id', $dato->seccione_id)->first();
+				$seclced = Seclced::where('seccione_id', $dato->seccione_id)->first();
 				//dd($Seccled->toArray());
 			
 				return view('core.uns.show')
@@ -230,7 +230,7 @@ class UnsController extends Controller {
 				            ->with('seccion', $seccion);
 			
 			} elseif ($seccion->tipo == 4) {
-				$seclcre=Seclcre::where('seccione_id', $dato->seccione_id)->first();
+				$seclcre = Seclcre::where('seccione_id', $dato->seccione_id)->first();
 				//dd($Secclre->toArray());
 			
 				return view('core.uns.show')
@@ -245,9 +245,9 @@ class UnsController extends Controller {
     }
 	}
  
-    /*************************************************************************************
-     * Despliega el registro especificado en formato formulario para edición
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Despliega el registro especificado en formato formulario para edición
+   ************************************************************************************/	
 	public function edit($un_id)
 	{
 		

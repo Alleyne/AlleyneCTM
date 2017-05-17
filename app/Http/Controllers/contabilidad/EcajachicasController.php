@@ -206,11 +206,8 @@ class EcajachicasController extends Controller
 				$dato->delete();			
 
 				// Registra en bitacoras
-				$detalle =	'Borra el Factura '.$dato->no. ', '.
-										'a favor de= '. $dato->afavorde. ', '.
-										'fecha= '. 			$dato->fecha;
-				
-				Sity::RegistrarEnBitacora(3, 'ecajachicas', $dato->id, $detalle);
+				Sity::RegistrarEnBitacora($dato, Null, 'Ecajachica', 'Elimina egreso de Caja chica');   
+
 				Session::flash('success', 'La factura No' .$dato->doc_no. ' ha sido borrada permanentemente de la base de datos.');
 				DB::commit();				
 				return Redirect()->route('ecajachicas.index');
@@ -263,8 +260,10 @@ class EcajachicasController extends Controller
 				}
 				
 				//Encuentra los datos generales del egreso de caja chica
-				$ecajachica= Ecajachica::find($ecajachica_id);
+				$ecajachica = Ecajachica::find($ecajachica_id);
 			 
+				Sity::RegistrarEnBitacora($ecajachica, Null, 'Ecajachica', 'Contabiliza egreso de Caja chica');  
+
 				// convierte la fecha string a carbon/carbon
 				$f_ecajachica = Carbon::parse($ecajachica->fecha);   
 				$month= $f_ecajachica->month;    
@@ -490,14 +489,6 @@ class EcajachicasController extends Controller
 				$dte->cajachica_id = $cchica->id;
 				$dte->save();				
 
-				// Registra en bitacoras
-				$detalle =  'Contabiliza ecajachica_id '.$ecajachica_id. ', '.
-																'pcontable_id= '.$pdo.', '.
-																'doc_no= '.$ecajachica->doc_no.', '.
-																'org_id= '.$ecajachica->org_id.', '.
-																'fecha= '.$f_ecajachica;
-
-   				
 
 				// Verifica si la caja chica en estudio tiene algun desembolso sin aprobar,
 				// Si no exite lo crea y le vincula los detalles del presente egreso de caja chica.
@@ -505,8 +496,6 @@ class EcajachicasController extends Controller
 				// Si existe, entonces actualiza la fecha con la fecha del presente egreso de caja y
 				// le vincula los detalles del presente egreso de caja chica.
 				Sity::analizaDesembolsos($cchica->id);
-				
-				Sity::RegistrarEnBitacora(15, 'ecajachica', $ecajachica->doc_no, $detalle);
 				
 				DB::commit();    
 				Session::flash('success', 'El egreso de caja chica No. ' .$ecajachica->doc_no. ' ha sido cotabilizado.');

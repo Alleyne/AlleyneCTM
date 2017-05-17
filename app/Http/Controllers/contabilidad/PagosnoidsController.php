@@ -96,14 +96,14 @@ class PagosnoidsController extends Controller
 
 				// convierte la fecha string a carbon/carbon
 				$fecha = Carbon::parse(Input::get('fecha'));   
-				$month= $fecha->month;    
-				$year= $fecha->year;    
+				$month = $fecha->month;    
+				$year = $fecha->year;    
 
 				// determina el periodo al que corresponde la fecha de pago    
-				$pdo= Sity::getMonthName($month).'-'.$year;
+				$pdo = Sity::getMonthName($month).'-'.$year;
 			  
 			  // encuentra el periodo mas antiguo abierto
-				$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+				$periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
 			  //dd($periodo);
 
 		    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
@@ -128,6 +128,8 @@ class PagosnoidsController extends Controller
 				$pagosnoid->monto = Input::get('monto');
 				$pagosnoid->save();
 			
+  			Sity::RegistrarEnBitacora($pagosnoid, Input::get(), 'Pagosnoid', 'Registra pago no identificado');
+
 				// registra en libros
 				// registra en Ctdiario principal
 	      $dato = new Ctdiario;
@@ -255,7 +257,9 @@ class PagosnoidsController extends Controller
 				$pagosnoid->propietarios = ltrim($propietarios, " , "); 
 				$pagosnoid->identificado = 1;
 				$pagosnoid->save();															
-			
+  			
+  			Sity::RegistrarEnBitacora($pagosnoid, Input::get(), 'Pagosnoid', 'Identifica pago no identificado');			
+				
 				Session::flash('success', 'Se identifico el pago no identificado!');
 				DB::commit();       
 				return redirect()->route('pagosnoids.index');
@@ -286,7 +290,7 @@ class PagosnoidsController extends Controller
 	    //$pdo= Sity::getMonthName($month).'-'.$year;    
 		    
 		  // encuentra el periodo mas antiguo abierto
-			$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+			$periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
 	    //dd($pdo, $periodo->periodo);
 	    
 	    // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
@@ -314,7 +318,10 @@ class PagosnoidsController extends Controller
 			$dato->un_id       = $un_id;
 	    $dato->user_id 	   = Auth::user()->id; 		    
 	    $dato->save();
-
+			
+			// Registra en bitacoras
+  		Sity::RegistrarEnBitacora($dato, Null, 'Pago', 'Contabiliza pago no identificado');
+			
 			// actualiza pago no identificado como contabilizado
 			$dto = Pagosnoid::find($pagosnoid_id);
 			$dto->contabilizado = 1;
@@ -323,9 +330,6 @@ class PagosnoidsController extends Controller
 			// proceso de contabilizar el pago recibido
 			Npago::iniciaPago($un_id, $monto, $dato->id, $f_pago, $periodo->id, $periodo->periodo, 3);
 
-			// Registra en bitacoras
-			$detalle =	'Crea y procesa Pago de mantenimiento '. $dato->id. ', con el siguiente monto: '.  $monto;  
-      Sity::RegistrarEnBitacora(1, 'pagos', $dato->id, $detalle);
 			DB::commit();		            
       Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado y procesado con éxito.');
 			return redirect()->route('pagosnoids.index');

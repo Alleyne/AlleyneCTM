@@ -107,16 +107,23 @@
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->area }}">
 									</div>
 								</div>
-
+								
 								<div class="form-group">
-									<label class="col-md-4 control-label">Dias de gracia</label>
+									<label class="col-md-4 control-label">Aplica recargo</label>
 									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->d_gracias }}">
+										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->m_vence == 0 ? 'Mes corriente' : 'Proximo mes' }}">
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-md-4 control-label">Despues del dia</label>
+									<div class="col-md-8">
+										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->d_vence }}">
 									</div>
 								</div>							
 
 								<div class="form-group">
-									<label class="col-md-4 control-label">Meses descuento</label>
+									<label class="col-md-4 control-label">Meses para descuento</label>
 									<div class="col-md-8">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->m_descuento }}">
 									</div>

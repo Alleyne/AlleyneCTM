@@ -3,14 +3,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Session, DB;
+use Session, DB, Validator;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
-use Validator;
-
-
 use Jenssegers\Date\Date;
-
 
 use App\Ecajachica;
 use App\Dte_ecajachica;
@@ -162,17 +158,6 @@ class Dte_ecajachicasController extends Controller {
 				$dato->cuenta	  					= $serviproducto->catalogo->nombre;
 				$dato->save();
 				
-				// Registra en bitacoras
-				$det=	'serviproducto_id= '.	$dato->serviproducto_id. ', '.
-							'nombre= '				  .	$dato->nombre. ', '.
-							'cantidad= '				.	$dato->cantidad. ', '.
-							'precio= '					.	$dato->precio. ', '.
-							'itbms= '					  .	$dato->itbms. ', '.
-							'factura_id= '			.	$dato->factura_id. ', '.
-							'catalogo_ido= '		.	$dato->catalogo_id. ', '.
-							'codigo= '				  .	$dato->codigo. ', '.
-							'cuenta= '				  .	$dato->cuenta;
-
 				$totaldetalles= 0;
 
 			  //calcula el total de detallefacturas para la presente factura
@@ -199,7 +184,8 @@ class Dte_ecajachicasController extends Controller {
 					$ecajachica->save();		
 		    }
 			    
-				Sity::RegistrarEnBitacora(1, 'dte_ecajachicas', $dato->id, $det);
+				Sity::RegistrarEnBitacora($dato, Input::get(), 'Dte_ecajachica', 'Registra detalle de Caja chica');
+				
 				Session::flash('success', 'El detalle de ecajachica No. ' .$dato->id. ' ha sido creado con éxito.');
 		    DB::commit();				
 				return redirect()->route('dte_ecajachicas.show', Input::get('ecajachica_id'));
@@ -228,13 +214,6 @@ class Dte_ecajachicasController extends Controller {
 			$dato = Dte_ecajachica::find($dte_ecajachica_id);
 			$dato->delete();			
 
-			// Registra en bitacoras
-			$det =	'Borra detalle de egreso de factura '.$dato->id. ', '.
-					'cantidad= '.   		$dato->cantidad. ', '.
-					'precio= '.   			$dato->precio. ', '.
-					'itbms= '.   				$dato->itbms. ', '.
-					'ecajachica_id= '. 	$dato->ecajachica_id;
-			
 			$totaldetalles = 0;
 
 	    //calcula el total de detallefacturas para la presente factura
@@ -258,7 +237,8 @@ class Dte_ecajachicasController extends Controller {
 				$ecajachica->save();
 	    }
 			
-			Sity::RegistrarEnBitacora(3, 'dte_ecajachicas', $dato->id, $det);
+  		Sity::RegistrarEnBitacora($dato, Null, 'Dte_ecajachica', 'Elimina detalle de egreso de Caja chica');   
+
 			Session::flash('success', 'El detalle "' .$dato->nombre .'" ha sido borrado de la factura.');
 			DB::commit();
 			return redirect()->route('dte_ecajachicas.show', $dato->ecajachica_id);

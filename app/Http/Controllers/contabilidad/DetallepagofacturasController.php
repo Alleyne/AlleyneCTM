@@ -3,12 +3,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Session, DB;
+use Session, DB, Validator, Date;
 use App\library\Sity;
 use App\Http\Helpers\Grupo;
-use Validator;
 use Carbon\Carbon;
-use Date;
 
 use App\Org;
 use App\Factura;
@@ -21,14 +19,14 @@ use App\Trantipo;
 use App\Diariocaja;
 
 class DetallepagofacturasController extends Controller {
-    public function __construct()
-    {
-       	$this->middleware('hasAccess');    
-    }
-    
-    /*************************************************************************************
-     * Despliega un grupo de registros en formato de tabla
-     ************************************************************************************/	
+  public function __construct()
+  {
+     	$this->middleware('hasAccess');    
+  }
+  
+  /*************************************************************************************
+   * Despliega un grupo de registros en formato de tabla
+   ************************************************************************************/	
 	public function show($factura_id)
 	{
     $datos = Detallepagofactura::where('factura_id', $factura_id)->get();
@@ -91,9 +89,21 @@ class DetallepagofacturasController extends Controller {
 		    
 		    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
 		    if (Carbon::parse($periodo->fecha)->gt(Carbon::parse(Input::get('fecha')))) {
-					Session::flash('danger', '<< ERROR >> Solamente se permite registrar pago de facturas de gastos cuya fecha se mayor o igual al periodo vigente de '.$periodo->periodo);
+					Session::flash('danger', '<< ERROR >> Solamente se permite registrar pago de facturas de gastos cuya fecha se mayor o igual al dia primero del periodo vigente de '.$periodo->periodo);
 					return back()->withInput()->withErrors($validation);
 		    }
+
+		    // encuentra la fecha del ultimo pago programado de la presente factura
+	 	    $ultimaFecha = Detallepagofactura::orderBy('id', 'desc')->where('factura_id', Input::get('factura_id'))->first();
+				//dd($ultimaFecha);
+
+				if ($ultimaFecha) {
+			    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+			    if (Carbon::parse($ultimaFecha)->gte(Carbon::parse(Input::get('fecha')))) {
+						Session::flash('danger', '<< ERROR >> La fecha del pago programado debera ser mayor o igual a la ultima fecha de pago programado');
+						return back()->withInput()->withErrors($validation);
+			    }
+				}
 
 				// encuentra el monto total de la factura			
 				$factura= Factura::find(Input::get('factura_id'));
@@ -174,31 +184,32 @@ class DetallepagofacturasController extends Controller {
 		}
 	}
     
-    /*************************************************************************************
-     * Borra registro de la base de datos
-     ************************************************************************************/	
+  /*************************************************************************************
+   * Borra registro de la base de datos
+   ************************************************************************************/	
 	public function destroy($detallepagofactura_id)
 	{
 		DB::beginTransaction();
 		try {
+	    // verifica si existe algun pago programado posterior al presente
+			$exitePosterior= Detallepagofactura::where('id', '>', $detallepagofactura_id)->first();
+	    
+	    if ($exitePosterior) {
+        Session::flash('danger', '<< ERROR >> No puede eliminar el presente pago programado, solo se puede eliminar el ultimo pago programado!');
+    		return back();
+	    }
 			//dd($detallefactura_id);
+			
 			$dato = Detallepagofactura::find($detallepagofactura_id);
 			$dato->delete();			
-
-			// Registra en bitacoras
-			/*$det =	'Borra detalle de Factura '.$dato->no. ', '.
-					'cantidad= '.   		$dato->cantidad. ', '.
-					'detalle= '.   			$dato->detalle. ', '.
-					'precio= '.   			$dato->precio. ', '.
-					'itbms= '.   			$dato->itbms. ', '.
-					'factura_id= '. 		$dato->factura_id;*/
-			
-		    // actualiza el totalpagodetalle en la tabla facturas
+		
+		  // actualiza el totalpagodetalle en la tabla facturas
 		  $factura= Factura::find($dato->factura_id);
-			$factura->totalpagodetalle= $factura->totalpagodetalle - $dato->monto;
+			$factura->totalpagodetalle = $factura->totalpagodetalle - $dato->monto;
 			$factura->save();		
 			
-			//Sity::RegistrarEnBitacora(3, 'detallefacturas', $dato->id, $det);
+  		Sity::RegistrarEnBitacora($dato, Null, 'Factura', 'Elimina pago programado por Caja general'); 
+			
 			DB::commit();			
 			Session::flash('success', 'El detalle de factura "' .$dato->detalle .'" con monto de B/.'. $dato->monto.' ha sido borrado permanentemente de la base de datos.');
 			return redirect()->route('detallepagofacturas.show', $dato->factura_id);
@@ -206,7 +217,7 @@ class DetallepagofacturasController extends Controller {
 		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
-			return back()->withInput()->withErrors($validation);
+			return back();
 		}
 	}
 

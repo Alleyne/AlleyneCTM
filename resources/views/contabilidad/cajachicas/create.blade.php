@@ -99,6 +99,21 @@
 											</div>
 										</div>	
 
+										<div class="form-group">
+											<label class="col-md-3 control-label">Monto maximo</label>
+											<div class="col-md-9">
+												{{ Form::text('monto_maximo', old('monto_maximo'),
+													array(
+													    'class' => 'form-control',
+													    'id' => 'monto_maximo',
+													    'placeholder' => 'Escriba el monto maximo permitido para un egreso de Caja chica!',
+														  'autocomplete' => 'off',
+													))
+												}} 
+												{!! $errors->first('monto_maximo', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>	
+
 										<hr />		
 
 										<div class="form-group">
