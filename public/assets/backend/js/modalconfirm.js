@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  //<!-- Dialog show event handler -->
+  //<!-- Dialog show event handler german-->
   $('#confirmAction').on('show.bs.modal', function (e) {
     $message = $(e.relatedTarget).attr('data-message');
     $(this).find('.modal-body p').text($message);
@@ -23,9 +23,7 @@ $(document).ready(function() {
   });
 
   //<!-- Form confirm (yes/ok) handler, submits form -->
-  $('#confirmAction').find('.modal-footer #confirm').on('click', function(){
-    $(this).find('#confirm').prop('disabled',true);   
+  $('#confirmAction').find('.modal-footer #confirm').one('click', function(){
     $(this).data('form').submit();
   });
 }); 
-
