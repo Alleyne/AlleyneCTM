@@ -48,17 +48,12 @@
                             <a class="btn btn-primary dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Banca en linea</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 2)) }}">Transferencia</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 3)) }}">ACH</a></li>
-                                
+                               
                                 <li class="divider"></li>                                
                                 <li><a href="{{ URL::route('createPago', array($un_id, 5)) }}">Efectivo</a></li>
                                 <li><a href="{{ URL::route('createPago', array($un_id, 1)) }}">Cheque</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 6)) }}">Tarjeta Clave</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 7)) }}">Visa</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 8)) }}">Master Card</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 9)) }}">American Express</a></li>
- 
+                                <li><a href="{{ URL::route('createPago', array($un_id, 6)) }}">Tarjeta de debito</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 7)) }}">Tarjeta de credito</a></li>
                                 <li><!-- <a href="#">Separated link</a> --></li>
                             </ul>
                         </div><!-- /btn-group -->       

@@ -96,11 +96,11 @@ class DetallepagofacturasController extends Controller {
 
 		    // encuentra la fecha del ultimo pago programado de la presente factura
 	 	    $ultimaFecha = Detallepagofactura::orderBy('id', 'desc')->where('factura_id', Input::get('factura_id'))->first();
-				//dd($ultimaFecha);
+				//dd(Carbon::parse($ultimaFecha->fecha), Carbon::parse(Input::get('fecha')));
 
 				if ($ultimaFecha) {
 			    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
-			    if (Carbon::parse($ultimaFecha->fecha)->gte(Carbon::parse(Input::get('fecha')))) {
+			    if (Carbon::parse(Input::get('fecha'))->lt(Carbon::parse($ultimaFecha->fecha))) {
 						Session::flash('danger', '<< ERROR >> La fecha del pago programado debera ser mayor o igual a la ultima fecha de pago programado');
 						return back()->withInput()->withErrors($validation);
 			    }

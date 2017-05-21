@@ -33,7 +33,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Registrar pagos</h2>
+						<h2>Registrar pagos tipo tarjeta de debito</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -53,14 +53,7 @@
 
 	 									{{ Form::hidden('un_id', $un_id) }}
 	 									{{ Form::hidden('key', $key) }}
-	 									
-										<div class="form-group">
-											<label class="col-md-3 control-label">Banco</label>
-											<div class="col-md-9">
-												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control', 'required' => '']) }}
-											</div>
-										</div>	
-
+                    
                     <div class="form-group">
                         <label class="col-md-3 control-label">Fecha de pago</label>
                         <div class="col-md-9">
@@ -69,7 +62,14 @@
 													<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 												</div>
 	                      </div>
-	                  </div>  
+	                  </div>
+
+										<div class="form-group">
+											<label class="col-md-3 control-label">Banco</label>
+											<div class="col-md-9">
+												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control', 'required' => '']) }}
+											</div>
+										</div>	
 
 										<div class="form-group">
 											<label class="col-md-3 control-label">Monto</label>

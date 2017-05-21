@@ -33,7 +33,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Registrar pagos en efectivo</h2>
+						<h2>Registrar pagos tipo Banca en linea</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -53,7 +53,7 @@
 
 	 									{{ Form::hidden('un_id', $un_id) }}
 	 									{{ Form::hidden('key', $key) }}
-
+                    
                     <div class="form-group">
                         <label class="col-md-3 control-label">Fecha de pago</label>
                         <div class="col-md-9">
@@ -64,6 +64,31 @@
 	                      </div>
 	                  </div>  
 
+										<div class="form-group">
+											<label class="col-md-3 control-label">Banco</label>
+											<div class="col-md-9">
+												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control', 'required' => '']) }}
+											</div>
+										</div>		
+
+										<div class="transNo form-group">
+											<label class="col-md-3 control-label">Transaccion No.</label>
+											<div class="col-md-9">
+												{{ Form::text('transno', old('transno'),
+													array(
+												    'class' => 'form-control',
+												    'id' => 'transno',
+												    'placeholder' => 'Escriba el numero de la transaccion...',
+														'autocomplete' => 'off',
+														'data-parsley-type'=>'digits',
+														'minlength '=>'1',
+														'maxlength '=>'10',
+														'data-parsley-error-message'=>'mi mensaje para el campo trans no'
+													))
+												}} 
+											</div>
+										</div>	
+					
 										<div class="form-group">
 											<label class="col-md-3 control-label">Monto</label>
 											<div class="col-md-9">

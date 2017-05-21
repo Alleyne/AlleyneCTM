@@ -66,8 +66,8 @@
 						<td width="14%"> <img src="{{asset('assets/backend/img/ctmaster_logo.png') }}" width=70 height=70 alt="Responsive image"></td>
 						<td width="69%">
 							<div class="encabezado-principal">
-								<label>MONAGRE CORP. S.A.</label><br>
-								<label>INFORME DIARIO DE CAJA</label>
+								<label>PH EL MARQUEZ</label><br>
+								<label>INFORME DIARIO DE CAJA GENERAL</label>
 								<br>
 								<label>{{ $fecha }}</label>
 							</div>
@@ -143,7 +143,7 @@
 					@foreach ($desembolsoEfectivos as $desembolsoEfectivo) 
 						<tr align="right">
 							<td align="left">{{ $desembolsoEfectivo->codigo }}</td>
-							<td align="left">{{ $desembolsoEfectivo->trantipo == 'Cheque' ? "Chq " . $desembolsoEfectivo->trans_no : $desembolsoEfectivo->trantipo }}</td>
+							<td align="left">{{ $desembolsoEfectivo->trantipo == 'Cheque' ? "Chq " . $desembolsoEfectivo->doc_no : $desembolsoEfectivo->trantipo }}</td>
 							<td align="left">{{ $desembolsoEfectivo->detalle }} </td>
 							<td>{{ $desembolsoEfectivo->monto }}</td>
 							<td>&nbsp;</td>

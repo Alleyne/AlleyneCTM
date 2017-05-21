@@ -68,28 +68,28 @@ class PagosController extends Controller {
 	{
     
     // obtiene todas las instituciones bancarias actualmente registrada
-    $bancos= Banco::orderBy('nombre')->pluck('nombre', 'id')->all();
+    $bancos = Banco::orderBy('nombre')->pluck('nombre', 'id')->all();
 		//dd($bancos);	    
     
-    if ($key==1) {
+    if ($key == 1) {
 	    return view('contabilidad.pagos.createPagoTipo1')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
     
-    } elseif ($key==2 || $key==3 || $key==4) {
-	    return view('contabilidad.pagos.createPagoTipo234')        			
+    } elseif ($key == 4) {
+	    return view('contabilidad.pagos.createPagoTipo4')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
     
-    } elseif ($key==5 || $key==7 || $key==8 || $key==9) {
-	    return view('contabilidad.pagos.createPagoTipo5')        			
+    } elseif ($key == 5 || $key == 7) {
+	    return view('contabilidad.pagos.createPagoTipo57')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
     
-    } elseif ($key==6) {
+    } elseif ($key == 6) {
 	    return view('contabilidad.pagos.createPagoTipo6')        			
 						->with('bancos', $bancos)
 						->with('key', $key)

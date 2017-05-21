@@ -33,7 +33,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Registrar pagos</h2>
+						<h2>Registrar pagos tipo cheque</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -54,6 +54,16 @@
 	 									{{ Form::hidden('un_id', $un_id) }}
 	 									{{ Form::hidden('key', $key) }}
 										<h2>Registra pago con cheques</h2>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Fecha de pago</label>
+                        <div class="col-md-9">
+												<div class="input-group">
+													<input type="text" id="f_pago" name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" required="" value="{{ old('f_pago') }}">
+													<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+												</div>
+	                      </div>
+	                  </div>
+	                  
 										<div class="form-group">
 											<label class="col-md-3 control-label">Banco</label>
 											<div class="col-md-9">
@@ -79,15 +89,6 @@
 												}} 
 											</div>
 										</div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Fecha de pago</label>
-                        <div class="col-md-9">
-												<div class="input-group">
-													<input type="text" id="f_pago" name="f_pago" placeholder="Seleccione la fecha en que se hizo efectivo el pago ..." class="form-control datepicker" required="" value="{{ old('f_pago') }}">
-													<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-												</div>
-	                      </div>
-	                  </div>  
 
 										<div class="form-group">
 											<label class="col-md-3 control-label">Monto</label>

@@ -110,7 +110,8 @@ class DiariocajasController extends Controller
                   {
                     $join->on('detallepagofacturas.trantipo_id', '=', 'trantipos.id');
                   })
-                ->get(['detallepagofacturas.id as pagoNo','trantipos.id as trantipo_id', 'trantipos.nombre as trantipo','codigo','ctmayores.detalle','credito as monto']);
+                ->get(['detallepagofacturas.id as pagoNo','trantipos.id as trantipo_id', 'trantipos.nombre as trantipo','doc_no','codigo','ctmayores.detalle','credito as monto']);
+      
       //dd($desembolsoEfectivos->toArray()); 
 
       // calcula el total desembolsado en efectivo solamente      
