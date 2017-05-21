@@ -82,7 +82,6 @@
 											<th>FECHA</th>
 											<th>DETALLE</th>
 											<th>MONTO</th>
-											<th>TRANS</th>
 											<th>PAGO</th>
 											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>	
 										</tr>
@@ -94,12 +93,15 @@
 												<td col width="100px">{{ $dato->fecha }}</td>
 												<td>{{ $dato->detalle }}</td>
 												<td col width="100px">{{ $dato->monto }}</td>
-												<td col width="100px">{{ $dato->Trantipo->nombre }}</td>
-												<td col width="100px">{{ $dato->pagotipo ? 'Completo' : 'Parcial' }}</td>
-												@if ($dato->contabilizado == 0)
-													<td col width="140px" align="right">
+												<td col width="100px">{{ $dato->pagotipo }}</td>
+												@if ($dato->etapa == 1)
+													<td col width="180px" align="right">
 														<ul class="demo-btns">
+															
 															<li>
+          											<button type="button" data-target="#myModalPagar" data-toggle="modal" class="btn btn-success btn-xs pagarContabilizarBtn" data-detallepagofactura_id="{{ $dato->id }}">Pagar contabilizar</button>
+															</li>
+															{{-- <li>
 																{{Form::open(array(
 																	'route' => array('contabilizaDetallePagoFactura', $dato->id),
 																	'method' => 'GET',
@@ -107,18 +109,19 @@
 																	))
 																}}
 
-																{{Form::button('Contabilizar', array(
+																{{Form::button('Pagar y contabilizar', array(
 												          'class' => 'btn btn-warning btn-xs',
 												          'data-toggle' => 'modal',
 												          'data-target' => '#confirmAction',
-																	'data-title' => 'Contabilizar pago programado de factura de egreso de Caja general',
-																	'data-message' => 'Esta seguro(a) que desea contabilizar pago programado?',
-																	'data-btntxt' => 'SI, contabilizar pago',
+																	'data-title' => 'Pagar y contabilizar factura de egreso de Caja general',
+																	'data-message' => 'Esta seguro(a) que desea pagar y contabilizar pago programado?',
+																	'data-btntxt' => 'SI, pagar y contabilizar',
 												          'data-btncolor' => 'btn-warning'
 																	))
 																}}
 																{{Form::close()}}
- 															</li>
+ 															</li> --}}
+															
 															<li>
 																{{Form::open(array(
 																	'route' => array('detallepagofacturas.destroy', $dato->id),
@@ -143,11 +146,11 @@
 														</ul>
 													</td>
 												
-												@elseif ($dato->contabilizado == 1)
+												@elseif ($dato->etapa == 2)
 													<td col width="140px" align="right">
 														<ul class="demo-btns">
 															<li>
-																<span class="label label-success">Pago Contabilizado</span>
+																<span class="label label-success">Pagado y contabilizado</span>
 															</li>
 														</ul>
 													</td>
@@ -158,6 +161,7 @@
 								</table>
 								<!-- Incluye la modal box -->
 								@include('templates.backend._partials.modal_confirm')
+								@include('contabilidad.detallepagofacturas.modal_pagar')
 							</div>
 							<!-- end widget content -->
 		
@@ -188,46 +192,6 @@
 						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'detallepagofacturas.store')) }}
 							<fieldset>
       				{{ Form::hidden('factura_id', $factura->id) }}                
-								<div class="form-group">
-								  <label class="col-md-3 control-label">Tipo de pago</label>
-									<div class="col-md-9">
-								    <select name="trantipo_id" id="trantipo_id" class="form-control" onclick="createUserJsObject.ShowtipoDePago;">
-							        @foreach ($trantipos as $trantipo)
-							        	<option id="{{ $trantipo->id }}" value="{{ $trantipo->id }}">{{ $trantipo->nombre }}</option>				        	
-							        @endforeach
-								    </select>
-									</div>		
-								</div>
-								
-								<div class="form-group chequeNo" style=" display: none;">
-									<label class="col-md-3 control-label">Cheque No.</label>
-									<div class="col-md-9">
-										{{ Form::text('transno', old('transno'),
-											array(
-											    'class' => 'form-control',
-											    'id' => 'transno',
-											    'placeholder' => 'Escriba el numero del cheque...',
-													'autocomplete' => 'off',
-											))
-										}} 
-										{!! $errors->first('transno', '<li style="color:red">:message</li>') !!}
-									</div>
-								</div>	
-								
-								<div class="form-group transaccionNo" style=" display: none;">
-									<label class="col-md-3 control-label">Transaccion No.</label>
-									<div class="col-md-9">
-										{{ Form::text('transno', old('transno'),
-											array(
-											    'class' => 'form-control',
-											    'id' => 'transno',
-											    'placeholder' => 'Escriba el numero de la transaccion...',
-													'autocomplete' => 'off',
-											))
-										}} 
-										{!! $errors->first('transno', '<li style="color:red">:message</li>') !!}
-									</div>
-								</div>	
                 
                 <div class="form-group">
                   <label class="col-md-3 control-label">Fecha</label>
@@ -298,29 +262,6 @@
 	        });
 	    })
 
-		var trantipo_id = jQuery('#trantipo_id');
-		var select = this.value;
-		trantipo_id.change(function () {
-		    if ($(this).val() == 1) {
-		        $('.chequeNo').show();
-		    		$('.transaccionNo').hide();
-		    
-		    } else if ($(this).val() == 2 || $(this).val() == 3 || $(this).val() == 4 || $(this).val() == 6 || $(this).val() == 7) {
-		    	$('.chequeNo').hide();
-		    	$('.transaccionNo').show();
-		    
-		    } else if ($(this).val() == 5) {
-		    	$('.chequeNo').hide();
-		    	$('.transaccionNo').hide();
-	    
-		    }	else {
-		    	$('.chequeNo').hide();
-		    	$('.transaccionNo').hide();
-		    }
-		});
-
-
-
 		$(function () {
 	    $("#fecha").datepicker({
 	        dateFormat: 'yy-mm-dd'
@@ -360,11 +301,35 @@
 	        }
 	    });
 		    
-	    $("#opener").click(function () {
-	        $("#dialog").dialog("open");
-	    });
-    
-	    $("input[type='submit']").attr("disabled", false);
+			var trantipo_id = jQuery('#trantipo_id');
+			var select = this.value;
+			trantipo_id.change(function () {
+			    
+			    if ($(this).val() == 1) {
+		        $('.chequeNo').show();
+		    		$('.transaccionNo').hide();
+			    
+			    } else if ($(this).val() == 2 || $(this).val() == 3 || $(this).val() == 4 || $(this).val() == 6 || $(this).val() == 7) {
+			    	$('.chequeNo').hide();
+			    	$('.transaccionNo').show();
+			    
+			    } else if ($(this).val() == 5) {
+			    	$('.chequeNo').hide();
+			    	$('.transaccionNo').hide();
+		    
+			    }	else {
+			    	$('.chequeNo').hide();
+			    	$('.transaccionNo').hide();
+			    }
+			});
+
+			// pasa el detallepagofactura_id al 
+			$('#myModalPagar').on('show.bs.modal', function(e) {
+			    var id = $(e.relatedTarget).data('detallepagofactura_id');
+			    $(e.currentTarget).find('input[name="detallepagofactura_id"]').val(id);
+			});
+
+      $("input[type='submit']").attr("disabled", false);
 	    $("form").submit(function(){
 	      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
 	      return true;

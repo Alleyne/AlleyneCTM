@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ctmayore extends Model 
 {
 	protected $table = 'ctmayores';
-  public $timestamps = false;    
+  public $timestamps = true;    
 
   public function pago()
   {

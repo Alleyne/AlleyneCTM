@@ -2373,3 +2373,43 @@ Work::with(
     
     <!-- Incluye javascript -->
     <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
+
+  /*************************************************************************************
+   * Para limpiar archivos ya compilados, views y cache
+   ************************************************************************************/
+    php artisan clear-compiled
+    php artisan view:clear
+    php artisan cache:clear
+
+  /*************************************************************************************
+   * Para enviar datos a una ventana modal
+   ************************************************************************************/
+  <button type="button" data-target="#myModalPagar" data-toggle="modal" class="btn btn-success btn-xs pagarContabilizarBtn" data-detallepagofactura_id="{{ $dato->id }}">Pagar contabilizar</button>
+
+  <div class="modal" id="#myModalPagar">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">Modal header</h4>
+        </div>
+        <div class="modal-body">
+          <p>some content</p>
+          
+          {{ Form::hidden('detallepagofactura_id', '', array('id' => 'detallepagofactura_id')) }}
+          {{-- <input id="detallepagofactura_id" name="detallepagofactura_id" type="hidden"> --}}
+          
+          <input type="text" name="bookId" value=""/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  // pasa el detallepagofactura_id al 
+  $('#myModalPagar').on('show.bs.modal', function(e) {
+      var id = $(e.relatedTarget).data('detallepagofactura_id');
+      $(e.currentTarget).find('input[name="detallepagofactura_id"]').val(id);
+  });

@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ph extends Model 
 {
 	protected $table = 'phs';
-  public $timestamps = false;    
+  public $timestamps = true;    
   
   public function secciones()
   {

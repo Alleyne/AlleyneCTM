@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Blqadmin extends Model 
 {
 	protected $table = 'blqadmins';
-    public $timestamps = false;    
+    public $timestamps = true;    
     
     public function bloque() {
         return $this->belongsTo('App\Bloque');

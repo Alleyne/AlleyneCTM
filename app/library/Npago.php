@@ -17,6 +17,10 @@ use App\Detallepago;
 use App\Pcontable;
 use App\Ctmayore;
 use App\Pago;
+use App\Detallepagofactura;
+use App\Diariocaja;
+use App\Factura;
+use App\Org;
 
 class Npago {
   
@@ -1436,5 +1440,135 @@ class Npago {
     return $no;
   } 
 
+  /** 
+  *=============================================================================================
+  *  Esta function registra en libros el pago de una factura ya se parcial o completa
+  * @param  string detallepagofactura_id  '7'       
+  * @return void
+  *===========================================================================================*/
+  public static function contabilizaDetallePagoFactura($detallepagofactura_id, $periodo) {
+  
+    //dd($detallepagofactura_id);
+
+    // incializa variables a utilizar
+    $cuenta_6 = Catalogo::find(6)->nombre;    // 2001.00 Cuentas por pagar a proveedores
+    $cuenta_8 = Catalogo::find(8)->nombre;    // 1020.00 Banco Nacional
+
+    // encuentra los datos del detalle de pago en estudio
+    $dato = Detallepagofactura::find($detallepagofactura_id);
+    //dd($dato->toArray());
+    
+    // verifica si existe registro para informe de diario de caja para el dia de hoy,
+    // si no existe entonces lo crea.
+    if ($dato->trantipo_id != '2' && $dato->trantipo_id != '4' ) {
+      $diariocaja= Diariocaja::where('fecha', $dato->fecha)->first();
+
+      if (!$diariocaja) {
+        $dto = new Diariocaja; 
+        $dto->fecha = $dato->fecha;         
+        $dto->save();
+      }
+    }  
+      
+    // encuentra el proveedor de la factura
+    $factura = Factura::find($dato->factura_id);
+    //dd($factura->doc_no);
+    
+    // almacena el total de la factura 
+    $totalfactura = round(floatval($factura->total),2);
+    
+    // encuentra los datos de la organizacion
+    $org = Org::find($factura->org_id);
+    //dd($org->toArray());    
+
+    // verifica si se trata de un pago completo o parcial
+    if ($dato->pagotipo == 1) {
+      $pagotipo = 'completo';
+    
+    } else {
+      $pagotipo = 'parcial';
+    } 
+
+    // registra en ctmayores una disminucion en la cuenta de Cuetas por pagar a proveedores
+    Sity::registraEnCuentas(
+      $periodo->id,
+      'menos', 
+      2,
+      6,
+      $dato->fecha,
+      'Pago '.$pagotipo.', factura #'.$factura->doc_no.', '.$factura->afavorde.', '.$periodo->periodo,
+      $dato->monto,
+      Null,
+      Null,
+      $dato->id,
+      $org->id,
+      Null,
+      Null
+    );
+
+    // registra en Ctdiario principal
+    $diario = new Ctdiario;
+    $diario->pcontable_id  = $periodo->id;
+    $diario->fecha   = $dato->fecha;
+    $diario->detalle = $cuenta_6;
+    $diario->debito  = $dato->monto;
+    $diario->save(); 
+    
+    // registra en ctmayores una disminucion en la cuenta Banco
+    Sity::registraEnCuentas(
+      $periodo->id,
+      'menos',
+      1, 
+      8,
+      $dato->fecha,
+      'Pago '.$pagotipo.', factura #'.$factura->doc_no.', '.$factura->afavorde.', '.$periodo->periodo,
+      $dato->monto,
+      Null,
+      Null,
+      $dato->id,
+      $org->id,
+      Null,
+      Null
+    );
+
+    // registra en Ctdiario principal
+    $diario = new Ctdiario;
+    $diario->pcontable_id  = $periodo->id;
+    $diario->detalle = $cuenta_8;
+    $diario->credito = $dato->monto;
+    $diario->save(); 
+    
+    // registra en Ctdiario principal
+    $diario = new Ctdiario;
+    $diario->pcontable_id = $periodo->id;
+    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura #'. $factura->doc_no.' '.$periodo->periodo;
+    $diario->save(); 
+
+    // registra el detalle de pago de factura como contabilizado  
+    $dato->etapa = 2;
+    $dato->save();
+    
+    // verifica si hay algun detalle que no ha sido contabilizado
+    $sinContabilizar = Detallepagofactura::where('factura_id', $factura->id)
+                    ->where('etapa', 1)
+                    ->count('id');       
+    //dd($sinContabilizar);
+         
+    // calcula el monto total de los detalles de la presente factura
+    $totaldetalles = Detallepagofactura::where('factura_id', $factura->id)->sum('monto');       
+    $totaldetalles =round(floatval($totaldetalles),2);
+    //dd($totaldetalles, $sinContabilizar, $totalfactura, $factura->id);  
+
+    // si el total de la factura es igual al total de los detalles y no exiten detalles por contabilizar
+    // entonces registra la factura como pagada en su totalidad
+    if (($totalfactura == $totaldetalles) && $sinContabilizar == 0) {
+      $factura->pagada = 1;
+      $factura->save();   
+      
+    } elseif ($totaldetalles < $totalfactura) {
+      $factura->pagada = 0;
+      $factura->save();
+    }
+  }
 
 } //fin de Class Npago

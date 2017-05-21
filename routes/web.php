@@ -143,6 +143,7 @@ Route::group(['namespace' => 'contabilidad'], function()
 	// Funciones del controlador DetallepagofacturasController
 	//---------------------------------------------------------// 		
 	Route::get('contabilizaDetallePagoFactura/{detallepagofactura_id}', 'DetallepagofacturasController@contabilizaDetallePagoFactura')->name('contabilizaDetallePagoFactura');
+	Route::post('pagarContabilizar', 'DetallepagofacturasController@pagarContabilizar')->name('pagarContabilizar');
 	Route::resource('detallepagofacturas', 'DetallepagofacturasController');
 
 	//---------------------------------------------------------//

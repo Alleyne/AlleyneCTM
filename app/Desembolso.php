@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Desembolso extends Model 
 {
 	protected $table = 'desembolsos';
-    public $timestamps = false;    
+    public $timestamps = true;    
 
     public function dte_desembolsos()
     {

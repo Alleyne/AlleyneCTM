@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Serviproducto extends Model 
 {
 	protected $table = 'serviproductos';
-  public $timestamps = false;    
+  public $timestamps = true;    
 
   public function catalogo()
   {

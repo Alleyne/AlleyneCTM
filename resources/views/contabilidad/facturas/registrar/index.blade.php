@@ -116,7 +116,7 @@
                                   'style' => 'display:inline'
                               ))}}
 
-                              {{Form::button('Cantabilizar', array(
+                              {{Form::button('Contabilizar', array(
                                   'class' => 'btn btn-warning btn-xs',
                                   'data-toggle' => 'modal',
                                   'data-target' => '#confirmAction',

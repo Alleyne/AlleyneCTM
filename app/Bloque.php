@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Bloque extends Model 
 {
 	protected $table = 'bloques';
-    public $timestamps = false;    
+    public $timestamps = true;    
     
     public function secciones()
     {

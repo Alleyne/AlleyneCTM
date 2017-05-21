@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cajachica extends Model 
 {
 	protected $table = 'cajachicas';
-    public $timestamps = false;    
+    public $timestamps = true;    
 
   public function dte_cajachicas()
   {
