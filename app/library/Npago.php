@@ -1541,7 +1541,7 @@ class Npago {
     // registra en Ctdiario principal
     $diario = new Ctdiario;
     $diario->pcontable_id = $periodo->id;
-    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura #'. $factura->doc_no.' '.$periodo->periodo;
+    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura #'. $factura->doc_no.', '.$factura->afavorde.', '.$periodo->periodo,
     $diario->save(); 
 
     // registra el detalle de pago de factura como contabilizado  
