@@ -129,7 +129,22 @@
                                                 @endif
                                             @else
                                                 <li>
-                                                    <a href="{{ URL::route('procesaChequeRecibido', $dato->id) }}" class="btn btn-primary btn-xs"> Contabilizar</a>
+                                                    {{Form::open(array(
+                                                      'route' => array('procesaChequeRecibido', $dato->id),
+                                                      'method' => 'GET',  // or DELETE
+                                                      'style' => 'display:inline'
+                                                    ))}}
+
+                                                    {{Form::button(' Contabilizar', array(
+                                                      'class' => 'btn btn-primary btn-xs',
+                                                      'data-toggle' => 'modal',
+                                                      'data-target' => '#confirmAction',
+                                                      'data-title' => 'Contabiliza cheque',
+                                                      'data-message' => 'Esta seguro(a) que desea contabilizar el presente cheque?',
+                                                      'data-btntxt' => 'SI, contabilizar',
+                                                      'data-btncolor' => 'btn-primary'
+                                                    ))}}
+                                                    {{Form::close()}}   
                                                 </li>
                                                 <div id="ask_4" class="btn btn-default btn-xs">
                                                     <a href="{{ URL::route('eliminaPagoCheque', $dato->id) }}" title="Eliminar pago"><i class="fa fa-search"></i> Eliminar</a>
