@@ -49,15 +49,13 @@ class DiariocajasController extends Controller
       //dd($fecha);
 
       // encuentra los datos para la seccion de Ingresos de efectivo del Informe de caja diario (Cheque,Efectivo y tarjetas de credito)
-      $ingresoEfectivos= Pago::where('f_pago', $fecha)
+      $ingresoEfectivos = Pago::where('f_pago', $fecha)
                 ->where(function($query){
                           return $query
                             ->where('trantipo_id', 1)
                             ->orWhere('trantipo_id', 5)
                             ->orWhere('trantipo_id', 6)
-                            ->orWhere('trantipo_id', 7)
-                            ->orWhere('trantipo_id', 8)
-                            ->orWhere('trantipo_id', 9);
+                            ->orWhere('trantipo_id', 7);
                   })
                 ->join('ctmayores', function($join)
                   {
@@ -73,32 +71,34 @@ class DiariocajasController extends Controller
       //dd($ingresoEfectivos->toArray()); 
       
       // calcula el total de ingresos recibidos por efectivo y cheques
-      $totalIngresoEfectivos= $ingresoEfectivos->sum('monto');  
+      $totalIngresoEfectivos = $ingresoEfectivos->sum('monto');  
       //dd($totalIngresoEfectivos); 
       
       // calcula el total de ingresos recibidos por efectivo solamente
-      $totalEfectivos= $ingresoEfectivos->where('trantipo_id', 5)->sum('monto');  
+      $totalEfectivos = $ingresoEfectivos->where('trantipo_id', 5)->sum('monto');  
       //dd($totalEfectivos);
       
       // calcula el total de ingresos recibidos por cheque solamente
-      $totalCheques= $ingresoEfectivos->where('trantipo_id', 1)->sum('monto');  
+      $totalCheques = $ingresoEfectivos->where('trantipo_id', 1)->sum('monto');  
       //dd($totalCheques);
 
       // calcula el total de ingresos recibidos por tarjetas clave
-      $totalClaves= $ingresoEfectivos->Where('trantipo_id', 6)->sum('monto');  
+      $totalClaves = $ingresoEfectivos->Where('trantipo_id', 6)->sum('monto');  
       //dd($totalClaves);  
 
       // calcula el total de ingresos recibidos por tarjetas de credito solamente
-      $totalTarjetas= $ingresoEfectivos->Where('trantipo_id', 7)->sum('monto');       
+      $totalTarjetas = $ingresoEfectivos->Where('trantipo_id', 7)->sum('monto');       
       //dd($totalTarjetas);      
 
-      // encuentra los datos para la seccion de Ingresos de efectivo del Informe de caja diario (Cheque y Efectivo)
+      // encuentra los datos para la seccion de Desembolsos de efectivo del Informe de caja diario (Cheque,Efectivo y tarjetas de credito)
       // 1. encuentra la cantidad de efectivo desembolsado
-      $desembolsoEfectivos= Detallepagofactura::where('detallepagofacturas.fecha', $fecha)
+      $desembolsoEfectivos = Detallepagofactura::where('detallepagofacturas.fecha', $fecha)
                 ->where(function($query){
-                                          return $query
-                                            ->where('trantipo_id', 1)
-                                            ->orwhere('trantipo_id', 5);
+                          return $query
+                          ->where('trantipo_id', 1)
+                          ->orWhere('trantipo_id', 5)
+                          ->orWhere('trantipo_id', 6)
+                          ->orWhere('trantipo_id', 7);
                                         })                
                 ->join('ctmayores', function($join)
                   {
@@ -114,21 +114,42 @@ class DiariocajasController extends Controller
       //dd($desembolsoEfectivos->toArray()); 
 
       // calcula el total desembolsado en efectivo solamente      
-      $totalDesembolsoEfectivos= $desembolsoEfectivos->sum('monto');  
+      $totalDesembolsoEfectivos = $desembolsoEfectivos->sum('monto');  
       //dd($totalDesembolsoEfectivos);
+      
+      // calcula el total de desembolsado en efectivo solamente
+      $totalDesemEfectivos = $desembolsoEfectivos->where('trantipo_id', 5)->sum('monto');  
+      //dd($totalDesemEfectivos);
+      
+      // calcula el total de desembolsado en cheque solamente
+      $totalDesemCheques = $desembolsoEfectivos->where('trantipo_id', 1)->sum('monto');  
+      //dd($totalDesemCheques);
 
+      // calcula el total de desembolsado en tarjetas clave
+      $totalDesemClaves = $desembolsoEfectivos->Where('trantipo_id', 6)->sum('monto');  
+      //dd($totalDesemClaves);  
+
+      // calcula el total de desembolsado en tarjetas de credito solamente
+      $totalDesemTarjetas = $desembolsoEfectivos->Where('trantipo_id', 7)->sum('monto');       
+      //dd($totalDesemTarjetas);   
+      
       $fecha= Date::parse($fecha)->toFormattedDateString();
 
-      return view('contabilidad.diariocajas.show')->with('ingresoEfectivos', $ingresoEfectivos)
-                                                  ->with('totalEfectivos', $totalEfectivos)
-                                                  ->with('totalCheques', $totalCheques)
-                                                  ->with('totalClaves', $totalClaves)
-                                                  ->with('totalTarjetas', $totalTarjetas)                                                  
-                                                  ->with('totalIngresoEfectivos', $totalIngresoEfectivos)                                                  
-                                                  
-                                                  ->with('desembolsoEfectivos', $desembolsoEfectivos)                                                  
-                                                  ->with('totalDesembolsoEfectivos', $totalDesembolsoEfectivos)
-                                                  ->with('fecha', $fecha);
+      return view('contabilidad.diariocajas.show')
+                  ->with('ingresoEfectivos', $ingresoEfectivos)
+                  ->with('totalEfectivos', $totalEfectivos)
+                  ->with('totalCheques', $totalCheques)
+                  ->with('totalClaves', $totalClaves)
+                  ->with('totalTarjetas', $totalTarjetas)                                                  
+                  ->with('totalIngresoEfectivos', $totalIngresoEfectivos)                                                  
+                  
+                  ->with('desembolsoEfectivos', $desembolsoEfectivos)                                                  
+                  ->with('totalDesemEfectivos', $totalDesemEfectivos)
+                  ->with('totalDesemCheques', $totalDesemCheques)
+                  ->with('totalDesemClaves', $totalDesemClaves)
+                  ->with('totalDesemTarjetas', $totalDesemTarjetas)
+                  ->with('totalDesembolsoEfectivos', $totalDesembolsoEfectivos)
+                  ->with('fecha', $fecha);
     }
 
     /**

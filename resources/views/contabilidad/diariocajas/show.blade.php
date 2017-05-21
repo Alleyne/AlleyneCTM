@@ -171,7 +171,7 @@
 					</tr>
 					<tr align="right">
 					  <td colspan="6" ><div align="right"><strong>Efectivo neto recibido </strong>&nbsp;&nbsp;</div></td>
-					  <td colspan="1"><p class="mix" >{{ number_format($totalIngresoEfectivos - $totalDesembolsoEfectivos,2) }}</p></td>
+					  <td colspan="1"><p class="mix" >{{ number_format(($totalIngresoEfectivos - $totalDesembolsoEfectivos),2) }}</p></td>
 					</tr>			  
 			  </table>
 			</div>
@@ -196,28 +196,28 @@
 						<td colspan="3" align="left">Efectivo (Billetes y monedas) </td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td>{{ number_format($totalEfectivos - $totalDesembolsoEfectivos,2) }}</td>
+						<td>{{ number_format(($totalEfectivos - $totalDesemEfectivos),2) }}</td>
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
 						<td colspan="3" align="left">Cheques</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td class="simple">{{ number_format($totalCheques,2) }}</td>
+						<td class="simple">{{ number_format(($totalCheques),2) }}</td>
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
 						<td colspan="3" align="left">Tarjetas Debito</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td class="simple">{{ number_format($totalClaves,2) }}</td>
+						<td class="simple">{{ number_format(($totalClaves),2) }}</td>
 						<td>&nbsp;</td>
 				  </tr>	
 					<tr align="right">
 						<td colspan="3" align="left">Tarjetas de credito</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td class="simple">{{ number_format($totalTarjetas,2) }}</td>
+						<td class="simple">{{ number_format(($totalTarjetas),2) }}</td>
 						<td>&nbsp;</td>
 				  </tr>		
 					<tr align="right">
@@ -229,7 +229,7 @@
 				  </tr>
 					<tr align="right">
 						<td colspan="6" ><div align="right"></div></td>
-						<td colspan="1" bgcolor="#66FF99"><p >{{ number_format($totalIngresoEfectivos,2) }}</p></td>
+						<td colspan="1" bgcolor="#66FF99"><p >{{ number_format(($totalIngresoEfectivos),2) }}</p></td>
 					</tr>
 					<tr align="right">
 						<td colspan="6" >&nbsp;&nbsp;</td>

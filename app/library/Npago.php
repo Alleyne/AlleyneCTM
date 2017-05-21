@@ -1541,34 +1541,37 @@ class Npago {
     // registra en Ctdiario principal
     $diario = new Ctdiario;
     $diario->pcontable_id = $periodo->id;
-    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura #'. $factura->doc_no.', '.$factura->afavorde.', '.$periodo->periodo,
+    $diario->detalle = 'Para registra pago '.$pagotipo.' de la factura #'.$factura->doc_no.', '.$factura->afavorde.', '.$periodo->periodo;
     $diario->save(); 
 
-    // registra el detalle de pago de factura como contabilizado  
+    // registra el detalle de pago de factura como pagado contabilizado  
     $dato->etapa = 2;
     $dato->save();
     
-    // verifica si hay algun detalle que no ha sido contabilizado
+    // verifica si hay algun detalle que no ha sido pagado contabilizado
     $sinContabilizar = Detallepagofactura::where('factura_id', $factura->id)
                     ->where('etapa', 1)
                     ->count('id');       
     //dd($sinContabilizar);
          
     // calcula el monto total de los detalles de la presente factura
-    $totaldetalles = Detallepagofactura::where('factura_id', $factura->id)->sum('monto');       
+    $totaldetalles = Detallepagofactura::where('factura_id', $factura->id)->where('etapa', 2)->sum('monto');       
     $totaldetalles =round(floatval($totaldetalles),2);
     //dd($totaldetalles, $sinContabilizar, $totalfactura, $factura->id);  
 
     // si el total de la factura es igual al total de los detalles y no exiten detalles por contabilizar
     // entonces registra la factura como pagada en su totalidad
     if (($totalfactura == $totaldetalles) && $sinContabilizar == 0) {
+      $factura->totalpagodetalle = $totaldetalles;
       $factura->pagada = 1;
       $factura->save();   
       
     } elseif ($totaldetalles < $totalfactura) {
+      $factura->totalpagodetalle = $totaldetalles;
       $factura->pagada = 0;
       $factura->save();
     }
+
   }
 
 } //fin de Class Npago

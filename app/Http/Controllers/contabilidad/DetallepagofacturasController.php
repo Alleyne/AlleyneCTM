@@ -160,10 +160,6 @@ class DetallepagofacturasController extends Controller {
 						$dato->save();	
 
 						Sity::RegistrarEnBitacora($dato, Input::get(), 'Detallepagofactura', 'Programa pago parcial de factura de egreso de Caja general');
-
-						// actualiza el monto de los detalles en la factura
-						$factura->totalpagodetalle = $totaldetalles;
-						$factura->save();
 			    }
 	 	    }
 	 	    

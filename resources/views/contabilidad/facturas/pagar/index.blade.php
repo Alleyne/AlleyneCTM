@@ -57,8 +57,8 @@
 											<th col width="25px">NUMERO</th>
 											<th>PROVEEDOR</th>
 											<th col width="70px">FECHA</th>
-											<th col width="20px">TOTALFAC</th>
-											<th col width="20px">TOTALPDO</th>
+											<th col width="20px">TOTAL FAC</th>
+											<th col width="20px">TOTAL PDO</th>
 											<th col width="185px" class="text-center"><i class="fa fa-gear fa-lg"></i></th>							
 									</tr>
 								</thead>
