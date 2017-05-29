@@ -194,7 +194,7 @@ class PagosnoidsController extends Controller
 		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo PagosnoidsController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-			return back()->withInput()->withErrors($validation);
+			return back();
 		}
 	}
 
@@ -271,7 +271,7 @@ class PagosnoidsController extends Controller
 		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo PagosnoidsController.indentificarPagosStore, la transaccion ha sido cancelada! '.$e->getMessage());
-			return back()->withInput()->withErrors($validation);
+			return back();
 		}
 	}
 
@@ -308,7 +308,7 @@ class PagosnoidsController extends Controller
 			// Registra el pago recibido
 			$dato = new Pago;
 			$dato->banco_id    = $banco_id;
-			$dato->trantipo_id = 3;           //ACH
+			$dato->trantipo_id = 4;           //ACH
 		  $dato->trans_no    = $doc_no; 
 			$dato->monto       = $monto;
 			$dato->f_pago      = $f_pago;
@@ -337,7 +337,7 @@ class PagosnoidsController extends Controller
 		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', 'Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-			return back()->withInput()->withErrors($validation);
+			return back();
 		}
 	}
 

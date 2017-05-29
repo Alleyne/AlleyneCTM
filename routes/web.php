@@ -256,6 +256,17 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------// 		
 	Route::resource('serviproductos', 'ServiproductosController');
 
+	//---------------------------------------------------------//
+	// Funciones del controlador ConciliasController
+	//---------------------------------------------------------// 		
+	Route::resource('concilias', 'ConciliasController');
+
+	//---------------------------------------------------------//
+	// Funciones del controlador Dte_conciliasController
+	//---------------------------------------------------------// 		
+	Route::resource('dte_concilias', 'Dte_conciliasController');
+  Route::post('addDetalleConciliacion', 'Dte_conciliasController@addDetalleConciliacion')->name('addDetalleConciliacion');
+
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');
 	Route::get('/truncateAll','PruebasController@truncateAll');

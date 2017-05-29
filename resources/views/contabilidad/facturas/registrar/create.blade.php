@@ -28,7 +28,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear Pago por Caja General</h2>
+						<h2>Registra factua por Caja General</h2>
 					</header>
 	
 					<!-- widget div-->

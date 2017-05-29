@@ -16,10 +16,10 @@
 			      A Favor de: {{ $ecajachica->afavorde }}
 			    </div> 
 			    <div class="col-md-3">
-			      Saldo actual B/.: {{ $ecajachica->total }}
-			    </div> 
-			    <div class="col-md-3">
 			    	Fecha: {{ $ecajachica->fecha }}
+			    </div>
+			    <div class="col-md-3">
+			      <strong>Saldo actual B/. {{ $ecajachica->total }}</strong>
 			    </div>
 			  </div>				
 		</div>	
