@@ -86,10 +86,7 @@
 																		</li>
 																		<li class="divider"></li>	
 																		<li>
-																			<a href="{{ URL::route('concilias.index') }}">Conciliacion bancaria</a>
-																		</li>
-																		<li>
-																			<a href="{{ URL::route('concilias.show', $dato->id) }}">Conciliacion show</a>
+																			<a href="{{ URL::route('concilias.show', $dato->id) }}">Conciliacion bancaria</a>
 																		</li>
 																	</ul>
 																</div>

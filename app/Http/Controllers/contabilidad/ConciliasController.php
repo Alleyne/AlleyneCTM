@@ -1,9 +1,11 @@
 <?php namespace App\Http\Controllers\contabilidad;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
+use URL, DB;
 use App\Concilia;
 use App\Dte_concilia;
+use App\Ctmayore;
+use App\Pago;
 
 class ConciliasController extends Controller
 {
@@ -79,10 +81,16 @@ class ConciliasController extends Controller
     // calcula el total en libro menos
     $t_libromenos = Dte_concilia::where('concilia_id', $concilia->id)->where('seccion', 'libro')->where('masmenos', 'menos')->sum('monto');    
  
-    
+    // calcula el total depositado del periodo
+    $t_depositado = Ctmayore::where('pcontable_id', $periodo_id)->where('cuenta', 8)->sum('debito');
+
+    // calcula el total depositado en cheque
+    $t_cheques = Pago::where('trantipo_id', 1)
+            ->join('ctmayores', 'ctmayores.pago_id', '=', 'pagos.id')
+            ->sum('debito');
+    //dd($t_cheques); 
 
     //dd($concilia, $ncs, $nds, $aj_lmas, $aj_lmenos, );    
-    
     return view('contabilidad.concilias.show')
                 ->with('ncs', $ncs)
                 ->with('aj_lmas', $aj_lmas)
@@ -92,6 +100,8 @@ class ConciliasController extends Controller
                 ->with('chq_circulacions', $chq_circulacions)
                 ->with('t_libromas', $t_libromas)
                 ->with('t_libromenos', $t_libromenos)
+                ->with('t_depositado', $t_depositado)                
+                ->with('t_cheques', $t_cheques)  
                 ->with('concilia', $concilia); 
   }
 

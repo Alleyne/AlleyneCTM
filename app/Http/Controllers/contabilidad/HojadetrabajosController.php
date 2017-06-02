@@ -398,7 +398,7 @@ class HojadetrabajosController extends Controller {
 
     } else {
       $unCodigo = '';
-      $datos= Ctmayore::where('pcontable_id', $periodo)
+      $datos = Ctmayore::where('pcontable_id', $periodo)
                      ->where('cuenta', $cuenta)
                      ->get();
     }
@@ -410,21 +410,29 @@ class HojadetrabajosController extends Controller {
     foreach ($datos as $dato) {
       if ($dato->tipo==1 || $dato->tipo==6) {  
         if ($i==1) {
-          $saldo= $dato->debito-$dato->credito;
+          $saldo = $dato->debito - $dato->credito;
           $datas[$i]['fecha']= $dato->fecha;
           $datas[$i]['codigo']= $dato->codigo;
-          $datas[$i]['detalle']= $dato->detalle;
-          $datas[$i]['ref']= "";
+          if ($dato->pago_id) {          
+            $datas[$i]['detalle']= $dato->detalle.', Pg '.$dato->pago_id.', '.$dato->pago->trantipo->siglas.', '.$dato->pago->trans_no;
+          } else {
+            $datas[$i]['detalle']= $dato->detalle;
+          }
+          $datas[$i]['ref']= "";   
           $datas[$i]['debito']= $dato->debito;
           $datas[$i]['credito']= $dato->credito;
           $datas[$i]['saldo']=  $saldo;
             
         } else {
-          $saldo= ($dato->debito-$dato->credito)+$saldo;
+          $saldo = ($dato->debito - $dato->credito) + $saldo;
           $datas[$i]['fecha']= $dato->fecha;
           $datas[$i]['codigo']= $dato->codigo;
-          $datas[$i]['detalle']= $dato->detalle;
-          $datas[$i]['ref']= "";
+          if ($dato->pago_id) {          
+            $datas[$i]['detalle']= $dato->detalle.', Pg '.$dato->pago_id.', '.$dato->pago->trantipo->siglas.', '.$dato->pago->trans_no;
+          } else {
+            $datas[$i]['detalle']= $dato->detalle;
+          }
+          $datas[$i]['ref']= ""; 
           $datas[$i]['debito']= $dato->debito;
           $datas[$i]['credito']= $dato->credito;
           $datas[$i]['saldo']=  $saldo;
@@ -432,7 +440,7 @@ class HojadetrabajosController extends Controller {
 
       } elseif ($dato->tipo==2 || $dato->tipo==3 || $dato->tipo==4) {  
           if ($i==1) {
-              $saldo= $dato->credito-$dato->debito;
+              $saldo = $dato->credito - $dato->debito;
               $datas[$i]['fecha']= $dato->fecha;
               $datas[$i]['codigo']= $dato->codigo;
               $datas[$i]['detalle']= $dato->detalle;
@@ -442,7 +450,7 @@ class HojadetrabajosController extends Controller {
               $datas[$i]['saldo']=  $saldo;
               
           } else {
-              $saldo= ($dato->credito-$dato->debito)+$saldo;
+              $saldo = ($dato->credito - $dato->debito) + $saldo;
               $datas[$i]['fecha']= $dato->fecha;
               $datas[$i]['codigo']= $dato->codigo;
               $datas[$i]['detalle']= $dato->detalle;

@@ -17,8 +17,8 @@
   <p class="text-center" style="margin:0px">(en balboas)</p>
 
 	<div class="row hidden-print" style="margin-top:0px; background-color:white;">
-	  <div class="col-xs-6"></div>
-	  <div class="col-xs-6 text-right"><strong><a href="#" class="hidden-print"><span class="glyphicon glyphicon-plus text-success"  data-target="#Modal_AddDetalleConciliacion" data-toggle="modal"></span></a></strong></div>
+	  <div class="col-xs-6"><a href="{{ url(Cache::get('goto_pcontables_index')) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a></div>
+	  <div class="col-xs-6 text-right"><a href="#" class="hidden-print"><span class="glyphicon glyphicon-plus text-success" data-target="#Modal_AddDetalleConciliacion" data-toggle="modal"><strong> Agregar</strong></span></a></div>
 	</div>	
 
 	<!-- Seccion del libro de Banco -->
@@ -37,7 +37,7 @@
 		<div class="row">
 		  <div class="col-xs-6">&nbsp;&nbsp;&nbsp; <strong>Depositos del mes</strong></div>
 		  <div class="col-xs-2"></div>	
-		  <div class="col-xs-2 text-right">8,320.00</div>	
+		  <div class="col-xs-2 text-right">{{ $t_depositado }}</div>	
 		  <div class="col-xs-2"></div>	
 		</div>
 		
@@ -133,7 +133,7 @@
 			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;Subtotal</div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
-			  <div class="col-xs-2 text-right">{{ $t_libromas }}</div>	
+			  <div class="col-xs-2 text-right">{{ $t_depositado + $ncs->sum('monto') + $aj_lmas->sum('monto') }}</div>	
 			</div>
 		</div>
 		
@@ -144,7 +144,7 @@
 		<div class="row">
 		  <div class="col-xs-6">&nbsp;&nbsp;&nbsp; <strong>Cheques girados del mes</strong></div>
 		  <div class="col-xs-2"></div>	
-		  <div class="col-xs-2 text-right">8,320.00</div>	
+		  <div class="col-xs-2 text-right">{{ $t_cheques }}</div>	
 		  <div class="col-xs-2"></div>	
 		</div>	
 		
@@ -239,13 +239,13 @@
 			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;Subtotal</div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
-			  <div class="col-xs-2 text-right">{{ $t_libromenos }}</div>	
+			  <div class="col-xs-2 text-right">{{ $t_depositado - $t_cheques }}</div>	
 			</div>
 		</div>
 
 		<div class="row" style="margin-top:5px; background-color:rgb(200,200,200);">
 		  <div class="col-xs-6">Saldo conciliado en libro al 31 de agosto 2017</div>
-		  <div class="col-xs-6 text-right"><strong>8,320.00</strong></div>
+		  <div class="col-xs-6 text-right"><strong>{{ $concilia->saldo_libro + ($t_depositado - $t_cheques) }}</strong></div>
 		</div>
 	</div>
 
@@ -263,7 +263,7 @@
 		  <div class="col-xs-12"><strong>MAS</strong></div>
 		</div>
 
-		<div style="background-color:lavender;">
+		<div style="background-color:lavenderblush;">
 			<div class="row">
 			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Depositos en transito</strong></div>
 			  <div class="col-xs-2"></div>	
@@ -311,7 +311,7 @@
 		  <div class="col-xs-12"><strong>MENOS</strong></div>
 		</div>
 		
-		<div style="background-color:lavender;">	
+		<div style="background-color:lavenderblush;">	
 			<div class="row">
 			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Cheques en circulacion</strong></div>
 			  <div class="col-xs-2"></div>	
@@ -358,7 +358,7 @@
 		
 		<div class="row" style="margin-top:5px; background-color:rgb(200,200,200);">
 		  <div class="col-xs-6">Saldo conciliado en banco al 31 de agosto 2017</div>
-		  <div class="col-xs-6 text-right"><strong>8,320.00</strong></div>
+		  <div class="col-xs-6 text-right"><strong>{{ ($concilia->saldo_banco + $d_transitos->sum('monto')) - $chq_circulacions->sum('monto') }}</strong></div>
 		</div>
 	</div>
 

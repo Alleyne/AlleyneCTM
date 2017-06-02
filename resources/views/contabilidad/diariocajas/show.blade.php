@@ -196,7 +196,11 @@
 						<td colspan="3" align="left">Efectivo (Billetes y monedas) </td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td>{{ number_format(($totalEfectivos - $totalDesemEfectivos),2) }}</td>
+						@if (($totalEfectivos - $totalDesemEfectivos) < 0)
+							<td>{{ number_format(0,2) }}</td>
+						@else
+							<td>{{ number_format(($totalEfectivos - $totalDesemEfectivos),2) }}</td>
+						@endif
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">

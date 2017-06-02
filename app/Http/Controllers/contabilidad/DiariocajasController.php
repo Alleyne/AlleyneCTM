@@ -237,8 +237,16 @@ class DiariocajasController extends Controller
         // calcula el total de ingresos recibidos por cheque solamente
         $totalCheques = $ingresoEfectivos->where('trantipo_id', 1)->sum('monto');  
         //dd($totalCheques);
-       
-        $total = $totalEfectivos + $totalCheques;
+        
+        // calcula el total de ingresos recibidos por cheque solamente
+        $totalTajetaDebito = $ingresoEfectivos->where('trantipo_id', 6)->sum('monto');  
+        //dd($totalCheques);       
+        
+        // calcula el total de ingresos recibidos por cheque solamente
+        $totalTarjetaCredito = $ingresoEfectivos->where('trantipo_id', 7)->sum('monto');  
+        //dd($totalCheques);
+
+        $total = $totalEfectivos + $totalCheques + $totalTajetaDebito + $totalTarjetaCredito;
         
         // encuentra el periodo mas antiguo abierto
         $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
@@ -278,6 +286,7 @@ class DiariocajasController extends Controller
         Sity::registraEnCuentas($periodo->id, 'menos', 1, 32, $fecha, 'Para anotar el deposito del efectivo del '.Date::parse($fecha)->toFormattedDateString(), $total);     
 
         DB::commit();
+  
         Session::flash('success', 'Informe de Caja general ha sido aprobado y se cotabiliza deposito al banco!');
         return redirect()->route('diariocajas.index');
       

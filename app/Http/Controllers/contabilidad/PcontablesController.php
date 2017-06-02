@@ -3,7 +3,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Session, DB, Validator;
+use Session, DB, Validator, Cache, URL;
 use Carbon\Carbon;
 
 use App\library\Sity;
@@ -29,7 +29,8 @@ class PcontablesController extends Controller {
 		//Obtiene todos los Periodos contables.
 		$datos = Pcontable::All();
 		//dd($datos->toArray());
-
+		
+		Cache::forever('goto_pcontables_index', URL::full());
 		return view('contabilidad.pcontables.index')->with('datos', $datos);     	
 	}	
 

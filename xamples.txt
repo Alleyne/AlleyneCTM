@@ -515,25 +515,6 @@ Work::with(
 
     /*
     |------------------------------------------------------------------------------------
-    |- Para ver y regresar a la página anterior
-    |-------------------------------------------------------------------------------------
-    */
-     <ul>
-        <li>Current page  = {{{URL::current()}}}</li>
-        <li>Previous page = {{{URL::previous()}}}</li>
-     </ul>
-    
-     <h4><a href="{{ URL::previous() }}"><i class="icon-backward"></i><span class="hidden-tablet"> Regresar</span></a></h4>      
-     
-     <a href="{{ URL::previous() }}" class="btn btn-primary btn-large">Regresar</a>
-     <a href="{{ URL::previous() }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>            
-     
-     //para rutas que no usan parametros
-     <h4><a href="{{ URL::route('admin.proveedores.index') }}">&laquo; Regresar</a></h4>
-
-
-    /*
-    |------------------------------------------------------------------------------------
     |- Para usar variables en eloquent
     |-------------------------------------------------------------------------------------
     */
