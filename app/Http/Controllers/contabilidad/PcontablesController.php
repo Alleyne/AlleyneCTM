@@ -12,6 +12,7 @@ use App\library\Fact;
 use App\library\Ppago;
 use App\Pcontable;
 use App\Bitacora;
+use App\Concilia;
 use App\Un;
 
 class PcontablesController extends Controller {
@@ -88,7 +89,7 @@ class PcontablesController extends Controller {
 				// 2. inicializa en el libro mayor todas las cuentas temporales activas presentes en el catalogo de cuentas, no registra en el diario principal.
 				// 3. calcula y contabiliza en libros los ingresos esperados en cuotas de mantenimiento regular para todas las secciones cuya ocobro se genera los dias primero o dieciseis de cada mes.
 				// 4. calcula y contabiliza en libros los ingresos esperados en cuotas de mantenimiento extraordinarias para todas las secciones cuya ocobro se genera los dias primero o dieciseis de cada mes.
-				Npdo::periodo($fecha);
+				$newPeriodo = Npdo::periodo($fecha);
 				
 				// crea facturacion para el nuevo periodo contable
 				// facturacion para las secciones que generan las ordenes de cobro los dias 1
@@ -97,6 +98,11 @@ class PcontablesController extends Controller {
 				// facturacion para las secciones que generan las ordenes de cobro los dias 16
 				Fact::facturar(Carbon::createFromDate($year, $month, 16));
 							
+				// crea conciliacion bancaria para el periodo
+        $conicilia = new Concilia;
+     		$conicilia->periodo_id = $newPeriodo;
+	      $conicilia->save();
+
 				DB::commit(); 				
 
 				Session::flash('success', 'Se crea el primer periodo contable del sistema '.$pdo. ' con éxito.');

@@ -142,14 +142,14 @@
                                                             'style' => 'display:inline'
                                                         ))}}
 
-                                                        {{Form::button('Cantabilizar', array(
+                                                        {{Form::button('Contabilizar', array(
                                                             'class' => 'btn btn-warning btn-xs',
                                                             'data-toggle' => 'modal',
                                                             'data-target' => '#confirmAction',
                                                             'data-title' => 'Contabilizar egreso de Caja chica',
                                                             'data-message' => 'Esta seguro(a) que desea contabilizar el presente egreso de Caja chica?',
                                                             'data-btntxt' => 'Contabilizar egreso de caja Chica',
-                                                            'data-btncolor' => 'btn-info'
+                                                            'data-btncolor' => 'btn-warning'
                                                         ))}}
                                                         {{Form::close()}}                                                    
                                                     </li>

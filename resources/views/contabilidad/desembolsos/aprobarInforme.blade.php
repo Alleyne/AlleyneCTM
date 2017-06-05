@@ -48,6 +48,65 @@
 	 									{{ csrf_field() }}
                    	{{ Form::hidden('desembolso_id', $desembolso_id) }}
 										
+										<div class="col-sm-12 mensaje_1">
+											<div class="alert alert-block alert-warning">
+												<a class="close" data-dismiss="alert" href="#">×</a>
+												<h4 class="alert-heading">Atencion!</h4>
+												Antes de aprobar el desembolos asegurece que el arqueo de Caja chica banlance con el efectivo en caja. Si no balancea, entoces debera registrar el monto del sobrante o faltante para que el sistema pueda hacer el ajuste pertinente.
+											</div>
+										</div>
+
+										<!-- Multiple Radios (inline) -->
+										<div class="form-group">
+										  <label class="col-md-4 control-label" for="radios">Resultado del arqueo de Caja chica:</label>
+										  <div class="col-md-8"> 
+										    <label class="radio-inline" for="radios-1">
+										      <input type="radio" name="arqueocc_radios" id="arqueocc-1" value="1" checked="checked">
+										      Arqueo balanceado
+										    </label> 
+										    <label class="radio-inline" for="radios-2">
+										      <input type="radio" name="arqueocc_radios" id="arqueocc-2" value="2">
+										      Arqueo con faltante
+										    </label>
+										    <label class="radio-inline" for="radios-3">
+										      <input type="radio" name="arqueocc_radios" id="arqueocc-3" value="3">
+										      Arqueo con sobrante
+										    </label>
+										  </div>
+										</div>
+										
+										<div class="form-group montofaltante" style="display: none;">
+											<label class="col-md-3 control-label">Monto faltante</label>
+											<div class="col-md-9">
+												{{ Form::text('montofaltante', old('montofaltante'),
+													array(
+													    'class' => 'form-control',
+													    'id' => 'montofaltante',
+													    'placeholder' => 'Escriba monto faltante...',
+														'autocomplete' => 'off',
+													))
+												}} 
+												{!! $errors->first('montofaltante', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>										
+										
+										<div class="form-group montosobrante" style="display: none;">
+											<label class="col-md-3 control-label">Monto sobrante</label>
+											<div class="col-md-9">
+												{{ Form::text('montosobrante', old('montosobrante'),
+													array(
+													    'class' => 'form-control',
+													    'id' => 'montosobrante',
+													    'placeholder' => 'Escriba monto sobrante...',
+														'autocomplete' => 'off',
+													))
+												}} 
+												{!! $errors->first('montosobrante', '<li style="color:red">:message</li>') !!}
+											</div>
+										</div>
+
+										<hr>
+
 										<div class="form-group">
 											<label class="col-md-3 control-label">Aprobado por:</label>
 											<div class="col-md-9">
@@ -140,14 +199,20 @@ $(document).ready(function() {
 		e.stopPropagation();
 	});
 
-	   $("#tipodoc-1").click(function(){
-	       $(".factura").show();
+	   $("#arqueocc-1").click(function(){
+	      $(".montofaltante").hide();
+	      $(".montosobrante").hide();
 	   });
 
-	   $("#tipodoc-2").click(function(){
-	       $(".factura").hide();
+	   $("#arqueocc-2").click(function(){
+	      $(".montofaltante").show();
+	      $(".montosobrante").hide();
 	   });
-
+	   
+	   $("#arqueocc-3").click(function(){
+	      $(".montofaltante").hide();
+	      $(".montosobrante").show();
+	   });
 
 		$('#fecha').datepicker({
 			prevText : '<i class="fa fa-chevron-left"></i>',

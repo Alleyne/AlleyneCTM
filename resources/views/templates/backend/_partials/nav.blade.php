@@ -35,6 +35,9 @@
 				<a href="{{ URL::route('indexunall') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Por Unidades</span></a>
 			</li>
 			<li>
+				<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Ctas cobrar empleados</span></a>
+			</li>
+			<li>
 				<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Otros</span></a>
 			</li>
 		</ul>

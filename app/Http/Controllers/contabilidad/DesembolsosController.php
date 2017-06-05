@@ -35,7 +35,7 @@ class DesembolsosController extends Controller
 		public function verDesembolsos($cajachica_id) {
 
 			//dd($cajachica_id);
-			// encuentra todos los desembolsos que pertenecen a una determinada caja chica
+			// encuentra todos los desembolsos que pertenecen a una determinada Caja chica
 			$datos = Desembolso::where('cajachica_id', $cajachica_id)->get();
 			
 			return view('contabilidad.desembolsos.verDesembolsos')
@@ -123,12 +123,30 @@ class DesembolsosController extends Controller
 				//dd(Input::all());
 				$input = Input::all();
 
-				$rules = array(
-					'user_id' => 'required|Numeric|min:1',    
-					'cheque' => 'required',      
-					'monto' => 'required|Numeric|min:0.01'   	
-				);
-	
+				if (Input::get('arqueocc_radios') == '1') {
+					$rules = array(
+						'user_id' => 'required|Numeric|min:1',    
+						'cheque' => 'required',      
+						'monto' => 'required|Numeric|min:0.01'   	
+					);
+				
+				} elseif (Input::get('arqueocc_radios') == '2') {
+					$rules = array(
+						'user_id' => 'required|Numeric|min:1',    
+						'cheque' => 'required',      
+						'monto' => 'required|Numeric|min:0.01',   	
+					  'montofaltante' => 'required|Numeric|min:0.01'					
+					);
+				
+				} elseif (Input::get('arqueocc_radios') == '3') {
+					$rules = array(
+						'user_id' => 'required|Numeric|min:1',    
+						'cheque' => 'required',      
+						'monto' => 'required|Numeric|min:0.01',   	
+					  'montosobrante' => 'required|Numeric|min:0.01'		 	
+					);
+				}
+ 
 				$messages = [
 						'required'      => 'Informacion requerida!',
 						'before'        => 'La fecha de la factura debe ser anterior o igual a fecha del dia de hoy!',
@@ -149,7 +167,7 @@ class DesembolsosController extends Controller
 
 					$montoTotal= 0;
 					foreach ($dte_desembolsos as $dte_desembolso) {
-						$montoTotal= $montoTotal + (($dte_desembolso->cantidad * $dte_desembolso->precio) + $dte_desembolso->itbms);
+						$montoTotal = $montoTotal + (($dte_desembolso->cantidad * $dte_desembolso->precio) + $dte_desembolso->itbms);
 					}
 					//dd($montoTotal, (float)Input::get('monto'));
 
@@ -158,75 +176,256 @@ class DesembolsosController extends Controller
 						return back()->withInput()->withErrors($validation);
 					}
 
-  				// salva la informacion
-					$desembolso = Desembolso::find(Input::get('desembolso_id'));
-
-					$desembolso->fecha = Carbon::today();
-					$desembolso->cheque = Input::get('cheque');
-					$desembolso->monto = Input::get('monto');
-					$desembolso->aprobadopor_id = Input::get('user_id');
-					$desembolso->aprobadopor = User::find(Input::get('user_id'))->nombre_completo;
-					$desembolso->aprobado = 1;
-					$desembolso->save();
- 					
- 					Sity::RegistrarEnBitacora($desembolso, Input::get(), 'Desembolso', 'Aprueba desembolso de Caja chica');
-					
 					// encuentra el periodo mas antiguo abierto
 		      $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
 		      //dd($periodo);
-
-					// registra en Ctdiario principal
-		      $dato = new Ctdiario;
-		      $dato->pcontable_id = $periodo->id;
-      		$dato->fecha = Carbon::today();
-	        $dato->detalle = 'Caja chica';
-	        $dato->debito = Input::get('monto');
-		      $dato->save();
-	        
-		      $dato = new Ctdiario;
-		      $dato->pcontable_id = $periodo->id;
-	        $dato->detalle = Catalogo::find(8)->nombre;
-	        $dato->credito = Input::get('monto');
-		      $dato->save(); 
-
-		      // registra en Ctdiario principal
-		      $dato = new Ctdiario;
-		      $dato->pcontable_id = $periodo->id;
-	        $dato->detalle = 'Para registrar el chq #'.Input::get('cheque').' y reponer el fondo de caja chica #'.$desembolso->cajachica->id;
-		      $dato->save(); 
-		      
-	        Sity::registraEnCuentas(
-	          $periodo->id,
-	          'mas', 
-	          1,
-	          30,
-	          Carbon::today(),
-	          'Para reponer fondo de caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque'),
-	          Input::get('monto'),
-	          Null,
-	          Null,
-	          Null,
-	          Null,
-	          Null,
-	          Null
-	        );
-
-	        Sity::registraEnCuentas(
-	          $periodo->id,
-	          'menos', 
-	          1,
-	          8,
-	          Carbon::today(),
-	          'Para reponer fondo de caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque'),
-	          Input::get('monto'),
-	          Null,
-	          Null,
-	          Null,
-	          Null,
-	          Null,
-	          Null
-	        );
+	
+					if (Input::get('arqueocc_radios') == '1') {
 					
+	  				// salva la informacion
+						$desembolso = Desembolso::find(Input::get('desembolso_id'));
+
+						$desembolso->fecha = Carbon::today();
+						$desembolso->cheque = Input::get('cheque');
+						$desembolso->monto = Input::get('monto');
+						$desembolso->aprobadopor_id = Input::get('user_id');
+						$desembolso->aprobadopor = User::find(Input::get('user_id'))->nombre_completo;
+						$desembolso->saldo_arqueo = 0;
+						$desembolso->aprobado = 1;
+						$desembolso->save();		
+
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+      			$dato->fecha = Carbon::today();
+		        $dato->detalle = Catalogo::find(30)->nombre;
+		        $dato->debito = Input::get('monto');
+		     		$dato->save();
+
+		        Sity::registraEnCuentas(
+		          $periodo->id,
+		          'mas', 
+		          1,
+		          30,
+		          Carbon::today(),
+		          'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque'),
+		          Input::get('monto'),
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null
+		        );
+						
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+		        $dato->detalle = Catalogo::find(8)->nombre;
+		        $dato->credito = Input::get('monto');
+			      $dato->save(); 
+
+			      // registra en Ctdiario principal
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+		        $dato->detalle = 'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.' mediante chq #'.Input::get('cheque');
+			      $dato->save(); 
+
+		        Sity::registraEnCuentas(
+		          $periodo->id,
+		          'menos', 
+		          1,
+		          8,
+		          Carbon::today(),
+		          'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque'),
+		          Input::get('monto'),
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null
+		        );
+
+					} elseif (Input::get('arqueocc_radios') == '2') {
+						// registra monto faltante
+	  				
+	  				// salva la informacion
+						$desembolso = Desembolso::find(Input::get('desembolso_id'));
+
+						$desembolso->fecha = Carbon::today();
+						$desembolso->cheque = Input::get('cheque');
+						$desembolso->monto = Input::get('monto');
+						$desembolso->aprobadopor_id = Input::get('user_id');
+						$desembolso->aprobadopor = User::find(Input::get('user_id'))->nombre_completo;
+						$desembolso->saldo_arqueo = Input::get('montofaltante');
+						$desembolso->aprobado = 1;
+						$desembolso->save();		
+			     	
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+	      		$dato->fecha = Carbon::today();
+		        $dato->detalle = Catalogo::find(30)->nombre;
+		        $dato->debito = Input::get('monto');
+			      $dato->save();
+
+		        Sity::registraEnCuentas(
+		          $periodo->id,
+		          'mas', 
+		          1,
+		          30,
+		          Carbon::today(),
+		          'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque'),
+		          Input::get('monto'),
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null
+		        );
+
+  					// registra en Ctdiario principal
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+		        $dato->detalle = Catalogo::find(35)->nombre.' - '.$desembolso->cajachica->responsable; // Cuentas por cobrar - empleados
+		        $dato->debito = Input::get('montofaltante');
+			      $dato->save();
+			      
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+		        $dato->detalle = Catalogo::find(8)->nombre;
+		        $dato->credito = Input::get('monto') + Input::get('montofaltante');
+			      $dato->save(); 
+
+			      // registra en Ctdiario principal
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+		        $dato->detalle = 'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.' mediante chq #'.Input::get('cheque').' y registrar faltante';
+			      $dato->save(); 
+
+		        Sity::registraEnCuentas(
+		          $periodo->id,
+		          'menos', 
+		          1,
+		          8,
+		          Carbon::today(),
+		          'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque').'y registrar faltante',
+		          (Input::get('monto') + Input::get('montofaltante')),
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null
+		        );
+		        
+		        Sity::registraEnCuentas(
+		          $periodo->id,
+		          'mas', 
+		          1,
+		          35,	// Cuentas por cobrar - empleados
+		          Carbon::today(),
+		          'Para regisgrar faltante en arqueo de Caja chica #'.$desembolso->cajachica->id.' - '.$desembolso->cajachica->responsable,
+		          Input::get('montofaltante'),
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null
+		        );
+
+					} elseif (Input::get('arqueocc_radios') == '3') {
+						// registra monto sobrante
+	  				
+	  				// salva la informacion
+						$desembolso = Desembolso::find(Input::get('desembolso_id'));
+
+						$desembolso->fecha = Carbon::today();
+						$desembolso->cheque = Input::get('cheque');
+						$desembolso->monto = Input::get('monto');
+						$desembolso->aprobadopor_id = Input::get('user_id');
+						$desembolso->aprobadopor = User::find(Input::get('user_id'))->nombre_completo;
+						$desembolso->saldo_arqueo = Input::get('montosobrante');
+						$desembolso->aprobado = 1;
+						$desembolso->save(); 
+			      
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+	      		$dato->fecha = Carbon::today();
+		        $dato->detalle = Catalogo::find(30)->nombre;
+		        $dato->debito = Input::get('monto');
+			      $dato->save();
+
+		        Sity::registraEnCuentas(
+		          $periodo->id,
+		          'mas', 
+		          1,
+		          30,
+		          Carbon::today(),
+		          'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque'),
+		          Input::get('monto'),
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null
+		        );
+
+						// registra en Ctdiario principal
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+		        $dato->detalle = Catalogo::find(33)->nombre; // Otros ingresos
+		        $dato->credito = Input::get('montosobrante');
+			      $dato->save();
+			      
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+		        $dato->detalle = Catalogo::find(8)->nombre;
+		        $dato->credito = Input::get('monto') - Input::get('montosobrante');
+			      $dato->save(); 
+
+			      // registra en Ctdiario principal
+			      $dato = new Ctdiario;
+			      $dato->pcontable_id = $periodo->id;
+		        $dato->detalle = 'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.' mediante chq #'.Input::get('cheque').' y registrar sobrante';
+			      $dato->save(); 
+
+		        Sity::registraEnCuentas(
+		          $periodo->id,
+		          'menos', 
+		          1,
+		          8,
+		          Carbon::today(),
+		          'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque').'y registrar sobrante',
+		          (Input::get('monto') - Input::get('montosobrante')),
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null
+		        );
+		        
+		        Sity::registraEnCuentas(
+		          $periodo->id,
+		          'mas', 
+		          4,
+		          33,		// Otros ingresos
+		          Carbon::today(),
+		          'Para regisgrar sobrante en arqueo de Caja chica #'.$desembolso->cajachica->id,
+		          Input::get('montosobrante'),
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null,
+		          Null
+		        );
+					}
+ 					
+ 					Sity::RegistrarEnBitacora($desembolso, Input::get(), 'Desembolso', 'Aprueba desembolso de Caja chica');
+
 		      // calcula el saldo actual de los detalles de cajachicas
 		      $montoActual = Dte_cajachica::all()->last();
 		      if ($montoActual) {
@@ -239,7 +438,7 @@ class DesembolsosController extends Controller
 		      // registra nuevo detalle en dte_cajachicas
 		      $dte_cajachica = new Dte_cajachica;
 		      $dte_cajachica->fecha = Carbon::today();
-		      $dte_cajachica->descripcion = 'Para reponer fondo de caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque');
+		      $dte_cajachica->descripcion = 'Para reponer fondo de Caja chica #'.$desembolso->cajachica->id.', chq #'.Input::get('cheque');
 		      $dte_cajachica->doc_no = Input::get('cheque');
 		      $dte_cajachica->aumenta = Input::get('monto');
 		      $dte_cajachica->saldo = Input::get('monto') + $montoActual;
@@ -252,9 +451,9 @@ class DesembolsosController extends Controller
 		      $cchica = Cajachica::find($desembolso->cajachica->id);
 		      $cchica->saldo = Input::get('monto') + $montoActual;
 		      $cchica->save();
-
-					Session::flash('success', 'Se ha registrado la aprobacion de informe de caja chica #'.$desembolso->cajachica->id);
-					DB::commit();       
+					
+					DB::commit(); 
+					Session::flash('success', 'Se ha registrado la aprobacion de informe de Caja chica #'.$desembolso->cajachica->id);
 
 					return redirect()->route('verDesembolsos', $desembolso->cajachica->id);
 				}       
@@ -264,7 +463,7 @@ class DesembolsosController extends Controller
 
 			} catch (\Exception $e) {
 				DB::rollback();
-				Session::flash('warning', ' Ocurrio un error en el modulo DesembolsosController.storeAprobarInforme, la transaccion ha sido cancelada! '.$e->getMessage());
+				Session::flash('warning', ' Ocurrio un error en el modulo DesembolsosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
 				return back();
 			}
 		}

@@ -55,7 +55,7 @@
                         <tbody>
                             @foreach ($datos as $dato)
                                 <tr>
-                                    <td col width="30px"><strong>{{ $dato->id }}</strong></td>
+                                    <td col width="20px"><strong>{{ $dato->id }}</strong></td>
                                     <td col width="70px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
                                     <td col width="60px"><strong>{{ $dato->cheque }}</strong></td>
                                     <td col width="60px"><strong>{{ $dato->monto }}</strong></td>                                    

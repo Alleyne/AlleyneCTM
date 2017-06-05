@@ -17,6 +17,7 @@ use App\Pcontable;
 use App\Ht;
 use App\Un;
 use App\Secapto;
+use App\Concilia;
 
 class HojadetrabajosController extends Controller {
     
@@ -579,7 +580,12 @@ class HojadetrabajosController extends Controller {
         Hojat::migraDatosCtdiariohis($pcontable_id);
         
         // crea el nuevo periodo contable
-        Npdo::periodo($fechaNuevoPeriodo);
+        $newPeriodo = Npdo::periodo($fechaNuevoPeriodo);
+
+        // crea conciliacion bancaria para el periodo
+        $conicilia = new Concilia;
+        $conicilia->periodo_id = $newPeriodo;
+        $conicilia->save();
 
         DB::commit();    
         

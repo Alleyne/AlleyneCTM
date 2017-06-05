@@ -56,7 +56,7 @@ class Npdo {
     
     Sity::RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion);
     
-    return 'Nuevo periodo de '.$periodo->periodo.' han sido creado!' ;
+    return $periodo->id;
   }
 
   /** 

@@ -278,7 +278,7 @@ class EcajachicasController extends Controller
 				//dd($datos->toArray());  				
 			  
 			  // encuentra el periodo mas antiguo abierto
-				$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+				$periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
 			  //dd($periodo);
 				
 				foreach ($datos as $dato) {
@@ -286,6 +286,7 @@ class EcajachicasController extends Controller
 						$dte_desembolso->doc_no  				= $dato->ecajachica->doc_no;
 						$dte_desembolso->serviproducto 	= $dato->nombre;
 						$dte_desembolso->cantidad   		= $dato->cantidad;
+						$dte_desembolso->catalogo_id		= $dato->catalogo_id;
 						$dte_desembolso->codigo   			= $dato->codigo;
 						$dte_desembolso->precio   			= $dato->precio;
 						$dte_desembolso->itbms   				= $dato->itbms;
@@ -309,82 +310,82 @@ class EcajachicasController extends Controller
 				
 				// se anota el monto de cada uno de los gastos del egreso con su respectivo codigo de gasto
 				foreach ($cuentas as $cuenta) {
-						$datos = Dte_ecajachica::where('ecajachica_id', $ecajachica_id)
-																->where('catalogo_id', $cuenta->catalogo_id)
-																->get();
-						$monto= 0;
-						$itbms= 0;
+					$datos = Dte_ecajachica::where('ecajachica_id', $ecajachica_id)
+															->where('catalogo_id', $cuenta->catalogo_id)
+															->get();
+					$monto= 0;
+					$itbms= 0;
 
-						// calcula los total por cada cuenta
-						foreach ($datos as $dato) {
-								$monto= $monto + ($dato->cantidad * $dato->precio);
-								$itbms= $itbms + $dato->itbms;
-						}
-						//dd($cuenta->catalogo_id, $monto, $itbms); 
+					// calcula los total por cada cuenta
+					foreach ($datos as $dato) {
+							$monto= $monto + ($dato->cantidad * $dato->precio);
+							$itbms= $itbms + $dato->itbms;
+					}
+					//dd($cuenta->catalogo_id, $monto, $itbms); 
 
-						// registra en libros cada un de los serviproductos encontrados en la factura de caja chica
-						//$pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id=Null, $pago_id=Null, $detallepagofactura_id=Null, $org_id=Null, $ctdasm_id=Null, $anula=Null
-					 
+					// registra en libros cada un de los serviproductos encontrados en la factura de caja chica
+					//$pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id=Null, $pago_id=Null, $detallepagofactura_id=Null, $org_id=Null, $ctdasm_id=Null, $anula=Null
+				 
+					Sity::registraEnCuentas(
+						$periodo->id,
+						'mas', 
+						6,
+						$cuenta->catalogo_id,
+						$f_ecajachica,
+						'Egreso por Caja chica #'.$cchica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
+						$monto,
+						Null,
+						Null,
+						Null,
+						$ecajachica->org_id,
+						Null,
+						Null
+					);
+
+					if ($itbms > 0) {
 						Sity::registraEnCuentas(
 							$periodo->id,
 							'mas', 
 							6,
-							$cuenta->catalogo_id,
+							15,
 							$f_ecajachica,
-							'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
-							$monto,
+							'Egreso por Caja chica #'.$cchica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
+							$itbms,
 							Null,
 							Null,
 							Null,
 							$ecajachica->org_id,
 							Null,
 							Null
-						);
+						);   
+					}
 
-						if ($itbms > 0) {
-							Sity::registraEnCuentas(
-								$periodo->id,
-								'mas', 
-								6,
-								15,
-								$f_ecajachica,
-								'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
-								$itbms,
-								Null,
-								Null,
-								Null,
-								$ecajachica->org_id,
-								Null,
-								Null
-							);   
-						}
+					// registra en Ctdiario principal
+					$diario = new Ctdiario;
+					$diario->pcontable_id = $periodo->id;
+					if ($i == 1) {
+						$diario->fecha = $f_ecajachica;
+						$i = 0;           
+					} 
 
-						// registra en Ctdiario principal
-						$diario = new Ctdiario;
-						$diario->pcontable_id = $periodo->id;
-						if ($i == 1) {
-							$diario->fecha = $f_ecajachica;
-							$i = 0;           
-						} 
+					$diario->detalle = $dato->cuenta;
+					$diario->debito  = $monto;
+					$diario->save(); 
 
-						$diario->detalle = $dato->cuenta;
-						$diario->debito  = $monto;
-						$diario->save(); 
-
-						if ($itbms > 0) {
-							$diario = new Ctdiario;
-							$diario->pcontable_id  = $periodo->id;
-							$diario->detalle = Catalogo::find(15)->nombre;
-							$diario->debito  = $itbms;
-							$diario->save(); 
-						}
-						
-						//acumula los totales finales
-						$montoTotal= $montoTotal + $monto;
-						$itbmsTotal= $itbmsTotal + $itbms;
+					//acumula los totales finales
+					$montoTotal= $montoTotal + $monto;
+					$itbmsTotal= $itbmsTotal + $itbms;
 				}
 				
 				//dd($montoTotal, $itbmsTotal);
+
+				if ($itbms > 0) {
+					$diario = new Ctdiario;
+					$diario->pcontable_id  = $periodo->id;
+					$diario->detalle = Catalogo::find(15)->nombre;
+					$diario->debito  = $itbmsTotal;
+					$diario->save(); 
+				}				
 
 				// se anota el total del egreso de caja chica a credito incluyendo el itbms en
 				// libro Mayor Auxiliar de Cuentas por Pagar a proveedores
@@ -394,7 +395,7 @@ class EcajachicasController extends Controller
 					2, 
 					6,
 					$f_ecajachica,	
-					'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
+					'Egreso por Caja chica #'.$cchica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
 					$montoTotal + $itbmsTotal,
 					Null,
 					Null,
@@ -414,7 +415,7 @@ class EcajachicasController extends Controller
 				// registra en Ctdiario principal
 				$diario = new Ctdiario;
 				$diario->pcontable_id  = $periodo->id;
-				$diario->detalle = 'Para registrar egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde;
+				$diario->detalle = 'Para registrar egreso por Caja chica #'.$cchica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde;
 				$diario->save(); 
 
 				// cambia la factura de etapa pagar         
@@ -429,7 +430,7 @@ class EcajachicasController extends Controller
 					2, 
 					6,
 					$f_ecajachica,	
-					'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
+					'Egreso por Caja chica #'.$cchica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
 					$montoTotal + $itbmsTotal,
 					Null,
 					Null,
@@ -445,7 +446,7 @@ class EcajachicasController extends Controller
           1,
           30,
 					$f_ecajachica,
-					'Egreso por Caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
+					'Egreso por Caja chica #'.$cchica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde,
 					$montoTotal + $itbmsTotal,
           Null,
           Null,
@@ -472,7 +473,7 @@ class EcajachicasController extends Controller
 				// registra en Ctdiario principal
 				$diario = new Ctdiario;
 				$diario->pcontable_id  = $periodo->id;
-				$diario->detalle = 'Para registrar egreso de caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde;
+				$diario->detalle = 'Para registrar egreso de caja chica #'.$cchica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde;
 				$diario->save(); 
 
 			  // actualiza cajachicas para que refleje nuevo saldo
@@ -482,7 +483,7 @@ class EcajachicasController extends Controller
 				// agrega nuevo registro a dte_cajachicas
 				$dte = new Dte_cajachica;
 				$dte->fecha = $f_ecajachica;
-				$dte->descripcion = 'Registra egreso de caja chica #'.$ecajachica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde;
+				$dte->descripcion = 'Registra egreso de caja chica #'.$cchica->id.', factura #'.$ecajachica->doc_no.' - '.$ecajachica->afavorde;
 				$dte->doc_no = $ecajachica->doc_no;
 				$dte->disminuye = $montoTotal + $itbmsTotal;
 				$dte->saldo = Dte_cajachica::all()->last()->saldo - ($montoTotal + $itbmsTotal);
@@ -498,7 +499,7 @@ class EcajachicasController extends Controller
 				Sity::analizaDesembolsos($cchica->id);
 				
 				DB::commit();    
-				Session::flash('success', 'El egreso de caja chica No. ' .$ecajachica->doc_no. ' ha sido cotabilizado.');
+				Session::flash('success', 'El egreso de caja chica #' .$cchica->id. ' ha sido cotabilizado.');
 				return Redirect()->route('ecajachicas.index');
 
 			} catch (\Exception $e) {

@@ -2250,6 +2250,8 @@ Work::with(
   $dato->save(); 
   
   Sity::RegistrarEnBitacora($dato, Input::get(), 'Bloque', 'Crea nuevo bloque');
+  or
+  Sity::RegistrarEnBitacora($dato, $request->All(), 'Bloque', 'Crea nuevo bloque');
 
   // update
   $dato = Bloque::find($id);

@@ -37,6 +37,9 @@ class Lim {
     
     DB::table('pagosnoids')->truncate();
 
+    DB::table('concilias')->truncate();
+    DB::table('dte_concilias')->truncate();
+
     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
   }
 } //fin de Class Lim
