@@ -76,6 +76,10 @@
                   <input type="radio" name="DteBanvoMas_radios" id="dtDteBanvoMas-1" value="1" checked="checked">
                   Depositos en transito
                 </label> 
+                <label class="radio-inline" for="radios-2">
+                  <input type="radio" name="DteBanvoMas_radios" id="ajDteBanvoMas-2" value="2">
+                  Ajuste por error
+                </label>
               </div>
             </div>
 
@@ -87,10 +91,30 @@
                   <input type="radio" name="DteBancoMenos_radios" id="ccDteBancoMenos-1" value="1" checked="checked">
                   Cheques en circulacion
                 </label> 
+                <label class="radio-inline" for="radios-2">
+                  <input type="radio" name="DteBancoMenos_radios" id="ajDteBancoMenos-2" value="2">
+                  Ajuste por error
+                </label>
               </div>
             </div>            
 
             <hr>
+            
+            <div class="form-group catalogo4s">
+              <label class="col-md-3 control-label">Cuentas</label>
+              <div class="col-md-9">
+                {{ Form::select('catalogo4_id', ['' => 'Selecione una cuenta ingresos'] + $catalogo4s, 0, ['class' => 'form-control']) }}
+                {!! $errors->first('catalogo4_id', '<li style="color:red">:message</li>') !!}
+              </div>
+            </div> 
+            
+            <div class="form-group catalogo6s" style="display: none;">
+              <label class="col-md-3 control-label">Cuentas</label>
+              <div class="col-md-9">
+                {{ Form::select('catalogo6_id', ['' => 'Selecione una cuenta de gastos!'] + $catalogo6s, 0, ['class' => 'form-control']) }}
+                {!! $errors->first('catalogo6_id', '<li style="color:red">:message</li>') !!}
+              </div>
+            </div> 
 
             <div class="form-group">
               <label class="col-md-3 control-label">Detalle</label>

@@ -2118,7 +2118,20 @@ Work::with(
     $total_importe = $imps->sum('importe');
     // dd($total_importe);
 
-
+  // ejemplo no 5
+    //=== primero ================================================================
+    // concatenar campos para generar los datos de un select o list o combo box   
+    //============================================================================ 
+    //Encuentra todas las cuentas contables
+    $catalogos = Catalogo::orderBy('codigo')->get();
+    
+    $catalogos->map(function ($x) {
+      $x['nombre'] = $x->codigo. ' '.$x->nombre;
+    });
+    
+    //dd($catalogos->toArray());      
+    $catalogos = $catalogos->pluck('nombre', 'id')->All();
+    dd($catalogos);    
 
   /*************************************************************************************
    * La colacion utf8_spanish_ci o utf8_general_ci
@@ -2396,3 +2409,32 @@ Work::with(
       var id = $(e.relatedTarget).data('detallepagofactura_id');
       $(e.currentTarget).find('input[name="detallepagofactura_id"]').val(id);
   });
+
+
+  /*************************************************************************************
+   * Para definir una variable en un template de blade
+   ************************************************************************************/
+  <?php $i = 0; ?>
+ 
+  @if (!$aj_lmenos->isEmpty())
+    @foreach ($aj_lmenos as $aj_lmeno)
+      @if ($i == 0)
+      <div class="row" style="margin-top:10px;">  
+        <div class="col-xs-2"><strong>31/01/2017</strong></div>
+        <div class="col-xs-6">{{ $aj_lmeno->detalle }}</div>  
+        <div class="col-xs-2">{{ number_format(floatval($aj_lmeno->monto),2) }}</div> 
+        <div class="col-xs-2"></div>
+      </div>
+      
+      <?php $i = 1; ?>
+      
+      @else
+        <div class="row"> 
+          <div class="col-xs-2"><</div>
+          <div class="col-xs-6">{{ $aj_lmeno->detalle }}</div>  
+          <div class="col-xs-2">{{ number_format(floatval($aj_lmeno->monto),2) }}</div> 
+          <div class="col-xs-2"></div>
+        </div>
+      @endif
+    @endforeach   
+  @endif

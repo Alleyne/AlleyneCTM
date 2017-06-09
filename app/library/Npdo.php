@@ -207,11 +207,11 @@ class Npdo {
   public static function ingresoEsperadoCuotaExtraordinaria($dia, $fecha, $periodo_id, $periodo) {
     //dd($dia, $fecha, $periodo_id, $periodo);
     
-    $totalExtraordinaria=0;
+    $totalExtraordinaria = 0;
     
     // Encuentra todas las secciones de apartamentos en las cuales la fecha de registro
     // de cuota de mantenimiento por cobrar es el dia primero o el dia dieciséis de cada mes.
-    $secaptos= Secapto::where('d_registra_cmpc', $dia)->get();
+    $secaptos = Secapto::where('d_registra_cmpc', $dia)->get();
     //dd($secaptos->toArray());
     
     if (! $secaptos->isEmpty()) {

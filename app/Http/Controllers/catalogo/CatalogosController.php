@@ -60,8 +60,7 @@ class CatalogosController extends Controller {
 	    } elseif ($codigo==6) {
 				$this->validate($request, array(
 					'nombre'    			=> 'required',
-					'codigo'    			=> 'required|between:7,7',
-					'nombre_factura'  => 'required'
+					'codigo'    			=> 'required|between:7,7'
 				));
 	    
 	    } else {
@@ -111,13 +110,11 @@ class CatalogosController extends Controller {
 				$dato->nombre       	 = $request->input('nombre');
 				$dato->codigo		       = $request->input('codigo');
 				$dato->tipo			  	   = $request->input('id');
-				$dato->nombre_factura  = $request->input('nombre_factura');
 				$dato->save();	
 
 				// Registra en bitacoras
 				$detalle =	'nombre= '.		    	$dato->nombre. ', '.
 										'codigo= '.   			$dato->codigo. ', '.
-										'nombre_factura= '.	$dato->nombre_factura. ', '.
 										'tipo= '.		    		$dato->tipo;
 			}
 
@@ -158,6 +155,7 @@ class CatalogosController extends Controller {
 	  DB::beginTransaction();
 	  try {
 			
+			//dd($request->toArray());
 			$cuenta= Catalogo::find($id);
 	   
 			$this->validate($request, array(
@@ -165,12 +163,19 @@ class CatalogosController extends Controller {
 	  	));			
 
 			$cuenta->nombre = $request->nombre;		
+			if ($request->concilia_radios == 1) {
+				$cuenta->conciliacion = 'n/c';
+			
+			} elseif ($request->concilia_radios == 2) {
+				$cuenta->conciliacion = 'n/d';
+			}
+			
 			$cuenta->save();
 	  	
 	  	DB::commit();			
 			
 			Session::flash('success', 'La cuenta ' .$cuenta->nombre. ' ha sido editada con exito');
-	    return redirect()->route('catalogos.index');
+	    return redirect()->route('catalogos.index'); 
 
 	  } catch (\Exception $e) {
 	    DB::rollback();

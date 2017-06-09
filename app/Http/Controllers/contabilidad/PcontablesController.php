@@ -100,7 +100,7 @@ class PcontablesController extends Controller {
 							
 				// crea conciliacion bancaria para el periodo
         $conicilia = new Concilia;
-     		$conicilia->periodo_id = $newPeriodo;
+     		$conicilia->pcontable_id = $newPeriodo;
 	      $conicilia->save();
 
 				DB::commit(); 				

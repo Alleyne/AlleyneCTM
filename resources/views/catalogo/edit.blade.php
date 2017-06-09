@@ -18,6 +18,25 @@
 									{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 								</div>
 							</div>
+  					
+	            <!-- Multiple Radios (inline) -->
+	            <div class="form-group libroMasmenos">
+	              <label class="col-md-3 control-label" for="radios">Grupo en conciliacion</label>
+	              <div class="col-md-9"> 
+	                <label class="radio-inline" for="radios-1">
+	                  <input type="radio" name="concilia_radios" id="ninguan" value="1" checked="checked">
+	                  Ninguno
+	                </label> 
+	                <label class="radio-inline" for="radios-2">
+	                  <input type="radio" name="concilia_radios" id="nc" value="2">
+	                  Nota de credito
+	                </label>
+	                <label class="radio-inline" for="radios-3">
+	                  <input type="radio" name="concilia_radios" id="nd" value="3">
+	                  Nota de debito
+	                </label> 
+	              </div>
+	            </div>
   					</fieldset>
 						
 						<div class="form-actions">

@@ -266,6 +266,7 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------// 		
 	Route::resource('dte_concilias', 'Dte_conciliasController');
   Route::post('addDetalleConciliacion', 'Dte_conciliasController@addDetalleConciliacion')->name('addDetalleConciliacion');
+  Route::get('contabilizaConcilia/{concilia_id},{pcontable_id}', 'Dte_conciliasController@contabilizaConcilia')->name('contabilizaConcilia');
 
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');

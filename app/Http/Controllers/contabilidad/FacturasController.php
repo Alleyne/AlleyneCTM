@@ -122,7 +122,7 @@ class FacturasController extends Controller {
 				    $pdo= Sity::getMonthName($month).'-'.$year;    
 
 					  // encuentra el periodo mas antiguo abierto
-						$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+						$periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
 					  //dd($periodo);
 					    
 				    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
@@ -147,6 +147,7 @@ class FacturasController extends Controller {
             $factura->descripcion = Input::get('descripcion');
             $factura->total = Input::get('monto');
             $factura->etapa = 1;
+            $factura->pcontable_id = $periodo->id;
             $factura->save();
 						
 						Sity::RegistrarEnBitacora($factura, Input::get(), 'Factura', 'Registra factura de egreso de Caja general');

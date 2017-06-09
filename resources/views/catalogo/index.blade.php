@@ -72,6 +72,7 @@
 											<th>NOMBRE</th>
 											<th>CODIGO</th>
 											<th>TIPO</th>
+											<th>CONC</th>
 											<th>CLASE</th>
 											<th>ESTADO</th>
 											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
@@ -84,12 +85,13 @@
 												<td><strong>{{ $dato->nombre }}</strong></td>
 												<td col width="50px"><strong>{{ $dato->codigo }}</strong></td>
 												<td col width="50px">{{ $dato->tipo }}</td>
+												<td col width="50px">{{ $dato->conciliacion }}</td>
 												<td col width="80px">
-													@if ($dato->corriente_siono===1)
+													@if ($dato->corriente_siono === 1)
 														Corriente
-													@elseif ($dato->corriente_siono===0)
+													@elseif ($dato->corriente_siono === 0)
 														No corriente
-													@elseif ($dato->corriente_siono===null)
+													@elseif ($dato->corriente_siono === null)
 													@endif
 												</td>
 												<td col width="80px">

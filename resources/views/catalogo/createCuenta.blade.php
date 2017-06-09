@@ -77,22 +77,6 @@
 												</div>
 											</div>	
 										@endif
-										@if ($id == 6)
-											<div class="form-group">
-												<label class="col-md-2 control-label">Nombre en factura</label>
-												<div class="col-md-10">
-													{{ Form::text('nombre_factura', old('nombre_factura'),
-														array(
-														    'class' => 'form-control',
-														    'id' => 'nombre_factura',
-														    'placeholder' => 'Escriba nombre de la cuenta que usara en las facturas.',
-															'autocomplete' => 'off',
-														))
-													}} 
-													{!! $errors->first('nombre_factura', '<li style="color:red">:message</li>') !!}
-												</div>
-											</div>
-										@endif
 
 									</fieldset>
 									
