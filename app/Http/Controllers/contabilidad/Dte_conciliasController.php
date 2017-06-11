@@ -56,33 +56,31 @@ class Dte_conciliasController extends Controller
     try {
       //dd(Input::all());
       $input = Input::all();
-      $condicion = Input::get('secciones_radios').Input::get('DteLibroMas_radios').Input::get('DteLibroMenos_radios').Input::get('DteBanvoMas_radios').Input::get('DteBancoMenos_radios');
+      $condicion = Input::get('secciones_radios').Input::get('DteLibroMas_radios').Input::get('DteLibroMenos_radios');
       //dd($condicion);
       
-      if ($condicion == '11111') {
+      if ($condicion == '111') {
         $rules = array(
           'catalogo4_id' => 'Required',
           'detalle' => 'Required',
           'monto' => 'required|Numeric|min:0.01'    
         );
 
-      } elseif ($condicion == '12111') {
-        $rules = array(
-          'catalogo4_id' => 'Required',
-          'detalle' => 'Required',
-          'monto' => 'required|Numeric|min:0.01'    
-        );
-
-      } elseif ($condicion == '21111') {
+      } elseif ($condicion == '211') {
         $rules = array(
           'catalogo6_id' => 'Required',
+          'detalle' => 'Required',
+          'monto' => 'required|Numeric|min:0.01'    
+        );
+
+      } elseif ($condicion == '311') {
+        $rules = array(
           'detalle' => 'Required',
           'monto' => 'required|Numeric|min:0.01'    
         );
       
-      } elseif ($condicion == '21211') {
+      } elseif ($condicion == '411') {
         $rules = array(
-          'catalogo6_id' => 'Required',
           'detalle' => 'Required',
           'monto' => 'required|Numeric|min:0.01'    
         );
@@ -101,55 +99,33 @@ class Dte_conciliasController extends Controller
       if ($validation->passes())
       {
         
-        if ($condicion == '11111') {
+        if ($condicion == '111') {
           // salva nota de credito
           $dato = new Dte_concilia;
           $dato->seccion = 'libro';    
           $dato->masmenos = 'mas';          
           $dato->tipo = 'n/c';         
           $dato->catalogo_id = Input::get('catalogo4_id');
-          $dato->detalle = Input::get('detalle');
-          $dato->monto = Input::get('monto');
-          $dato->concilia_id = Input::get('concilia_id');
-          $dato->save();
-
-        } elseif ($condicion == '12111') {
-          // salva ajuste por error mas
-          $dato = new Dte_concilia;
-          $dato->seccion = 'libro';    
-          $dato->masmenos = 'mas';          
-          $dato->tipo = 'aj_lmas';         
-          $dato->catalogo_id = Input::get('catalogo4_id');
+          $dato->cuenta = Catalogo::find(Input::get('catalogo4_id'))->nombre;  
           $dato->detalle = Input::get('detalle');
           $dato->monto = Input::get('monto');
           $dato->concilia_id = Input::get('concilia_id');
           $dato->save();
         
-        } elseif ($condicion == '21111') {
+        } elseif ($condicion == '211') {
           // salva nota de debito
           $dato = new Dte_concilia;
           $dato->seccion = 'libro';    
           $dato->masmenos = 'menos';          
           $dato->tipo = 'n/d';         
           $dato->catalogo_id = Input::get('catalogo6_id');
+          $dato->cuenta = Catalogo::find(Input::get('catalogo6_id'))->nombre; 
           $dato->detalle = Input::get('detalle');
           $dato->monto = Input::get('monto');
           $dato->concilia_id = Input::get('concilia_id');
           $dato->save();
         
-        } elseif ($condicion == '21211') {
-          // salva ajuste por error menos
-          $dato = new Dte_concilia;
-          $dato->seccion = 'libro';    
-          $dato->masmenos = 'menos';          
-          $dato->tipo = 'aj_lmenos';         
-          $dato->catalogo_id = Input::get('catalogo6_id');
-          $dato->detalle = Input::get('detalle');
-          $dato->monto = Input::get('monto');
-          $dato->concilia_id = Input::get('concilia_id');
-          $dato->save();
-        
-        } elseif ($condicion == '31111') {
+        } elseif ($condicion == '311') {
           // salva el depositos en transito
           $dato = new Dte_concilia;
           $dato->seccion = 'banco';    
@@ -159,35 +135,13 @@ class Dte_conciliasController extends Controller
           $dato->monto = Input::get('monto');
           $dato->concilia_id = Input::get('concilia_id');
           $dato->save(); 
-
-        } elseif ($condicion == '31121') {
-          // salva el depositos en transito
-          $dato = new Dte_concilia;
-          $dato->seccion = 'banco';    
-          $dato->masmenos = 'mas';
-          $dato->tipo = 'aj_bmas';         
-          $dato->detalle = Input::get('detalle');
-          $dato->monto = Input::get('monto');
-          $dato->concilia_id = Input::get('concilia_id');
-          $dato->save(); 
         
-        } elseif ($condicion == '41111') {
+        } elseif ($condicion == '411') {
           // salva el cheques en circulacion
           $dato = new Dte_concilia;
           $dato->seccion = 'banco';    
           $dato->masmenos = 'menos';
           $dato->tipo = 'chq_circulacion';         
-          $dato->detalle = Input::get('detalle');
-          $dato->monto = Input::get('monto');
-          $dato->concilia_id = Input::get('concilia_id');
-          $dato->save();
-        
-        } elseif ($condicion == '41112') {
-          // salva el cheques en circulacion
-          $dato = new Dte_concilia;
-          $dato->seccion = 'banco';    
-          $dato->masmenos = 'menos';
-          $dato->tipo = 'aj_bmenos';         
           $dato->detalle = Input::get('detalle');
           $dato->monto = Input::get('monto');
           $dato->concilia_id = Input::get('concilia_id');
@@ -218,7 +172,7 @@ class Dte_conciliasController extends Controller
    */
   public function contabilizaConcilia($concilia_id, $pcontable_id)
   {
-    //dd($concilia_id);
+    //dd($concilia_id, $pcontable_id);
     DB::beginTransaction();
     try {
       $dte_concilias = Dte_concilia::where('concilia_id', $concilia_id)->get();
@@ -234,11 +188,7 @@ class Dte_conciliasController extends Controller
       //==================================================================      
       // encuentra las notas de credito
       $ncs = $dte_concilias->where('tipo', 'n/c');
-      //dd($ncs->toArray());
-      
-      // encuentra los ajustes de notas de credito
-      $aj_lmas = $dte_concilias->where('tipo', 'aj_lmas');
-      //dd($aj_lmas->toArray());      
+      //dd($ncs->toArray());    
       
       // registra en libros la seccion Notas de credito de la conciliacion
       if ($ncs) {
@@ -252,49 +202,26 @@ class Dte_conciliasController extends Controller
         $diario->save();      
 
         // registra en el mayor
-        Sity::registraEnCuentas($periodo, 'mas', 1, 8, $pdoFechaInicio, 'N/C', $ncs->sum('monto'), Null, Null, Null, Null, Null);            
-        
+        Sity::registraEnCuentas($pcontable_id, 'mas', 1, 8, $pdoFechaInicio, 'Notas de credito', $ncs->sum('monto'), Null, Null, Null, Null, Null);            
+ 
         foreach ($ncs as $nc) {
           // registra en el diario
           $diario = new Ctdiario;
           $diario->pcontable_id  = $pcontable_id;
-          $diario->detalle = $nc->detalle;
+          $diario->detalle = $nc->cuenta.' - '.$nc->detalle;
           $diario->debito  = Null;
           $diario->credito = $nc->monto;
           $diario->save();
+        
+          // registra en el mayor
+          $cuenta = Catalogo::find($nc->catalogo_id);
+          Sity::registraEnCuentas($pcontable_id, 'menos', $cuenta->tipo, $cuenta->id, $pdoFechaInicio, $nc->detalle, $nc->monto, Null, Null, Null, Null, Null);            
         }
         
         $diario = new Ctdiario;
         $diario->pcontable_id  = $pcontable_id;
         $diario->detalle = 'Para registrar Notas de credito del mes. (Conciliacion)';
         $diario->save();
-      }
-
-      // registra en libros la seccion ajustes a notas de credito de la conciliacion
-      if ($aj_lmas) {
-        // registra en el diario
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->fecha = $pdoFechaInicio;
-        $diario->detalle = Catalogo::find(8)->nombre;
-        $diario->debito  = $aj_lmas->sum('monto');
-        $diario->credito = Null;
-        $diario->save();  
-
-        foreach ($aj_lmas as $aj_lma) {
-          // registra en el diario
-          $diario = new Ctdiario;
-          $diario->pcontable_id  = $pcontable_id;
-          $diario->detalle = $aj_lma->detalle;
-          $diario->debito  = Null;
-          $diario->credito = $aj_lma->monto;
-          $diario->save();
-        }
-
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->detalle = 'Para corregir errores en Notas de credito del mes. (Conciliacion)';
-        $diario->save();      
       }
 
       //==================================================================
@@ -304,10 +231,6 @@ class Dte_conciliasController extends Controller
       $nds = $dte_concilias->where('tipo', 'n/d');
       //dd($nds->toArray());
       
-      // encuentra los ajustes de notas de credito
-      $aj_lmenos = $dte_concilias->where('tipo', 'aj_lmenos');
-      //dd($aj_lmenos->toArray());      
-      
       // registra en libros la seccion Notas de credito de la conciliacion
       if ($nds) {     
         $i = 0;
@@ -316,10 +239,15 @@ class Dte_conciliasController extends Controller
           $diario = new Ctdiario;
           $diario->pcontable_id  = $pcontable_id;
           if ($i == 0) { $diario->fecha = $pdoFechaInicio; }
-          $diario->detalle = $nd->detalle;
+          $diario->detalle = $nd->cuenta.' - '.$nd->detalle;
           $diario->debito  = $nd->monto;
           $diario->credito = Null;
           $diario->save();
+          
+          // registra en el mayor
+          $cuenta = Catalogo::find($nd->catalogo_id);
+          Sity::registraEnCuentas($pcontable_id, 'mas', $cuenta->tipo, $cuenta->id,  $pdoFechaInicio, $nd->detalle, $nd->monto, Null, Null, Null, Null, Null);                    
+
           $i++;
         }
         
@@ -331,172 +259,20 @@ class Dte_conciliasController extends Controller
         $diario->credito = $nds->sum('monto');
         $diario->save(); 
         
+        // registra en el mayor
+        Sity::registraEnCuentas($pcontable_id, 'menos', 1, 8, $pdoFechaInicio, 'Notas de debito', $nds->sum('monto'), Null, Null, Null, Null, Null);            
+
         $diario = new Ctdiario;
         $diario->pcontable_id  = $pcontable_id;
         $diario->detalle = 'Para registrar Notas de debito del mes. (Conciliacion)';
         $diario->save();
       }
 
-      // registra en libros la seccion ajustes a notas de credito de la conciliacion
-      if ($aj_lmenos) {
-        $i = 0;
-        foreach ($aj_lmenos as $aj_lmeno) {
-          // registra en el diario
-          $diario = new Ctdiario;
-          $diario->pcontable_id  = $pcontable_id;
-          if ($i == 0) { $diario->fecha = $pdoFechaInicio; }
-          $diario->detalle = $aj_lmeno->detalle;
-          $diario->debito  = $aj_lmeno->monto;
-          $diario->credito = Null;
-          $diario->save();
-          $i++;
-        }
-
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->detalle = Catalogo::find(8)->nombre;
-        $diario->debito  = Null;
-        $diario->credito = $aj_lmenos->sum('monto');
-        $diario->save(); 
-
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->detalle = 'Para corregir errores en Notas de debito del mes. (Conciliacion)';
-        $diario->save();      
-      }
-
-/*
-      //==================================================================
-      // SECCION BANCO MAS
-      //==================================================================      
-      // encuentra las depositos en transito
-      $d_transitos = $dte_concilias->where('tipo', 'd_transito');
-      //dd($d_transito->toArray());
+      Sity::RegistrarEnBitacoraEsp($dte_concilias, 'dte_concilias', 1, 'Elabora y aprueba conciliacion');
       
-      // encuentra los ajustes de notas de credito
-      $aj_bmas = $dte_concilias->where('tipo', 'aj_bmas');
-      //dd($aj_bmas->toArray());      
-      
-      // registra en libros la seccion Notas de credito de la conciliacion
-      if ($d_transitos) {
-        // registra en el diario
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->fecha = $pdoFechaInicio;
-        $diario->detalle = Catalogo::find(8)->nombre;
-        $diario->debito  = $d_transitos->sum('monto');
-        $diario->credito = Null;
-        $diario->save();      
-     
-        foreach ($d_transitos as $d_transito) {
-          // registra en el diario
-          $diario = new Ctdiario;
-          $diario->pcontable_id  = $pcontable_id;
-          $diario->detalle = $d_transito->detalle;
-          $diario->debito  = Null;
-          $diario->credito = $d_transito->monto;
-          $diario->save();
-        }
-        
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->detalle = 'Para registrar Depositos en transito del mes';
-        $diario->save();
-      }
-
-      // registra en libros la seccion ajustes a notas de credito de la conciliacion
-      if ($aj_bmas) {
-        // registra en el diario
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->fecha = $pdoFechaInicio;
-        $diario->detalle = Catalogo::find(8)->nombre;
-        $diario->debito  = $aj_bmas->sum('monto');
-        $diario->credito = Null;
-        $diario->save();  
-
-        foreach ($aj_bmas as $aj_bma) {
-          // registra en el diario
-          $diario = new Ctdiario;
-          $diario->pcontable_id  = $pcontable_id;
-          $diario->detalle = $aj_bma->detalle;
-          $diario->debito  = Null;
-          $diario->credito = $aj_bma->monto;
-          $diario->save();
-        }
-
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->detalle = 'Para corregir errores en Depositos en transito del mes';
-        $diario->save();      
-      }
-      
-      //==================================================================
-      // SECCION BANCO MENOS
-      //==================================================================      
-      // encuentra las cheques en transito o circulacion
-      $chq_circulacions = $dte_concilias->where('tipo', 'chq_circulacion');
-      //dd($chq_circulacion->toArray());
-      
-      // encuentra los ajustes de notas de credito
-      $aj_bmenos = $dte_concilias->where('tipo', 'aj_bmenos');
-      //dd($aj_bmas->toArray());      
-      
-      // registra en libros la seccion Notas de credito de la conciliacion
-      if ($chq_circulacions) {
-        // registra en el diario
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->fecha = $pdoFechaInicio;
-        $diario->detalle = Catalogo::find(8)->nombre;
-        $diario->debito  = $chq_circulacions->sum('monto');
-        $diario->credito = Null;
-        $diario->save();      
-     
-        foreach ($chq_circulacions as $chq_circulacion) {
-          // registra en el diario
-          $diario = new Ctdiario;
-          $diario->pcontable_id  = $pcontable_id;
-          $diario->detalle = $chq_circulacion->detalle;
-          $diario->debito  = Null;
-          $diario->credito = $chq_circulacion->monto;
-          $diario->save();
-        }
-        
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->detalle = 'Para registrar Cheques en transito del mes';
-        $diario->save();
-      }
-
-      // registra en libros la seccion ajustes a notas de credito de la conciliacion
-      if ($aj_bmenos) {
-        // registra en el diario
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->fecha = $pdoFechaInicio;
-        $diario->detalle = Catalogo::find(8)->nombre;
-        $diario->debito  = $aj_bmenos->sum('monto');
-        $diario->credito = Null;
-        $diario->save();  
-
-        foreach ($aj_bmenos as $aj_bmeno) {
-          // registra en el diario
-          $diario = new Ctdiario;
-          $diario->pcontable_id  = $pcontable_id;
-          $diario->detalle = $aj_bmeno->detalle;
-          $diario->debito  = Null;
-          $diario->credito = $aj_bmeno->monto;
-          $diario->save();
-        }
-
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $pcontable_id;
-        $diario->detalle = 'Para corregir errores en Cheques en transito del mes';
-        $diario->save();      
-      }*/
-
-      DB::commit();
+      Session::flash('success', 'Conciliacion a hido registrada y aprobada con exito.');
+      DB::commit();       
+      return redirect()->route('pcontables.index');
 
     } catch (\Exception $e) {
       DB::rollback();

@@ -66,18 +66,6 @@ class ConciliasController extends Controller
     $nds = Dte_concilia::where('concilia_id', $concilia->id)->where('tipo', 'n/d')->get();    
     
     // encuentra todas la notas de credito
-    $aj_lmas = Dte_concilia::where('concilia_id', $concilia->id)->where('tipo', 'aj_lmas')->get();    
-
-    // encuentra todas la notas de credito
-    $aj_lmenos = Dte_concilia::where('concilia_id', $concilia->id)->where('tipo', 'aj_lmenos')->get();    
-    
-    // encuentra todas la notas de credito
-    $aj_bmas = Dte_concilia::where('concilia_id', $concilia->id)->where('tipo', 'aj_bmas')->get();    
-
-    // encuentra todas la notas de credito
-    $aj_bmenos = Dte_concilia::where('concilia_id', $concilia->id)->where('tipo', 'aj_bmenos')->get();     
-
-    // encuentra todas la notas de credito
     $d_transitos = Dte_concilia::where('concilia_id', $concilia->id)->where('tipo', 'd_transito')->get();
 
     // encuentra todas la notas de credito
@@ -125,13 +113,12 @@ class ConciliasController extends Controller
     $catalogo4s = $catalogo4s->pluck('nombre', 'id')->All();
     //dd($catalogo16s, $catalogo24s);
     
+    // encuentra el nombre de la cuenta banco
+    $banco = Catalogo::find(8)->nombre;
+    
     return view('contabilidad.concilias.show')
                 ->with('ncs', $ncs)
                 ->with('nds', $nds)
-                ->with('aj_lmas', $aj_lmas)
-                ->with('aj_lmenos', $aj_lmenos)
-                ->with('aj_bmas', $aj_bmas)
-                ->with('aj_bmenos', $aj_bmenos)
                 ->with('d_transitos', $d_transitos)
                 ->with('chq_circulacions', $chq_circulacions)
                 ->with('t_libromas', $t_libromas)
@@ -140,6 +127,7 @@ class ConciliasController extends Controller
                 ->with('t_chq_girados', $t_chq_girados) 
                 ->with('catalogo6s', $catalogo6s) 
                 ->with('catalogo4s', $catalogo4s) 
+                ->with('banco', $banco) 
                 ->with('concilia', $concilia); 
   }
 

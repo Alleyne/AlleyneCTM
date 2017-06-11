@@ -46,6 +46,10 @@
                   <input type="radio" name="DteLibroMas_radios" id="ncDteLibroMas-1" value="1" checked="checked">
                   Nota de credito
                 </label> 
+                <label class="radio-inline" for="radios-2">
+                  <input type="radio" name="DteLibroMas_radios" id="ajDteLibroMas-2" value="2">
+                  Ajuste por error
+                </label>
               </div>
             </div>
 
@@ -57,6 +61,10 @@
                   <input type="radio" name="DteLibroMenos_radios" id="ndDteLibroMenos-1" value="1" checked="checked">
                   Nota de debito
                 </label> 
+                <label class="radio-inline" for="radios-2">
+                  <input type="radio" name="DteLibroMenos_radios" id="ajDteLibroMenos-2" value="2">
+                  Ajuste por error
+                </label>
               </div>
             </div>            
 
@@ -68,6 +76,10 @@
                   <input type="radio" name="DteBanvoMas_radios" id="dtDteBanvoMas-1" value="1" checked="checked">
                   Depositos en transito
                 </label> 
+                <label class="radio-inline" for="radios-2">
+                  <input type="radio" name="DteBanvoMas_radios" id="ajDteBanvoMas-2" value="2">
+                  Ajuste por error
+                </label>
               </div>
             </div>
 
@@ -79,6 +91,10 @@
                   <input type="radio" name="DteBancoMenos_radios" id="ccDteBancoMenos-1" value="1" checked="checked">
                   Cheques en circulacion
                 </label> 
+                <label class="radio-inline" for="radios-2">
+                  <input type="radio" name="DteBancoMenos_radios" id="ajDteBancoMenos-2" value="2">
+                  Ajuste por error
+                </label>
               </div>
             </div>            
 
