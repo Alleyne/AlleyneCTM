@@ -28,7 +28,7 @@
 			</li>
 		</ul>
 	</li>
-	<li>
+	<li class="active">
 		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Ingresos</span></a>
 		<ul>
 			<li>
@@ -43,7 +43,7 @@
 		</ul>
 	</li>
 
-	<li class="active">
+	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja General</span></a>
 		<ul>
 			<li>

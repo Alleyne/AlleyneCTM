@@ -89,7 +89,8 @@ class ConciliasController extends Controller
     $t_libromenos = Dte_concilia::where('concilia_id', $concilia->id)->where('seccion', 'libro')->where('masmenos', 'menos')->sum('monto');    
  
     // calcula el total depositado del periodo
-???    $t_depositado = Ctmayore::where('pcontable_id', $periodo_id)->where('cuenta', 8)->sum('debito');
+    $t_depositado = Ctmayore::where('pcontable_id', $periodo_id)->where('cuenta', 8)->where('pago_id', '!=', Null)->sum('debito');
+    //dd($t_depositado);
 
     // calcula el total depositado en cheque
     $t_chq_girados = Factura::where('pcontable_id', $periodo_id)
