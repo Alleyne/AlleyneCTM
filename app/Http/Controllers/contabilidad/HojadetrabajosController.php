@@ -584,7 +584,10 @@ class HojadetrabajosController extends Controller {
 
         // crea conciliacion bancaria para el periodo
         $conicilia = new Concilia;
-        $conicilia->periodo_id = $newPeriodo;
+        $conicilia->pcontable_id = $newPeriodo;
+        $conicilia->f_incioperiodo = $fechaNuevoPeriodo;
+        $conicilia->slib_endlastpdo = Sity::getSaldoCuentaLastPcontable(8, 1); // encuentra el saldo de la cuenta banco del periodo anterior
+        $conicilia->sban_endpresentpdo = 0;
         $conicilia->save();
 
         DB::commit();    

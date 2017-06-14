@@ -53,8 +53,8 @@ class PcontablesController extends Controller {
 	public function store()
 	{
 
-		DB::beginTransaction();
-		try {
+		//DB::beginTransaction();
+		//try {
 			//dd(Input::all());
 			$input = Input::all();
 			$rules = array(
@@ -98,10 +98,13 @@ class PcontablesController extends Controller {
 				// facturacion para las secciones que generan las ordenes de cobro los dias 16
 				Fact::facturar(Carbon::createFromDate($year, $month, 16));
 							
-				// crea conciliacion bancaria para el periodo
+        // crea conciliacion bancaria para el periodo
         $conicilia = new Concilia;
-     		$conicilia->pcontable_id = $newPeriodo;
-	      $conicilia->save();
+        $conicilia->pcontable_id = $newPeriodo;
+        $conicilia->f_incioperiodo = $fecha;
+        $conicilia->slib_endlastpdo = 0; 
+        $conicilia->sban_endpresentpdo = 0;
+        $conicilia->save();
 
 				DB::commit(); 				
 
@@ -110,11 +113,11 @@ class PcontablesController extends Controller {
 			}
 			return back()->withInput()->withErrors($validation);
 		
-		} catch (\Exception $e) {
-			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo PcontablesController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-			return back();
-		}
+		//} catch (\Exception $e) {
+			//DB::rollback();
+			//Session::flash('warning', ' Ocurrio un error en el modulo PcontablesController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+			//return back();
+		//}
 	} 
 
 } // end of class

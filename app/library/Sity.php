@@ -27,6 +27,7 @@ use App\Ph;
 use App\Dte_desembolso;
 use App\Desembolso;
 use App\Bloque;
+use App\Ctmayorehi;
 
 class Sity {
 
@@ -64,6 +65,46 @@ class Sity {
 
     // si no tiene saldo, iniciliza en cero
     $sa = ($sa) ? $sa : 0;
+    //dd($sa);    
+    return $sa;
+  }
+
+  /****************************************************************************************
+   * Encuentra el saldo actual de una cuenta de acuerdo al tipo de cuenta y periodo contable
+   *****************************************************************************************/
+  public static function getSaldoCuentaLastPcontable($cuenta, $cuentaTipo)
+  {
+  
+    $lastPcontable = Ctmayorehi::orderBy('pcontable_id', 'desc')->first()->pcontable_id;
+    //dd($lastPcontable);
+
+    if ($lastPcontable) {
+      $tdebito = Ctmayorehi::where('cuenta', $cuenta)
+                  ->where('pcontable_id', $lastPcontable)
+                  ->sum('debito');
+      $tdebito = round(floatval($tdebito),2);
+      
+      $tcredito = Ctmayorehi::where('cuenta', $cuenta)
+                  ->where('pcontable_id', $lastPcontable)
+                  ->sum('credito');
+      $tcredito = round(floatval($tcredito),2);    
+      
+      if ($cuentaTipo == 1 || $cuentaTipo == 6) {  
+        $sa= $tdebito - $tcredito;
+
+      } elseif ($cuentaTipo == 2 || $cuentaTipo == 3 || $cuentaTipo ==4) {  
+        $sa= $tcredito - $tdebito;
+      
+      } else {
+        return 'Error: tipo de cuenta no exite en function Sity::getSaldoCuenta()';
+      } 
+
+      // si no tiene saldo, iniciliza en cero
+      $sa = ($sa) ? $sa : 0;
+    } else {
+      $sa = 0;
+    }
+
     //dd($sa);    
     return $sa;
   }

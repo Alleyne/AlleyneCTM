@@ -1,12 +1,15 @@
 <?php namespace App\Http\Controllers\contabilidad;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use URL, DB;
+use App\library\Sity;
+use URL, DB, Date, Session;
+
 use App\Concilia;
 use App\Dte_concilia;
 use App\Ctmayore;
 use App\Pago;
 use App\Factura;
+use App\Detallepagofactura;
 use App\Catalogo;
 
 class ConciliasController extends Controller
@@ -58,7 +61,15 @@ class ConciliasController extends Controller
     
     // encuentra todas las conciliaciones
     $concilia = Concilia::where('pcontable_id', $periodo_id)->first();
-    
+    $concilia['f_endpresentdo'] = Date::parse($concilia->f_incioperiodo)->endOfMonth()->toFormattedDateString();
+    $concilia['f_endlastpdo'] = Date::parse($concilia->f_incioperiodo)->subMonth()->endOfMonth()->toFormattedDateString();
+    //dd($concilia);
+
+    if ($concilia->contabilizada == 1) {
+      Session::flash('warning', 'Conciliacion del presente periodo ya ha sido aprobada y contabilizada.');
+      return redirect()->route('pcontables.index');
+    }
+
     // encuentra todas la notas de credito
     $ncs = Dte_concilia::where('concilia_id', $concilia->id)->where('tipo', 'n/c')->get();
     
@@ -78,17 +89,15 @@ class ConciliasController extends Controller
     $t_libromenos = Dte_concilia::where('concilia_id', $concilia->id)->where('seccion', 'libro')->where('masmenos', 'menos')->sum('monto');    
  
     // calcula el total depositado del periodo
-    $t_depositado = Ctmayore::where('pcontable_id', $periodo_id)->where('cuenta', 8)->sum('debito');
+???    $t_depositado = Ctmayore::where('pcontable_id', $periodo_id)->where('cuenta', 8)->sum('debito');
 
     // calcula el total depositado en cheque
-    //$t_cheques = Pago::where('trantipo_id', 1)
-            //->join('ctmayores', 'ctmayores.pago_id', '=', 'pagos.id')
-            //->sum('debito');
-    //dd($t_cheques); 
-
-    // calcula el total girado en cheques
-    $t_chq_girados = Factura::where('pcontable_id', $periodo_id)->sum('total');
-    //dd($t_facturas);     
+    $t_chq_girados = Factura::where('pcontable_id', $periodo_id)
+            ->join('detallepagofacturas', 'detallepagofacturas.factura_id', '=', 'facturas.id')
+            ->where('detallepagofacturas.etapa', 2)
+            ->where('trantipo_id', 1)
+            ->sum('monto');
+    //dd($t_chq_girados); 
 
     //Encuentra todas las cuentas contables activos y gastos
     $catalogo6s = Catalogo::where('conciliacion', 'n/d')->orderBy('codigo')->get();
@@ -115,7 +124,7 @@ class ConciliasController extends Controller
     
     // encuentra el nombre de la cuenta banco
     $banco = Catalogo::find(8)->nombre;
-    
+   
     return view('contabilidad.concilias.show')
                 ->with('ncs', $ncs)
                 ->with('nds', $nds)

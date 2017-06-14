@@ -17,70 +17,30 @@
           
             <!-- Multiple Radios (inline) -->
             <div class="form-group libroMasmenos">
-              <label class="col-md-2 control-label" for="radios">Secciones</label>
+              <label class="col-md-2 control-label" for="radios">Opciones</label>
               <div class="col-md-10"> 
                 <label class="radio-inline" for="radios-1">
-                  <input type="radio" name="secciones_radios" id="libro-mas-1" value="1" checked="checked">
-                  Libro mas
-                </label> 
-                <label class="radio-inline" for="radios-2">
-                  <input type="radio" name="secciones_radios" id="libro-menos-2" value="2">
-                  Libro menos
-                </label>
-                <label class="radio-inline" for="radios-3">
-                  <input type="radio" name="secciones_radios" id="banco-mas-1" value="3">
-                  Banco mas
-                </label> 
-                <label class="radio-inline" for="radios-4">
-                  <input type="radio" name="secciones_radios" id="banco-menos-2" value="4">
-                  Banco menos
-                </label>
-              </div>
-            </div>
-
-            <!-- Multiple Radios (inline) -->
-            <div class="form-group DteLibroMas">
-              <label class="col-md-3 control-label" for="radios">Libro mas</label>
-              <div class="col-md-9"> 
-                <label class="radio-inline" for="radios-1">
-                  <input type="radio" name="DteLibroMas_radios" id="ncDteLibroMas-1" value="1" checked="checked">
+                  <input type="radio" name="secciones_radios" id="nc" value="1" checked="checked">
                   Nota de credito
                 </label> 
-              </div>
-            </div>
-
-            <!-- Multiple Radios (inline) -->
-            <div class="form-group DteLibroMenos" style="display: none;">
-              <label class="col-md-3 control-label" for="radios">Libro menos</label>
-              <div class="col-md-9"> 
-                <label class="radio-inline" for="radios-1">
-                  <input type="radio" name="DteLibroMenos_radios" id="ndDteLibroMenos-1" value="1" checked="checked">
+                <label class="radio-inline" for="radios-2">
+                  <input type="radio" name="secciones_radios" id="nd" value="2">
                   Nota de debito
-                </label> 
-              </div>
-            </div>            
-
-            <!-- Multiple Radios (inline) -->
-            <div class="form-group DteBancoMas" style="display: none;">
-              <label class="col-md-3 control-label" for="radios">Banco mas</label>
-              <div class="col-md-9"> 
-                <label class="radio-inline" for="radios-1">
-                  <input type="radio" name="DteBanvoMas_radios" id="dtDteBanvoMas-1" value="1" checked="checked">
+                </label>
+                <label class="radio-inline" for="radios-3">
+                  <input type="radio" name="secciones_radios" id="dt" value="3">
                   Depositos en transito
                 </label> 
+                <label class="radio-inline" for="radios-4">
+                  <input type="radio" name="secciones_radios" id="cc" value="4">
+                  Cheques en circulacion
+                </label>
+                <label class="radio-inline" for="radios-5">
+                  <input type="radio" name="secciones_radios" id="sb" value="5">
+                  Saldo en banco a {{ $concilia->f_endpresentdo }}
+                </label>
               </div>
             </div>
-
-            <!-- Multiple Radios (inline) -->
-            <div class="form-group DteBancoMenos" style="display: none;">
-              <label class="col-md-3 control-label" for="radios">Banco menos</label>
-              <div class="col-md-9"> 
-                <label class="radio-inline" for="radios-1">
-                  <input type="radio" name="DteBancoMenos_radios" id="ccDteBancoMenos-1" value="1" checked="checked">
-                  Cheques en circulacion
-                </label> 
-              </div>
-            </div>            
 
             <hr>
             
@@ -100,7 +60,7 @@
               </div>
             </div> 
 
-            <div class="form-group">
+            <div class="form-group detalle">
               <label class="col-md-3 control-label">Detalle</label>
               <div class="col-md-9">
                 {{ Form::text('detalle', old('detalle'),
@@ -115,7 +75,7 @@
               </div>
             </div>  
             
-            <div class="form-group">
+            <div class="form-group monto">
               <label class="col-md-3 control-label">Monto</label>
               <div class="col-md-9">
                 {{ Form::text('monto', old('monto'),

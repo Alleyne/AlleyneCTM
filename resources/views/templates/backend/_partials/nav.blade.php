@@ -43,7 +43,7 @@
 		</ul>
 	</li>
 
-	<li>
+	<li class="active">
 		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja General</span></a>
 		<ul>
 			<li>
@@ -54,7 +54,12 @@
 			</li>
 		</ul>
 	</li>
-
+	<li>
+		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
+	</li>
+	<li>
+		<a href="{{ URL::route('eventos.index') }}"><i class="fa fa-lg fa-fw fa-calendar"><em>3</em></i> <span class="menu-item-parent">Reservaciones</span></a>
+	</li>
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Contabilidad</span></a>
 		<ul>
@@ -117,9 +122,6 @@
 			</li>
 		</ul>
 	</li>	
-	<li>
-		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
-	</li>
 	<li>
 		<a href="{{ URL::route('bitacoras.index') }}"><i class="fa fa-archive"></i> <span class="menu-item-parent">Bitácora</span></a>
 	</li>
@@ -220,7 +222,9 @@
 			</li>
 		</ul>
 	</li>
-
+	<li>
+		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
+	</li>
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Contabilidad</span></a>
 		<ul>
@@ -262,9 +266,6 @@
 				<a href="{{ route('tags.index') }}"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Etiquetas</span></a>
 			</li>
 		</ul>
-	</li>
-	<li>
-		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
 	</li>
 	<li>
 		<a href="{{ URL::route('bitacoras.index') }}"><i class="fa fa-archive"></i> <span class="menu-item-parent">Bitácora</span></a>

@@ -9,6 +9,7 @@ use App\Dte_concilia;
 use App\Pcontable;
 use App\Ctdiario;
 use App\Catalogo;
+use App\Concilia;
 
 class Dte_conciliasController extends Controller
 {
@@ -56,34 +57,40 @@ class Dte_conciliasController extends Controller
     try {
       //dd(Input::all());
       $input = Input::all();
-      $condicion = Input::get('secciones_radios').Input::get('DteLibroMas_radios').Input::get('DteLibroMenos_radios');
+      $condicion = Input::get('secciones_radios');
       //dd($condicion);
       
-      if ($condicion == '111') {
+      if ($condicion == '1') {
         $rules = array(
           'catalogo4_id' => 'Required',
           'detalle' => 'Required',
           'monto' => 'required|Numeric|min:0.01'    
         );
 
-      } elseif ($condicion == '211') {
+      } elseif ($condicion == '2') {
         $rules = array(
           'catalogo6_id' => 'Required',
           'detalle' => 'Required',
           'monto' => 'required|Numeric|min:0.01'    
         );
 
-      } elseif ($condicion == '311') {
+      } elseif ($condicion == '3') {
         $rules = array(
           'detalle' => 'Required',
           'monto' => 'required|Numeric|min:0.01'    
         );
       
-      } elseif ($condicion == '411') {
+      } elseif ($condicion == '4') {
         $rules = array(
           'detalle' => 'Required',
           'monto' => 'required|Numeric|min:0.01'    
         );
+      
+      } elseif ($condicion == '5') {
+        $rules = array(
+          'monto' => 'required|Numeric|min:0.01'    
+        );
+
       }
 
       $messages = [
@@ -99,7 +106,7 @@ class Dte_conciliasController extends Controller
       if ($validation->passes())
       {
         
-        if ($condicion == '111') {
+        if ($condicion == '1') {
           // salva nota de credito
           $dato = new Dte_concilia;
           $dato->seccion = 'libro';    
@@ -112,7 +119,7 @@ class Dte_conciliasController extends Controller
           $dato->concilia_id = Input::get('concilia_id');
           $dato->save();
         
-        } elseif ($condicion == '211') {
+        } elseif ($condicion == '2') {
           // salva nota de debito
           $dato = new Dte_concilia;
           $dato->seccion = 'libro';    
@@ -125,7 +132,7 @@ class Dte_conciliasController extends Controller
           $dato->concilia_id = Input::get('concilia_id');
           $dato->save();
         
-        } elseif ($condicion == '311') {
+        } elseif ($condicion == '3') {
           // salva el depositos en transito
           $dato = new Dte_concilia;
           $dato->seccion = 'banco';    
@@ -136,7 +143,7 @@ class Dte_conciliasController extends Controller
           $dato->concilia_id = Input::get('concilia_id');
           $dato->save(); 
         
-        } elseif ($condicion == '411') {
+        } elseif ($condicion == '4') {
           // salva el cheques en circulacion
           $dato = new Dte_concilia;
           $dato->seccion = 'banco';    
@@ -145,6 +152,12 @@ class Dte_conciliasController extends Controller
           $dato->detalle = Input::get('detalle');
           $dato->monto = Input::get('monto');
           $dato->concilia_id = Input::get('concilia_id');
+          $dato->save();
+        
+        } elseif ($condicion == '5') {
+          // salva el cheques en circulacion
+          $dato = Concilia::find( Input::get('concilia_id'));
+          $dato->sban_endpresentpdo  = Input::get('monto');   
           $dato->save();
         }
 
@@ -268,6 +281,11 @@ class Dte_conciliasController extends Controller
         $diario->save();
       }
 
+      // salva el cheques en circulacion
+      $dato = Concilia::find($concilia_id);
+      $dato->contabilizada = 1;   
+      $dato->save();      
+
       Sity::RegistrarEnBitacoraEsp($dte_concilias, 'dte_concilias', 1, 'Elabora y aprueba conciliacion');
       
       Session::flash('success', 'Conciliacion a hido registrada y aprobada con exito.');
@@ -279,7 +297,6 @@ class Dte_conciliasController extends Controller
       Session::flash('warning', ' Ocurrio un error en Dte_controller@contabilizaConcilia, la transaccion ha sido cancelada!');
       return back()->withInput();
     }  
-
   }
 
   /**

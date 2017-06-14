@@ -2438,3 +2438,16 @@ Work::with(
       @endif
     @endforeach   
   @endif
+
+  // otro ejemplo
+  <?php
+    $t_libro = ($concilia->slib_endlastpdo + $t_depositado + $ncs->sum('monto') + $t_chq_girados - $nds->sum('monto'));
+    $t_banco = ($concilia->sban_endpresentpdo + $d_transitos->sum('monto') - $chq_circulacions->sum('monto'));
+  ?>
+
+  @if ( number_format($t_libro,2)  == number_format($t_banco,2) )
+    <div class="row" style="margin-top:10px; margin-bottom:35px;">
+      <div class="col-xs-6"></div>
+      <div class="col-xs-6 text-right"><a href="{{ URL::route('contabilizaConcilia', [$concilia->id, $concilia->pcontable_id]) }}" class="btn btn-warning btn-sm hidden-print"><i class="fa fa-search"></i> Contabilizar conciliacion</a></div>
+    </div>
+  @endif

@@ -13,7 +13,7 @@
 <div class="container" style="width:8.5in; background-color:white";>
   <h4 class="text-center">PH El Marquez</h4>
   <p class="text-center" style="margin:0px">Conciliacion Bancaria- Banco Nacional</p>
-  <p class="text-center" style="margin:0px">31 de Agosto de 2017</p>
+  <p class="text-center" style="margin:0px">{{ $concilia->f_endpresentdo }}</p>
   <p class="text-center" style="margin:0px">(en balboas)</p>
 
 	<div class="row hidden-print" style="margin-top:0px; background-color:white;">
@@ -26,8 +26,8 @@
 	
 	<div style="background-color:white";>
 		<div class="row" style="margin-top:0px; background-color:rgb(200,200,200);">
-		  <div class="col-xs-6">Saldo en libro al 31 de julio de 2017</div>
-		  <div class="col-xs-6 text-right"><strong>{{ number_format(floatval($concilia->saldo_libro),2) }}</strong></div>
+		  <div class="col-xs-6">Saldo en libro a dia {{ $concilia->f_endlastpdo }}</div>
+		  <div class="col-xs-6 text-right"><strong>{{ number_format(floatval($concilia->slib_endlastpdo),2) }}</strong></div>
 		</div>
 
 		<div class="row" style="margin-top:5px;">
@@ -52,6 +52,7 @@
 
 			@foreach ($ncs as $nc)
 				<div class="row" style="margin-top:2px;">
+
 			    <div class="col-xs-6 form-actions">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		        {{Form::open(array(
 		          'route' => array('dte_concilias.destroy', $nc->id),
@@ -156,10 +157,10 @@
 		</div>
 
 		<div class="row" style="margin-top:5px; background-color:rgb(200,200,200);">
-		  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;Saldo conciliado en libro al 31 de agosto 2017</div>
+		  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;Saldo conciliado en libro al dia {{ $concilia->f_endpresentdo }}</div>
 		  <div class="col-xs-2"></div>	
 		  <div class="col-xs-2"></div>	
-		  <div class="col-xs-2 text-right" style="border-style: solid hidden double hidden;"><strong>{{ number_format(floatval(  ($concilia->saldo_libro + $t_depositado + $ncs->sum('monto')) - ($t_chq_girados + $nds->sum('monto'))  ),2) }}</strong></div>
+		  <div class="col-xs-2 text-right" style="border-style: solid hidden double hidden;"><strong>{{ number_format(floatval($concilia->slib_endlastpdo + $t_depositado + $ncs->sum('monto') + $t_chq_girados - $nds->sum('monto')),2) }}</strong></div>
 		</div>
 
 	<br>
@@ -168,8 +169,8 @@
 	<h4><i><b>Informacion en banco</i></b></h4>
 	<div style="background-color:white";>
 		<div class="row" style="margin-top:0px;background-color:rgb(200,200,200);">
-		  <div class="col-xs-6">Saldo en banco al 31 de agosto de 2017</div>
-		  <div class="col-xs-6 text-right"><strong>{{ number_format(floatval($concilia->saldo_banco),2) }}</strong></div>
+		  <div class="col-xs-6">Saldo en banco al dia {{ $concilia->f_endpresentdo }}</div>
+		  <div class="col-xs-6 text-right"><strong>{{ number_format(floatval($concilia->sban_endpresentpdo),2) }}</strong></div>
 		</div>
 
 		<div class="row" style="margin-top:5px;">
@@ -269,10 +270,10 @@
 		
 		</div>			
 			<div class="row" style="margin-top:5px; background-color:rgb(200,200,200);">
-			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;Saldo conciliado en banco al 31 de agosto 2017</div>
+			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;Saldo conciliado en banco al dia {{ $concilia->f_endpresentdo }}</div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
-			  <div class="col-xs-2 text-right" style="border-style: solid hidden double hidden;"><strong>{{ number_format(floatval($concilia->saldo_banco + ($d_transitos->sum('monto') - $chq_circulacions->sum('monto'))),2) }}</strong></div>
+			  <div class="col-xs-2 text-right" style="border-style: solid hidden double hidden;"><strong>{{ number_format(floatval($concilia->sban_endpresentpdo + ($d_transitos->sum('monto') - $chq_circulacions->sum('monto'))),2) }}</strong></div>
 			</div>
 	</div>
 
@@ -280,13 +281,16 @@
 	  <div class="col-xs-6" style="background-color:lavenderblush;">Saldo conciliado en libro al 31 de agosto 2017</div>
 	  <div class="col-xs-6 text-right"><strong>8,320.00</strong></div>
 	</div> -->
-	@if ((($concilia->saldo_libro + $t_depositado + $ncs->sum('monto')) - ($t_chq_girados + $nds->sum('monto'))) == ($concilia->saldo_banco + ($d_transitos->sum('monto') - $chq_circulacions->sum('monto'))))
+  <?php
+  	$t_libro = ($concilia->slib_endlastpdo + $t_depositado + $ncs->sum('monto') + $t_chq_girados - $nds->sum('monto'));
+  	$t_banco = ($concilia->sban_endpresentpdo + $d_transitos->sum('monto') - $chq_circulacions->sum('monto'));
+  ?>
+
+	@if ( number_format($t_libro,2)  == number_format($t_banco,2) )
 		<div class="row" style="margin-top:10px; margin-bottom:35px;">
 		  <div class="col-xs-6"></div>
 		  <div class="col-xs-6 text-right"><a href="{{ URL::route('contabilizaConcilia', [$concilia->id, $concilia->pcontable_id]) }}" class="btn btn-warning btn-sm hidden-print"><i class="fa fa-search"></i> Contabilizar conciliacion</a></div>
 		</div>
-	
-
 	@endif
 	
 	<hr style="margin-top:60px">
@@ -390,8 +394,6 @@
 	    </div>
 	    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 	      <div class="panel-body">
-
-
 			  	<dl>
 		  			<dt style="margin-top:9px;">Depositos del mes</dt>
 		  			<dd>Los conforman el efectivo que recibe la organizacion diariamente por concepto de cobro por servicio de mantenimiento, recargos, etc, menos aquellos gastos o pagos que no fueron girados en cheques.</dd>
@@ -408,13 +410,10 @@
 		  			<dt style="margin-top:9px;">Ajustes</dt>
 		  			<dd>Registros para corregir errores u omisiones de los tenedores de libros, que pueden provocar una diferencia en los saldos de las cuentas.</dd>
 					</dl>
-
-
 	      </div>
 	    </div>
 	  </div>
 	</div>
-
 
 	@include('templates.backend._partials.modal_confirm')
 	@include('contabilidad.concilias.Modal_AddDetalleConciliacion')
@@ -427,40 +426,34 @@
 
 <script type="text/javascript">
 
-    $("#libro-mas-1").click(function(){
-      $(".DteLibroMas").show();
-      $(".DteLibroMenos").hide();    
-      $(".DteBancoMas").hide();
-      $(".DteBancoMenos").hide();   
+    $("#nc").click(function(){
       $(".catalogo6s").hide();   
       $(".catalogo4s").show();   
+      $(".detalle").show();  
     });
 
-    $("#libro-menos-2").click(function(){
-      $(".DteLibroMas").hide();
-      $(".DteLibroMenos").show();    
-      $(".DteBancoMas").hide();
-      $(".DteBancoMenos").hide();   
+    $("#nd").click(function(){
       $(".catalogo6s").show();   
       $(".catalogo4s").hide();   
+      $(".detalle").show();  
     });
 
-    $("#banco-mas-1").click(function(){
-      $(".DteLibroMas").hide();
-      $(".DteLibroMenos").hide();
-      $(".DteBancoMas").show();
-      $(".DteBancoMenos").hide();    
+    $("#dt").click(function(){
       $(".catalogo6s").hide();   
       $(".catalogo4s").hide();
+      $(".detalle").show();   
     });
 
-    $("#banco-menos-2").click(function(){
-      $(".DteLibroMas").hide();
-      $(".DteLibroMenos").hide();
-      $(".DteBancoMas").hide();
-      $(".DteBancoMenos").show();    
+    $("#cc").click(function(){
       $(".catalogo6s").hide();   
       $(".catalogo4s").hide();
+      $(".detalle").show();  
+    });
+
+    $("#sb").click(function(){
+      $(".catalogo6s").hide();   
+      $(".catalogo4s").hide();
+      $(".detalle").hide();   
     });
 
 </script>	
