@@ -86,13 +86,19 @@
 					
 					<tr align="right">
 						<td width="3%" align="left">&nbsp;</td>
-						<td width="57%" align="left">Total de Ingresos</td>
+						<td width="57%" align="left"><strong><em>Total de Ingresos</em></strong></td>
 						<td width="7%" align="left">&nbsp;</td>
 						<td width="13%" align="left">&nbsp;</td>
-						<td width="13%"><p class="mix" ><strong>{{ number_format($total_ingresos,2) }}</strong></p></td>
+						<td width="13%"><p class="mix"><strong>{{ number_format($total_ingresos,2) }}</strong></p></td>
 					</tr>
+					
+					<tr>&nbsp;</tr>					
+					<tr>&nbsp;</tr>
+					<tr>&nbsp;</tr>
+					<tr>&nbsp;</tr>
+
 					<tr align="right">
-						<td colspan="2" align="left"><strong>Menos Gastos </strong></td>
+						<td colspan="2" align="left"><strong>Menos Gastos</strong></td>
 						<td width="7%" align="left">&nbsp;</td>
 						<td width="13%" align="left">&nbsp;</td>
 						<td width="13%">&nbsp;</td>
@@ -108,9 +114,14 @@
 						</tr>				
 					@endforeach
 
+					<tr>&nbsp;</tr>					
+					<tr>&nbsp;</tr>
+					<tr>&nbsp;</tr>
+					<tr>&nbsp;</tr>
+
 					<tr align="right">
 						<td width="3%" align="left">&nbsp;</td>
-						<td width="57%" align="left">Total de Gastos</td>
+						<td width="57%" align="left"><strong><em>Total de Gastos</em></strong></td>
 						<td width="7%" align="left">&nbsp;</td>
 						<td width="13%" align="left">&nbsp;</td>
 						<td width="13%"><p class="mix" ><strong>{{ number_format($total_gastos,2) }}</strong></p></td>

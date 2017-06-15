@@ -72,7 +72,7 @@
 												<td col width="70px" align="left"><strong>{{ $dato->periodo }}</strong></td>
 												<td col width="70px" align="left">{{ $dato->f_cierre }}</td>
 												<td col width="30px" align="center">{{ $dato->cerrado ? 'Si' : 'No' }}</td>
-												<td col width="310px" align="right">
+												<td col width="315px" align="right">
 													<ul class="demo-btns">
 														@if ( $dato->cerrado == 0 )
 															<li>

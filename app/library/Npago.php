@@ -248,7 +248,7 @@ class Npago {
             Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, $cuenta_1.' '.$mesAnio.', '.$unCodigo, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // Registra en Detallepago para generar un renglon en el recibo
-            Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento extraordinaria '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
+            Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento regular '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
 
             // Actualiza el nuevo monto disponible para continuar pagando
             // redondeo el resultado para eliminar decimales extras producto de la resta
@@ -407,7 +407,7 @@ class Npago {
       if ($hayPie) {
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de couta de mantenimiento regular, unidad '.$unCodigo.', Pago #'.$pago_id;
+        $diario->detalle = 'Para registrar cobro de couta de mant regular, unidad '.$unCodigo.', Pago #'.$pago_id;
         $diario->save();
       }
 
@@ -469,7 +469,7 @@ class Npago {
       // dd($saldocpa);
 
       // incializa variables a utilizar
-      $cuenta_2 = Catalogo::find(2)->nombre;      // 1130.00 Recargo en cuota de mantenimiento por cobrar
+      $cuenta_2 = Catalogo::find(2)->nombre;    // 1130.00 Recargo en cuota de mantenimiento por cobrar
       $cuenta_5 = Catalogo::find(5)->nombre;    // 2010.00 Anticipos recibidos de propietarios
       $cuenta_8 = Catalogo::find(8)->nombre;    // 1020.00 Banco Nacional
       $cuenta_32 = Catalogo::find(32)->nombre;  // 1000.00 Caja general
@@ -552,7 +552,7 @@ class Npago {
             Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, $cuenta_2.', '.$mesAnio, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // Registra en Detallepago para generar un renglon en el recibo
-            Self::registraDetallepago($periodo, $ocobro, 'Paga recargo en cuota de mantenimiento regular '. $mesAnio, $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
+            Self::registraDetallepago($periodo, $ocobro, 'Paga recargo en cuota de mantenimiento regular de '. $mesAnio, $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
 
             // Actualiza el nuevo monto disponible para continuar pagando
             // redondeo el resultado para eliminar decimales extras producto de la resta
@@ -682,7 +682,7 @@ class Npago {
             Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, $cuenta_2.', '.$mesAnio, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en Detallepago para generar un renglon en el recibo
-            Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento regular de '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
+            Self::registraDetallepago($periodo, $ocobro, 'Paga recargo en cuota de mantenimiento regular de '. $mesAnio, $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
 
             // salva un nuevo registro que representa una linea del recibo
             $dto = new Detallepago;
@@ -711,7 +711,7 @@ class Npago {
         // agrega ultima linea al libro diario
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de recargo en couta de mantenimiento regular, unidad '.$unCodigo.', Pago #'.$pago_id;
+        $diario->detalle = 'Para registrar cobro de recargo en couta de mant regular, unidad '.$unCodigo.', Pago #'.$pago_id;
         $diario->save();
       }
 
@@ -855,7 +855,7 @@ class Npago {
             Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, $cuenta_16.' '.$mesAnio.', '.$unCodigo, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // Registra en Detallepago para generar un renglon en el recibo
-            Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento extraordinaria '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $extra, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
+            Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento extraordinaria '. $mesAnio, $dato->id, $extra, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
 
             // Actualiza el nuevo monto disponible para continuar pagando
             // redondeo el resultado para eliminar decimales extras producto de la resta
@@ -984,7 +984,7 @@ class Npago {
             Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, $cuenta_16.' '.$mesAnio.', '.$unCodigo, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en Detallepago para generar un renglon en el recibo
-            Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento regular de '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $extra, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
+            Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento extraordinaria', $dato->id, $extra, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
 
             // salva un nuevo registro que representa una linea del recibo
             $dto = new Detallepago;
@@ -1013,7 +1013,7 @@ class Npago {
         // agrega ultima linea al libro diario
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de couta de mantenimiento extraordinaria, unidad '.$unCodigo.', Pago #'.$pago_id;
+        $diario->detalle = 'Para registrar cobro de couta de mant extraordinaria, unidad '.$unCodigo.', Pago #'.$pago_id;
         $diario->save();
       }
 

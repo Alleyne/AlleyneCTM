@@ -273,6 +273,14 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------// 		
 	Route::resource('eventos', 'EventosController');
 
+	//---------------------------------------------------------//
+	// Funciones del controlador EventosController
+	//---------------------------------------------------------// 	
+	//Route::get('cargaEventos{id?}','EventosController@index');
+	//Route::post('guardaEventos', array('as' => 'guardaEventos','uses' => 'EventosController@create'));
+	//Route::post('actualizaEventos','EventosController@update');
+	//Route::post('eliminaEvento','EventosController@delete');  
+
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');
 	Route::get('/truncateAll','PruebasController@truncateAll');

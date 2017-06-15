@@ -91,6 +91,8 @@
                                                 Add Event
                                             </button>
                                         </div>
+                                                  {!! Form::open(['route' => ['guardaEventos'], 'method' => 'POST', 'id' =>'form-calendario']) !!}
+              {!! Form::close() !!}
                                     </div>
                                 </div>
                             </form>

@@ -324,7 +324,7 @@
 						@foreach ($ncs as $nc)		
 							<div class="row">	
 							  <div class="col-xs-2"></div>
-							  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;{{ $nc->cuenta.' - '.$nc->detalle }}</div>	
+							  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;{{ $nc->cuenta }} - <em>{{ $nc->detalle }}</em></div>	
 							  <div class="col-xs-2"></div>	
 							  <div class="col-xs-2 text-right">{{ number_format(floatval($nc->monto),2) }}</div>
 							</div>

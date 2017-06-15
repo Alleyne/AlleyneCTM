@@ -58,7 +58,7 @@ class CtdasmsController extends Controller {
                       ->get();
     // dd($recs->toArray());
     
-    $total_recargo = $imps->sum('recargo');   
+    $total_recargo = $recs->sum('recargo');   
     // dd($total_recargo);
     
     //=== tercero ================================================================
