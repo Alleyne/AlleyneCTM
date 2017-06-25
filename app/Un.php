@@ -19,4 +19,9 @@ class Un extends Model
   {
       return $this->hasMany('App\Ctdasm');    
   }
+
+  public function calendareventos()
+  {
+      return $this->hasMany('App\Calendarevento');    
+  }
 }

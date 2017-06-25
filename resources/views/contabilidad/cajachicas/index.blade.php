@@ -146,12 +146,12 @@
     <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
     
     <script type="text/javascript">
-    $(document).ready(function() {
-        pageSetUp();
- 
-        $('#dt_basic').dataTable({
-            "sPaginationType" : "bootstrap_full"
-        });
-    })
+        $(document).ready(function() {
+            pageSetUp();
+     
+            $('#dt_basic').dataTable({
+                "sPaginationType" : "bootstrap_full"
+            });
+        })
     </script>
 @stop

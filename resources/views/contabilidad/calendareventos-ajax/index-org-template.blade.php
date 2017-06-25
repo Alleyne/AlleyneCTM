@@ -91,8 +91,8 @@
                                                 Add Event
                                             </button>
                                         </div>
-                                                  {!! Form::open(['route' => ['guardaEventos'], 'method' => 'POST', 'id' =>'form-calendario']) !!}
-              {!! Form::close() !!}
+                                        {!! Form::open(['route' => ['guardaEventos'], 'method' => 'POST', 'id' =>'form-calendario']) !!}
+                                        {!! Form::close() !!}
                                     </div>
                                 </div>
                             </form>
@@ -203,13 +203,13 @@
 
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/backend/js/plugin/fullcalendar/jquery.fullcalendar.min.js') }}"></script>
-
+    <script src="{{ URL::asset('assets/backend/js/plugin/fullcalendar/moment.min.js') }}"></script>
+    
     <script type="text/javascript">
     $(document).ready(function() {
       
       pageSetUp();
       
-
           "use strict";
       
           var date = new Date();
@@ -308,8 +308,8 @@
                   if ($('#drop-remove').is(':checked')) {
                       // if so, remove the element from the "Draggable Events" list
                       $(this).remove();
-                  }
-      
+                  }   
+
               },
       
               select: function (start, end, allDay) {

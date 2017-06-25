@@ -155,7 +155,7 @@ class CatalogosController extends Controller {
 	  DB::beginTransaction();
 	  try {
 			
-			//dd($request->toArray());
+			dd($request->toArray());
 			$cuenta= Catalogo::find($id);
 	   
 			$this->validate($request, array(
@@ -164,10 +164,12 @@ class CatalogosController extends Controller {
 
 			$cuenta->nombre = $request->nombre;		
 			if ($request->concilia_radios == 1) {
-				$cuenta->conciliacion = 'n/c';
 			
 			} elseif ($request->concilia_radios == 2) {
-				$cuenta->conciliacion = 'n/d';
+				$cuenta->conciliacion = 'n/c';
+			
+			} elseif ($request->concilia_radios == 3) {
+				$cuenta->conciliacion = 'n/d';			
 			}
 			
 			$cuenta->save();

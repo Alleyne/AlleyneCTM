@@ -16,6 +16,9 @@
 <!-- Basic Styles -->
 <link rel="stylesheet" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 <link href="{{ URL::asset('assets/backend/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" media="screen">			
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+
 <link href="{{ URL::asset('assets/backend/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="screen">
 
 <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
@@ -37,6 +40,9 @@
 <!-- FAVICONS -->
 <link rel="shortcut icon" href="{{ URL::asset('assets/backend/img/favicon/favicon.ico') }}" type="image/x-icon">		
 <link rel="icon" href="{{ URL::asset('assets/backend/img/favicon/favicon.ico') }}" type="image/x-icon">	
+
+
+        <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
 <!-- GOOGLE FONT -->
 <!-- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700"> -->

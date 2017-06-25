@@ -141,3 +141,7 @@
 .funny-boxes-right-u:hover {
   border-right-color: #5fb611;
 }
+
+.datepicker{
+  z-index:1151 !important;
+}

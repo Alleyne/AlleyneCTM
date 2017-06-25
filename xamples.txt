@@ -2451,3 +2451,269 @@ Work::with(
       <div class="col-xs-6 text-right"><a href="{{ URL::route('contabilizaConcilia', [$concilia->id, $concilia->pcontable_id]) }}" class="btn btn-warning btn-sm hidden-print"><i class="fa fa-search"></i> Contabilizar conciliacion</a></div>
     </div>
   @endif
+
+  /*************************************************************************************
+   * Date picker en una ventana modal
+   ************************************************************************************/
+    <style>
+      .datepicker{z-index:1151 !important;}
+    </style>
+
+    <div class="form-group">
+      <label class="col-md-3 control-label">Fecha</label>
+      <div class="col-md-9">
+      
+      <div class="input-group">
+        <input type="text" class="form-control datepicker" name="fecha" placeholder="Select a date" data-dateformat="dd/mm/yy" value={{ old('fecha') }}>
+        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+      </div>
+        {!! $errors->first('fecha', '<li style="color:red">:message</li>') !!} 
+      
+      </div>
+    </div>  
+
+      $(function () {
+      $("#fecha").datepicker({
+        dateFormat: 'yy-mm-dd'
+      });
+
+      $.datepicker.regional['es'] = {
+        closeText: 'Cerrar',
+        prevText: '<Ant',
+        nextText: 'Sig>',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'yy/mm/dd',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+        };
+
+      $.datepicker.setDefaults($.datepicker.regional['es']);
+
+
+  /*************************************************************************************
+   * Datepicker and datetimepicker en una ventana modal
+   ************************************************************************************/
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4 class="modal-title" id="myModalLabel">Agregar reservacion</h4>
+        </div>
+        <div class="modal-body">
+
+          
+          {{ Form::open(array('class' => 'form-horizontal', 'route' => 'calendareventos.store')) }}
+            <fieldset>
+              {{ Form::hidden('calendarevento_id', $dato->id) }}             
+              <style>
+                .datepicker{z-index:1151 !important;}
+              </style>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">Fecha</label>
+                <div class="col-md-9">
+                
+                <div class="input-group">
+                  <input type="text" class="form-control datepicker" name="fecha" placeholder="Select a date" data-dateformat="dd/mm/yy" value={{ old('fecha') }}>
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+                  {!! $errors->first('fecha', '<li style="color:red">:message</li>') !!} 
+                
+                </div>
+              </div>  
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">Inicia</label>
+                <div class="col-md-9">
+                
+                      <div class='input-group date' id='datetimepicker6'>
+                          <input type='text' class="form-control" />
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  {!! $errors->first('fecha', '<li style="color:red">:message</li>') !!} 
+                
+                </div>
+              </div>  
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">Termina</label>
+                <div class="col-md-9">
+                
+                      <div class='input-group date' id='datetimepicker7'>
+                          <input type='text' class="form-control" />
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                  {!! $errors->first('fecha', '<li style="color:red">:message</li>') !!} 
+                
+                </div>
+              </div> 
+
+  
+            </fieldset>       
+            
+            <div class="form-actions">
+              {{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
+              <button type="button" class="btn btn-default" data-dismiss="modal">
+                Cancel
+              </button>
+            </div>
+          {{ Form::close() }}
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->      
+
+
+
+  /*************************************************************************************
+   * Send data to a bootstrap modal window
+   ************************************************************************************/
+
+    BOTTON EN INDEX VIEW
+    <li>
+      <button type="button" data-target="#updateModal" data-toggle="modal" class="btn btn-warning btn-xs" data-calendarevento_id="{{ $dato->id }}" data-un="{{ $dato->un_id }}" data-am="{{ $dato->title }}" data-start="{{ $dato->start }}" data-end="{{ $dato->end }}"><i class="fa fa-pencil"></i></button>
+    </li>
+
+    MODAL
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Actualizar reservacion</h4>
+          </div>
+          <div class="modal-body">
+
+            {{ Form::open(array('class' => 'form-horizontal', 'route' => 'actualizaEvento')) }}
+              <fieldset>
+                <input id="calendarevento_id" name="calendarevento_id" type="hidden">
+                
+                <style>
+                  .datepicker{z-index:1151 !important;}
+                </style>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Unidad</label>
+                  <div class="col-md-9">
+                    <input type="text" name="un" id="un" class="form-control" readonly>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Amenidad</label>
+                  <div class="col-md-9">
+                    <input type="text" name="am" id="am" class="form-control" readonly>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Inicia</label>
+                  <div class="col-md-9">
+                  
+                        <div class='input-group date' id='datetimepicker6'>
+                            <input type='text' name="start" id="start" class="form-control">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    {!! $errors->first('start', '<li style="color:red">:message</li>') !!} 
+                  
+                  </div>
+                </div>  
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Termina</label>
+                  <div class="col-md-9">
+                  
+                        <div class='input-group date' id='datetimepicker7'>
+                            <input type='text' name="end" id="end" class="form-control">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    {!! $errors->first('end', '<li style="color:red">:message</li>') !!} 
+                  
+                  </div>
+                </div> 
+              </fieldset>       
+              
+              <div class="form-actions">
+                {{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  Cancel
+                </button>
+              </div>
+            {{ Form::close() }}
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    SCRIPT
+    <script>
+      $(document).ready(function() {
+        $(function () {
+          $('#datetimepicker6').datetimepicker({
+            format: 'DD/MM/YYYY hh:mm A'
+          });
+          $('#datetimepicker7').datetimepicker({
+            format: 'DD/MM/YYYY hh:mm A',
+            useCurrent: false //Important! See issue #1075
+          });
+          $("#datetimepicker6").on("dp.change", function (e) {
+              $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+          });
+          $("#datetimepicker7").on("dp.change", function (e) {
+              $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+          });
+        })
+
+        // pasa el calendarevento_id a la ventana modal 
+        $('#updateModal').on('show.bs.modal', function(e) {
+          //alert('aqui...');
+          var id = $(e.relatedTarget).data('calendarevento_id');
+          $(e.currentTarget).find('input[name="calendarevento_id"]').val(id);
+      
+          var un = $(e.relatedTarget).data('un');
+          $(e.currentTarget).find('input[name="un"]').val(un);
+          
+          var am = $(e.relatedTarget).data('am');
+          $(e.currentTarget).find('input[name="am"]').val(am);
+
+          var start = $(e.relatedTarget).data('start');
+          $(e.currentTarget).find('input[name="start"]').val(start);
+          
+          var end = $(e.relatedTarget).data('end');
+          $(e.currentTarget).find('input[name="end"]').val(end);
+        });
+
+        // Setup - add a text input to each footer cell
+        $('#dt_basic tfoot th').each( function () {
+            var title = $('#dt_basic thead th').eq( $(this).index() ).text();
+            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        });
+      });
+    </script>
+
+
+  /*************************************************************************************
+   * Trim first n caracteres from a string
+   ************************************************************************************/
+    $str = "The quick brown fox jumps over the lazy dog."
+    $str2 = substr($str, 4); // "quick brown fox jumps over the lazy dog."

@@ -171,14 +171,14 @@ class DetallefacturasController extends Controller {
 				//dd($totaldetalles);
 			    
 		    if (round(floatval($totalfactura),2) < round(floatval($totaldetalles),2)) {
-	        Session::flash('danger', '<< ERROR >> El valor total de los detalles no puede sobrepasar al valor total de la factura de egresos. Intente nuevamente!');
+	        Session::flash('danger', 'El valor total de los detalles no puede sobrepasar al valor total de la factura de egresos. Intente nuevamente!');
 	        DB::rollback();
 	        return back()->withInput()->withErrors($validation);
 		    	
 		    } elseif (round(floatval($totalfactura),2) > round(floatval($totaldetalles),2)) {
 					$factura->totaldetalle= $totaldetalles;
 					$factura->save();
-			    Session::flash('warning', '<< ATENCION >> El valor total de los detalles es inferior al valor total de la factura egresos. Continue ingresando detalles!');
+			    //Session::flash('warning', '<< ATENCION >> El valor total de los detalles es inferior al valor total de la factura egresos. Continue ingresando detalles!');
 		    
 		    } elseif (round(floatval($totalfactura),2) == round(floatval($totaldetalles),2)) {
 					$factura->totaldetalle= $totaldetalles;
@@ -237,13 +237,13 @@ class DetallefacturasController extends Controller {
 	    }
 			
 			Sity::RegistrarEnBitacora($dato, Null, 'Detallefactura', 'Elimina detalle de egreso de factura de Caja general');   
-			Session::flash('success', 'El detalle "' .$dato->detalle .'" ha sido borrado permanentemente de la base de datos.');
+			Session::flash('info', 'El detalle "' .$dato->detalle .'" ha sido borrado permanentemente de la base de datos.');
 			DB::commit();
 			return redirect()->route('detallefacturas.show', $dato->factura_id);
 		
 		} catch (\Exception $e) {
 	    DB::rollback();
-    	Session::flash('warning', ' Ocurrio un error en el modulo DetallefacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
+    	Session::flash('danger', ' Ocurrio un error en el modulo DetallefacturasController.destroy, la transaccion ha sido cancelada! '.$e->getMessage());
     	return back()->withInput()->withErrors($validation);
 		}
 	}

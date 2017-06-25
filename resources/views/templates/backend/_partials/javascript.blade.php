@@ -39,9 +39,32 @@
 		<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
 
 		<![endif]-->
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+		<script src="{{ URL::asset('assets/fullcalendar340/lib/moment.min.js') }}"></script>
+		<script src="{{ URL::asset('assets/fullcalendar340/lib/es.js') }}"></script>
 
+		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 		<!-- Demo purpose only-->
 		<script src="{{ URL::asset('assets/backend/js/demo.js') }}"></script>
 		
 		<!-- MAIN APP JS FILE-->
 		<script src="{{ URL::asset('assets/backend/js/app.js') }}"></script> 
+
+		<!-- NOTIFICACIONES VIA TOASTR-->
+		<script>
+		  @if(Session::has('success'))
+		      toastr.success("{{ Session::get('success') }}", 'FELICIDADES', {timeOut: 7000});
+		  @endif
+
+		  @if(Session::has('info'))
+		      toastr.info("{{ Session::get('info') }}", 'ATENCION', {timeOut: 7000});
+		  @endif
+
+		  @if(Session::has('warning'))
+		      toastr.warning("{{ Session::get('warning') }}", 'PRECAUCION', {timeOut: 7000});
+		  @endif
+
+		  @if(Session::has('danger'))
+		      toastr.error("{{ Session::get('danger') }}", 'ERROR', {timeOut: 7000});
+		  @endif
+		</script>

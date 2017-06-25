@@ -58,7 +58,15 @@
 		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
 	</li>
 	<li>
-		<a href="{{ URL::route('eventos.index') }}"><i class="fa fa-lg fa-fw fa-calendar"><em>3</em></i> <span class="menu-item-parent">Reservaciones</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-calendar"><em>3</em></i> <span class="menu-item-parent">Reservaciones</span></a>
+		<ul>
+			<li>
+				<a href="{{ URL::route('calendareventos.index') }}"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Eventos</span></a>
+			</li>
+			<li>
+				<a href="{{ URL::route('verCalendario') }}"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Ver calendario</span></a>
+			</li>
+		</ul>
 	</li>
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Contabilidad</span></a>
