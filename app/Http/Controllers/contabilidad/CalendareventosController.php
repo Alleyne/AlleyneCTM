@@ -4,14 +4,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Jenssegers\Date\Date;
 use App\library\Sity;
-use Carbon\Carbon, Log, DB, Session;
+use App\library\Npago;
+use Carbon\Carbon, Log, DB, Session, Auth;
 
 use App\Calendarevento;
-use App\Am;
+use App\Am_alquilere;
 use App\Un;
 use App\Prop;
 use App\User;
 use App\Trantipo;
+use App\Pago;
 
 class CalendareventosController extends Controller
 {
@@ -34,7 +36,7 @@ class CalendareventosController extends Controller
       $datos->map(function ($datos) {
         $datos->start = Date::parse($datos->start)->toDayDateTimeString();
         $datos->end = Date::parse($datos->end)->toDayDateTimeString();
-        $datos->am_id = Am::find($datos->am_id)->codigo;
+        $datos->am_id = Am_alquilere::find($datos->am_id)->codigo;
         $datos->un_id = Un::find($datos->un_id)->codigo;       
         $props = User::find($datos->user_id);
         
@@ -44,7 +46,7 @@ class CalendareventosController extends Controller
       // dd($datos);
 
       //Encuentra todas las amenidades
-      $ams = Am::orderBy('nombre')->pluck('nombre', 'id')->All();
+      $ams = Am_alquilere::orderBy('nombre')->pluck('nombre', 'id')->All();
       //dd($ams);
 
       // encuentra todas las unidades disponibles
@@ -200,39 +202,44 @@ class CalendareventosController extends Controller
      */
     public function store(Request $request)
     {
-      DB::beginTransaction();
-      try {
+      //DB::beginTransaction();
+      //try {
 
         //dd(Input::all());
         $input = Input::all();
-
-        $rules = array(
-            'start' => 'required',  
-            'end' => 'required',          
-            'un_id' => 'required|Numeric|min:1',
-            'am_id' => 'required|Numeric|min:1'
-        );
-  
         
         if (Input::get('trantipo_id') == 1) {
           $rules = array(
+            'fecha' => 'required|date', 
+            'start' => 'required',  
+            'end' => 'required',          
+            'un_id' => 'required|Numeric|min:1',
+            'am_id' => 'required|Numeric|min:1',
             'trantipo_id' => 'Required',
             'chqno' => 'Required'
           );      
 
         } elseif (Input::get('trantipo_id') == 5) {
           $rules = array(
+            'fecha' => 'required|date', 
+            'start' => 'required',  
+            'end' => 'required',          
+            'un_id' => 'required|Numeric|min:1',
+            'am_id' => 'required|Numeric|min:1',
             'trantipo_id' => 'Required'
           );  
         
         } else {
           $rules = array(
+            'fecha' => 'required|date', 
+            'start' => 'required',  
+            'end' => 'required',          
+            'un_id' => 'required|Numeric|min:1',
+            'am_id' => 'required|Numeric|min:1',
             'trantipo_id' => 'Required',
             'transno' => 'Required'
           );  
         }
-
-
 
         $messages = [
             'required'      => 'Informacion requerida!',
@@ -260,53 +267,121 @@ class CalendareventosController extends Controller
           
           //dd(Input::get('start'), Carbon::createFromFormat('d/m/Y h:i A', Input::get('start')));
 
+          
+          /*// calcula el periodo al que corresponde la fecha de pago
+          $f_pago= Carbon::parse(Input::get('f_pago'));
+          $year= $f_pago->year;
+          $month= $f_pago->month;
+          $pdo= Sity::getMonthName($month).'-'.$year;    
+            
+          // encuentra el periodo mas antiguo abierto
+          $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+          //dd($pdo, $periodo->periodo);
+          
+          // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
+          if ($pdo != $periodo->periodo) {
+            Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo de '.$periodo->periodo);
+            return back()->withInput()->withErrors($validation);
+          }
+
+          // antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
+          Npago::penalizarTipo2(Input::get('f_pago'), Input::get('un_id'), $periodo->id);
+
+          // Almacena el monto de la transaccion
+          $montoRecibido= round(floatval(Input::get('monto')),2);
+
+          // Procesa el pago recibido si el tipo de transaccion es cheque
+          if (Input::get('key') == 1) {
+            // Solamente registra el pago recibido no lo procesa
+            $dato = new Pago;
+            $dato->banco_id    = Input::get('banco_id');
+            $dato->trantipo_id = Input::get('key');
+            $dato->trans_no    = Input::get('transno'); 
+            $dato->monto       = $montoRecibido;
+            $dato->f_pago      = Input::get('f_pago');
+            $dato->descripcion = Input::get('descripcion');
+            $dato->fecha       = Carbon::today();         
+            $dato->entransito  = 1;
+            $dato->un_id       = Input::get('un_id');
+            $dato->user_id     = Auth::user()->id;        
+            $dato->save();
+            
+            // Registra en bitacoras
+            Sity::RegistrarEnBitacora($dato, Input::get(), 'Pago', 'Registra pago de propietario');
+
+            DB::commit(); 
+            Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado con éxito.');     
+        
+          } else {
+            
+            // Registra el pago recibido
+            $dato = new Pago;
+            $dato->banco_id    = Input::get('banco_id');
+            $dato->trantipo_id = Input::get('key');
+            $dato->trans_no    = Input::get('transno'); 
+            $dato->monto       = $montoRecibido;
+            $dato->f_pago      = Input::get('f_pago');
+            $dato->descripcion = Input::get('descripcion');
+            $dato->fecha       = Carbon::today();         
+            $dato->entransito  = 0;
+            $dato->un_id       = Input::get('un_id');
+            $dato->user_id     = Auth::user()->id;        
+            $dato->save();
+          }*/
+
+          // Registra el pago recibido
+          $dato = new Pago;
+          $dato->banco_id    = Input::get('banco_id');
+          $dato->trantipo_id = Input::get('trantipo_id');
+          $dato->trans_no    = Input::get('transno'); 
+          $dato->monto       = Input::get('monto'); 
+          $dato->f_pago      = Input::get('fecha');
+          $dato->descripcion = 'Deposito por alquiler de amenidades';
+          $dato->fecha       = Carbon::today();         
+          $dato->entransito  = 0;
+          $dato->un_id       = Input::get('un_id');
+          $dato->user_id     = Auth::user()->id;        
+          $dato->save();
+
           // encuentra por lo menos uno de los propietarios
           $props = Prop::where('un_id', Input::get('un_id'))
            ->join('users','users.id','=','props.user_id')
            ->first();
           //dd($props);
 
-          /*if (Input::get('am_id') == 1) { // Area social
-          
-          } elseif (Input::get('am_id') == 2) { // Piscina
-          
-          } elseif (Input::get('am_id') == 3) { // Barbacoa
-          
-          }*/
-
           $evento = new Calendarevento;
           
-          $evento->title = Am::find(Input::get('am_id'))->nombre;
+          $evento->title = Am_alquilere::find(Input::get('am_id'))->nombre;
           $evento->start = Carbon::createFromFormat('d/m/Y G:ia', Input::get('start'));
           $evento->end = Carbon::createFromFormat('d/m/Y G:ia', Input::get('end'));
           $evento->un_id = Input::get('un_id');
           $evento->user_id = $props->id;
           $evento->am_id = Input::get('am_id');
+          $evento->description = Input::get('descripcion');
+          $evento->res_tipopago = Input::get('trantipo_id');
+          $evento->res_monto = Input::get('monto');
           $evento->className = 'bg-color-yellow txt-color-white';
-          $evento->icon = 'fa-unlock';
+          $evento->icon = 'fa-unlock-o';
+          if (Input::get('trantipo_id') == 1) {
+            $evento->res_docno = Input::get('chqno');
 
+          } elseif (Input::get('trantipo_id') == 5) {
+            $evento->res_docno = 'n/a';  
+          
+          } else {
+            $evento->res_docno = Input::get('transno');    
+          } 
+          
           $evento->save();
           
-          // contabiliza evento como reservado solamente
+          $periodo = 1;
           
-          if (Input::get('tipores_radios') == 1) {
-              $factura->tipodoc = 1;
-              $factura->doc_no = Input::get('no');        
+          // contabiliza evento como reservado
+          Npago::contabilizaReservaAm($evento, $periodo, $dato->id);
+
+          // Registra en Detallepago para generar un renglon en el recibo
+          //Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento regular '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
           
-          } elseif (Input::get('tipores_radios') == 2) {
-              $factura->tipodoc = 2;
-          }
-
-
-          $dato->trantipo_id = Input::get('trantipo_id');
-          
-          if (Input::get('trantipo_id') == 1) {
-            $dato->doc_no = Input::get('chqno');
-
-          } elseif (Input::get('trantipo_id') != 5) {
-            $dato->doc_no = Input::get('transno');    
-          }
-
 
           Sity::RegistrarEnBitacora($evento, Input::get(), 'Calendarevento', 'Registra nueva resercacion de amenidades');
         
@@ -319,11 +394,11 @@ class CalendareventosController extends Controller
         Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
         return back()->withInput()->withErrors($validation);
 
-      } catch (\Exception $e) {
-          DB::rollback();
-          Session::flash('warning', ' Ocurrio un error en el modulo CalendereventosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-          return back()->withInput();
-      }
+      //} catch (\Exception $e) {
+          //DB::rollback();
+          //Session::flash('warning', ' Ocurrio un error en el modulo CalendereventosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+          //return back()->withInput();
+      //}
     }
 
     /**
@@ -352,7 +427,7 @@ class CalendareventosController extends Controller
       $dato->end = Date::parse($dato->end)->toDayDateTimeString();
 
       // cambia el campo am_id por el nombre de la amenidad
-      $dato->am_id = Am::find($dato->am_id)->nombre;
+      $dato->am_id = Am_alquilere::find($dato->am_id)->nombre;
       $dato->un_id = Un::find($dato->un_id)->codigo;
       //dd($dato);
 

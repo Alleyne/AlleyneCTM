@@ -11,9 +11,9 @@ class Calendarevento extends Model
   	return $this->belongsTo('App\Un');
   }
   
-  public function am()
+  public function am_alquilere()
   {
-  	return $this->belongsTo('App\Am');
+  	return $this->belongsTo('App\am_alquilere');
   }
 
 }

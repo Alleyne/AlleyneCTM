@@ -69,11 +69,14 @@
                                 <td col width="60px"><span class="label label-success">Pagada</span></td>
                               @endif
 
-															<td col width="60px" align="right">
+															<td col width="80px" align="right">
 																<ul class="demo-btns">
 																	<li>
-																		<a href="{{ URL::route('calendareventos.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>
+																		<a href="{{ URL::route('calendareventos.edit', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-user"></i></a>
 																	</li>
+																	<li>
+																		<a href="#" class="btn btn-warning btn-xs"><i class="fa fa-reply"></i></a>
+																	</li>																	
 																	<li>
 																		<a href="#" class="btn btn-success btn-xs"><i class="fa fa-lock"></i></a>
 																	</li>
@@ -109,7 +112,7 @@
 							<fieldset>
 	    					{{-- {{ Form::hidden('calendarevento_id', $dato->id) }}  --}}            
 								<style>
-									.datepicker{z-index:1151 !important;}
+
 								</style>
 
 								<div class="form-group">
@@ -154,13 +157,26 @@
 						                </span>
 						            </div>
 	                  {!! $errors->first('end', '<li style="color:red">:message</li>') !!} 
-	                
 	                </div>
 	              </div> 
 								
+								<div class="form-group">
+									<label class="col-md-3 control-label">Descripción</label>
+									<div class="col-md-9">
+						        {{ Form::textarea('descripcion', old('descripcion'),
+						        	array(
+						        		'class' => 'form-control',
+						        		'title' => 'Escriba la descripcion',
+						        		'rows' => '3',
+						        		'required' => ''
+						        	))
+						        }}
+									</div>
+								</div>	
+
 								<hr />
 		            
-								<!-- Multiple Radios (inline) -->
+								<!-- Multiple Radios (inline)
 								<div class="form-group">
 								  <label class="col-md-3 control-label" for="radios">Tipo de reservacion</label>
 								  <div class="col-md-9"> 
@@ -173,10 +189,21 @@
 								      Reservacion y pago completo
 								    </label>
 								  </div>
-								</div>
+								</div> 
 								
-								<hr />
+								<hr />-->
 		            
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Fecha</label>
+                        <div class="col-md-9">
+													<div class="input-group">
+														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura de egreso de caja chica!" class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+													</div>
+                        	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
+                        </div>
+                    </div>  
+
 		            <div class="form-group">
 		              <label class="col-md-3 control-label">Tipo de pago</label>
 		              <div class="col-md-9">
@@ -217,6 +244,21 @@
 		                {!! $errors->first('transno', '<li style="color:red">:message</li>') !!}
 		              </div>
 		            </div>  
+								
+								<div class="form-group">
+									<label class="col-md-3 control-label">Monto</label>
+									<div class="col-md-9">
+										{{ Form::text('monto', old('monto'),
+											array(
+											    'class' => 'form-control',
+											    'id' => 'monto',
+											    'placeholder' => 'Escriba el monto del deposito o alquiler...',
+												'autocomplete' => 'off',
+											))
+										}} 
+										{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
+									</div>
+								</div>
 							</fieldset>				
 							
 							<div class="form-actions">
@@ -232,12 +274,52 @@
 @stop
 
 @section('relatedplugins')
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
     <script src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
   	<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>   
-    
+
+		<script type="text/javascript">
+		// DO NOT REMOVE : GLOBAL FUNCTIONS!
+			$(document).ready(function() {
+				pageSetUp();
+				
+					$('#fecha').datepicker({
+						prevText : '<i class="fa fa-chevron-left"></i>',
+						nextText : '<i class="fa fa-chevron-right"></i>',
+						onSelect : function(selectedDate) {
+							$('#finishdate').datepicker('option', 'minDate', selectedDate);
+						}
+					});
+					
+					$.datepicker.regional['es'] = {
+						alert('aqui');
+						closeText: 'Cerrar',
+						prevText: '<Ant',
+						nextText: 'Sig>',
+						currentText: 'Hoy',
+						monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+						monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+						dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+						dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+						dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+						weekHeader: 'Sm',
+						dateFormat: 'yy/mm/dd',
+						firstDay: 1,
+						isRTL: false,
+						showMonthAfterYear: false,
+						yearSuffix: ''
+					};
+
+					$.datepicker.setDefaults($.datepicker.regional['es']);
+					
+					$(function () {
+						$("#fecha").datepicker();
+					});
+			})
+		</script>
+
     <script>
       $(document).ready(function() {
+		    
 		    $(function () {
 	        $('#datetimepicker6').datetimepicker({
       			format: 'DD/MM/YYYY hh:mm A'
@@ -255,24 +337,24 @@
 		    
 					var trantipo_id = jQuery('#trantipo_id');
 					var select = this.value;
+					
 					trantipo_id.change(function () {
-					    
-					    if ($(this).val() == 1) {
-				        $('.chequeNo').show();
-				    		$('.transaccionNo').hide();
-					    
-					    } else if ($(this).val() == 2 || $(this).val() == 3 || $(this).val() == 4 || $(this).val() == 6 || $(this).val() == 7) {
-					    	$('.chequeNo').hide();
-					    	$('.transaccionNo').show();
-					    
-					    } else if ($(this).val() == 5) {
-					    	$('.chequeNo').hide();
-					    	$('.transaccionNo').hide();
+				    if ($(this).val() == 1) {
+			        $('.chequeNo').show();
+			    		$('.transaccionNo').hide();
 				    
-					    }	else {
-					    	$('.chequeNo').hide();
-					    	$('.transaccionNo').hide();
-					    }
+				    } else if ($(this).val() == 2 || $(this).val() == 3 || $(this).val() == 4 || $(this).val() == 6 || $(this).val() == 7) {
+				    	$('.chequeNo').hide();
+				    	$('.transaccionNo').show();
+				    
+				    } else if ($(this).val() == 5) {
+				    	$('.chequeNo').hide();
+				    	$('.transaccionNo').hide();
+			    
+				    }	else {
+				    	$('.chequeNo').hide();
+				    	$('.transaccionNo').hide();
+				    }
 					});
 
 		    })

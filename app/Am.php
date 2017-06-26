@@ -6,9 +6,4 @@ class Am extends Model
 	protected $table = 'ams';
   public $timestamps = true;
 
-  public function calendareventos()
-  {
-      return $this->hasMany('App\Calendarevento');    
-  }
-
 }

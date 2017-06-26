@@ -1600,4 +1600,107 @@ class Npago {
       $factura->save();
     }
   }
+
+  /** 
+  *=============================================================================================
+  *  Esta function registra en libros el pago por reserva de Area social & BB
+  * @param  string detallepagofactura_id  '7'       
+  * @return void
+  *===========================================================================================*/
+  public static function contabilizaReservaAm($evento, $periodo, $pago_id) {
+  
+    //dd($evento, $periodo);
+
+    // incializa variables a utilizar
+    $cuenta_32 = Catalogo::find(32)->nombre;  // 1000.00 Caja general
+    $cuenta_39 = Catalogo::find(39)->nombre;  // 2040.00 Depositos por reservacion de Area social & BB
+    $cuenta_8 = Catalogo::find(8)->nombre;    // 1020.00 Banco Nacional
+
+    if ($evento->res_tipopago != '4' ) {
+      // verifica si existe registro para informe de diario de caja para el dia de hoy,
+      // si no existe entonces lo crea.      
+      $diariocaja= Diariocaja::where('fecha', Carbon::today())->first();
+
+      if (!$diariocaja) {
+        $dto = new Diariocaja; 
+        $dto->fecha = Carbon::today();         
+        $dto->save();
+      }
+      
+      // registra en ctmayores un aumento en la Caja general
+      Sity::registraEnCuentas(
+        $periodo,
+        'mas',
+        1, 
+        32,
+        Carbon::today(),
+        'Deposito por reservacion de '.$evento->title,
+        $evento->res_monto,
+        $evento->un_id,
+        $pago_id,
+        $evento->id
+      );
+
+      // registra en Ctdiario principal
+      $diario = new Ctdiario;
+      $diario->pcontable_id  = $periodo;
+      $diario->fecha   = Carbon::today();
+      $diario->detalle = $cuenta_32;
+      $diario->debito = $evento->res_monto;
+      $diario->save();     
+
+    } else {  
+      
+      // registra en ctmayores un aumento en banco
+      Sity::registraEnCuentas(
+        $periodo,
+        'mas',
+        1, 
+        8,
+        Carbon::today(),
+        'Deposito por reservacion de '.$evento->title,
+        $evento->res_monto,
+        $evento->un_id,
+        $pago_id,
+        $evento->id
+      );
+
+      // registra en Ctdiario principal
+      $diario = new Ctdiario;
+      $diario->pcontable_id  = $periodo;
+      $diario->fecha   = Carbon::today();
+      $diario->detalle = $cuenta_8;
+      $diario->debito = $evento->res_monto;
+      $diario->save();     
+    } 
+
+    // registra en ctmayores un aumento cuenta Depositos por reservacion de amenidades
+    Sity::registraEnCuentas(
+      $periodo,
+      'mas',
+      2, 
+      39,
+      Carbon::today(),
+      'Deposito por reservacion de '.$evento->title.', pago #'. $pago_id.', doc #'. $evento->res_docno,
+      $evento->res_monto,
+      $evento->un_id,
+      $pago_id,
+      $evento->id
+    );
+
+    // registra en Ctdiario principal
+    $diario = new Ctdiario;
+    $diario->pcontable_id  = $periodo;
+    $diario->detalle = $cuenta_39;
+    $diario->credito = $evento->res_monto;
+    $diario->save();       
+
+    // registra en Ctdiario principal
+    $diario = new Ctdiario;
+    $diario->pcontable_id = $periodo;
+    $diario->detalle = 'Para registra deposito por reservacion de '.$evento->title.', pago #'. $pago_id.', doc #'. $evento->res_docno.', '.$periodo;
+    $diario->save(); 
+  
+
+  }
 } //fin de Class Npago

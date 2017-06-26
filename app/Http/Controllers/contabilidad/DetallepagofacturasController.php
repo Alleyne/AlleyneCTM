@@ -250,8 +250,10 @@ class DetallepagofacturasController extends Controller {
 				
 				if (Input::get('trantipo_id') == 1) {
 					$dato->doc_no = Input::get('chqno');
-
-				} elseif (Input::get('trantipo_id') != 5) {
+				
+				} elseif (Input::get('trantipo_id') == 5) {
+				
+				} else {
 					$dato->doc_no = Input::get('transno');		
 				}
 				$dato->save();	
