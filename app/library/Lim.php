@@ -41,7 +41,8 @@ class Lim {
     DB::table('dte_concilias')->truncate();
 
     DB::table('calendareventos')->truncate();
-    
+    DB::table('eventodevoluciones')->truncate();
+
     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
   }
 } //fin de Class Lim

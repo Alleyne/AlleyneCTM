@@ -21,6 +21,7 @@ use App\Detallepagofactura;
 use App\Diariocaja;
 use App\Factura;
 use App\Org;
+use App\Calendarevento;
 
 class Npago {
   
@@ -1700,7 +1701,228 @@ class Npago {
     $diario->pcontable_id = $periodo;
     $diario->detalle = 'Para registra deposito por reservacion de '.$evento->title.', pago #'. $pago_id.', doc #'. $evento->res_docno.', '.$periodo;
     $diario->save(); 
-  
+    
+    // Registra en Detallepago para generar un renglon en el recibo
+    Self::registraDetallepago($periodo, '', 'Paga deposito por reservacion de '.$evento->title, '', $evento->res_monto, $evento->un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);  
 
   }
+
+  /** 
+  *=============================================================================================
+  *  Esta function registra en libros devolucion de deposito por reserva de Area social & BB
+  * @param  collection devolucion       
+  * @return periodo
+  * @return void
+  *===========================================================================================*/
+  public static function contabilizaDevolucionDeposito($devolucion, $periodo) {
+  
+    //dd($devolucion, $periodo);
+
+    // encuentra los detalles del calendarevento
+    $evento = Calendarevento::find($devolucion->calendarevento_id);
+    
+    // incializa variables a utilizar
+    $cuenta_32 = Catalogo::find(32)->nombre;  // 1000.00 Caja general
+    $cuenta_39 = Catalogo::find(39)->nombre;  // 2040.00 Depositos por reservacion de Area social & BB
+    $cuenta_8 = Catalogo::find(8)->nombre;    // 1020.00 Banco Nacional
+
+    // verifica si existe registro para informe de diario de caja para el dia de hoy,
+    // si no existe entonces lo crea.      
+    $diariocaja= Diariocaja::where('fecha', Carbon::today())->first();
+
+    if (!$diariocaja) {
+      $dto = new Diariocaja; 
+      $dto->fecha = Carbon::today();         
+      $dto->save();
+    }
+
+    // registra en ctmayores un aumento cuenta Depositos por reservacion de amenidades
+    Sity::registraEnCuentas(
+      $periodo,
+      'menos',
+      2, 
+      39,
+      Carbon::today(),
+      'Devolucion de deposito por reservacion de '.$evento->title.', doc #'. $evento->res_docno,
+      $evento->res_monto,
+      $evento->un_id,
+      null,
+      $evento->id
+    );
+
+    // registra en Ctdiario principal
+    $diario = new Ctdiario;
+    $diario->pcontable_id  = $periodo;
+    $diario->fecha   = Carbon::today();
+    $diario->detalle = $cuenta_39;
+    $diario->debito = $evento->res_monto;
+    $diario->save();  
+
+    if ($devolucion->tipopago != '4' ) {  // no sea banca en linea
+      // registra en ctmayores un aumento en la Caja general
+      Sity::registraEnCuentas(
+        $periodo,
+        'menos',
+        1, 
+        32,
+        Carbon::today(),
+        'Devolucion de deposito por reservacion de '.$evento->title,
+        $evento->res_monto,
+        $evento->un_id,
+        null,
+        $evento->id
+      );
+
+      // registra en Ctdiario principal
+      $diario = new Ctdiario;
+      $diario->pcontable_id  = $periodo;
+      $diario->detalle = $cuenta_32;
+      $diario->credito = $evento->res_monto;
+      $diario->save();     
+
+    } else {  
+      
+      // registra en ctmayores un aumento en banco
+      Sity::registraEnCuentas(
+        $periodo,
+        'menos',
+        1, 
+        8,
+        Carbon::today(),
+        'Devolucion de deposito por reservacion de '.$evento->title,
+        $evento->res_monto,
+        $evento->un_id,
+        null,
+        $evento->id
+      );
+
+      // registra en Ctdiario principal
+      $diario = new Ctdiario;
+      $diario->pcontable_id  = $periodo;
+      $diario->fecha   = Carbon::today();
+      $diario->detalle = $cuenta_8;
+      $diario->credito = $evento->res_monto;
+      $diario->save();     
+    } 
+
+    // registra en Ctdiario principal
+    $diario = new Ctdiario;
+    $diario->pcontable_id = $periodo;
+    $diario->detalle = 'Para registra devolucion de deposito por reservacion de '.$evento->title.', doc #'. $evento->res_docno.', '.$periodo;
+    $diario->save(); 
+    
+    // Registra en Detallepago para generar un renglon en el recibo
+    // Self::registraDetallepago($periodo, '', 'Paga deposito por reservacion de '.$evento->title, '', $evento->res_monto, $evento->un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);  
+
+  }
+
+  /** 
+  *=============================================================================================
+  *  Esta function registra devolucion en el pago de alquiler de Area social & BB
+  * @param  collection devolucion       
+  * @return periodo
+  * @return void
+  *===========================================================================================*/
+  public static function contabilizaDevolucionAlquiler($devolucion, $periodo) {
+  
+    //dd($devolucion, $periodo);
+
+    // encuentra los detalles del calendarevento
+    $evento = Calendarevento::find($devolucion->calendarevento_id);
+
+    // incializa variables a utilizar
+    $cuenta_32 = Catalogo::find(32)->nombre;  // 1000.00 Caja general
+    $cuenta_39 = Catalogo::find(39)->nombre;  // 2040.00 Depositos por reservacion de Area social & BB
+    $cuenta_8 = Catalogo::find(8)->nombre;    // 1020.00 Banco Nacional
+    
+    // verifica si existe registro para informe de diario de caja para el dia de hoy,
+    // si no existe entonces lo crea.      
+    $diariocaja= Diariocaja::where('fecha', Carbon::today())->first();
+
+    if (!$diariocaja) {
+      $dto = new Diariocaja; 
+      $dto->fecha = Carbon::today();         
+      $dto->save();
+    }
+    
+    // registra en ctmayores un aumento cuenta Depositos por reservacion de amenidades
+    Sity::registraEnCuentas(
+      $periodo,
+      'menos',
+      2, 
+      39,
+      Carbon::today(),
+      'Devolucion de deposito por reservacion de '.$evento->title.', doc #'. $evento->pc_docno,
+      $evento->pc_monto,
+      $evento->un_id,
+      null,
+      $evento->id
+    );
+
+    // registra en Ctdiario principal
+    $diario = new Ctdiario;
+    $diario->pcontable_id  = $periodo;
+    $diario->fecha   = Carbon::today();
+    $diario->detalle = $cuenta_39;
+    $diario->debito = $evento->pc_monto;
+    $diario->save();  
+
+    if ($devolucion->tipopago != '4' ) {  // no sea banca en linea
+      // registra en ctmayores un aumento en la Caja general
+      Sity::registraEnCuentas(
+        $periodo,
+        'menos',
+        1, 
+        32,
+        Carbon::today(),
+        'Devolucion de deposito por reservacion de '.$evento->title,
+        $evento->pc_monto,
+        $evento->un_id,
+        null,
+        $evento->id
+      );
+
+      // registra en Ctdiario principal
+      $diario = new Ctdiario;
+      $diario->pcontable_id  = $periodo;
+      $diario->detalle = $cuenta_32;
+      $diario->credito = $evento->pc_monto;
+      $diario->save();     
+
+    } else {  
+      
+      // registra en ctmayores un aumento en banco
+      Sity::registraEnCuentas(
+        $periodo,
+        'menos',
+        1, 
+        8,
+        Carbon::today(),
+        'Devolucion de deposito por reservacion de '.$evento->title,
+        $evento->pc_monto,
+        $evento->un_id,
+        null,
+        $evento->id
+      );
+
+      // registra en Ctdiario principal
+      $diario = new Ctdiario;
+      $diario->pcontable_id  = $periodo;
+      $diario->fecha   = Carbon::today();
+      $diario->detalle = $cuenta_8;
+      $diario->credito = $evento->pc_monto;
+      $diario->save();     
+    }      
+
+    // registra en Ctdiario principal
+    $diario = new Ctdiario;
+    $diario->pcontable_id = $periodo;
+    $diario->detalle = 'Para registra devolucion de deposito por reservacion de '.$evento->title.', doc #'. $evento->pc_docno.', '.$periodo;
+    $diario->save(); 
+    
+    // Registra en Detallepago para generar un renglon en el recibo
+    // Self::registraDetallepago($periodo, '', 'Paga deposito por reservacion de '.$evento->title, '', $evento->res_monto, $evento->un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);  
+
+  }
+
 } //fin de Class Npago

@@ -198,6 +198,7 @@ class PagosController extends Controller {
 					$dato->monto       = $montoRecibido;
 					$dato->f_pago      = Input::get('f_pago');
 					$dato->descripcion = Input::get('descripcion');
+					$dato->concepto		 = 'pago por servicios de mantenimiento';
 				  $dato->fecha 	   	 = Carbon::today(); 		    
 					$dato->entransito  = 1;
 					$dato->un_id       = Input::get('un_id');
@@ -220,6 +221,7 @@ class PagosController extends Controller {
 					$dato->monto       = $montoRecibido;
 					$dato->f_pago      = Input::get('f_pago');
 					$dato->descripcion = Input::get('descripcion');
+					$dato->concepto		 = 'pago por servicios de mantenimiento';
 				  $dato->fecha 	   	 = Carbon::today(); 		    
 					$dato->entransito  = 0;
 					$dato->un_id       = Input::get('un_id');

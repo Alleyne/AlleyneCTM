@@ -40,10 +40,7 @@
 
 		<![endif]-->
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-		<script src="{{ URL::asset('assets/fullcalendar340/lib/moment.min.js') }}"></script>
-		<script src="{{ URL::asset('assets/fullcalendar340/lib/es.js') }}"></script>
 
-		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 		<!-- Demo purpose only-->
 		<script src="{{ URL::asset('assets/backend/js/demo.js') }}"></script>
 		

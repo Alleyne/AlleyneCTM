@@ -13,7 +13,7 @@ class Calendarevento extends Model
   
   public function am_alquilere()
   {
-  	return $this->belongsTo('App\am_alquilere');
+  	return $this->belongsTo('App\Am_alquilere');
   }
 
 }

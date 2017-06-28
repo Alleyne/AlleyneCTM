@@ -279,7 +279,11 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador CalendareventosController
 	//---------------------------------------------------------// 	
-	//Route::get('cargaEventos{id?}','CalendareventosController@index');
+	Route::get('eventoAlquiler/{calendarevento_id}','CalendareventosController@eventoAlquiler')->name('eventoAlquiler');
+	Route::post('eventoAlquilerUpdate/{calendarevento_id}','CalendareventosController@eventoAlquilerUpdate')->name('eventoAlquilerUpdate');
+	Route::get('eventoDevolucion/{calendarevento_id}','CalendareventosController@eventoDevolucion')->name('eventoDevolucion');
+	Route::post('eventoDevolucionStore/{calendarevento_id}','CalendareventosController@eventoDevolucionStore')->name('eventoDevolucionStore');
+
   Route::post('guardaEventos', 'CalendareventosController@create')->name('guardaEventos');
   Route::post('actualizaEvento', 'CalendareventosController@actualizaEvento')->name('actualizaEvento');
 	Route::post('eliminaEvento','CalendareventosController@delete');  

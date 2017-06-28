@@ -3,6 +3,12 @@
 @section('title', '| Reservaciones')
 
 @section('content')
+    <style type="text/css">
+	    .progress {
+	     margin-bottom: 0px;     	
+    	}
+    </style>
+
     <div class="row show-grid">
         <div class="col-xs-12 col-sm-6 col-md-12">        
             <!-- NEW WIDGET START -->
@@ -43,6 +49,7 @@
 											<table id="dt_basic" class="table table-hover">
 												<thead>
 												<tr>
+													<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>
 													<th>No</th>
 													<th>UNIDAD</th>
 													<th>PROPIETARIOS</th>
@@ -50,38 +57,79 @@
 													<th>FIN</th>
 													<th>AME</th>
 													<th>ESTATUS</th>
-													<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>	
 												</tr>
 												</thead>
 												<tbody>
 													@foreach ($datos as $dato)
 														<tr>
+															<td col width="70px">
+																<div class="btn-group">
+																	@if ($dato->status == 0 || $dato->status == 1)
+																		<button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+																			Accion <span class="caret"></span>
+																		</button>
+																	@else
+																		<button class="btn btn-primary btn-xs dropdown-toggle disabled" data-toggle="dropdown">
+																			Accion <span class="caret"></span>
+																		</button>
+																	@endif
+																		<ul class="dropdown-menu">
+																			<li>
+																				<a href="{{ URL::route('calendareventos.edit', $dato->id) }}">Editar propietario</a>
+																			</li>
+																			<li>
+																				<a href="javascript:void(0);">Ver recibo de deposito</a>
+																			</li>
+																			<li>
+																				<a href="{{ URL::route('eventoDevolucion', $dato->id) }}">Cancelar y devolver</a>
+																			</li>
+																			<li class="divider"></li>
+																			<li>
+																				<a href="{{ URL::route('eventoAlquiler', $dato->id) }}">Registrar alquiler</a>
+																			</li>
+																			<li>
+																				<a href="javascript:void(0);">Ver recibo de alquiler</a>
+																			</li>
+																		</ul>
+																</div>
+															</td>
 															<td>{{ $dato->id }}</td>
 															<td col width="80px"><strong>{{ $dato->un_id }}</strong></td>
 															<td>{{ $dato->props }}</td>
-															<td col width="170px">{{ $dato->start }}</td>
-															<td col width="170px">{{ $dato->end }}</td>
+															<td col width="140px">{{ $dato->start }}</td>
+															<td col width="140px">{{ $dato->end }}</td>
 															<td col width="25px" align="center"><strong>{{ $dato->am_id }}</strong></td>
 														
-                              @if ($dato->etapa == 0)
-                                <td col width="60px"><span class="label label-info">Deposito</span></td>
-                              @else
-                                <td col width="60px"><span class="label label-success">Pagada</span></td>
-                              @endif
-
-															<td col width="80px" align="right">
-																<ul class="demo-btns">
-																	<li>
-																		<a href="{{ URL::route('calendareventos.edit', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-user"></i></a>
-																	</li>
-																	<li>
-																		<a href="#" class="btn btn-warning btn-xs"><i class="fa fa-reply"></i></a>
-																	</li>																	
-																	<li>
-																		<a href="#" class="btn btn-success btn-xs"><i class="fa fa-lock"></i></a>
-																	</li>
-																</ul>
+                              @if ($dato->status == 0)
+			                        <td>      
+	                              {{-- <td>
+																	<div class="progress">
+																		<div class="progress-bar bg-color-teal" aria-valuetransitiongoal="25"></div>
+																	</div>
+																</td> --}}																
+																<div class="progress progress-sm">
+																	<div class="progress-bar bg-color-redLight" style="width: 20%"></div>
+																</div>
 															</td>
+                              
+                              @elseif ($dato->status == 1)
+				                        <td>      
+																	<div class="progress progress-sm">
+																		<div class="progress-bar bg-color-yellow" style="width: 80%"></div>
+																	</div>
+																</td>
+                              
+                              @elseif ($dato->status == 2)
+				                        <td>      
+																	<div class="progress progress-sm">
+																		<div class="progress-bar bg-color-greenLight" style="width: 100%"></div>
+																	</div>
+																</td>
+                              @else
+																<td>
+                              		Cancelado
+                              	</td>
+                              @endif
 														</tr>
 													@endforeach
 												</tbody>
@@ -106,15 +154,32 @@
 						<h4 class="modal-title" id="myModalLabel">Agregar reservacion</h4>
 					</div>
 					<div class="modal-body">
-
-						
+						<style type="text/css">
+							    	.datetimepicker { position: relative; z-index: 10000 !important; }
+						</style>
 						{{ Form::open(array('class' => 'form-horizontal', 'route' => 'calendareventos.store')) }}
 							<fieldset>
 	    					{{-- {{ Form::hidden('calendarevento_id', $dato->id) }}  --}}            
-								<style>
+								
+								<div class="alert alert-info fade in">
+									<button class="close" data-dismiss="alert">
+										×
+									</button>
+									<i class="fa-fw fa fa-warning"></i>
+									<strong>Atencion: </strong> Para poder registrar una nueva reservacion en el sistema, el propietario debera pagar por adelantado un deposito de garantia y entregar comprobante de pago.
+								</div>
 
-								</style>
-
+               {{--  <div class="form-group">
+                    <label class="col-md-3 control-label">Fecha</label>
+                    <div class="col-md-9">
+											<div class="input-group">
+												<input type="text" name="fecha" placeholder="Fecha en que se efectuo el deposito de garantia!" class="form-control" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+											</div>
+                    	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
+                    </div>
+                </div> --}}
+								
 								<div class="form-group">
 									<label class="col-md-3 control-label">Unidades</label>
 									<div class="col-md-9">
@@ -136,7 +201,7 @@
 	                <div class="col-md-9">
 									
 						            <div class='input-group date' id='datetimepicker6'>
-						                <input type='text' name="start" class="form-control" />
+						                <input type='text' name="start" class="form-control" placeholder="Fecha de inicio del evento" />
 						                <span class="input-group-addon">
 						                    <span class="glyphicon glyphicon-calendar"></span>
 						                </span>
@@ -151,7 +216,7 @@
 	                <div class="col-md-9">
 									
 						            <div class='input-group date' id='datetimepicker7'>
-						                <input type='text' name="end" class="form-control" />
+						                <input type='text' name="end" class="form-control" placeholder="Fecha de finalizacion del evento" />
 						                <span class="input-group-addon">
 						                    <span class="glyphicon glyphicon-calendar"></span>
 						                </span>
@@ -166,7 +231,7 @@
 						        {{ Form::textarea('descripcion', old('descripcion'),
 						        	array(
 						        		'class' => 'form-control',
-						        		'title' => 'Escriba la descripcion',
+						        		'placeholder' => 'Motivo por el cual se reservan las amenidades',
 						        		'rows' => '3',
 						        		'required' => ''
 						        	))
@@ -192,17 +257,19 @@
 								</div> 
 								
 								<hr />-->
-		            
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Fecha</label>
-                        <div class="col-md-9">
-													<div class="input-group">
-														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura de egreso de caja chica!" class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
-														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-													</div>
-                        	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
-                        </div>
-                    </div>  
+		             
+								<div class="form-group">
+									<label class="col-md-3 control-label">Fecha</label>
+									<div class="col-md-9">
+										<div class="input-group date" data-provide="datepicker">
+									    <input type="text" name="fecha" placeholder="Fecha en que se efectuo el deposito de garantia!" class="form-control">
+									    <div class="input-group-addon">
+									        <span class="glyphicon glyphicon-th"></span>
+									    </div>
+											<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p>
+										</div>
+									</div>
+								</div>
 
 		            <div class="form-group">
 		              <label class="col-md-3 control-label">Tipo de pago</label>
@@ -214,6 +281,13 @@
 		                </select>
 		              </div>    
 		            </div>
+								
+								<div class="bancos form-group">
+									<label class="col-md-3 control-label">Banco</label>
+									<div class="col-md-9">
+										{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control']) }}
+									</div>
+								</div>
 		            
 		            <div class="form-group chequeNo" style=" display: none;">
 		              <label class="col-md-3 control-label">Cheque No.</label>
@@ -245,7 +319,7 @@
 		              </div>
 		            </div>  
 								
-								<div class="form-group">
+								{{-- <div class="form-group">
 									<label class="col-md-3 control-label">Monto</label>
 									<div class="col-md-9">
 										{{ Form::text('monto', old('monto'),
@@ -258,7 +332,7 @@
 										}} 
 										{!! $errors->first('monto', '<li style="color:red">:message</li>') !!}
 									</div>
-								</div>
+								</div> --}}
 							</fieldset>				
 							
 							<div class="form-actions">
@@ -274,63 +348,41 @@
 @stop
 
 @section('relatedplugins')
+    <script src="{{ URL::asset('assets/fullcalendar340/lib/moment.min.js') }}"></script>
     <script src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
   	<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>   
-
-		<script type="text/javascript">
-		// DO NOT REMOVE : GLOBAL FUNCTIONS!
-			$(document).ready(function() {
-				pageSetUp();
-				
-					$('#fecha').datepicker({
-						prevText : '<i class="fa fa-chevron-left"></i>',
-						nextText : '<i class="fa fa-chevron-right"></i>',
-						onSelect : function(selectedDate) {
-							$('#finishdate').datepicker('option', 'minDate', selectedDate);
-						}
-					});
-					
-					$.datepicker.regional['es'] = {
-						alert('aqui');
-						closeText: 'Cerrar',
-						prevText: '<Ant',
-						nextText: 'Sig>',
-						currentText: 'Hoy',
-						monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-						monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-						dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-						dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
-						dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
-						weekHeader: 'Sm',
-						dateFormat: 'yy/mm/dd',
-						firstDay: 1,
-						isRTL: false,
-						showMonthAfterYear: false,
-						yearSuffix: ''
-					};
-
-					$.datepicker.setDefaults($.datepicker.regional['es']);
-					
-					$(function () {
-						$("#fecha").datepicker();
-					});
-			})
-		</script>
+  	<script src="{{ URL::asset('assets/backend/js/plugin/bootstrap-progressbar/bootstrap-progressbar.js') }}"></script> 
 
     <script>
       $(document).ready(function() {
 		    
 		    $(function () {
+	        $('.datepicker').datepicker();
+
+	        // Fill all progress bars with animation
+					$('.progress-bar').progressbar({
+						display_text : 'fill'
+					});
+
+	        var dateToday = new Date();
 	        $('#datetimepicker6').datetimepicker({
-      			format: 'DD/MM/YYYY hh:mm A'
+      			format: 'DD/MM/YYYY hh:mm A',
+      			stepping: 30,
+      			minDate: dateToday
 	        });
+
 	        $('#datetimepicker7').datetimepicker({
             format: 'DD/MM/YYYY hh:mm A',
+            stepping: 30,
             useCurrent: false //Important! See issue #1075
 	        });
+
 	        $("#datetimepicker6").on("dp.change", function (e) {
 	            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
 	        });
+	        
 	        $("#datetimepicker7").on("dp.change", function (e) {
 	            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
 	        });
@@ -340,20 +392,19 @@
 					
 					trantipo_id.change(function () {
 				    if ($(this).val() == 1) {
+			        $('.bancos').show();
 			        $('.chequeNo').show();
 			    		$('.transaccionNo').hide();
 				    
-				    } else if ($(this).val() == 2 || $(this).val() == 3 || $(this).val() == 4 || $(this).val() == 6 || $(this).val() == 7) {
-				    	$('.chequeNo').hide();
-				    	$('.transaccionNo').show();
-				    
 				    } else if ($(this).val() == 5) {
+				    	$('.bancos').hide();
 				    	$('.chequeNo').hide();
 				    	$('.transaccionNo').hide();
 			    
 				    }	else {
+				    	$('.bancos').show();
 				    	$('.chequeNo').hide();
-				    	$('.transaccionNo').hide();
+				    	$('.transaccionNo').show();
 				    }
 					});
 
