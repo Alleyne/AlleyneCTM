@@ -28,12 +28,11 @@
                 
 								<header>
 									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-									<h2>Reserva de amenidades </h2>
+									<h2>Reservaciones y alquileres de amenidades </h2>
 									<div class="widget-toolbar">
-										<a href="#" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
-											<button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus"></i>
-												 Agregar reservacion
-											</button>
+										<button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus"></i>
+											 Agregar reservacion
+										</button>
 									</div>
 								</header>
 
@@ -75,21 +74,25 @@
 																	@endif
 																		<ul class="dropdown-menu">
 																			<li>
-																				<a href="{{ URL::route('calendareventos.edit', $dato->id) }}">Editar propietario</a>
+																				<a href="{{ URL::route('calendareventos.edit', $dato->id) }}">Editar reservacion</a>
 																			</li>
 																			<li>
-																				<a href="javascript:void(0);">Ver recibo de deposito</a>
+																				<a href="{{ URL::route('eventoDevolucion', $dato->id) }}">Cancelar y devolver depositos</a>
 																			</li>
-																			<li>
-																				<a href="{{ URL::route('eventoDevolucion', $dato->id) }}">Cancelar y devolver</a>
-																			</li>
+																			@if ($dato->status == 0)
+																				<li>
+																					<a href="{{ URL::route('eventoAlquiler', $dato->id) }}">Registrar pago por alquiler</a>
+																				</li>
+																			@endif
 																			<li class="divider"></li>
 																			<li>
-																				<a href="{{ URL::route('eventoAlquiler', $dato->id) }}">Registrar alquiler</a>
+																				<a href="{{ URL::route('showRecibo', $dato->res_pago_id) }}">Ver recibo de deposito</a>
 																			</li>
-																			<li>
-																				<a href="javascript:void(0);">Ver recibo de alquiler</a>
-																			</li>
+																			@if ($dato->status == 1 || $dato->status == 2)
+																				<li>
+																					<a href="{{ URL::route('showRecibo', $dato->pc_pago_id) }}">Ver recibo de alquiler</a>
+																				</li>
+																			@endif
 																		</ul>
 																</div>
 															</td>
@@ -262,7 +265,7 @@
 									<label class="col-md-3 control-label">Fecha</label>
 									<div class="col-md-9">
 										<div class="input-group date" data-provide="datepicker">
-									    <input type="text" name="fecha" placeholder="Fecha en que se efectuo el deposito de garantia!" class="form-control">
+									    <input type="text" id="fecha" name="fecha" placeholder="Fecha en que se efectuo el deposito de garantia!" class="form-control">
 									    <div class="input-group-addon">
 									        <span class="glyphicon glyphicon-th"></span>
 									    </div>
@@ -270,6 +273,19 @@
 										</div>
 									</div>
 								</div>
+
+
+{{--                     <div class="form-group">
+                        <label class="col-md-3 control-label">Fecha</label>
+                        <div class="col-md-9">
+													<div class="input-group">
+														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+													</div>
+                        	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
+                        </div>
+                    </div>  
+ --}}
 
 		            <div class="form-group">
 		              <label class="col-md-3 control-label">Tipo de pago</label>
@@ -359,7 +375,7 @@
       $(document).ready(function() {
 		    
 		    $(function () {
-	        $('.datepicker').datepicker();
+	        $('.fecha').datepicker();
 
 	        // Fill all progress bars with animation
 					$('.progress-bar').progressbar({

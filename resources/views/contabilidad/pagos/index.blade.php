@@ -32,14 +32,8 @@
                             <a class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#">REGISTRAR INGRESO POR:</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Alquiler del area social</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 2)) }}">Multas</a></li>
-                                
-                                <li class="divider"></li>                                
-                                <li><a href="#">COBRAR INGRESO POR:</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Alquiler del area social</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 2)) }}">Multas</a></li>
-                                <li><!-- <a href="#">Separated link</a> --></li>
+                                <li><a href="#">Multas</a></li>
+                                <li><a href="#">Otros</a></li>
                             </ul>
                         </div><!-- /btn-group --> 
 

@@ -269,25 +269,21 @@ Route::group(['namespace' => 'contabilidad'], function()
   Route::get('contabilizaConcilia/{concilia_id},{pcontable_id}', 'Dte_conciliasController@contabilizaConcilia')->name('contabilizaConcilia');
 
 	//---------------------------------------------------------//
-	// Funciones del controlador EventosController
+	// Funciones del controlador CalendareventosController
 	//---------------------------------------------------------// 		
 	//Route::get('verFullCalendar','CalendareventosController@verFullCalendar')->name('verFullCalendar');
 	Route::get('verCalendario','CalendareventosController@verCalendario')->name('verCalendario');
 	Route::get('cargaEventos','CalendareventosController@cargaEventos')->name('cargaEventos');
-	Route::resource('calendareventos', 'CalendareventosController', ['only' => ['index', 'store','edit', 'update']]);
-
-	//---------------------------------------------------------//
-	// Funciones del controlador CalendareventosController
-	//---------------------------------------------------------// 	
 	Route::get('eventoAlquiler/{calendarevento_id}','CalendareventosController@eventoAlquiler')->name('eventoAlquiler');
-	Route::post('eventoAlquilerUpdate/{calendarevento_id}','CalendareventosController@eventoAlquilerUpdate')->name('eventoAlquilerUpdate');
 	Route::get('eventoDevolucion/{calendarevento_id}','CalendareventosController@eventoDevolucion')->name('eventoDevolucion');
+	
 	Route::post('eventoDevolucionStore/{calendarevento_id}','CalendareventosController@eventoDevolucionStore')->name('eventoDevolucionStore');
-
+	Route::post('eventoAlquilerUpdate/{calendarevento_id}','CalendareventosController@eventoAlquilerUpdate')->name('eventoAlquilerUpdate');
   Route::post('guardaEventos', 'CalendareventosController@create')->name('guardaEventos');
   Route::post('actualizaEvento', 'CalendareventosController@actualizaEvento')->name('actualizaEvento');
 	Route::post('eliminaEvento','CalendareventosController@delete');  
-
+	Route::resource('calendareventos', 'CalendareventosController', ['only' => ['index', 'store','edit', 'update']]);
+  
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');
 	Route::get('/truncateAll','PruebasController@truncateAll');

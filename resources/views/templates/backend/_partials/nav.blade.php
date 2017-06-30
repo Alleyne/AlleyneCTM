@@ -61,7 +61,7 @@
 		<a href="#"><i class="fa fa-lg fa-fw fa-calendar"><em>3</em></i> <span class="menu-item-parent">Reservaciones</span></a>
 		<ul>
 			<li>
-				<a href="{{ URL::route('calendareventos.index') }}"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Eventos</span></a>
+				<a href="{{ URL::route('calendareventos.index') }}"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Reservas</span></a>
 			</li>
 			<li>
 				<a href="{{ URL::route('verCalendario') }}"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Ver calendario</span></a>

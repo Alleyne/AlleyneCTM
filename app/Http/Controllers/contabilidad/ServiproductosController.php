@@ -71,7 +71,7 @@ class ServiproductosController extends Controller
       if ($validation->passes()) {
         $dato = Serviproducto::find($id);
         $dato->nombre = Input::get('nombre');
-        $dato->activo = Input::has('activo');;
+        $dato->activo = Input::has('activo');
         Sity::RegistrarEnBitacora($dato, Input::get(), 'Serviproducto', 'Actualiza serviproducto');        
         $dato->save();      
 

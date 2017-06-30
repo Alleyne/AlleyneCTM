@@ -30,7 +30,7 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Editar serviproducto</h2>
+						<h2>Editar reservacion</h2>
 	
 					</header>
 	
@@ -51,27 +51,35 @@
 										{{ csrf_field() }}
 		                
 		                <div class="form-group">
-		                  <label class="col-md-4 control-label">Unidad</label>
-		                  <div class="col-md-8">
+		                  <label class="col-md-2 control-label">Unidad</label>
+		                  <div class="col-md-10">
 		                    <input type="text" name="un" id="un" class="form-control" readonly value="{{ $dato->un_id }}">
 		                  </div>
 		                </div>										
 		                
 		                <div class="form-group">
-		                  <label class="col-md-4 control-label">Amenidad</label>
-		                  <div class="col-md-8">
+		                  <label class="col-md-2 control-label">Amenidad</label>
+		                  <div class="col-md-10">
 		                    <input type="text" name="am" id="am" class="form-control" readonly value="{{ $dato->am_id }}">
 		                  </div>
 		                </div>	
 										
 										<div class="form-group organizaciones">
-											<label class="col-md-4 control-label">Propietario(s)</label>
-											<div class="col-md-8">
-												{{ Form::select('user_id', ['' => 'Selecione un propietario ...'] + $props, 0, ['class' => 'form-control']) }}
+											<label class="col-md-2 control-label">Propietario(s)</label>
+											<div class="col-md-10">
+												{{ Form::select('user_id', ['' => 'Selecione un propietario ...'] + $props, 0, ['class' => 'form-control', 'value' => $dato->user_id]) }}
 												{!! $errors->first('user_id', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
-		                
+										
+										<div class="form-group">
+											<label class="col-md-2 control-label">Todo el dia</label>
+											<div class="col-md-10">
+												{{ Form::checkbox('allDay') }}
+											</div>
+										</div>	                
+
+
 {{-- 		                <div class="form-group">
 		                  <label class="col-md-4 control-label">Iniciaba <strong>{{ $dato->start }}</strong></label>
 		                  <div class="col-md-8">
@@ -114,8 +122,8 @@
 						            'class' => 'btn btn-success btn-xs',
 						            'data-toggle' => 'modal',
 						            'data-target' => '#confirmAction',
-						            'data-title' => 'Salvar cambios al evento',
-						            'data-message' => 'Esta seguro(a) que desea salvar los cambios al evento?',
+						            'data-title' => 'Salvar cambios a la reservacion',
+						            'data-message' => 'Esta seguro(a) que desea salvar los cambios a la reservacion?',
 						            'data-btntxt' => 'Si, salvar cambios',
 						            'data-btncolor' => 'btn-success'
 						        ))}}

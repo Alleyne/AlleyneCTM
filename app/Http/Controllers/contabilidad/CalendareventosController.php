@@ -16,6 +16,7 @@ use App\Trantipo;
 use App\Pago;
 use App\Banco;
 use App\Eventodevolucione;
+use App\Pcontable;
 
 class CalendareventosController extends Controller
 {
@@ -194,6 +195,7 @@ class CalendareventosController extends Controller
         $dato->user_id = Input::get('user_id');
         //$dato->start = Carbon::createFromFormat('d/m/Y G:ia', Input::get('start'));
         //$dato->end = Carbon::createFromFormat('d/m/Y G:ia', Input::get('end'));  
+        $dato->allDay = Input::has('allDay');
         Sity::RegistrarEnBitacora($dato, Input::get(), 'Calendarevento', 'Actualiza evento');
         $dato->save();      
 
@@ -273,42 +275,23 @@ class CalendareventosController extends Controller
 
       if ($validation->passes())
       {
+        
+        // verifica que exista un periodo de acuerdo a la fecha de pago
+        $year = Carbon::parse(Input::get('fecha'))->year;
+        $month = Carbon::parse(Input::get('fecha'))->month;
+        $pdo = Sity::getMonthName($month).'-'.$year; 
 
         // encuentra el periodo mas antiguo abierto
-        //$periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
+        $periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
         //dd($periodo);
           
-        // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
-        //if ($pdo != $periodo->periodo) {
-          //Session::flash('danger', '<< ERROR >> Solamente se permite registrar facturas de gastos que correspondan al periodo vigente de '.$periodo->periodo);
-          //return back()->withInput()->withErrors($validation);
-        //}
-        
-        //dd(Input::get('start'), Carbon::createFromFormat('d/m/Y h:i A', Input::get('start')));
-
-        
-        /*// calcula el periodo al que corresponde la fecha de pago
-        $f_pago= Carbon::parse(Input::get('f_pago'));
-        $year= $f_pago->year;
-        $month= $f_pago->month;
-        $pdo= Sity::getMonthName($month).'-'.$year;    
-          
-        // encuentra el periodo mas antiguo abierto
-        $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
-        //dd($pdo, $periodo->periodo);
-        
-        // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
+        // se puede registrar reservaciones de amenidades en cualquier fecha del presento o futuro, pero el pago del deposito 
+        // debe corresponder al presente periodo contable
         if ($pdo != $periodo->periodo) {
-          Session::flash('danger', '<< ERROR >> Solamente se permite registrar pagos que correspondan al periodo de '.$periodo->periodo);
+          Session::flash('danger', '<< ERROR >> Solamente se permite hacer pagos de deposito por reservacion que correspondan al periodo vigente de '.$periodo->periodo);
           return back()->withInput()->withErrors($validation);
         }
-
-        // antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
-        Npago::penalizarTipo2(Input::get('f_pago'), Input::get('un_id'), $periodo->id);
-
-        // Almacena el monto de la transaccion
-        $montoRecibido= round(floatval(Input::get('monto')),2);*/
-
+        
         // calcula el monto de deposito o alquiler de la amenidad
         $monto = Am_alquilere::find(Input::get('am_id'));
         
@@ -380,6 +363,7 @@ class CalendareventosController extends Controller
         $evento->am_id = Input::get('am_id');
         $evento->description = Input::get('descripcion');
         $evento->res_pago_id =  $dato->id;
+        $evento->res_fechapago =  Input::get('fecha');
         $evento->res_tipopago = Input::get('trantipo_id');
         $evento->res_monto = $monto->deposito;
         $evento->pc_monto = $monto->alquiler;        
@@ -398,7 +382,7 @@ class CalendareventosController extends Controller
         $periodo = 1;
         
         // contabiliza evento como reservado
-        Npago::contabilizaReservaAm($evento, $periodo, $dato->id);
+        Npago::contabilizaReservaAm($evento, $dato->id, $periodo);
 
         // Registra en Detallepago para generar un renglon en el recibo
         //Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento regular '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
@@ -666,6 +650,22 @@ class CalendareventosController extends Controller
       if ($validation->passes())
       {
 
+        // verifica que exista un periodo de acuerdo a la fecha de pago
+        $year = Carbon::parse(Input::get('fecha'))->year;
+        $month = Carbon::parse(Input::get('fecha'))->month;
+        $pdo = Sity::getMonthName($month).'-'.$year; 
+
+        // encuentra el periodo mas antiguo abierto
+        $periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
+        //dd($periodo);
+          
+        // se puede registrar reservaciones de amenidades en cualquier fecha del presento o futuro, pero el pago del deposito 
+        // debe corresponder al presente periodo contable
+        if ($pdo != $periodo->periodo) {
+          Session::flash('danger', '<< ERROR >> Solamente se permite hacer devoluciones de depositos por reservacion que correspondan al periodo vigente de '.$periodo->periodo);
+          return back()->withInput()->withErrors($validation);
+        }
+
         // actualiza el status a cancelado
         $evento = Calendarevento::find($calendarevento_id);
         $evento->status = 3;
@@ -680,7 +680,8 @@ class CalendareventosController extends Controller
 
         $devolucion = new Eventodevolucione;
         
-        $devolucion->tipopago = Input::get('trantipo_id');
+        $devolucion->fecha = Input::get('fecha');
+        $devolucion->trantipo_id = Input::get('trantipo_id');
         $devolucion->banco_id = Input::get('banco_id');
         $devolucion->monto = $monto;
         $devolucion->calendarevento_id = Input::get('calendarevento_id');
@@ -769,8 +770,8 @@ class CalendareventosController extends Controller
   public function eventoAlquilerUpdate($calendarevento_id)
   {
 
-    //DB::beginTransaction();
-    //try {
+    DB::beginTransaction();
+    try {
 
       //dd(Input::all());
       $input = Input::all();
@@ -814,6 +815,21 @@ class CalendareventosController extends Controller
 
       if ($validation->passes())
       {
+        // verifica que exista un periodo de acuerdo a la fecha de pago
+        $year = Carbon::parse(Input::get('fecha'))->year;
+        $month = Carbon::parse(Input::get('fecha'))->month;
+        $pdo = Sity::getMonthName($month).'-'.$year; 
+
+        // encuentra el periodo mas antiguo abierto
+        $periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
+        //dd($periodo);
+          
+        // se puede registrar reservaciones de amenidades en cualquier fecha del presento o futuro, pero el pago del deposito 
+        // debe corresponder al presente periodo contable
+        if ($pdo != $periodo->periodo) {
+          Session::flash('danger', '<< ERROR >> Solamente se permite hacer pagos de alquileres de amenidades que correspondan al periodo vigente de '.$periodo->periodo);
+          return back()->withInput()->withErrors($validation);
+        }
 
         // actualiza el status a alquilado
         $evento = Calendarevento::find($calendarevento_id);
@@ -875,6 +891,7 @@ class CalendareventosController extends Controller
 
         // actualiza los datos del evento
         $evento->pc_pago_id =  $dato->id;
+        $evento->pc_fechapago = Input::get('fecha');
         $evento->pc_tipopago = Input::get('trantipo_id');
         if (Input::get('trantipo_id') == 1) {
           $evento->pc_docno = Input::get('chqno');
@@ -889,10 +906,10 @@ class CalendareventosController extends Controller
         
         $evento->save();
 
-        //$periodo = 1;
+        $periodo = 1;
         
-        // contabiliza evento como reservado
-        //Npago::contabilizaAlquilerAm($evento, $periodo, $dato->id);
+        // contabiliza evento como alquilado
+        Npago::contabilizaAlquilerAm($evento, $dato->id, $periodo);
 
         //Sity::RegistrarEnBitacora($devolucioneevento, Input::get(), 'Calendarevento', 'Registra nueva resercacion de amenidades');
       
@@ -905,11 +922,11 @@ class CalendareventosController extends Controller
       Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
       return back()->withInput()->withErrors($validation);
 
-   //} catch (\Exception $e) {
-      //DB::rollback();
-      //Session::flash('warning', ' Ocurrio un error en el modulo CalendereventosController.eventoAlquilerUpdate, la transaccion ha sido cancelada! '.$e->getMessage());
-      //return back()->withInput();
-    //}
+    } catch (\Exception $e) {
+      DB::rollback();
+      Session::flash('warning', ' Ocurrio un error en el modulo CalendereventosController.eventoAlquilerUpdate, la transaccion ha sido cancelada! '.$e->getMessage());
+      return back()->withInput();
+    }
 
   }
 

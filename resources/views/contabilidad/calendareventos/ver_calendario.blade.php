@@ -9,14 +9,27 @@
       margin: 0px 10px;
       padding: 0;
       font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     #calendar {
       max-width: 900px;
       margin: 0 auto;
     }
+
+    .fc-list-item:hover td {
+      background-color: #999;
+    }  
+/*
+    .bg-color-yellow{
+      background-color: #b5b1a4!important;
+    }
+
+    .txt-color-white {
+      color:#b5b1a4!important;*/
+    }
   </style>
+
 @endsection
 
 @section('content')
@@ -35,7 +48,6 @@
 @section('relatedplugins')
   <script src="{{ URL::asset('assets/fullcalendar340/lib/moment.min.js') }}"></script>
   <script src="{{ URL::asset('assets/fullcalendar340/fullcalendar.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/fullcalendar340/lib/es.js') }}"></script>
   <script src="{{ URL::asset('assets/fullcalendar340/locale/es.js') }}"></script>  
 
   <script type="text/javascript">
@@ -51,7 +63,7 @@
   
       var hdr = {
         left: 'title',
-        center: 'month,agendaWeek,agendaDay',
+        center: 'month,agendaWeek,agendaDay,listMonth',
         right: 'prev,today,next'
       };
   
@@ -69,8 +81,14 @@
             'default':true
           },
           
-          timeFormat: "HH:mm",*/
+          defaultView: 'agendaWeek',
+          slotMinutes: 60,
+          minTime: 7,
+          maxTime: 19 */         
 
+          timeFormat: "h:mma",
+          slotLabelFormat: "h:mma",
+          
           eventDrop: function(event, delta, revertFunc, jsEvent, ui, view ) {
             if (event.status == 2) {  // no permite mover de fecha un evento si el mismo ya culmino,
               $('#calendar').fullCalendar( 'refetchEvents' );

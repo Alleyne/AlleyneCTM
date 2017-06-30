@@ -111,7 +111,7 @@ class DiariocajasController extends Controller
                   })
                 ->get(['detallepagofacturas.id as pagoNo','trantipos.id as trantipo_id', 'trantipos.nombre as trantipo','doc_no','codigo','ctmayores.detalle','credito as monto']);
       
-      //dd($desembolsoEfectivos->toArray()); 
+      dd($desembolsoEfectivos->toArray()); 
 
       // calcula el total desembolsado en efectivo solamente      
       $totalDesembolsoEfectivos = $desembolsoEfectivos->sum('monto');  

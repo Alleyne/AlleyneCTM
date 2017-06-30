@@ -168,14 +168,13 @@
 $(document).ready(function() {
 	pageSetUp();
 	
-	   $("#tipodoc-1").click(function(){
-	       $(".factura").show();
-	   });
+		$("#tipodoc-1").click(function(){
+		   $(".factura").show();
+		});
 
-	   $("#tipodoc-2").click(function(){
-	       $(".factura").hide();
-	   });
-
+		$("#tipodoc-2").click(function(){
+		   $(".factura").hide();
+		});
 
 		$('#fecha').datepicker({
 			prevText : '<i class="fa fa-chevron-left"></i>',
@@ -201,12 +200,13 @@ $(document).ready(function() {
 			isRTL: false,
 			showMonthAfterYear: false,
 			yearSuffix: ''
-			};
-			$.datepicker.setDefaults($.datepicker.regional['es']);
-			$(function () {
+		};
+		
+		$.datepicker.setDefaults($.datepicker.regional['es']);
+		
+		$(function () {
 			$("#fecha").datepicker();
 		});
-
 
     $("input[type='submit']").attr("disabled", false);
     $("form").submit(function(){

@@ -115,7 +115,7 @@ class Sity {
    ****************************************************************************************/
   public static function registraEnCuentas($pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id = Null, $pago_id = Null, $detallepagofactura_id = Null, $org_id = Null, $ctdasm_id = Null, $anula = Null)
   {
-    //dd($pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id=Null, $pago_id=Null, $detallepagofactura_id, $org_id=Null, $ctdasm_id=Null, $anula=Null);
+    //dd($pcontable_id, $mas_menos, $tipo, $cuenta, $fecha, $detalle, $monto, $un_id = Null, $pago_id = Null, $detallepagofactura_id = Null, $org_id = Null, $ctdasm_id = Null, $anula = Null);
     
     $debito = 0;
     $credito = 0;

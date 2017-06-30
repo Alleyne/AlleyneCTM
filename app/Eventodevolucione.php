@@ -12,4 +12,9 @@ class Eventodevolucione extends Model
   	return $this->belongsTo('App\Calendarevento');
   }
 
+  public function trantipo()
+  {
+  	return $this->belongsTo('App\Trantipo');
+  }
+
 }
