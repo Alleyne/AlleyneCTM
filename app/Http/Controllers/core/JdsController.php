@@ -88,9 +88,7 @@ class JdsController extends Controller
 			$img_path->imagen_L = "assets/img/jds/jd_".$dato->id.".jpg";
 			$img_path->save();			
 			
-			// Registra en bitacoras
-			$detalle =	'Crea la Junta directiva '.	$dato->nombre;
- 			Sity::RegistrarEnBitacora(1, 'jds', $dato->id, $detalle);
+  		Sity::RegistrarEnBitacora($dato, Input::get(), 'Jd', 'Crea nueva Junta directiva');
 			
 			//return response()->json(["mensaje" => 'La Junta Directiva ' .$dato->nombre. ' ha sido creada con éxito.']); //api
 			Session::flash('success', 'La Junta Directiva ' .$dato->nombre. ' ha sido creada con éxito.');
@@ -133,10 +131,7 @@ class JdsController extends Controller
 			$dato->descripcion  = Input::get('descripcion');
 			$dato->save();			
 			
-			// Registra en bitacoras
-			$detalle =	'Edita el nombre de la junta directiva a '.	$dato->nombre;
-
-			Sity::RegistrarEnBitacora(2, 'jds', $dato->id, $detalle);
+  		Sity::RegistrarEnBitacora($dato, Input::get(), 'Jd', 'Edita Junta directiva');
 			
 			//return response()->json(["mensaje" => 'La Junta Directiva ' .$id. ' ha sido editada con éxito.']); //api
 			Session::flash('success', 'La Junta Directiva ' .$id. ' ha sido editada con éxito.');
@@ -173,7 +168,6 @@ class JdsController extends Controller
 		}
 		
 		elseif (!empty($users)) {
-			//return response()->json(["mensaje" => 'La Junta Directiva ' .$dato->nombre. ' no puede ser borrada porque tiene uno o más periodos asignados a la misma.']); //api
 			Session::flash('success', 'La Junta Directiva ' .$dato->nombre. ' no puede ser borrada porque tiene uno o más periodos asignadoa a la misma.');
 			return redirect()->route('admin.jds.index');	
 		}
@@ -181,11 +175,8 @@ class JdsController extends Controller
 		else {
 			$dato->delete();
 
-			// Registra en bitacoras
-			$detalle =	'Borra la Justa directiva '. $dato->nombre;
-			Sity::RegistrarEnBitacora(3, 'jds', $dato->id, $detalle);
+  		Sity::RegistrarEnBitacora($dato, Null, 'Jd', 'Elimina Junta directiva');   
 			
-			//return response()->json(["mensaje" => 'La Junta Directiva ' .$dato->nombre. ' ha sido borrada permanentemente de la base de datos.']); //api
 			Session::flash('success', 'La Junta Directiva ' .$dato->nombre. ' ha sido borrada permanentemente de la base de datos.');			
 			return redirect()->route('admin.jds.index');	
 		}

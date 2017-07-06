@@ -158,7 +158,7 @@
 									<label class="col-md-3 control-label">Fecha</label>
 									<div class="col-md-9">
 										<div class="input-group">
-											<input type="text" name="fecha" placeholder="Entre la fecha del primer periodo a registrar (aaaa/mm/dd)" ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
+											<input type="text" name="fecha" id="fecha" placeholder="Entre la fecha del primer periodo a registrar (aaaa/mm/dd)" ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 										</div>
 										<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
@@ -184,6 +184,9 @@
 
     <script>
         $(document).ready(function() {
+                	$("#fecha").datepicker({
+	        dateFormat: 'yy-mm-dd'
+	    });
             // Setup - add a text input to each footer cell
             $('#dt_basic2 tfoot th').each( function () {
                 var title = $('#dt_basic2 thead th').eq( $(this).index() ).text();
@@ -244,9 +247,7 @@
             } );
         } );
      
-    	$("#fecha").datepicker({
-	        dateFormat: 'yy-mm-dd'
-	    });
+
 
 	    $("input[type='submit']").attr("disabled", false);
 	    $("form").submit(function(){

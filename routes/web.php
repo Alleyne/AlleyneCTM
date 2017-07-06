@@ -275,7 +275,7 @@ Route::group(['namespace' => 'contabilidad'], function()
 	Route::get('verCalendario','CalendareventosController@verCalendario')->name('verCalendario');
 	Route::get('cargaEventos','CalendareventosController@cargaEventos')->name('cargaEventos');
 	Route::get('eventoAlquiler/{calendarevento_id}','CalendareventosController@eventoAlquiler')->name('eventoAlquiler');
-	Route::get('eventoDevolucion/{calendarevento_id}','CalendareventosController@eventoDevolucion')->name('eventoDevolucion');
+	Route::get('eventoDevolucion/{calendarevento_id},{cancelar}','CalendareventosController@eventoDevolucion')->name('eventoDevolucion');
 	
 	Route::post('eventoDevolucionStore/{calendarevento_id}','CalendareventosController@eventoDevolucionStore')->name('eventoDevolucionStore');
 	Route::post('eventoAlquilerUpdate/{calendarevento_id}','CalendareventosController@eventoAlquilerUpdate')->name('eventoAlquilerUpdate');

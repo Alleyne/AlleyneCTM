@@ -67,7 +67,7 @@
 											<tr>
 												@if (Cache::get('esAdminkey') || Cache::get('esJuntaDirectivakey'))												
 													<td><strong>{{ $dato->nombre }}</strong></td>
-													<td col width="380px" align="right">
+													<td col width="150px" align="right">
 														<ul class="demo-btns">
 															<li>
 																<a href="#" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> Periodos</a>

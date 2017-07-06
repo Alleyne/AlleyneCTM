@@ -30,8 +30,8 @@
                         <li><a href="{{ URL::route('createsec', array($bloque->id, 4)) }}">Locales u oficinas en Residenciales</a></li>
                         <li><a href="{{ URL::route('createsec', array($bloque->id, 5)) }}">Amenidades propias</a></li>
                         <li><a href="{{ URL::route('createsec', array($bloque->id, 6)) }}">Amenidades comunes</a></li>
-                        <li><a href="{{ URL::route('createsec', array($bloque->id, 7)) }}">Estacionamientos alquilables</a></li> -->
-                        <li class="divider"></li>
+                        <li><a href="{{ URL::route('createsec', array($bloque->id, 7)) }}">Estacionamientos alquilables</a></li>
+                        <li class="divider"></li> -->
                         <li><!-- <a href="#">Separated link</a> --></li>
                     </ul>
                 </div><!-- /btn-group -->       

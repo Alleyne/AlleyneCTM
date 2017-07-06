@@ -81,7 +81,7 @@ class UnsController extends Controller {
 		}       
         //dd($propietarios);
 		
-		Cache::forever('indexunallkey', URL::full());
+		Cache::forever('goto_1', URL::full());
 		
 		//dd($datos->toArray());        
     return view('core.uns.indexunall')
@@ -164,7 +164,7 @@ class UnsController extends Controller {
 		}       
     //dd($propietarios);
 		
-		Cache::forever('indexunallkey', URL::full());
+		Cache::forever('goto_1', URL::full());
     return view('core.uns.indexunplus')
             ->with('jd', $jd)
             ->with('datos', $datos)        
@@ -218,6 +218,7 @@ class UnsController extends Controller {
 				return view('core.uns.show')
 				            ->with('dato', $dato)
 				            ->with('secre', $secre)
+				            ->with('props', $props)
 				            ->with('seccion', $seccion);
 			
 			}	elseif ($seccion->tipo == 3) {

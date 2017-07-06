@@ -292,22 +292,22 @@ class BloquesController extends Controller {
 					$img_path->imagen_L = "assets/img/bloques/bloq-L".$id.".jpg";
 					$img_path->imagen_M = "assets/img/bloques/bloq-M".$id.".jpg";
 					$img_path->imagen_S = "assets/img/bloques/bloq-S".$id.".jpg";
-  				Sity::RegistrarEnBitacora($img_path, $input, 'Bloque', 'Actualiza imagen de bloque');	
+  				//Sity::RegistrarEnBitacora($img_path, $input, 'Bloque', 'Actualiza imagen de bloque');	
 					$img_path->save();
 					
 					// crea imagen normal
 					// resize the image to a height of 300 and constrain aspect ratio (auto width)
-					$img = Image::make($img_path->imagen_L)->resize(null, 500, true);
+					$img = Image::make($img_path->imagen_L)->resize(900, 500);
 					$img->save("assets/img/bloques/bloq-L".$id.".jpg");
 					
 					// crea thumpnail No 1
 					// resize the image to a height of 189 and constrain aspect ratio (auto width)
-					$img = Image::make($img_path->imagen_L)->resize(189, null, true);
+					$img = Image::make($img_path->imagen_L)->resize(189, 189);
 					$img->save("assets/img/bloques/bloq-M".$id.".jpg");
 
 					// crea thumpnail No 2 
 					// resize the image to a height of 90 and constrain aspect ratio (auto width)
-					$img = Image::make($img_path->imagen_L)->resize(null, 90, true);
+					$img = Image::make($img_path->imagen_L)->resize(90, 90);
 					$img->save("assets/img/bloques/bloq-S".$id.".jpg");			
   			
 	  			DB::commit();

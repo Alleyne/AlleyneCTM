@@ -17,6 +17,7 @@ use App\Pago;
 use App\Banco;
 use App\Eventodevolucione;
 use App\Pcontable;
+use App\Catalogo;
 
 class CalendareventosController extends Controller
 {
@@ -36,8 +37,8 @@ class CalendareventosController extends Controller
  
       // revisa el status de cada evento y si encuentra alguno ya culminado le actualiza el status
       Calendarevento::where('end', '<', Carbon::now())
-                    ->where('status', 1)
-                    ->update(['status' => 2, 'className' => 'bg-color-darken txt-color-white', 'icon' => 'fa-lock']);
+                    ->where('status', 2)
+                    ->update(['status' => 3, 'className' => 'bg-color-green txt-color-white', 'icon' => 'fa-lock']);
 
       $datos = Calendarevento::all();
 
@@ -108,10 +109,10 @@ class CalendareventosController extends Controller
       
       // revisa el status de cada evento y si encuentra alguno ya culminado le actualiza el status
       Calendarevento::where('end', '<', Carbon::now())
-                    ->where('status', 1)
-                    ->update(['status' => 2, 'className' => 'bg-color-darken txt-color-white', 'icon' => 'fa-lock']);
+                    ->where('status', 2)
+                    ->update(['status' => 3, 'className' => 'bg-color-green txt-color-white', 'icon' => 'fa-lock']);
 
-      $data = Calendarevento::where('status','<=',2)->get(['id','title','un_id','description','start','end','allDay','className','icon','status']);
+      $data = Calendarevento::where('status','<=',4)->get(['id','title','un_id','description','start','end','allDay','className','icon','status']);
  
       $data->map(function ($data) {
         $data->un_id = Un::find($data->un_id)->codigo;       
@@ -229,7 +230,7 @@ class CalendareventosController extends Controller
       
       if (Input::get('trantipo_id') == 1) {
         $rules = array(
-          'fecha' => 'required|date', 
+          'fecha' => 'required', 
           'start' => 'required',  
           'end' => 'required',          
           'un_id' => 'required|Numeric|min:1',
@@ -241,7 +242,7 @@ class CalendareventosController extends Controller
 
       } elseif (Input::get('trantipo_id') == 5) {
         $rules = array(
-          'fecha' => 'required|date', 
+          'fecha' => 'required', 
           'start' => 'required',  
           'end' => 'required',          
           'un_id' => 'required|Numeric|min:1',
@@ -251,7 +252,7 @@ class CalendareventosController extends Controller
       
       } else {
         $rules = array(
-          'fecha' => 'required|date', 
+          'fecha' => 'required', 
           'start' => 'required',  
           'end' => 'required',          
           'un_id' => 'required|Numeric|min:1',
@@ -277,8 +278,8 @@ class CalendareventosController extends Controller
       {
         
         // verifica que exista un periodo de acuerdo a la fecha de pago
-        $year = Carbon::parse(Input::get('fecha'))->year;
-        $month = Carbon::parse(Input::get('fecha'))->month;
+        $year = Carbon::createFromFormat('d/m/Y', Input::get('fecha'))->year;
+        $month = Carbon::createFromFormat('d/m/Y', Input::get('fecha'))->month;
         $pdo = Sity::getMonthName($month).'-'.$year; 
 
         // encuentra el periodo mas antiguo abierto
@@ -363,7 +364,7 @@ class CalendareventosController extends Controller
         $evento->am_id = Input::get('am_id');
         $evento->description = Input::get('descripcion');
         $evento->res_pago_id =  $dato->id;
-        $evento->res_fechapago =  Input::get('fecha');
+        $evento->res_fechapago =  Carbon::createFromFormat('d/m/Y', Input::get('fecha'));
         $evento->res_tipopago = Input::get('trantipo_id');
         $evento->res_monto = $monto->deposito;
         $evento->pc_monto = $monto->alquiler;        
@@ -562,7 +563,7 @@ class CalendareventosController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function eventoDevolucion($calendarevento_id)
+  public function eventoDevolucion($calendarevento_id, $cancelar)
   {
     //dd($calendarevento_id);
 
@@ -571,11 +572,14 @@ class CalendareventosController extends Controller
     $dato->un_id = Un::find($dato->un_id)->codigo; 
     //dd($dato);
     
-    if ($dato->res_pago_id && $dato->pc_pago_id == null) {
+    if ($cancelar == true && $dato->res_pago_id && $dato->pc_pago_id == null) {    // se trata de una devolucion del deposito por cancelacion de reservacion
       $mensaje = 'Se devolvera deposito de B/.'.$dato->res_monto.' por cancelacion de reservacion de '.$dato->title.'.'; 
     
-    } elseif ($dato->res_pago_id && $dato->pc_pago_id) {
+    } elseif ($cancelar == true && $dato->res_pago_id && $dato->pc_pago_id) {    // se trata de una devolucion de deposito y alquiler por cancelacion de evento
       $mensaje = 'Se devolvera la suma total de B/.'.number_format(($dato->res_monto + $dato->pc_monto),2).' por cancelacion de reservacion de '.$dato->title.'. Desglosados de la siguiente forma: B/.'.$dato->res_monto.' de deposito y B/.'.$dato->pc_monto.' de alquiler.';
+    
+    } elseif ($cancelar == false && $dato->status == 3) {    // se trata de una devolucion de deposito por culminacion exitosa de evento    
+      $mensaje = 'Se devolvera deposito de B/.'.$dato->res_monto.' por culminacion exitosa de reservacion de '.$dato->title.'.'; 
     }
     
     // obtiene todas las instituciones bancarias actualmente registrada
@@ -591,6 +595,7 @@ class CalendareventosController extends Controller
               ->with('trantipos', $trantipos)
               ->with('bancos', $bancos)
               ->with('mensaje', $mensaje)
+              ->with('cancelar', $cancelar)
               ->with('dato', $dato);
   }
 
@@ -665,50 +670,128 @@ class CalendareventosController extends Controller
           Session::flash('danger', '<< ERROR >> Solamente se permite hacer devoluciones de depositos por reservacion que correspondan al periodo vigente de '.$periodo->periodo);
           return back()->withInput()->withErrors($validation);
         }
-
-        // actualiza el status a cancelado
+        
+        // encuentra los datos del evento
         $evento = Calendarevento::find($calendarevento_id);
-        $evento->status = 3;
-        $evento->save();
 
-        if ($evento->res_pago_id && $evento->pc_pago_id == null) {
-          $monto = $evento->res_monto;
-        
-        } elseif ($evento->res_pago_id && $evento->pc_pago_id) {
-          $monto = ($evento->res_monto + $evento->pc_monto);
-        }
+        if (Input::get('cancelar') == 1 && $evento->res_pago_id && $evento->pc_pago_id == null) {    // se trata de una devolucion del deposito por cancelacion de reservacion
 
-        $devolucion = new Eventodevolucione;
-        
-        $devolucion->fecha = Input::get('fecha');
-        $devolucion->trantipo_id = Input::get('trantipo_id');
-        $devolucion->banco_id = Input::get('banco_id');
-        $devolucion->monto = $monto;
-        $devolucion->calendarevento_id = Input::get('calendarevento_id');
-        if (Input::get('trantipo_id') == 1) {
-          $devolucion->docno = Input::get('chqno');
-        } elseif (Input::get('trantipo_id') == 5) {
-          $devolucion->docno = 'n/a';  
-        } else {
-          $devolucion->docno = Input::get('transno');    
-        } 
-        
-        $devolucion->save();
-        
-        $periodo = 1;
-        
-        if ($evento->res_pago_id && $evento->pc_pago_id == null) {
-          // contabiliza devolucion de deposito
-          Npago::contabilizaDevolucionDeposito($devolucion, $periodo);
-        
-        } elseif ($evento->res_pago_id && $evento->pc_pago_id) {
-          // contabiliza devolucion de deposito
-          Npago::contabilizaDevolucionDeposito($devolucion, $periodo);
+          // actualiza el status a cancelado
+          $evento->status = 5;
+          $evento->save();
+
+          $devolucion = new Eventodevolucione;
           
+          if (Input::get('trantipo_id') == 1) {
+            $doc_no = Input::get('chqno');
+          } elseif (Input::get('trantipo_id') == 5) {
+            $doc_no = 'n/a';  
+          } else {
+            $doc_no = Input::get('transno');    
+          }           
+          $devolucion->fecha = Input::get('fecha');
+          $devolucion->detalle = 'Devuelve deposito por cancelacion '.$evento->title.', '.Trantipo::find(Input::get('trantipo_id'))->siglas.', '.$docno;
+          $devolucion->catalogo_id = 39;
+          $devolucion->trantipo_id = Input::get('trantipo_id');
+          $devolucion->banco_id = Input::get('banco_id');
+          $devolucion->monto = $evento->res_monto;
+          $devolucion->calendarevento_id = Input::get('calendarevento_id');
+          $devolucion->doc_no = $doc_no;
+          
+          $devolucion->save();
+        
+          // contabiliza devolucion de deposito
+          Npago::contabilizaDevolucionDeposito($devolucion, $periodo);
+        
+        } elseif (Input::get('cancelar') == 1 && $evento->res_pago_id && $evento->pc_pago_id) {    // se trata de una devolucion de deposito y alquiler por cancelacion de evento
+          
+          // actualiza el status a cancelado
+          $evento->status = 5;
+          $evento->save();
+
+          $devolucion = new Eventodevolucione;
+          
+          if (Input::get('trantipo_id') == 1) {
+            $doc_no = Input::get('chqno');
+          } elseif (Input::get('trantipo_id') == 5) {
+            $doc_no = 'n/a';  
+          } else {
+            $doc_no = Input::get('transno');    
+          } 
+          $devolucion = new Eventodevolucione;
+          $devolucion->fecha = Input::get('fecha');
+          $devolucion->detalle = 'Devuelve deposito por cancelacion '.$evento->title.', '.Trantipo::find(Input::get('trantipo_id'))->siglas.', '.$docno;
+          $devolucion->catalogo_id = 39;
+          $devolucion->trantipo_id = Input::get('trantipo_id');
+          $devolucion->banco_id = Input::get('banco_id');
+          $devolucion->monto = $evento->res_monto;
+          $devolucion->calendarevento_id = Input::get('calendarevento_id');
+          $devolucion->doc_no = $doc_no;
+
+          $devolucion->save();
+        
+          // contabiliza devolucion de deposito
+          Npago::contabilizaDevolucionDeposito($devolucion, $periodo);
+       
+          $devolucion = new Eventodevolucione;
+          
+          if (Input::get('trantipo_id') == 1) {
+            $doc_no = Input::get('chqno');
+          } elseif (Input::get('trantipo_id') == 5) {
+            $doc_no = 'n/a';  
+          } else {
+            $doc_no = Input::get('transno');    
+          } 
+          $devolucion->fecha = Input::get('fecha');
+          $devolucion->detalle = 'Devuelve alquiler por cancelacion '.$evento->title.', '.Trantipo::find(Input::get('trantipo_id'))->siglas.', '.$docno;
+          $devolucion->catalogo_id = 45;
+          $devolucion->trantipo_id = Input::get('trantipo_id');
+          $devolucion->banco_id = Input::get('banco_id');
+          $devolucion->monto = $evento->pc_monto;
+          $devolucion->calendarevento_id = Input::get('calendarevento_id');
+          $devolucion->doc_no = $doc_no;
+
+          $devolucion->save();
+        
           // contabiliza devolucion de deposito
           Npago::contabilizaDevolucionAlquiler($devolucion, $periodo); 
-        }        
+        
+        } elseif (Input::get('cancelar') == 0 && $evento->status == 3) {    // se trata de una devolucion de deposito por culminacion exitosa de evento
 
+          // actualiza el status a cancelado
+          $evento->className = 'bg-color-darken txt-color-white';
+          $evento->icon = 'fa-lock';
+          $evento->status = 4;
+          $evento->save();
+
+          $devolucion = new Eventodevolucione;
+          
+          if (Input::get('trantipo_id') == 1) {
+            $doc_no = Input::get('chqno');
+          } elseif (Input::get('trantipo_id') == 5) {
+            $doc_no = 'n/a';  
+          } else {
+            $doc_no = Input::get('transno');    
+          } 
+
+          $devolucion->fecha = Input::get('fecha');
+          $devolucion->detalle = 'Devuelve deposito por culminacion de reserva de '.$evento->title.', '.Trantipo::find(Input::get('trantipo_id'))->siglas.', '.$docno;
+          $devolucion->catalogo_id = 39;
+          $devolucion->trantipo_id = Input::get('trantipo_id');
+          $devolucion->banco_id = Input::get('banco_id');
+          $devolucion->monto = $evento->res_monto;
+          $devolucion->calendarevento_id = Input::get('calendarevento_id');
+          $devolucion->doc_no = $doc_no;
+
+          $devolucion->save();
+        
+          // contabiliza devolucion de deposito
+          Npago::contabilizaDevolucionDeposito($devolucion, $periodo);
+
+        }
+
+        $periodo = 1;
+        
         //Sity::RegistrarEnBitacora($devolucioneevento, Input::get(), 'Calendarevento', 'Registra nueva resercacion de amenidades');
       
         Session::flash('success', 'La devolucion ha sido registrado con éxito.');
@@ -900,9 +983,9 @@ class CalendareventosController extends Controller
         } else {
           $evento->pc_docno = Input::get('transno');    
         } 
-        $evento->className = 'bg-color-green txt-color-white';
+        $evento->className = 'bg-color-purple txt-color-white';
         $evento->icon = 'fa-unlock-o';
-        $evento->status = 1;
+        $evento->status = 2;
         
         $evento->save();
 

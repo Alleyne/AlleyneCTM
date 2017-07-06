@@ -6,28 +6,11 @@
 <!-- Escoje la navegación de acuerdo al grupo al que pertenece el usuario -->
 @if (Cache::get('esAdminkey'))
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Juntas Directivas</span></a>
-		<ul>
-			<li>
-			<a href="{{ URL::route('jds.index') }}" ><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Ver Juntas</span></a>  
-			</li>
-			<li>
-				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Periodos</span></a>
-			</li>
-		</ul>
-	</li>		
-	
-	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
-		<ul>
-			<li>
-				<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Ver Bloques</span></a>
-			</li>
-			<li>
-				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Blqadmins</span></a>
-			</li>
-		</ul>
+		<a href="{{ URL::route('jds.index') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Junta Directiva</span></a>
 	</li>
+	<li>
+		<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
+	</li>	
 	<li class="active">
 		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Ingresos</span></a>
 		<ul>

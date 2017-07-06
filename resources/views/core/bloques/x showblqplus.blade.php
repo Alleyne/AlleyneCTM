@@ -5,6 +5,7 @@
 @section('content')
 	<div class="row"><!-- row -->
 		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
 			@include('core.bloques.show')
 		</article>
 
@@ -33,7 +34,10 @@
 							<a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Bloque</span></a>
 						</li>
 						<li>
-							<a data-toggle="tab" href="#s2"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Junta Directiva</span></a>
+							<a data-toggle="tab" href="#s2"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Blqadmins</span></a>
+						</li>
+						<li>
+							<a data-toggle="tab" href="#s3"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Junta Directiva</span></a>
 						</li>
 					</ul>
 
@@ -58,8 +62,15 @@
 								</div>
 							</div>
 							<!-- end s1 tab pane -->
-					
-							<div class="tab-pane fade" id="s2">
+							<div class="tab-pane fade active in padding-10 no-padding-bottom" id="s2">
+								<div class="row no-space">
+									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 show-stats">
+										@include('core.blqadmins.info')
+									</div>
+								</div>
+							</div>
+							<!-- end s1 tab pane -->
+							<div class="tab-pane fade" id="s3">
 								<div class="row no-space">
 									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-11 show-stats">
 										@include('core.jds.info')

@@ -206,12 +206,15 @@ class Npago {
               // registra en el diario
               // registra un aumento en la cuenta Banco  
               $diario = new Ctdiario;
+              
               $diario->pcontable_id  = $periodo;
               if ($i == 0) { $diario->fecha = $f_pago; }
               $diario->detalle = $cuenta_8;
               $diario->debito  = $importe;
               $diario->credito = Null;
+              
               $diario->save();
+              
               $i = 1;
 
               // registra en el mayor

@@ -8,7 +8,7 @@
 	<link href="{{ URL::asset('assets/backend/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="screen">
 </head>
 <body style="font-size:14px;"">
-@include('templates.backend._partials.flash_messages')
+{{-- @include('templates.backend._partials.flash_messages') --}}
 
 <div class="container" style="width:8.5in; background-color:white";>
   <h4 class="text-center">PH El Marquez</h4>

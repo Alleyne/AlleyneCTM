@@ -63,7 +63,7 @@
 														<tr>
 															<td col width="70px">
 																<div class="btn-group">
-																	@if ($dato->status == 0 || $dato->status == 1)
+																	@if ($dato->status != 5)
 																		<button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
 																			Accion <span class="caret"></span>
 																		</button>
@@ -73,26 +73,67 @@
 																		</button>
 																	@endif
 																		<ul class="dropdown-menu">
+																			{{-- seccion de editar reservaciones --}}
 																			<li>
 																				<a href="{{ URL::route('calendareventos.edit', $dato->id) }}">Editar reservacion</a>
 																			</li>
-																			<li>
-																				<a href="{{ URL::route('eventoDevolucion', $dato->id) }}">Cancelar y devolver depositos</a>
-																			</li>
-																			@if ($dato->status == 0)
-																				<li>
-																					<a href="{{ URL::route('eventoAlquiler', $dato->id) }}">Registrar pago por alquiler</a>
-																				</li>
-																			@endif
+																			
+																			{{-- seccion de acciones de proxima etapa --}}
 																			<li class="divider"></li>
-																			<li>
-																				<a href="{{ URL::route('showRecibo', $dato->res_pago_id) }}">Ver recibo de deposito</a>
-																			</li>
-																			@if ($dato->status == 1 || $dato->status == 2)
-																				<li>
-																					<a href="{{ URL::route('showRecibo', $dato->pc_pago_id) }}">Ver recibo de alquiler</a>
-																				</li>
-																			@endif
+																				@if ($dato->status == 1)
+																					<li>
+																						<a href="{{ URL::route('eventoAlquiler', $dato->id) }}">Registrar pago por alquiler</a>
+																					</li>
+																				@endif
+																				@if ($dato->status == 3)
+																					<li>
+																						<a href="{{ URL::route('eventoDevolucion', [$dato->id, 0]) }}">Devolver deposito por culminacion</a>
+																					</li>
+																				@endif
+
+
+																			{{-- seccion de recibos --}}
+																			<li class="divider"></li>
+																				@if ($dato->status == 1)
+																					<li>
+																						<a href="{{ URL::route('showRecibo', $dato->res_pago_id) }}">Ver recibo de deposito</a>
+																					</li>
+																				@endif
+																				@if ($dato->status == 2)
+																					<li>
+																						<a href="{{ URL::route('showRecibo', $dato->res_pago_id) }}">Ver recibo de deposito</a>
+																					</li>
+																					<li>
+																						<a href="{{ URL::route('showRecibo', $dato->pc_pago_id) }}">Ver recibo de alquiler</a>
+																					</li>
+																				@endif
+																				@if ($dato->status == 3 || $dato->status == 4)
+																					<li>
+																						<a href="{{ URL::route('showRecibo', $dato->res_pago_id) }}">Ver recibo de deposito</a>
+																					</li>
+																					<li>
+																						<a href="{{ URL::route('showRecibo', $dato->pc_pago_id) }}">Ver recibo de alquiler</a>
+																					</li>
+																					<li>
+																						<a href="#">Ver recibo de devolucion de deposito por culminacion</a>
+																					</li>
+																				@endif
+
+																			
+
+																			{{-- seccion de cancelacion de reservaciones --}}
+																			<li class="divider"></li>
+																				@if ($dato->status == 1)
+																					<li>
+																						<a href="{{ URL::route('eventoDevolucion', [$dato->id, 1]) }}" style="color:red">Cancelar reservacion y devolver deposito</a>
+																					</li>										
+																				@endif
+																				@if ($dato->status == 2 || $dato->status == 3)
+																					<li>
+																						<a href="{{ URL::route('eventoDevolucion', [$dato->id, 1]) }}" style="color:red">Cancelar reservacion y devolver deposito mas alquiler</a>
+																					</li>										
+																				@endif
+
 																		</ul>
 																</div>
 															</td>
@@ -103,7 +144,7 @@
 															<td col width="140px">{{ $dato->end }}</td>
 															<td col width="25px" align="center"><strong>{{ $dato->am_id }}</strong></td>
 														
-                              @if ($dato->status == 0)
+                              @if ($dato->status == 1)
 			                        <td>      
 	                              {{-- <td>
 																	<div class="progress">
@@ -111,21 +152,28 @@
 																	</div>
 																</td> --}}																
 																<div class="progress progress-sm">
-																	<div class="progress-bar bg-color-redLight" style="width: 20%"></div>
+																	<div class="progress-bar bg-color-yellow" style="width: 20%"></div>
 																</div>
 															</td>
-                              
-                              @elseif ($dato->status == 1)
-				                        <td>      
-																	<div class="progress progress-sm">
-																		<div class="progress-bar bg-color-yellow" style="width: 80%"></div>
-																	</div>
-																</td>
                               
                               @elseif ($dato->status == 2)
 				                        <td>      
 																	<div class="progress progress-sm">
-																		<div class="progress-bar bg-color-greenLight" style="width: 100%"></div>
+																		<div class="progress-bar bg-color-purple" style="width: 50%"></div>
+																	</div>
+																</td>
+                              
+                              @elseif ($dato->status == 3)
+				                        <td>      
+																	<div class="progress progress-sm">
+																		<div class="progress-bar bg-color-green" style="width: 80%"></div>
+																	</div>
+																</td>
+                              
+                              @elseif ($dato->status == 4)
+				                        <td>      
+																	<div class="progress progress-sm">
+																		<div class="progress-bar bg-color-darken" style="width: 100%"></div>
 																	</div>
 																</td>
                               @else
@@ -243,49 +291,21 @@
 								</div>	
 
 								<hr />
-		            
-								<!-- Multiple Radios (inline)
-								<div class="form-group">
-								  <label class="col-md-3 control-label" for="radios">Tipo de reservacion</label>
-								  <div class="col-md-9"> 
-								    <label class="radio-inline" for="radios-0">
-								      <input type="radio" name="tipores_radios" id="tipodoc-1" value="1" checked="checked">
-								      Solo reservacion de evento
-								    </label> 
-								    <label class="radio-inline" for="radios-1">
-								      <input type="radio" name="tipores_radios" id="tipodoc-2" value="2">
-								      Reservacion y pago completo
-								    </label>
-								  </div>
-								</div> 
-								
-								<hr />-->
-		             
-								<div class="form-group">
-									<label class="col-md-3 control-label">Fecha</label>
-									<div class="col-md-9">
-										<div class="input-group date" data-provide="datepicker">
-									    <input type="text" id="fecha" name="fecha" placeholder="Fecha en que se efectuo el deposito de garantia!" class="form-control">
-									    <div class="input-group-addon">
-									        <span class="glyphicon glyphicon-th"></span>
-									    </div>
-											<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p>
-										</div>
-									</div>
-								</div>
-
-
-{{--                     <div class="form-group">
-                        <label class="col-md-3 control-label">Fecha</label>
-                        <div class="col-md-9">
-													<div class="input-group">
-														<input type="text" name="fecha" placeholder="Seleccione la fecha de la factura ..." class="form-control datepicker" data-dateformat="yy/mm/dd" value={{ old('fecha') }}>
-														<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-													</div>
-                        	<p>{!! $errors->first('fecha', '<li style="color:red">:message</li>') !!}</p> 
-                        </div>
-                    </div>  
- --}}
+	              
+	              <div class="form-group">
+	                <label class="col-md-3 control-label">Fecha</label>
+	                <div class="col-md-9">
+									
+						            <div class='input-group date' id='datetimepicker8'>
+						                <input type='text' name="fecha" class="form-control" placeholder="Fecha en que se efectuo el deposito de garantia!" />
+						                <span class="input-group-addon">
+						                    <span class="glyphicon glyphicon-calendar"></span>
+						                </span>
+						            </div>
+	                  {!! $errors->first('fecha', '<li style="color:red">:message</li>') !!} 
+	                
+	                </div>
+	              </div>  
 
 		            <div class="form-group">
 		              <label class="col-md-3 control-label">Tipo de pago</label>
@@ -375,7 +395,6 @@
       $(document).ready(function() {
 		    
 		    $(function () {
-	        $('.fecha').datepicker();
 
 	        // Fill all progress bars with animation
 					$('.progress-bar').progressbar({
@@ -394,6 +413,11 @@
             stepping: 30,
             useCurrent: false //Important! See issue #1075
 	        });
+
+	        $('#datetimepicker8').datetimepicker({
+            format: 'DD/MM/YYYY',
+            useCurrent: false //Important! See issue #1075
+	        });	        
 
 	        $("#datetimepicker6").on("dp.change", function (e) {
 	            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);

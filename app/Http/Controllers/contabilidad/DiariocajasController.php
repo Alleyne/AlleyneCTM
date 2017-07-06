@@ -14,6 +14,8 @@ use App\Detallepagofactura;
 use App\Ctdiario;
 use App\Pcontable;
 use App\Catalogo;
+use App\Eventodevolucione; 
+use App\Trantipo; 
 
 class DiariocajasController extends Controller
 {
@@ -111,27 +113,41 @@ class DiariocajasController extends Controller
                   })
                 ->get(['detallepagofacturas.id as pagoNo','trantipos.id as trantipo_id', 'trantipos.nombre as trantipo','doc_no','codigo','ctmayores.detalle','credito as monto']);
       
-      dd($desembolsoEfectivos->toArray()); 
+      //dd($desembolsoEfectivos->toArray()); 
 
+      // encuentra las devoluciones por cancelacion o culminacion de eventos de reservacion de amenidades
+      $devoluciones = Eventodevolucione::where('fecha', $fecha)->get();
+      $devoluciones->map(function ($devoluciones) {
+        // agrega el nuevo elemento a la collection
+        $devoluciones->codigo = Catalogo::find($devoluciones->catalogo_id)->codigo;       
+        $devoluciones->trantipo = Trantipo::find($devoluciones->trantipo_id)->nombre; 
+      });
+      
+      //dd($devoluciones->toArray());
+
+      
       // calcula el total desembolsado en efectivo solamente      
-      $totalDesembolsoEfectivos = $desembolsoEfectivos->sum('monto');  
+      $totalDesembolsoEfectivos = $desembolsoEfectivos->sum('monto') + $devoluciones->sum('monto');  
       //dd($totalDesembolsoEfectivos);
       
       // calcula el total de desembolsado en efectivo solamente
-      $totalDesemEfectivos = $desembolsoEfectivos->where('trantipo_id', 5)->sum('monto');  
+      $totalDesemEfectivos = $desembolsoEfectivos->where('trantipo_id', 5)->sum('monto') + $devoluciones->where('trantipo_id', 5)->sum('monto');  
       //dd($totalDesemEfectivos);
       
       // calcula el total de desembolsado en cheque solamente
-      $totalDesemCheques = $desembolsoEfectivos->where('trantipo_id', 1)->sum('monto');  
+      $totalDesemCheques = $desembolsoEfectivos->where('trantipo_id', 1)->sum('monto') + $devoluciones->where('trantipo_id', 1)->sum('monto');  
       //dd($totalDesemCheques);
 
       // calcula el total de desembolsado en tarjetas clave
-      $totalDesemClaves = $desembolsoEfectivos->Where('trantipo_id', 6)->sum('monto');  
+      $totalDesemClaves = $desembolsoEfectivos->Where('trantipo_id', 6)->sum('monto') + $devoluciones->Where('trantipo_id', 6)->sum('monto');  
       //dd($totalDesemClaves);  
 
       // calcula el total de desembolsado en tarjetas de credito solamente
-      $totalDesemTarjetas = $desembolsoEfectivos->Where('trantipo_id', 7)->sum('monto');       
-      //dd($totalDesemTarjetas);   
+      $totalDesemTarjetas = $desembolsoEfectivos->Where('trantipo_id', 7)->sum('monto') + $devoluciones->Where('trantipo_id', 7)->sum('monto');       
+      //dd($totalDesemTarjetas); 
+
+      // calcula el total en efectivo en caja
+      $totalEfectivoEnCaja = $totalEfectivos - $totalDesemEfectivos;
       
       $fecha= Date::parse($fecha)->toFormattedDateString();
 
@@ -149,6 +165,10 @@ class DiariocajasController extends Controller
                   ->with('totalDesemClaves', $totalDesemClaves)
                   ->with('totalDesemTarjetas', $totalDesemTarjetas)
                   ->with('totalDesembolsoEfectivos', $totalDesembolsoEfectivos)
+                  
+                  ->with('devoluciones', $devoluciones)
+                  ->with('totalEfectivoEnCaja', $totalEfectivoEnCaja)
+
                   ->with('fecha', $fecha);
     }
 

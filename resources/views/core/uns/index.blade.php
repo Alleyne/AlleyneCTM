@@ -22,18 +22,18 @@
                     @if (Cache::get('esAdminkey'))
                         <a href="{{ URL::route('indexsecplus', array($bloque->id)) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>            
  
-                        @if ($seccion->tipo==2 or $seccion->tipo==4) 
+                        {{-- @if ($seccion->tipo==2 or $seccion->tipo==4)
                             <a href="{{ URL::route('createun', $seccion->id) }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Unidad individual</a>
-                        @endif
+                         @endif --}}
                         
-                        @if ($seccion->tipo==1 or $seccion->tipo==3) 
+                        {{-- @if ($seccion->tipo==1 or $seccion->tipo==3) --}} 
                             <a href="{{ URL::route('createungrupo', array($seccion->id)) }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Unidades en grupo</a>
-                        @endif            
+                        {{-- @endif --}}            
 
-                    @else
+                    {{-- @else
                         @if (Cache::get('esJuntaDirectivakey') || Cache::get('esAdminDeBloquekey'))
                             <a href="{{ URL::route('indexsecplus', array($bloque->id)) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>            
-                        @endif 
+                        @endif --}} 
                     @endif 
                 </div>
             </header>

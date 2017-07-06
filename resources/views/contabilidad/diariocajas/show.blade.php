@@ -132,7 +132,7 @@
 					</tr>
 					<tr bgcolor="#999999">
 						<th width="1%" bgcolor="#CCCCCC" scope="col">C&oacute;digo</th>
-						<th width="3.5%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
+						<th width="3.9%"  align="left" bgcolor="#CCCCCC" scope="col">Tipo</th>
 						<th width="30%"  align="left" bgcolor="#CCCCCC" scope="col">Cuenta</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">Monto</th>
 						<th width="2%" bgcolor="#CCCCCC" scope="col">ITBMS</th>
@@ -151,6 +151,19 @@
 							<td>&nbsp;</td>
 					  </tr>
 					@endforeach
+
+					@foreach ($devoluciones as $devolucione) 
+						<tr align="right">
+							<td align="left">{{ $devolucione->codigo }}</td>
+							<td align="left">{{ $devolucione->trantipo == 'Cheque' ? "Chq " . $devolucione->doc_no : $devolucione->trantipo }}</td>
+							<td align="left">{{ $devolucione->detalle }} </td>
+							<td>{{ $devolucione->monto }}</td>
+							<td>&nbsp;</td>
+							<td>{{ $devolucione->monto }}</td>
+							<td>&nbsp;</td>
+					  </tr>
+					@endforeach
+
 
 					<tr align="right">
 						<td>&nbsp;</td>
@@ -196,44 +209,44 @@
 						<td colspan="3" align="left">Efectivo (Billetes y monedas) </td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						@if (($totalEfectivos - $totalDesemEfectivos) < 0)
+						{{-- @if (($totalEfectivos - $totalDesemEfectivos) < 0)
 							<td>{{ number_format(0,2) }}</td>
-						@else
-							<td>{{ number_format(($totalEfectivos - $totalDesemEfectivos),2) }}</td>
-						@endif
+						@else --}}
+							<td>{{ number_format($totalEfectivoEnCaja,2) }}</td>
+						{{-- @endif --}}
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
 						<td colspan="3" align="left">Cheques</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td class="simple">{{ number_format(($totalCheques),2) }}</td>
+						<td class="simple">{{ number_format($totalCheques,2) }}</td>
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
 						<td colspan="3" align="left">Tarjetas Debito</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td class="simple">{{ number_format(($totalClaves),2) }}</td>
+						<td class="simple">{{ number_format($totalClaves,2) }}</td>
 						<td>&nbsp;</td>
 				  </tr>	
 					<tr align="right">
 						<td colspan="3" align="left">Tarjetas de credito</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td class="simple">{{ number_format(($totalTarjetas),2) }}</td>
+						<td class="simple">{{ number_format($totalTarjetas,2) }}</td>
 						<td>&nbsp;</td>
 				  </tr>		
 					<tr align="right">
 						<td colspan="3" align="left">&nbsp;</td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
-						<td><p class="mix" >{{ number_format($totalIngresoEfectivos,2) }}</p></td>
+						<td><p class="mix" >{{ number_format(($totalEfectivoEnCaja + $totalCheques + $totalClaves + $totalTarjetas),2) }}</p></td>
 						<td>&nbsp;</td>
 				  </tr>
 					<tr align="right">
 						<td colspan="6" ><div align="right"></div></td>
-						<td colspan="1" bgcolor="#66FF99"><p >{{ number_format(($totalIngresoEfectivos),2) }}</p></td>
+						<td colspan="1" bgcolor="#66FF99"><p >{{ number_format(($totalEfectivoEnCaja + $totalCheques + $totalClaves + $totalTarjetas),2) }}</p></td>
 					</tr>
 					<tr align="right">
 						<td colspan="6" >&nbsp;&nbsp;</td>

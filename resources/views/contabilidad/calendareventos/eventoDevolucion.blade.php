@@ -54,7 +54,8 @@
 										
 										{{ csrf_field() }}
 		                {{ Form::hidden('calendarevento_id', $dato->id) }}
-
+										{{ Form::hidden('cancelar', $cancelar) }}
+										
 										<div class="alert alert-info fade in">
 											<button class="close" data-dismiss="alert">
 												×

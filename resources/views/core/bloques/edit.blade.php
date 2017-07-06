@@ -116,7 +116,7 @@
 						<!-- widget content -->
 						<div class="widget-body">
 			              	<p>
-								<img style="height: 275px; border-radius: 8px;" src="{{asset($bloque->imagen_L)}}" class="img-responsive" alt="Responsive image">
+								<img style="border-radius: 8px;" src="{{asset($bloque->imagen_L)}}" class="img-responsive" alt="Responsive image">
 			             	</p>
 				         	{{ Form::open(array('route' => array('subirImagenBloque', $bloque->id),'files'=>true)) }}
 								<div class="form-actions">

@@ -256,13 +256,13 @@
                                             </div>    
 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Cuota mantenimiento</label>
+                                                <label class="col-md-3 control-label">Cuota mant (B/.)</label>
                                                 <div class="col-md-9">
                                                     {{ Form::text('cuota_mant', $dato->secre->cuota_mant, array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
                                                     {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">Recargo (%)</label>
                                                 <div class="col-md-9">
@@ -270,6 +270,7 @@
                                                     {!! $errors->first('recargo', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div>
+                                            
                                             
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">Descuento (%)</label>
@@ -289,24 +290,63 @@
                                             </div>                                            
                                             
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Dias de gracias</label>
-                                                <div class="col-md-9">
-                                                    <input class="form-control spinner-left"  id="spinner2" name="d_gracias" value= "{{ $dato->secre->d_gracias }}" type="text">
-                                                    <p class="text-left">Días de gracias despues de la fecha de vencimiento de pago.</p>
-                                                    {!! $errors->first('d_gracias', '<li style="color:red">:message</li>') !!}
+                                                <label class="col-md-4 control-label">Aplicar recargo en mes actual o posterior</label>
+                                                <div class="col-md-8">
+                                                    <div class="col-md-6">              
+                                                        <input class="form-control spinner-left" id="spinner4" name="m_vence" value="{{ $dato->secre->m_vence }}" type="text">
+                                                        <p class="text-left">0= actual    1= proximo</p>
+                                                        {!! $errors->first('m_vence', '<li style="color:red">:message</li>') !!}
+                                                    </div>
+                                                    
+                                                    <div class="col-md-6">              
+                                                        <input class="form-control spinner-left" id="spinner2" name="d_vence" value="{{ $dato->secre->d_vence }}" type="text">
+                                                        <p class="text-left">Día limite del mes para aplicar recargo</p>
+                                                        {!! $errors->first('d_vence', '<li style="color:red">:message</li>') !!}
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Meses para descuento</label>
-                                                <div class="col-md-9">
-                                                    <input class="form-control spinner-left"  id="spinner3" name="m_descuento" value= "{{ $dato->secapto->m_descuento }}" type="text">
-                                                    <p class="text-left">Días de gracias despues de la fecha de vencimiento de pago.</p>
+                                                <label class="col-md-4 control-label">Meses para descuento</label>
+                                                <div class="col-md-8">
+                                                    <input class="form-control spinner-left"  id="spinner3" name="m_descuento" value= "{{ $dato->secre->m_descuento }}" type="text">
+                                                    <p class="text-left">Cantidad de meses que se debera pagar por adelantado para obtener descuento por pagos anticipados.</p>
                                                     {!! $errors->first('m_descuento', '<li style="color:red">:message</li>') !!}
                                                 </div>
                                             </div> 
- 
-                                        @elseif ($dato->tipo==3) <!-- Local comercial en edificio -->
+
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">Cuota extra-ordinaria</label>
+                                                <div class="col-md-8">
+                                        
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <input type="text" id='f_iniciaextra' name="f_iniciaextra" placeholder="Fecha en que inicia el cobro de la cuota extraordinaria..." class="form-control datepicker" data-dateformat="yy/mm/dd" value="{{ $dato->secre->f_iniciaextra }}" }}>
+                                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                        </div>
+                                                        {!! $errors->first('f_iniciaextra', '<li style="color:red">:message</li>') !!}</p> 
+                                                    </div>
+                                                </div> 
+                                            </div> 
+                                        
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label"></label>
+                                                <div class="col-md-8">
+                                                    <div class="col-md-6">              
+                                                        <input class="form-control spinner-left" id="spinner5" name="extra_meses" value="{{ $dato->secre->extra_meses }}" type="text">
+                                                        <p class="text-left">Meses en que se divide el pago</p>
+                                                        {!! $errors->first('extra_meses', '<li style="color:red">:message</li>') !!}
+                                                    </div>
+                                                    <div class="col-md-6">              
+                                                        <input class="form-control" name="extra" value="{{ $dato->secre->extra }}" type="text">
+                                                        <p class="text-left">Monto de la cuota extraordinaria</p>
+                                                        {!! $errors->first('extra', '<li style="color:red">:message</li>') !!}
+                                                    </div>
+                                                </div>
+                                            </div>  
+
+                                        {{-- @elseif ($dato->tipo==3) <!-- Local comercial en edificio -->
                                             <legend>Sección tipo Oficina o Local comercial en edificio</legend>
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">No de baños</label>
@@ -482,7 +522,7 @@
                                                     <p class="text-left">Días de gracias despues de la fecha de vencimiento de pago.</p>
                                                     {!! $errors->first('m_descuento', '<li style="color:red">:message</li>') !!}
                                                 </div>
-                                            </div> 
+                                            </div>  --}}
 
                                         @endif
                                     </fieldset>
@@ -538,7 +578,7 @@
                         <!-- widget content -->
                          <div class="widget-body">
                               <p>
-                                <img style="height: 275px; border-radius: 8px;" src="{{asset($dato->imagen_L)}}" class="img-responsive" alt="Responsive image">
+                                <img style="border-radius: 8px;" src="{{asset($dato->imagen_L)}}" class="img-responsive" alt="Responsive image">
                              </p>
                              {{ Form::open(array('route' => array('subirImagenSeccion', $dato->id),'files'=>true)) }}
                                 <div class="form-actions">

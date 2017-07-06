@@ -4,10 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Session;
-use Grupo;
-use Validator;
-use Image;
+use Session, DB, Grupo, Validator, Image;
 use Carbon\Carbon;
 
 use App\User;
@@ -114,9 +111,7 @@ class SeccionesController extends Controller {
 		} elseif ($sec->tipo == 4) {
 				$seccion = Seccione::with('seclcre')->find($seccione_id);
 		
-		} elseif ($sec->tipo == 5 or $sec->tipo == 6 or $sec->tipo == 7) {
-				$seccion = $sec;
-		}		
+		} 	
 		//dd($seccion->toArray());
 		
 		//Obtiene los datos del Bloque
@@ -139,7 +134,7 @@ class SeccionesController extends Controller {
 								->with('jd', $jd);
 	}
 
- /*************************************************************************************
+  /*************************************************************************************
 	 * Despliega formulario para crear un nuevo registro
 	 ************************************************************************************/	
 	public function createsec($bloque_id, $tipo)
@@ -149,9 +144,9 @@ class SeccionesController extends Controller {
 					->with('tipo', $tipo);
 	}
 
-	 /*************************************************************************************
-		 * Almacena un nuevo registro en la base de datos
-		 ************************************************************************************/	
+  /*************************************************************************************
+	 * Almacena un nuevo registro en la base de datos
+	 ************************************************************************************/	
 	public function store()
 	{
 		DB::beginTransaction();
@@ -186,7 +181,7 @@ class SeccionesController extends Controller {
 				$dato->save();
 				
 				// Relaciones de uno a uno con Secciones
-				// Salva en la tabla Sec-apto
+				// Salva en la tabla secaptos "Apartamentos en condominios"
 				if ($dato->tipo == 1) {  
 					$t1 = new Secapto;
 					$t1->cuartos               = Input::get('cuartos');
@@ -207,30 +202,9 @@ class SeccionesController extends Controller {
 					
 					$t1->seccione_id           = $dato->id;
 					$t1->save();			
-					
-					// Registra en bitacoras
-					$detalle = 'Crea la Sección '.	$dato->nombre. ', '.
-								'codigo= '.   		  			$dato->codigo. ', '.
-								'tipo= '.		   	  				'Apartamentos, '.
-								'descripcion= '.   	  		$dato->descripcion. ', '.
-								'cuartos= '.   		  			$t1->cuartos. ', '.
-								'banos= '.   		  				$t1->banos. ', '.
-								'agua_caliente= '.    		$t1->agua_caliente. ', '.
-								'estacionamientos= '. 		$t1->estacionamientos. ', '.
-								'cuota_mant= '.   	  		$t1->cuota_mant. ', '.
-								'recargo= '.   	  	  		$t1->recargo. ', '.
-								'descuento= '.   	  			$t1->descuento. ', '.
-								'd_registra_cmpc= '.  		$t1->d_registra_cmpc. ', '.
-								'd_vence= '.   	 	  			$t1->d_vence. ', '.
-								'm_descuento= '.   	  		$t1->m_descuento. ', '.
-								'area= '.   	      			$t1->area. ', '. 
-								'f_iniciaextra= '.    		$t1->f_iniciaextra. ', '.
-								'extra_meses= '.   	  		$t1->extra_meses. ', '.
-								'extra= '.   	  	  			$t1->extra. ', '.   
-								'seccione_id= '.   	  		$t1->seccione_id;			
 				
 				}	elseif ($dato->tipo == 2) {  
-					// Salva en la tabla Sec-res
+					// Salva en la tabla secres "Residencias en residenciales"
 					$t2 = new Secre;
 					$t2->avenida               = Input::get('avenida');
 					$t2->cuartos               = Input::get('cuartos');
@@ -244,29 +218,16 @@ class SeccionesController extends Controller {
 					$t2->d_vence             	 = Input::get('d_vence');
 					$t2->m_descuento           = Input::get('m_descuento');
 					$t2->area                  = Input::get('area');
+					
+					$t2->f_iniciaextra         = Carbon::parse(Input::get('f_iniciaextra'))->startOfMonth();
+					$t2->extra_meses           = Input::get('extra_meses');
+					$t2->extra                 = Input::get('extra');
+
 					$t2->seccione_id           = $dato->id;
 					$t2->save();
-				
-					// Registra en bitacoras
-					$detalle =	'Crea la Sección '.	$dato->nombre. ', '.
-								'tipo= '.		   	  				'Residencias, '.
-								'codigo= '.   		  			$dato->codigo. ', '.
-								'descripcion= '.   	  		$dato->descripcion. ', '.
-								'avenida= '.   		  			$t2->avenida. ', '.
-								'cuartos= '.   		  			$t2->cuartos. ', '.
-								'banos= '.   		  				$t2->banos. ', '.
-								'agua_caliente= '.    		$t2->agua_caliente. ', '.
-								'estacionamientos= '. 		$t2->estacionamientos. ', '.
-								'recargo= '.   	  	  		$t2->recargo. ', '.
-								'descuento= '.   	  			$t2->descuento. ', '.
-								'cuota_mant= '.   	  		$t2->cuota_mant. ', '.
-								'd_registra_cmpc= '.  		$t2->d_registra_cmpc. ', '.
-								'd_vence= '.   	  				$t2->d_vence. ', '.
-								'm_descuento= '.  		 	  $t2->m_descuento. ', '.
-								'area= '.   	      			$t2->area. ', '. 
-								'seccione_id= '.   	  		$t2->seccione_id;			
+	
 				}	elseif ($dato->tipo == 3) { 
-					// Salva en la tabla Seclceds
+					// Salva en la tabla seclceds "Local comercial en condominios"
 					$t3 = new Seclced;
 					$t3->banos                  = Input::get('banos');
 					$t3->agua_caliente          = Input::get('agua_caliente');            
@@ -280,25 +241,9 @@ class SeccionesController extends Controller {
 					$t3->area                   = Input::get('area');
 					$t3->seccione_id            = $dato->id;
 					$t3->save();
-					
-					// Registra en bitacoras
-					$detalle =	'Crea la Sección '.	$dato->nombre. ', '.
-								'codigo= '.   		  			$dato->codigo. ', '.
-								'tipo= '.		   	  				'Local u oficinas en edificio, '.
-								'descripcion= '.   	  		$dato->descripcion. ', '.
-								'banos= '.   		  				$t3->banos. ', '.
-								'agua_caliente= '.    		$t3->agua_caliente. ', '.
-								'estacionamientos= '.			$t3->estacionamientos. ', '.
-								'cuota_mant= '.   	  		$t3->cuota_mant. ', '.
-								'recargo= '.   	  	  		$t3->recargo. ', '.
-								'descuento= '.   	  			$t3->descuento. ', '.
-								'd_registra_cmpc= '.  		$t3->d_registra_cmpc. ', '.
-								'd_vence= '.   	  				$t3->d_vence. ', '.
-								'm_descuento= '.   	  		$t3->m_descuento. ', '.
-								'area= '.   	     				$t3->area. ', '. 
-								'seccione_id= '.   	  		$t3->seccione_id;			
+	
 				}	elseif ($dato->tipo == 4) { 
-					// Salva en la tabla Seclcres
+					// Salva en la tabla seclcres "Local comercial en residencial"
  					$t4 = new Seclcre;
 					$t4->avenida                = Input::get('avenida');
 					$t4->banos                  = Input::get('banos');
@@ -314,32 +259,6 @@ class SeccionesController extends Controller {
 					$t4->seccione_id            = $dato->id;
 					$t4->save();
 				
-					// Registra en bitacoras
-					$detalle =	'Crea la Sección '.	$dato->nombre. ', '.
-								'codigo= '.   		  			$dato->codigo. ', '.
-								'tipo= '.		   	  				'Locales u oficinas en residencial, '.
-								'descripcion= '.   	  		$dato->descripcion. ', '.
-								'avenida= '.   		  			$t4->avenida. ', '.
-								'banos= '.   		  				$t4->banos. ', '.
-								'agua_caliente= '.    		$t4->agua_caliente. ', '.
-								'estacionamientos= '. 		$t4->estacionamientos. ', '.
-								'cuota_mant= '.   	  		$t4->cuota_mant. ', '.
-								'recargo= '.   	  	  		$t4->recargo. ', '.
-								'descuento= '.   	  			$t4->descuento. ', '.
-								'd_registra_cmpc= '.  		$t4->d_registra_cmpc. ', '.
-								'd_vence= '.   	  	  		$t4->d_vence. ', '.
-								'm_descuento= '.   	  		$t4->m_descuento. ', '.
-								'area= '.   	      			$t4->area. ', '. 
-								'seccione_id= '.   	  		$t4->seccione_id;			
-				
-				}	elseif ($dato->tipo == 5) { 
-					// Salva en la tabla ams
- 
-				// Registra en bitacoras
-				$detalle =	'Crea la Sección '.	$dato->nombre. ', '.
-										'codigo= '.   		  $dato->codigo. ', '.
-										'tipo= '.		   	  	'Amenidades propias, '.
-										'descripcion= '.   	$dato->descripcion; 
 				}			
 
 				// Actualiza la ruta de la imagen de la Sección
@@ -347,7 +266,7 @@ class SeccionesController extends Controller {
 				$img_path->imagen_L = "assets/img/secciones/sec_L".$dato->id.".jpg";
 				$img_path->save();		
 
-				Sity::RegistrarEnBitacora(1, 'secciones', $dato->id, $detalle);
+  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Crea nueva seccion');
 				DB::commit();
 				
 				Session::flash('success', 'La Sección administrativa ' .$dato->nombre. ' ha sido creada con éxito.');
@@ -370,7 +289,7 @@ class SeccionesController extends Controller {
 	{
 		//Obtiene datos de la Seccion administrativa que se desea editar.
 		//Encuentra la Sección no importa el tipo
-		$sec=Seccione::find($seccione_id);
+		$sec = Seccione::find($seccione_id);
 		//dd($sec->toArray());
 		
 		//Almacena una lista de todos los Phs para ser enviados al view.
@@ -389,8 +308,6 @@ class SeccionesController extends Controller {
 		} elseif ($sec->tipo == 4) {
 				$dato = Seccione::with('seclcre')->find($seccione_id);
 		
-		} elseif ($sec->tipo == 5 or $sec->tipo == 6 or $sec->tipo == 7) {
-				$dato = $sec;
 		}
 		//dd($dato->toArray());		
 		
@@ -399,9 +316,9 @@ class SeccionesController extends Controller {
 									->with('phs', $phs);
 	}
 
-		/*************************************************************************************
-		 * Actualiza registro
-		 ************************************************************************************/
+	/*************************************************************************************
+	 * Actualiza registro
+	 ************************************************************************************/
 	public function update($id)
 	{
 		
@@ -453,27 +370,6 @@ class SeccionesController extends Controller {
 					$t1->extra                 = Input::get('extra');
 					$t1->area                  = Input::get('area');
 					$t1->save();			
-					
-					// Registra en bitacoras
-					$detalle =	'Edita la Sección '.	$dato->nombre. ', '.
-								'tipo= '.		   	  					'Apartamentos, '.
-								'descripcion= '.   	  			$dato->descripcion. ', '.
-								'ph_id= '.   		  					$dato->ph_id. ', '.
-								'cuartos= '.   		  				$t1->cuartos. ', '.
-								'banos= '.   		  					$t1->banos. ', '.
-								'agua_caliente= '.    			$t1->agua_caliente. ', '.
-								'estacionamientos= '. 			$t1->estacionamientos. ', '.
-								'cuota_mant= '.   	  			$t1->cuota_mant. ', '.
-								'recargo= '.   	  	  			$t1->recargo. ', '.
-								'descuento= '.   	  				$t1->descuento. ', '.
-								'd_registra_cmpc= '.  			$t1->d_registra_cmpc. ', '.
-								'd_vence= '.  	  	  			$t1->d_vence. ', '.
-								'm_vence= '.  	  	  			$t1->m_vence. ', '.
-								'm_descuento= '.  	  			$t1->m_descuento. ', '.
-								'f_iniciaextra= '.    			$t1->f_iniciaextra. ', '.
-								'extra_meses= '.   	  			$t1->extra_meses. ', '.
-								'extra= '.   	  	  				$t1->extra. ', '.   
-								'area= '.   	      				$t1->area;
 				}
 
 				// Actualiza en la tabla Secres
@@ -493,24 +389,6 @@ class SeccionesController extends Controller {
 					$t2->m_descuento       	   = Input::get('m_descuento');
 					$t2->area                  = Input::get('area');
 					$t2->save();
-				
-					// Registra en bitacoras
-					$detalle =	'Edita la Sección '.	$dato->nombre. ', '.
-								'tipo= '.		   	  					'Residencias, '.
-								'descripcion= '.   	  			$dato->descripcion. ', '.
-								'avenida= '.   		  				$t2->avenida. ', '.
-								'cuartos= '.   		  				$t2->cuartos. ', '.
-								'banos= '.   		  					$t2->banos. ', '.
-								'agua_caliente= '.    			$t2->agua_caliente. ', '.
-								'estacionamientos= '. 			$t2->estacionamientos. ', '.
-								'cuota_mant= '.   	  			$t2->cuota_mant. ', '.
-								'recargo= '.   	  	  			$t2->recargo. ', '.
-								'descuento= '.   	  				$t2->descuento. ', '.
-								'd_registra_cmpc= '.  			$t2->d_registra_cmpc. ', '.
-								'd_vence= '.  	  	  			$t2->d_vence. ', '.
-								'm_vence= '.  	  	  			$t2->m_vence. ', '.
-								'm_descuento= '.  	  			$t2->m_descuento. ', '.
-								'area= '.   	      				$t2->area;  
 				}
 
 				// Actualiza en la tabla Seclceds
@@ -528,22 +406,6 @@ class SeccionesController extends Controller {
 					$t3->m_descuento       	    = Input::get('m_descuento');
 					$t3->area                   = Input::get('area');
 					$t3->save();
-				
-					// Registra en bitacoras
-					$detalle =	'Edita la Sección '.   $dato->nombre. ', '.
-								'tipo= '.		   	  					'Local u oficinas en edificio, '.
-								'descripcion= '.   	  			$dato->descripcion. ', '.
-								'banos= '.   		  					$t3->banos. ', '.
-								'agua_caliente= '.    			$t3->agua_caliente. ', '.
-								'estacionamientos= '. 			$t3->estacionamientos. ', '.
-								'cuota_mant= '.   	  			$t3->cuota_mant. ', '.
-								'recargo= '.   	  	 				$t3->recargo. ', '.
-								'descuento= '.   	  				$t3->descuento. ', '.
-								'd_registra_cmpc= '.  			$t3->d_registra_cmpc. ', '.
-								'd_vence= '.  	      			$t3->d_vence. ', '.
-								'm_vence= '.  	  	  			$t3->m_vence. ', '.
-								'm_descuento= '.  	  			$t3->m_descuento. ', '.
-								'area= '.   	      				$t3->area; 
 				}
 
 				// Actualiza en la tabla Seclcres
@@ -562,35 +424,10 @@ class SeccionesController extends Controller {
 					$t4->m_descuento       	    = Input::get('m_descuento');
 					$t4->area                   = Input::get('area');
 					$t4->save();
-				
-					// Registra en bitacoras
-					$detalle =	'Edita la Sección '.   $dato->nombre. ', '.
-								'tipo= '.		   	  					'Locales u oficinas en residencial, '.
-								'descripcion= '.   	  			$dato->descripcion. ', '.
-								'avenida= '.   		  				$t4->avenida. ', '.
-								'banos= '.   		  					$t4->banos. ', '.
-								'agua_caliente= '.    			$t4->agua_caliente. ', '.
-								'estacionamientos= '. 			$t4->estacionamientos. ', '.
-								'cuota_mant= '.   	  			$t4->cuota_mant. ', '.
-								'recargo= '.   	  	  			$t4->recargo. ', '.
-								'descuento= '.   	  				$t4->descuento. ', '.
-								'd_registra_cmpc= '.  			$t4->d_registra_cmpc. ', '.
-								'd_vence= '.  	      			$t4->d_vence. ', '.
-								'm_vence= '.  	  	  			$t4->m_vence. ', '.
-								'm_descuento= '.  	  			$t4->m_descuento. ', '.
-								'area= '.   	      				$t4->area; 
-				}			
+				}	
 
-				elseif ($dato->tipo == 5) {  
-				
-					// Registra en bitacoras
-					$detalle =	'Edita la Sección '.   $dato->nombre. ', '.
-								'tipo= '.		   	  					'Amenidades propias, '.
-								'descripcion= '.   	  			$dato->descripcion; 
-				}
-
-				Sity::RegistrarEnBitacora(2, 'secciones', $dato->id, $detalle);
-				DB::commit();				
+  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Edita seccion');
+  			DB::commit();				
 				
 				Session::flash('success', 'La Sección administrativa ' . $dato->nombre . ' ha sido editada con éxito.');
 				return redirect()->route('indexsecplus', Input::get('bloque_id'));
@@ -604,9 +441,9 @@ class SeccionesController extends Controller {
 		}  	
 	}
 
-		/*************************************************************************************
-		 * Borra registro de la base de datos
-		 ************************************************************************************/	
+	/*************************************************************************************
+	 * Borra registro de la base de datos
+	 ************************************************************************************/	
 	public function destroy($seccione_id)
 	{
 		
@@ -631,39 +468,27 @@ class SeccionesController extends Controller {
 				if ($dato->tipo == 1) {  		
 					$d = Secapto::where('seccione_id', $dato->id)->first();
 					$d->delete();
-					
-					$detalle =	'Borra la Sección '. $dato->nombre. ', tipo apartamento '. 
-											'con la siguiente descripcion: '.  $dato->descripcion;
 				}
 				
 				elseif ($dato->tipo == 2) {  		
 					$d = Secre::where('seccione_id', $dato->id)->first();
 					$d->delete();
-					
-					$detalle =	'Borra la Sección '. $dato->nombre. ', tipo residencia '.
-											'con la siguiente descripcion: '.  $dato->descripcion;
 				}		
 				
 				elseif ($dato->tipo == 3) {  		
 					$d = Seclced::where('seccione_id', $dato->id)->first();
 					$d->delete();
-					
-					$detalle =	'Borra la Sección '. $dato->nombre. ', oficina o local comercial en edificio '.
-											'con la siguiente descripcion: '.  $dato->descripcion;
 				}
 				
 				elseif ($dato->tipo == 4) {  		
 					$d = Seclcre::where('seccione_id', $dato->id)->first();
 					$d->delete();
-					
-					$detalle =	'Borra la Sección '. $dato->nombre. ', oficina o local comercial en residencial'.
-											'con la siguiente descripcion: '.  $dato->descripcion;
 				}		
 				
 				$dato->delete();
 
 				// Registra en bitacoras
-				Sity::RegistrarEnBitacora(3, 'secciones', $dato->id, $detalle);		
+  			Sity::RegistrarEnBitacora($bloque, Null, 'Seccione', 'Elimina seccion'); 
 				DB::commit();
 				
 				Session::flash('success', 'La Sección administrativa ' .$dato->nombre. ' ha sido borrada permanentemente de la base de datos.');		
@@ -675,6 +500,76 @@ class SeccionesController extends Controller {
 			Session::flash('warning', ' Ocurrio un error en penalizar.php, la transaccion ha sido cancelada!');
 			return back();
 		}
+	}
+
+  /*************************************************************************************
+	 * Sube una imagen a la carpeta de bloques
+	 ************************************************************************************/	
+	public function subirImagenSeccion($id)
+	{
+	  //DB::beginTransaction();
+	  //try {
+			$input = Input::all();
+			$rules = array(
+				'file' => 'required|image|max:10000|mimes:jpeg,jpg,gif,png,bmp'
+			);
+
+			$messages = array(
+					'required' => 'Debe seleccinar una imagen',
+					'image' => 'El archivo no es una imagen',
+					'max' => 'La imagen sobrepasa el tamaño máximo de 300',
+					'mimes' => 'La imagen deberá tener una de las siguienes extensiones jpg,gif,png,bmp'
+			);
+
+				$validation = Validator::make($input, $rules, $messages);
+				if ($validation->fails()) {
+					return back()->withInput()->withErrors($validation);
+				}
+
+				$file = Input::file('file'); 
+				$destinationPath = "assets/img/secciones";
+				$filename = "sec-L".$id.".jpg";
+
+				$uploadSuccess = Input::file('file')->move($destinationPath, $filename);
+				if( $uploadSuccess ) {
+					// Actualiza la ruta de la imagen del bloque
+					$img_path = Seccione::find($id);
+					$img_path->imagen_L = "assets/img/secciones/sec-L".$id.".jpg";
+					$img_path->imagen_M = "assets/img/secciones/sec-M".$id.".jpg";
+					$img_path->imagen_S = "assets/img/secciones/sec-S".$id.".jpg";
+  				//Sity::RegistrarEnBitacora($img_path, $input, 'Bloque', 'Actualiza imagen de bloque');	
+					$img_path->save();
+					
+					// crea imagen normal
+					// resize the image to a height of 300 and constrain aspect ratio (auto width)
+					$img = Image::make($img_path->imagen_L)->resize(900, 500);
+					$img->save("assets/img/secciones/sec-L".$id.".jpg");
+					
+					// crea thumpnail No 1
+					// resize the image to a height of 189 and constrain aspect ratio (auto width)
+					$img = Image::make($img_path->imagen_L)->resize(189, 189);
+					$img->save("assets/img/secciones/sec-M".$id.".jpg");
+
+					// crea thumpnail No 2 
+					// resize the image to a height of 90 and constrain aspect ratio (auto width)
+					$img = Image::make($img_path->imagen_L)->resize(90, 90);
+					$img->save("assets/img/secciones/sec-S".$id.".jpg");			
+  			
+	  			DB::commit();
+					
+					Session::flash('success', 'La imagen se actualizó con éxito.');
+					return back()->withInput();
+				
+				} else {
+					Session::flash('danger', 'La imagen no se pudo subir.');
+					return back()->withInput();
+				}
+
+	  //} catch (\Exception $e) {
+	    //DB::rollback();
+	    //Session::flash('warning', ' Ocurrio un error en SeccionesController.subirImagenSeccione, la transaccion ha sido cancelada!');
+	    //return back()->withInput();
+	  //}
 	}
 
 }

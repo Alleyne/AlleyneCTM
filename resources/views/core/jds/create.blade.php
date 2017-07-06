@@ -1,6 +1,9 @@
-@extends('templates.backend._layouts.default')
+@extends('templates.backend._layouts.smartAdmin')
 
-@section('main')<!-- MAIN PANEL -->
+@section('title', '| Crear Junta Directiva')
+
+@section('content')
+
 	<!-- widget grid -->
 	<section id="widget-grid" class="">
 	

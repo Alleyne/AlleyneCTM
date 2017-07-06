@@ -60,11 +60,11 @@
                                     <td><strong>{{ $dato->aprobadopor }}</strong></td>
 
                                     @if (Cache::get('esAdminkey'))
-                                        <td col width="340px" align="right">
+                                        <td col width="320px" align="right">
                                             <ul class="demo-btns">
                                                 @if ($dato->aprobado == 0)
                                                     <li>
-                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
+                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario</a>
                                                     </li> 
                                                     <li>
                                                         <a href="{{ URL::route('diariocajas.edit', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Depositar</a>
@@ -74,7 +74,7 @@
                                                     </li> 
                                                 @else
                                                     <li>
-                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
+                                                        <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario</a>
                                                     </li>  
                                                 @endif
                                             </ul>

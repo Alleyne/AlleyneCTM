@@ -25,7 +25,9 @@
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                 <h2>Pagos </h2>
                 <div class="widget-toolbar">
-                    <a href="{{ Cache::get('indexunallkey') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
+                    {{-- <a href="{{ Cache::get('indexunallkey') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a> --}}
+                    <a href="{{ URL::route('indexunall') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
+
                     @if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
                         <div class="btn-group">
                             <a class="btn btn-info btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Otros ingresos</a>
