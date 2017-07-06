@@ -184,9 +184,10 @@
 
     <script>
         $(document).ready(function() {
-                	$("#fecha").datepicker({
-	        dateFormat: 'yy-mm-dd'
-	    });
+            $("#fecha").datepicker({
+	        		dateFormat: 'yy-mm-dd'
+	    			});
+	    			
             // Setup - add a text input to each footer cell
             $('#dt_basic2 tfoot th').each( function () {
                 var title = $('#dt_basic2 thead th').eq( $(this).index() ).text();

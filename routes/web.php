@@ -323,6 +323,7 @@ Route::group(['namespace' => 'blog'], function()
 	//Route::get('blog', ['uses' => 'BlogController@getIndex', 'as' => 'blog.index']);
   Route::get('blog', 'BlogController@getIndex')->name('blog');
 
+  Route::get('eventCalendar', 'PagesController@eventCalendar')->name('eventCalendar');
   Route::get('contact', 'PagesController@getContact')->name('contact');
   Route::post('contact', 'PagesController@postContact');
 	Route::get('directivos', 'PagesController@getDirectivos')->name('directivos');

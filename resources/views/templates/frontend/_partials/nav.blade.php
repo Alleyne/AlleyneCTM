@@ -59,6 +59,14 @@
             
             <!-- Junta Directiva -->
             <li class="dropdown">
+                <a href="{{ URL::route('eventCalendar') }}" class="dropdown-toggle">
+                    Reservaciones
+                </a>
+            </li>
+            <!-- End Junta Directiva -->
+
+            <!-- Junta Directiva -->
+            <li class="dropdown">
                 <a href="{{ URL::route('directivos') }}" class="dropdown-toggle">
                     Directivos
                 </a>

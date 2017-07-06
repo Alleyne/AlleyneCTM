@@ -13,7 +13,7 @@ use Guzzlehttp\Client;
 class PagesController extends Controller {
 
 	public function getIndex() {
-		$posts = Post::orderBy('created_at', 'desc')->limit(4)->get();
+		$posts = Post::orderBy('created_at', 'desc')->limit(6)->get();
 		return view('blog.pages.welcome')->withPosts($posts);
 	}
 
@@ -31,6 +31,10 @@ class PagesController extends Controller {
 
 	public function getContact() {
 		return view('blog.pages.contact');
+	}
+
+	public function eventCalendar() {
+		return view('blog.pages.eventCalendar');
 	}
 
 	public function postContact(Request $request) {
