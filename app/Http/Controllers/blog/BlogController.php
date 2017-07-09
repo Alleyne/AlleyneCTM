@@ -2,9 +2,8 @@
 namespace App\Http\Controllers\blog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use Cache;
 
+use App\Http\Requests;
 use App\Post;
 
 class BlogController extends Controller
@@ -22,7 +21,7 @@ class BlogController extends Controller
     	$post = Post::where('slug', $slug)->first();
         
         // mas recientes
-        $posts = Cache::get('recentPostkey');
+        $posts = Post::orderBy('created_at', 'desc')->limit(3)->get();
     	// return the view and pass in the post object
     	
         return view('blog.blog.single')
