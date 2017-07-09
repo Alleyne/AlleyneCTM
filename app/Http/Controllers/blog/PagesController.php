@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\blog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Post;
-use Mail;
-use Session;
+use Mail, Cache, Session;
 use Guzzlehttp\Client;
+
+use App\Post;
 
 class PagesController extends Controller {
 
@@ -26,20 +25,25 @@ class PagesController extends Controller {
 		$data = [];
 		$data['email'] = $email;
 		$data['fullname'] = $fullname;
-		return view('blog.pages.directivos')->withData($data);
+	  
+	  // mas recientes
+		$posts = Cache::get('recentPostkey');		
+		
+		return view('blog.pages.directivos')
+					->withPosts($posts)
+					->withData($data);
 	}
 
 	public function getContact() {
 	  // mas recientes
-    $posts = Post::orderBy('created_at', 'desc')->limit(3)->get();
+		$posts = Cache::get('recentPostkey');
   	
   	// return the view and pass in the post object
 		return view('blog.pages.contact')->withPosts($posts);
 	}
 
 	public function eventCalendar() {
-		$posts = Post::orderBy('created_at', 'desc')->limit(3)->get();
-		return view('blog.pages.eventCalendar')->withPosts($posts);
+		return view('blog.pages.eventCalendar');
 	}
 
 	public function postContact(Request $request) {

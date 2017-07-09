@@ -24,7 +24,7 @@
         <div class="posts">
             <div class="headline"><h2>Mas Recientes</h2></div>
             
-            @foreach (Cache::get('recentPostkey') as $post)
+            @foreach ($posts as $post)
                 <dl class="dl-horizontal">
                     <dt><a href="#"><img src="{{asset('/images/' . $post->image)}}" alt="" /></a></dt>
                     <dd>

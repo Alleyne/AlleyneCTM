@@ -374,7 +374,7 @@
 @stop
 
 @section('relatedplugins')
-   <script src="{{ URL::asset('assets/fullcalendar340/lib/moment.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/fullcalendar340/lib/moment.min.js') }}"></script>
   <script src="{{ URL::asset('assets/fullcalendar340/fullcalendar.min.js') }}"></script>
   <script src="{{ URL::asset('assets/fullcalendar340/locale/es.js') }}"></script>  
 
