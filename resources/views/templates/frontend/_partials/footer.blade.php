@@ -24,14 +24,14 @@
         <div class="posts">
             <div class="headline"><h2>Mas Recientes</h2></div>
             
-            @foreach ($posts as $post)
+            {{-- @foreach ($posts as $post)
                 <dl class="dl-horizontal">
                     <dt><a href="#"><img src="{{asset('/images/' . $post->image)}}" alt="" /></a></dt>
                     <dd>
                         <p><a href="{{ route('blog.single', $post->slug) }}">{{ $post->title }}</a></p> 
                     </dd>
                 </dl>
-            @endforeach
+            @endforeach --}}
 
         </div>
         <!-- End Recent Blogs -->                    
