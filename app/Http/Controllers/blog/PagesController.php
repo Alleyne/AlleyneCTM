@@ -26,21 +26,14 @@ class PagesController extends Controller {
 		$data['email'] = $email;
 		$data['fullname'] = $fullname;
 	  
-	  // mas recientes
-		$posts = Cache::get('recentPostkey');		
-		//dd($posts);
-		
 		return view('blog.pages.directivos')
-					->with('posts', $posts)
 					->with('data', $data);
 	}
 
 	public function getContact() {
-	  // mas recientes
-		$posts = Cache::get('recentPostkey');
   	
   	// return the view and pass in the post object
-		return view('blog.pages.contact')->withPosts($posts);
+		return view('blog.pages.contact');
 	}
 
 	public function eventCalendar() {

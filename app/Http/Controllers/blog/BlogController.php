@@ -20,12 +20,7 @@ class BlogController extends Controller
         // fetch from the DB based on slug
     	$post = Post::where('slug', $slug)->first();
         
-        // mas recientes
-        $posts = Post::orderBy('created_at', 'desc')->limit(3)->get();
-    	// return the view and pass in the post object
-    	
         return view('blog.blog.single')
-                ->withPosts($posts)
                 ->withPost($post);
     }
 }

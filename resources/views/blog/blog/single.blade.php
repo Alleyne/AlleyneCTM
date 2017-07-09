@@ -99,7 +99,3 @@
     </div><!--/container-->		
     <!--=== End Content Part ===-->
 @endsection
-
-@section('footer')
-    @include('templates.frontend._partials.footer')
-@endsection

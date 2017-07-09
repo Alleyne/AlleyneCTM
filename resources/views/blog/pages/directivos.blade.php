@@ -101,9 +101,6 @@
             </blockquote>
         </div>
 
-        <div class="margin-bottom-60"></div>
-@endsection
-
-@section('footer')
-    @include('templates.frontend._partials.footer')
+        {{-- <div class="margin-bottom-60"></div> --}}
+    </div>
 @endsection
