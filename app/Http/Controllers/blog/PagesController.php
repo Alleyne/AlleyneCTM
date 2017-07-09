@@ -28,10 +28,11 @@ class PagesController extends Controller {
 	  
 	  // mas recientes
 		$posts = Cache::get('recentPostkey');		
+		//dd($posts);
 		
 		return view('blog.pages.directivos')
-					->withPosts($posts)
-					->withData($data);
+					->with('posts', $posts)
+					->with('data', $data);
 	}
 
 	public function getContact() {
