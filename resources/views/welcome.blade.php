@@ -62,6 +62,10 @@
     </div><!--/row-->  
 @stop
 
+@section('footer')
+    @include('templates.frontend._partials.footer')
+@endsection
+
 @section('relatedplugins')
 
     <script src="https://code.highcharts.com/highcharts.js"></script>

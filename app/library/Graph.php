@@ -49,7 +49,12 @@ class Graph {
         $ctaExtra[]= $_ctaExtra;
         
         $propietario= $un->props()->where('encargado', 1)->first();
-        $propietario= $propietario->user->nombre_completo; 
+        if ($propietario) {
+          $propietario= $propietario->user->nombre_completo; 
+        } else {
+          $propietario= "";
+        }
+                
         $categorias[]= $propietario.' '.$un->codigo;
       }
       //dd($uns->toArray()); 

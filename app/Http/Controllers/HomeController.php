@@ -7,6 +7,7 @@ use Session;
 use Cache;
 use App\Un;
 use App\User;
+use App\Post;
 
 class HomeController extends Controller
 {
@@ -54,6 +55,8 @@ class HomeController extends Controller
         Cache::forever('userFullNamekey', Auth::user()->first_name .' '.Auth::user()->last_name);
         
         Cache::forever('unsAllkey', Un::all());
+
+        Cache::forever('recentPostkey', Post::orderBy('created_at', 'desc')->limit(3)->get());
 
         return view('home');
     }

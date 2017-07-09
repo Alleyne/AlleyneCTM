@@ -23,9 +23,4 @@ class Seccione extends Model
   {
    return $this->hasMany('App\Un');    
   }
-
-  public function secre()
-  {
-      return $this->hasOne('App\Secre');
-  }
 }

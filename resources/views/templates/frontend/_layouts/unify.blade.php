@@ -44,7 +44,7 @@
       <!--=== Footer ===-->
       <div class="footer">
           <div class="container">
-            @include('templates.frontend._partials.footer')          
+            @yield('footer')          
           </div> 
       </div><!--/footer-->
       <!--=== End Footer ===-->

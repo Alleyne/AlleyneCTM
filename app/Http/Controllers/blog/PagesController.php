@@ -30,11 +30,16 @@ class PagesController extends Controller {
 	}
 
 	public function getContact() {
-		return view('blog.pages.contact');
+	  // mas recientes
+    $posts = Post::orderBy('created_at', 'desc')->limit(3)->get();
+  	
+  	// return the view and pass in the post object
+		return view('blog.pages.contact')->withPosts($posts);
 	}
 
 	public function eventCalendar() {
-		return view('blog.pages.eventCalendar');
+		$posts = Post::orderBy('created_at', 'desc')->limit(3)->get();
+		return view('blog.pages.eventCalendar')->withPosts($posts);
 	}
 
 	public function postContact(Request $request) {

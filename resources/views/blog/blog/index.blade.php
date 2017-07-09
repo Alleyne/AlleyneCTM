@@ -76,7 +76,7 @@
 	                <dl class="dl-horizontal">
 	                    <dt><a href="#"><img src="{{asset('/images/' . $post->image)}}" alt="" /></a></dt>
 	                    <dd>
-	                        <p><a href="{{ route('blog.single', $post->id) }}">{{ $post->title }}</a></p> 
+	                        <p><a href="{{ route('blog.single', $post->slug) }}">{{ $post->title }}</a></p> 
 	                    </dd>
 	                </dl>	       
 	            @endforeach

@@ -26,13 +26,10 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{ URL::route('createsec', array($bloque->id, 1)) }}">Apartamentos</a></li>
                         <li><a href="{{ URL::route('createsec', array($bloque->id, 2)) }}">Residencias</a></li>
-                        <!-- <li><a href="{{ URL::route('createsec', array($bloque->id, 3)) }}">Locales u oficinas en Edificios</a></li>
-                        <li><a href="{{ URL::route('createsec', array($bloque->id, 4)) }}">Locales u oficinas en Residenciales</a></li>
-                        <li><a href="{{ URL::route('createsec', array($bloque->id, 5)) }}">Amenidades propias</a></li>
-                        <li><a href="{{ URL::route('createsec', array($bloque->id, 6)) }}">Amenidades comunes</a></li>
-                        <li><a href="{{ URL::route('createsec', array($bloque->id, 7)) }}">Estacionamientos alquilables</a></li>
-                        <li class="divider"></li> -->
-                        <li><!-- <a href="#">Separated link</a> --></li>
+                        <li><a href="{{ URL::route('createsec', array($bloque->id, 3)) }}">Oficinas o Locales comerciales</a></li>
+                        <!--<li class="divider"></li>
+                        <li><a href="{{ URL::route('createsec', array($bloque->id, 4)) }}">Amenidades</a></li>
+                        <li><a href="{{ URL::route('createsec', array($bloque->id, 7)) }}">Estacionamientos alquilables</a></li>-->
                     </ul>
                 </div><!-- /btn-group -->       
             @endif  
@@ -65,32 +62,24 @@
                             <td col width="60px" ><strong> {{ $seccion->codigo }} </strong></td>
                             <td>{{ $seccion->nombre }}</td>
                             <td col width="200px">
-                                @if($seccion->tipo==1)    
+                                @if($seccion->tipo == 1)    
                                     Apartamentos                                        
-                                @elseif($seccion->tipo==2)    
+                                @elseif($seccion->tipo == 2)    
                                     Residencias                                        
-                                @elseif($seccion->tipo==3)    
-                                    Locales u ofincinas en edificios                                        
+                                @elseif($seccion->tipo == 3)    
+                                    Oficinas o Locales comerciales                                        
                                 @elseif($seccion->tipo==4)    
-                                    Locales u oficinas en residenciales                                        
-                                @elseif($seccion->tipo==5)    
-                                    Amenidades propias                                
-                                @elseif($seccion->tipo==6)    
-                                    Amenidades comunes    
-                                @elseif($seccion->tipo==7)    
-                                    Estacionamientos alquilables    
+                                    Amenidades                                        
                                 @endif    
                             </td>
                             @if (Cache::get('esAdminkey'))
                                 <td col width="150px" align="right">
                                     <ul class="demo-btns">
                                         <li>
-                                            @if($seccion->tipo==1 or $seccion->tipo==2 or $seccion->tipo==3 or $seccion->tipo==4)    
+                                            @if($seccion->tipo == 1 or $seccion->tipo == 2 or $seccion->tipo == 3)    
                                                 <a href="{{ URL::route('indexunplus', array($seccion->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Uns</a>
-                                            @elseif($seccion->tipo==5 or $seccion->tipo==6)    
+                                            @elseif($seccion->tipo == 4)    
                                                 <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Ame</a>
-                                            @elseif($seccion->tipo==7)    
-                                                <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Est</a>
                                             @endif    
                                         </li>
                                         <li>
@@ -111,12 +100,10 @@
                                 <td col width="150px" align="right">
                                     <ul class="demo-btns">
                                         <li>
-                                            @if($seccion->tipo==1 or $seccion->tipo==2 or $seccion->tipo==3 or $seccion->tipo==4)    
+                                            @if($seccion->tipo == 1 or $seccion->tipo == 2 or $seccion->tipo == 3)    
                                                 <a href="{{ URL::route('indexunplus', array($seccion->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Uns</a>
-                                            @elseif($seccion->tipo==5 or $seccion->tipo==6)    
+                                            @elseif($seccion->tipo == 4)    
                                                 <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Ame</a>
-                                            @elseif($seccion->tipo==7)    
-                                                <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Est</a>
                                             @endif    
                                         </li>
                                         <li>
@@ -131,12 +118,10 @@
                                 <td col width="150px" align="right">
                                     <ul class="demo-btns">
                                         <li>
-                                            @if($seccion->tipo==1 or $seccion->tipo==2 or $seccion->tipo==3 or $seccion->tipo==4)    
+                                            @if($seccion->tipo == 1 or $seccion->tipo == 2 or $seccion->tipo == 3)    
                                                 <a href="{{ URL::route('indexunplus', array($seccion->id)) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Uns</a>
-                                            @elseif($seccion->tipo==5 or $seccion->tipo==6)    
+                                            @elseif($seccion->tipo == 4)    
                                                 <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Ame</a>
-                                            @elseif($seccion->tipo==7)    
-                                                <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Est</a>
                                             @endif    
                                         </li>
                                         <li>

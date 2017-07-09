@@ -159,6 +159,8 @@ class SeccionesController extends Controller {
 				'nombre'    			=> 'required',
 				'descripcion' 		=> 'required',
 				'codigo'    			=> 'Required|Min:2|Max:2|Alpha_num',
+				'm_vence' 				=> 'required|Numeric',
+				'd_vence' 				=> 'required|Numeric',
 				'd_registra_cmpc' => 'required'	    
 			);
 			
@@ -181,86 +183,31 @@ class SeccionesController extends Controller {
 				$dato->save();
 				
 				// Relaciones de uno a uno con Secciones
-				// Salva en la tabla secaptos "Apartamentos en condominios"
-				if ($dato->tipo == 1) {  
-					$t1 = new Secapto;
-					$t1->cuartos               = Input::get('cuartos');
-					$t1->banos                 = Input::get('banos');
-					$t1->agua_caliente         = Input::get('agua_caliente');            
-					$t1->estacionamientos      = Input::get('estacionamientos');
-					$t1->cuota_mant            = Input::get('cuota_mant');
-					$t1->recargo               = Input::get('recargo');
-					$t1->descuento             = Input::get('descuento');								
-					$t1->d_registra_cmpc       = Input::get('d_registra_cmpc');
-					$t1->d_vence               = Input::get('d_vence');
-					$t1->m_descuento           = Input::get('m_descuento');
-					$t1->area                  = Input::get('area');
-					
-					$t1->f_iniciaextra         = Carbon::parse(Input::get('f_iniciaextra'))->startOfMonth();
-					$t1->extra_meses           = Input::get('extra_meses');
-					$t1->extra                 = Input::get('extra');
-					
-					$t1->seccione_id           = $dato->id;
-					$t1->save();			
+				$t1 = new Secapto;
+				$t1->avenida               = Input::get('avenida');
 				
-				}	elseif ($dato->tipo == 2) {  
-					// Salva en la tabla secres "Residencias en residenciales"
-					$t2 = new Secre;
-					$t2->avenida               = Input::get('avenida');
-					$t2->cuartos               = Input::get('cuartos');
-					$t2->banos                 = Input::get('banos');
-					$t2->agua_caliente         = Input::get('agua_caliente');            
-					$t2->estacionamientos      = Input::get('estacionamientos');
-					$t2->cuota_mant            = Input::get('cuota_mant');			
-					$t2->recargo               = Input::get('recargo');
-					$t2->descuento             = Input::get('descuento');	
-					$t2->d_registra_cmpc       = Input::get('d_registra_cmpc');
-					$t2->d_vence             	 = Input::get('d_vence');
-					$t2->m_descuento           = Input::get('m_descuento');
-					$t2->area                  = Input::get('area');
-					
-					$t2->f_iniciaextra         = Carbon::parse(Input::get('f_iniciaextra'))->startOfMonth();
-					$t2->extra_meses           = Input::get('extra_meses');
-					$t2->extra                 = Input::get('extra');
-
-					$t2->seccione_id           = $dato->id;
-					$t2->save();
-	
-				}	elseif ($dato->tipo == 3) { 
-					// Salva en la tabla seclceds "Local comercial en condominios"
-					$t3 = new Seclced;
-					$t3->banos                  = Input::get('banos');
-					$t3->agua_caliente          = Input::get('agua_caliente');            
-					$t3->estacionamientos       = Input::get('estacionamientos');
-					$t3->cuota_mant             = Input::get('cuota_mant');
-					$t3->recargo                = Input::get('recargo');
-					$t3->descuento              = Input::get('descuento');	
-					$t3->d_registra_cmpc        = Input::get('d_registra_cmpc');
-					$t3->d_vence              	= Input::get('d_vence');
-					$t3->m_descuento            = Input::get('m_descuento');
-					$t3->area                   = Input::get('area');
-					$t3->seccione_id            = $dato->id;
-					$t3->save();
-	
-				}	elseif ($dato->tipo == 4) { 
-					// Salva en la tabla seclcres "Local comercial en residencial"
- 					$t4 = new Seclcre;
-					$t4->avenida                = Input::get('avenida');
-					$t4->banos                  = Input::get('banos');
-					$t4->agua_caliente          = Input::get('agua_caliente');            
-					$t4->estacionamientos       = Input::get('estacionamientos');
-					$t4->cuota_mant             = Input::get('cuota_mant');
-					$t4->recargo                = Input::get('recargo');
-					$t4->descuento              = Input::get('descuento');	
-					$t4->d_registra_cmpc        = Input::get('d_registra_cmpc');
-					$t4->d_vence              	= Input::get('d_vence');
-					$t4->m_descuento            = Input::get('m_descuento');
-					$t4->area                   = Input::get('area');
-					$t4->seccione_id            = $dato->id;
-					$t4->save();
+				if (Input::get('tipo') != 3) {
+					$t1->cuartos             = Input::get('cuartos');
+				}
 				
-				}			
-
+				$t1->banos                 = Input::get('banos');
+				$t1->agua_caliente         = Input::get('agua_caliente');            
+				$t1->estacionamientos      = Input::get('estacionamientos');
+				$t1->cuota_mant            = Input::get('cuota_mant');
+				$t1->recargo               = Input::get('recargo');
+				$t1->descuento             = Input::get('descuento');								
+				$t1->d_registra_cmpc       = Input::get('d_registra_cmpc');
+				$t1->d_vence               = Input::get('d_vence');
+				$t1->m_descuento           = Input::get('m_descuento');
+				$t1->area                  = Input::get('area');
+				
+				$t1->f_iniciaextra         = Carbon::parse(Input::get('f_iniciaextra'))->startOfMonth();
+				$t1->extra_meses           = Input::get('extra_meses');
+				$t1->extra                 = Input::get('extra');
+				
+				$t1->seccione_id           = $dato->id;
+				$t1->save();			
+				
 				// Actualiza la ruta de la imagen de la Sección
 				$img_path = Seccione::find($dato->id);
 				$img_path->imagen_L = "assets/img/secciones/sec_L".$dato->id.".jpg";
@@ -295,20 +242,7 @@ class SeccionesController extends Controller {
 		//Almacena una lista de todos los Phs para ser enviados al view.
 		$phs = Ph::pluck('nombre', 'id')->all();  		
 
-		if ($sec->tipo == 1) {
-				//$dato = Seccione::find($id)->secapto; // trae solamente los datos de secaptos
-			$dato = Seccione::with('secapto')->find($seccione_id); // trae los datos de las dos tablas
-		
-		} elseif ($sec->tipo == 2) {
-				$dato = Seccione::with('secre')->find($seccione_id);
-		
-		} elseif ($sec->tipo == 3) {
-				$dato = Seccione::with('seclced')->find($seccione_id);
-		
-		} elseif ($sec->tipo == 4) {
-				$dato = Seccione::with('seclcre')->find($seccione_id);
-		
-		}
+		$dato = Seccione::with('secapto')->find($seccione_id); // trae los datos de las dos tablas
 		//dd($dato->toArray());		
 		
 		return view('core.secciones.edit')
@@ -322,15 +256,18 @@ class SeccionesController extends Controller {
 	public function update($id)
 	{
 		
-		DB::beginTransaction();
-		try {
+		//DB::beginTransaction();
+		//try {
 			//dd(Input::get());
 			$input = Input::all();
 			$rules = array(
 				'nombre'    			=> 'required',
 				'descripcion' 		=> 'required',
-				'ph_id'						=> 'required',
-				'd_registra_cmpc' => 'required'
+				'codigo'    			=> 'Required|Min:2|Max:2|Alpha_num',
+				'm_vence' 				=> 'required|Numeric',
+				'd_vence' 				=> 'required|Numeric',
+				'd_registra_cmpc' => 'required'	  
+
 			);
 
 			$messages = [
@@ -352,79 +289,28 @@ class SeccionesController extends Controller {
 				
 				// Relaciones de uno a uno con Secciones
 				// Actualiza en la tabla Secapto
-				if ($dato->tipo == 1) {  
-					$t1 = Seccione::find($id)->Secapto;
-					$t1->cuartos               = Input::get('cuartos');
-					$t1->banos                 = Input::get('banos');
-					$t1->agua_caliente         = Input::get('agua_caliente');            
-					$t1->estacionamientos      = Input::get('estacionamientos');
-					$t1->cuota_mant            = Input::get('cuota_mant');
-					$t1->recargo               = Input::get('recargo');
-					$t1->descuento             = Input::get('descuento');	
-					$t1->d_registra_cmpc       = Input::get('d_registra_cmpc');
-					$t1->d_vence       	   	   = Input::get('d_vence');
-					$t1->m_vence       	   	   = Input::get('m_vence');
-					$t1->m_descuento       	   = Input::get('m_descuento');
-					$t1->f_iniciaextra         = Carbon::parse(Input::get('f_iniciaextra'))->startOfMonth();
-					$t1->extra_meses           = Input::get('extra_meses');
-					$t1->extra                 = Input::get('extra');
-					$t1->area                  = Input::get('area');
-					$t1->save();			
-				}
 
-				// Actualiza en la tabla Secres
-				elseif ($dato->tipo == 2) {  
-					$t2 = Seccione::find($id)->Secre;
-					$t2->avenida               = Input::get('avenida');
-					$t2->cuartos               = Input::get('cuartos');
-					$t2->banos                 = Input::get('banos');
-					$t2->agua_caliente         = Input::get('agua_caliente');            
-					$t2->estacionamientos      = Input::get('estacionamientos');
-					$t2->cuota_mant            = Input::get('cuota_mant');			
-					$t2->recargo               = Input::get('recargo');
-					$t2->descuento             = Input::get('descuento');	
-					$t2->d_registra_cmpc       = Input::get('d_registra_cmpc');
-					$t2->d_vence       	   	   = Input::get('d_vence');
-					$t2->m_vence       	   	   = Input::get('m_vence');
-					$t2->m_descuento       	   = Input::get('m_descuento');
-					$t2->area                  = Input::get('area');
-					$t2->save();
+				$t1 = Seccione::find($id)->Secapto;
+				
+				if (Input::get('codigo') != 'LC') {
+					$t1->cuartos             = Input::get('cuartos');
 				}
-
-				// Actualiza en la tabla Seclceds
-				elseif ($dato->tipo == 3) {  
-					$t3 = Seccione::find($id)->Seclced;
-					$t3->banos                  = Input::get('banos');
-					$t3->agua_caliente          = Input::get('agua_caliente');            
-					$t3->estacionamientos       = Input::get('estacionamientos');
-					$t3->cuota_mant             = Input::get('cuota_mant');
-					$t3->recargo                = Input::get('recargo');
-					$t3->descuento              = Input::get('descuento');	
-					$t3->d_registra_cmpc        = Input::get('d_registra_cmpc');
-					$t3->d_vence       	   	    = Input::get('d_vence');
-					$t3->m_vence       	   	    = Input::get('m_vence');
-					$t3->m_descuento       	    = Input::get('m_descuento');
-					$t3->area                   = Input::get('area');
-					$t3->save();
-				}
-
-				// Actualiza en la tabla Seclcres
-				elseif ($dato->tipo == 4) {  
-					$t4 = Seccione::find($id)->Seclcre;
-					$t4->avenida                = Input::get('avenida');
-					$t4->banos                  = Input::get('banos');
-					$t4->agua_caliente          = Input::get('agua_caliente');            
-					$t4->estacionamientos       = Input::get('estacionamientos');
-					$t4->cuota_mant             = Input::get('cuota_mant');
-					$t4->recargo                = Input::get('recargo');
-					$t4->descuento              = Input::get('descuento');	
-					$t4->d_registra_cmpc        = Input::get('d_registra_cmpc');
-					$t4->d_vence       	   	    = Input::get('d_vence');
-					$t4->m_vence       	   	    = Input::get('m_vence');
-					$t4->m_descuento       	    = Input::get('m_descuento');
-					$t4->area                   = Input::get('area');
-					$t4->save();
-				}	
+				
+				$t1->banos                 = Input::get('banos');
+				$t1->agua_caliente         = Input::get('agua_caliente');            
+				$t1->estacionamientos      = Input::get('estacionamientos');
+				$t1->cuota_mant            = Input::get('cuota_mant');
+				$t1->recargo               = Input::get('recargo');
+				$t1->descuento             = Input::get('descuento');	
+				$t1->d_registra_cmpc       = Input::get('d_registra_cmpc');
+				$t1->d_vence       	   	   = Input::get('d_vence');
+				$t1->m_vence       	   	   = Input::get('m_vence');
+				$t1->m_descuento       	   = Input::get('m_descuento');
+				$t1->f_iniciaextra         = Carbon::parse(Input::get('f_iniciaextra'))->startOfMonth();
+				$t1->extra_meses           = Input::get('extra_meses');
+				$t1->extra                 = Input::get('extra');
+				$t1->area                  = Input::get('area');
+				$t1->save();			
 
   			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Edita seccion');
   			DB::commit();				
@@ -434,11 +320,11 @@ class SeccionesController extends Controller {
 			}
 			return back()->withInput()->withErrors($validation);
 
-		} catch (\Exception $e) {
-			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en SeccionesController.update, la transaccion ha sido cancelada!');
-			return back()->withInput();
-		}  	
+		//} catch (\Exception $e) {
+			//DB::rollback();
+			//Session::flash('warning', ' Ocurrio un error en SeccionesController.update, la transaccion ha sido cancelada!');
+			//return back()->withInput();
+		//}  	
 	}
 
 	/*************************************************************************************
@@ -456,39 +342,20 @@ class SeccionesController extends Controller {
 			$dato = Seccione::find($seccione_id);
 			
 			// Revisa si hay alguna unidad asignada a la junta directiva
-			$un= Un::where('seccione_id', $seccione_id)->first();
+			$un = Un::where('seccione_id', $seccione_id)->first();
 			//dd($un);
 
 			if(!empty($un)) {
 				Session::flash('success', 'La Sección ' .$dato->nombre. ' no puede ser borrada porque tiene uno o más unidades asignadoa a la misma.');
-			}
 			
-			else {
+			} else {
 			
-				if ($dato->tipo == 1) {  		
-					$d = Secapto::where('seccione_id', $dato->id)->first();
-					$d->delete();
-				}
-				
-				elseif ($dato->tipo == 2) {  		
-					$d = Secre::where('seccione_id', $dato->id)->first();
-					$d->delete();
-				}		
-				
-				elseif ($dato->tipo == 3) {  		
-					$d = Seclced::where('seccione_id', $dato->id)->first();
-					$d->delete();
-				}
-				
-				elseif ($dato->tipo == 4) {  		
-					$d = Seclcre::where('seccione_id', $dato->id)->first();
-					$d->delete();
-				}		
-				
-				$dato->delete();
+				$seccion = Seccione::find($seccione_id);
+				//dd($seccion);
+				$seccion->delete();
 
 				// Registra en bitacoras
-  			Sity::RegistrarEnBitacora($bloque, Null, 'Seccione', 'Elimina seccion'); 
+  			Sity::RegistrarEnBitacora($seccion, Null, 'Seccione', 'Elimina seccion'); 
 				DB::commit();
 				
 				Session::flash('success', 'La Sección administrativa ' .$dato->nombre. ' ha sido borrada permanentemente de la base de datos.');		
@@ -497,7 +364,7 @@ class SeccionesController extends Controller {
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en penalizar.php, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrio un error en SeccionesController@destroy, la transaccion ha sido cancelada!');
 			return back();
 		}
 	}
@@ -507,8 +374,8 @@ class SeccionesController extends Controller {
 	 ************************************************************************************/	
 	public function subirImagenSeccion($id)
 	{
-	  //DB::beginTransaction();
-	  //try {
+	  DB::beginTransaction();
+	  try {
 			$input = Input::all();
 			$rules = array(
 				'file' => 'required|image|max:10000|mimes:jpeg,jpg,gif,png,bmp'
@@ -565,11 +432,11 @@ class SeccionesController extends Controller {
 					return back()->withInput();
 				}
 
-	  //} catch (\Exception $e) {
-	    //DB::rollback();
-	    //Session::flash('warning', ' Ocurrio un error en SeccionesController.subirImagenSeccione, la transaccion ha sido cancelada!');
-	    //return back()->withInput();
-	  //}
+	  } catch (\Exception $e) {
+	    DB::rollback();
+	    Session::flash('warning', ' Ocurrio un error en SeccionesController.subirImagenSeccione, la transaccion ha sido cancelada!');
+	    return back()->withInput();
+	  }
 	}
 
 }

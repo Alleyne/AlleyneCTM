@@ -2,8 +2,9 @@
 
 use App\Http\Controllers\Controller;
 use App\library\Lim;
+use Session, DB;
+
 use App\Un;
-use Session;
 
 class PruebasController extends Controller {
   
@@ -39,7 +40,7 @@ class PruebasController extends Controller {
     /*************************************************************************************
      * 
      ************************************************************************************/  
-/*    public function truncateAll()
+    public function limcore()
     {
        
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -48,22 +49,12 @@ class PruebasController extends Controller {
         DB::table('uns')->truncate();
         DB::table('secciones')->truncate();
         DB::table('secaptos')->truncate();
-      //DB::table('phs')->truncate();
+        DB::table('phs')->truncate();
         DB::table('bloques')->truncate();
         DB::table('blqadmins')->truncate();
         DB::table('jds')->truncate();
-        
-        DB::table('pcontables')->truncate();
-        DB::table('facturas')->truncate();
-        DB::table('detallefacturas')->truncate();   
-        DB::table('ctdasms')->truncate();   
-        DB::table('detallepagos')->truncate();
-        DB::table('pagos')->truncate();
-        DB::table('ctmayores')->truncate();
-        DB::table('bitacoras')->truncate();     
-        DB::table('ctdiarios')->truncate();
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         return 'tablas limpias';
-    }  */
+    }
 }

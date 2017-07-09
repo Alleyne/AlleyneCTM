@@ -10,10 +10,10 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400);
 
 /*Reset Styles
-------------------------------------*/
+------------------------------------
 * {
    border-radius: 0 !important;
-}
+}*/
 
 body { 
    color: #333; 
@@ -1708,7 +1708,7 @@ i.icon-bg-light-grey {
 }
 
 .funny-boxes p a {
-  color: #72c02c;
+  color: #fff;
 }
 
 .funny-boxes .funny-boxes-img li i {

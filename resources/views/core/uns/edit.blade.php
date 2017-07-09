@@ -86,186 +86,56 @@
 												</div>
 											</div>	
 											
-											@if ($seccion->tipo==1) <!-- Apartamentos -->
+											@if ($seccion->tipo == 'AP') <!-- Apartamentos -->
 												<legend>Sección tipo apartamentos</legend>
-												<div class="form-group">
-													<label class="col-md-3 control-label">No de Cuartos</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuartos }}">
-													</div>
-												</div>						
-
-												<div class="form-group">
-													<label class="col-md-3 control-label">No de baños</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->banos }}">
-													</div>
-												</div>	
-
-												<div class="form-group">
-													<label class="col-md-3 control-label">Agua caliente</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->agua_caliente }}">
-													</div>
-												</div>											
-
-												<div class="form-group">
-													<label class="col-md-3 control-label">Estacionamientos</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->estacionamientos }}">
-													</div>
-												</div>						
-												
-												<div class="form-group">
-													<label class="col-md-3 control-label">Cuota</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuota_mant }}">
-													</div>
-												</div>
-																
-												<div class="form-group">
-													<label class="col-md-3 control-label">Area/m2</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->area }}">
-													</div>
-												</div>
-
-											@elseif ($seccion->tipo==2) <!-- Residencias -->
+											@elseif ($seccion->tipo == 'RE') <!-- Residencias -->
 												<legend>Sección tipo residencias</legend>
-												<div class="form-group">
-													<label class="col-md-3 control-label">Avenida</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->avenida }}">
-													</div>
-												</div>						
+											@elseif ($seccion->tipo == 'LC') <!-- Oficinas o locales comerciales -->
+												<legend>Sección tipo Oficinas o locales comerciales</legend>
+											@endif	
 
-												<div class="form-group">
-													<label class="col-md-3 control-label">No de Cuartos</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->cuartos }}">
-													</div>
+											<legend>Sección tipo apartamentos</legend>
+											<div class="form-group">
+												<label class="col-md-3 control-label">No de Cuartos</label>
+												<div class="col-md-9">
+													<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuartos }}">
 												</div>
+											</div>						
 
-												<div class="form-group">
-													<label class="col-md-3 control-label">No de baños</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->banos }}">
-													</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label">No de baños</label>
+												<div class="col-md-9">
+													<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->banos }}">
 												</div>
+											</div>	
 
-												<div class="form-group">
-													<label class="col-md-3 control-label">Agua caliente</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->agua_caliente }}">
-													</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label">Agua caliente</label>
+												<div class="col-md-9">
+													<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->agua_caliente }}">
 												</div>
-																		
-												<div class="form-group">
-													<label class="col-md-3 control-label">Estacionamientos</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->estacionamientos }}">
-													</div>
-												</div>
+											</div>											
 
-												<div class="form-group">
-													<label class="col-md-3 control-label">Cuota mantenimiento</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->cuota_mant }}">
-													</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label">Estacionamientos</label>
+												<div class="col-md-9">
+													<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->estacionamientos }}">
 												</div>
+											</div>						
 											
-												<div class="form-group">
-													<label class="col-md-3 control-label">Area/m2</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->area }}">
-													</div>
-												</div>						
-
-											@elseif ($seccion->tipo==3) <!-- Local comercial en edificio -->
-												<legend>Sección tipo Oficina o Local comercial en edificio</legend>
-												<div class="form-group">
-													<label class="col-md-3 control-label">No de baños</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->banos }}">
-													</div>
-												</div>						
-
-												<div class="form-group">
-													<label class="col-md-3 control-label">Agua caliente</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->agua_caliente }}">
-													</div>
-												</div>	
-
-												<div class="form-group">
-													<label class="col-md-3 control-label">Estacionamientos</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->estacionamientos }}">
-													</div>
-												</div>	
-
-												<div class="form-group">
-													<label class="col-md-3 control-label">Cuota mantenimiento</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->cuota_mant }}">
-													</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label">Cuota</label>
+												<div class="col-md-9">
+													<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuota_mant }}">
 												</div>
-
-												<div class="form-group">
-													<label class="col-md-3 control-label">Area/m2</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->area }}">
-													</div>
+											</div>
+															
+											<div class="form-group">
+												<label class="col-md-3 control-label">Area/m2</label>
+												<div class="col-md-9">
+													<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->area }}">
 												</div>
-										
-											@elseif ($seccion->tipo==4) <!-- Local comercial en residencial -->
-												<legend>Sección tipo Oficina o Local comercial en residencial</legend>
-												<div class="form-group">
-													<label class="col-md-3 control-label">Avenida</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->avenida }}">
-													</div>
-												</div>						
-
-												<div class="form-group">
-													<label class="col-md-3 control-label">No de baños</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->banos }}">
-													</div>
-												</div>
-
-												<div class="form-group">
-													<label class="col-md-3 control-label">Agua caliente</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->agua_caliente }}">
-													</div>
-												</div>
-								
-												<div class="form-group">
-													<label class="col-md-3 control-label">Estacionamientos</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->estacionamientos }}">
-													</div>
-												</div>
-								
-												<div class="form-group">
-													<label class="col-md-3 control-label">Cuota mantenimiento</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->couta_mant }}">
-													</div>
-												</div>				
-												
-												<div class="form-group">
-													<label class="col-md-3 control-label">Area/m2</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->area }}">
-													</div>
-												</div>
-
-											@elseif ($seccion->tipo==5) <!-- Amenidades -->
-												<legend>Sección tipo Amenidades</legend>
-											@endif
-
+											</div>
 										</fieldset>
 										
 										<div class="form-actions">

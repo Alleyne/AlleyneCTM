@@ -286,7 +286,7 @@ Route::group(['namespace' => 'contabilidad'], function()
   
   // RUTAS PARA HACER PRUEBAS, BORRAR EN PRODUCCION
 	Route::get('/lim','PruebasController@lim');
-	Route::get('/truncateAll','PruebasController@truncateAll');
+	Route::get('/limcore','PruebasController@limcore');
 	Route::get('/bbb','PruebasController@bbb');
 });	
 

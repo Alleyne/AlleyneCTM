@@ -28,7 +28,7 @@
                             <li><i class="fa fa-book"></i> Categoria: {{ $post->category->name }}</li>
                         </ul>
                     </div>
-                    <h2><a href="blog_item_option1.html">{{ $post->title }}</a></h2>
+                    <h2>{{ $post->title }}</h2>
                     <p>{!! $post->body !!}</p>                
                     <ul class="list-unstyled list-inline blog-tags">
                         @foreach ($post->tags as $tag)
@@ -98,4 +98,8 @@
         </div><!--/row-->        
     </div><!--/container-->		
     <!--=== End Content Part ===-->
+@endsection
+
+@section('footer')
+    @include('templates.frontend._partials.footer')
 @endsection

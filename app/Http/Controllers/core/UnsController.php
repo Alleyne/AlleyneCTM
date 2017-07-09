@@ -191,17 +191,15 @@ class UnsController extends Controller {
     Cache::forever('indexunallkey', URL::full());
 
     if(!is_null($dato)) {
-		//obtiene los datos de la sección
-		$seccion = Seccione::find($dato->seccione_id);	
-		//dd($seccion->toArray());			
-		
-		// encuentra a los propietarios
-		$props = Prop::where('un_id', $un_id)
+			//obtiene los datos de la sección
+			$seccion = Seccione::find($dato->seccione_id);	
+			//dd($seccion->toArray());			
+			
+			// encuentra a los propietarios
+			$props = Prop::where('un_id', $un_id)
 						->with('user')
 						->get();
 		
-
-		if ($seccion->tipo == 1) {
 			$secapto = Secapto::where('seccione_id', $dato->seccione_id)->first();
 			//dd($secapto->toArray());
 		
@@ -210,35 +208,6 @@ class UnsController extends Controller {
 			            ->with('secapto', $secapto)
 			            ->with('props', $props)
 			            ->with('seccion', $seccion);
-			
-			} elseif ($seccion->tipo == 2) {
-				$secre = Secre::where('seccione_id', $dato->seccione_id)->first();
-				//dd($secre->toArray());
-			
-				return view('core.uns.show')
-				            ->with('dato', $dato)
-				            ->with('secre', $secre)
-				            ->with('props', $props)
-				            ->with('seccion', $seccion);
-			
-			}	elseif ($seccion->tipo == 3) {
-				$seclced = Seclced::where('seccione_id', $dato->seccione_id)->first();
-				//dd($Seccled->toArray());
-			
-				return view('core.uns.show')
-				            ->with('dato', $dato)
-				            ->with('seclced', $seclced)
-				            ->with('seccion', $seccion);
-			
-			} elseif ($seccion->tipo == 4) {
-				$seclcre = Seclcre::where('seccione_id', $dato->seccione_id)->first();
-				//dd($Secclre->toArray());
-			
-				return view('core.uns.show')
-				            ->with('dato', $dato)
-				            ->with('seclcre', $seclcre)
-				            ->with('seccion', $seccion);
-			}			
     
     } else {
 			Session::flash('danger', 'La Unidad administrada No. ' .$un_id. ' no existe.');
@@ -259,41 +228,12 @@ class UnsController extends Controller {
 		$seccion = Seccione::find($dato->seccione_id);
 		//dd($seccion->toArray());		
 
-		if ($seccion->tipo == 1) {
-			// Almacena los datos de las unidades que pertenecen a una determinada sección
-			$secapto = Secapto::where('seccione_id', $dato->seccione_id)->first();
-	 		return view('core.uns.edit')
-	 					->with('dato', $dato)        
-						->with('secapto', $secapto) 
-						->with('seccion', $seccion); 
-		
-		} elseif ($seccion->tipo == 2) {
-			// Almacena los datos de las unidades que pertenecen a una determinada sección
-			$secre = Secre::where('seccione_id', $dato->seccione_id)->first();
-	 		
-	 		return view('core.uns.edit')
-	 					->with('dato', $dato)        
-						->with('secre', $secre)
-						->with('seccion', $seccion) ;
-		
-		} elseif ($seccion->tipo == 3) {
-			// Almacena los datos de las unidades que pertenecen a una determinada sección
-			$seclced = Seclced::where('seccione_id', $dato->seccione_id)->first();
-	 		
-	 		return view('core.uns.edit')
-	 					->with('dato', $dato)        
-						->with('seclced', $seclced)
-						->with('seccion', $seccion); 
-		
-		} elseif ($seccion->tipo == 4) {
-			// Almacena los datos de las unidades que pertenecen a una determinada sección
-			$seclcre = Seclcre::where('seccione_id', $dato->seccione_id)->first();
-	 		
-	 		return view('core.uns.edit')
-	 					->with('dato', $dato)        
-						->with('seclcre', $seclcre)
-						->with('seccion', $seccion);		
-		}	
+		// Almacena los datos de las unidades que pertenecen a una determinada sección
+		$secapto = Secapto::where('seccione_id', $dato->seccione_id)->first();
+ 		return view('core.uns.edit')
+ 					->with('dato', $dato)        
+					->with('secapto', $secapto) 
+					->with('seccion', $seccion); 
 	}
 
   /*************************************************************************************
@@ -420,6 +360,8 @@ class UnsController extends Controller {
 								'caracteristicas= '.  $dato->caracteristicas;
 	   
 					Sity::RegistrarEnBitacora(1, 'uns', $dato->id, $detalle);*/
+	  			
+	  			Cache::forever('unsAllkey', Un::all());
 	  			DB::commit();
 					
 					Session::flash('success', 'Se ha registrado y enumerado un nuevo grupo de unidades.');

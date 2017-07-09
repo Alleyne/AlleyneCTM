@@ -41,7 +41,6 @@
       Inicia: <span id="startTime"></span><br>
       Termina: <span id="endTime"></span><br><br>                                
       <div id="eventInfo"></div>
-      <p><strong><a id="eventLink" target="_blank">Read More</a></strong></p>
   </div>       
 @stop
 
@@ -178,7 +177,7 @@
             $("#eventContent").dialog({ modal: true, title: event.title, width:350, resizable: false, draggable: false});
           },
           
-          select: function (start, end, allDay) {
+          /*select: function (start, end, allDay) {
             var title = prompt('Event Title:');
             if (title) {
               calendar.fullCalendar('renderEvent', {
@@ -190,7 +189,7 @@
               );
             }
             calendar.fullCalendar('unselect');
-          },
+          },*/
   
           events: { url:"cargaEventos" },              
      

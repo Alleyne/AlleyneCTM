@@ -1,18 +1,18 @@
 <div class="row">
     <div class="col-md-4 md-margin-bottom-40">
         <!-- About -->
-        <div class="headline"><h2>About</h2></div>  
-        <p class="margin-bottom-25 md-margin-bottom-40">Unify is an incredibly beautiful responsive Bootstrap Template for corporate and creative professionals.</p>    
+        <div class="headline"><h2>Acerca de</h2></div>  
+        <p class="margin-bottom-25 md-margin-bottom-40">Sistema para la administracion transparente de Condominios, Phs, Residenciales y Locales comerciales.</p>    
         <!-- End About -->
 
         <!-- Monthly Newsletter -->
-        <div class="headline"><h2>Monthly Newsletter</h2></div> 
-        <p>Subscribe to our newsletter and stay up to date with the latest news and deals!</p>
+        <div class="headline"><h2>Boletin mensual</h2></div> 
+        <p>Subscribase a nuestro boletin para recibir noticias y  mantenerse al dia con las ultimas de su propiedad!</p>
         <form class="footer-subsribe">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Email Address">                            
+                <input type="text" class="form-control" placeholder="Email">                            
                 <span class="input-group-btn">
-                    <button class="btn-u" type="button">Subscribe</button>
+                    <button class="btn-u" type="button">Subscribase</button>
                 </span>
             </div>                  
         </form>                         
@@ -22,32 +22,24 @@
     <div class="col-md-4 md-margin-bottom-40">
         <!-- Recent Blogs -->
         <div class="posts">
-            <div class="headline"><h2>Recent Blog Entries</h2></div>
-            <dl class="dl-horizontal">
-                <dt><a href="#"><img src="" alt="" /></a></dt>
-                <dd>
-                    <p><a href="#">Anim moon officia Unify is an incredibly beautiful responsive Bootstrap Template</a></p> 
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-            <dt><a href="#"><img src="" alt="" /></a></dt>
-                <dd>
-                    <p><a href="#">Anim moon officia Unify is an incredibly beautiful responsive Bootstrap Template</a></p> 
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-            <dt><a href="#"><img src="" alt="" /></a></dt>
-                <dd>
-                    <p><a href="#">Anim moon officia Unify is an incredibly beautiful responsive Bootstrap Template</a></p> 
-                </dd>
-            </dl>
+            <div class="headline"><h2>Mas Recientes</h2></div>
+            
+            @foreach (Cache::get('recentPostkey') as $post)
+                <dl class="dl-horizontal">
+                    <dt><a href="#"><img src="{{asset('/images/' . $post->image)}}" alt="" /></a></dt>
+                    <dd>
+                        <p><a href="{{ route('blog.single', $post->slug) }}">{{ $post->title }}</a></p> 
+                    </dd>
+                </dl>
+            @endforeach
+
         </div>
         <!-- End Recent Blogs -->                    
     </div><!--/col-md-4-->
 
     <div class="col-md-4">
         <!-- Contact Us -->
-        <div class="headline"><h2>Contact Us</h2></div> 
+        <div class="headline"><h2>Contactenos</h2></div> 
         <address class="md-margin-bottom-40">
             25, Lorem Lis Street, Orange <br />
             California, US <br />
@@ -58,7 +50,7 @@
         <!-- End Contact Us -->
 
         <!-- Social Links -->
-        <div class="headline"><h2>Stay Connected</h2></div> 
+        <div class="headline"><h2>Redes sociales</h2></div> 
         <ul class="social-icons">
             <li><a href="#" data-original-title="Feed" class="social_rss"></a></li>
             <li><a href="#" data-original-title="Facebook" class="social_facebook"></a></li>

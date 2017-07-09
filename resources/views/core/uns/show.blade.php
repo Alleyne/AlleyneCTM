@@ -67,223 +67,70 @@
 								</div>
 							</div>	
 							
-							@if ($seccion->tipo==1) <!-- Apartamentos -->
+							@if ($seccion->tipo != 3) <!-- Apartamentos -->
 								<div class="form-group">
 									<label class="col-md-4 control-label">No de Cuartos</label>
 									<div class="col-md-8">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuartos }}">
 									</div>
 								</div>						
-
-								<div class="form-group">
-									<label class="col-md-4 control-label">No de baños</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->banos }}">
-									</div>
-								</div>	
-
-								<div class="form-group">
-									<label class="col-md-4 control-label">Agua caliente</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->agua_caliente }}">
-									</div>
-								</div>											
-
-								<div class="form-group">
-									<label class="col-md-4 control-label">Estacionamientos</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->estacionamientos }}">
-									</div>
-								</div>						
-								
-								<div class="form-group">
-									<label class="col-md-4 control-label">Cuota</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuota_mant }}">
-									</div>
-								</div>
-												
-								<div class="form-group">
-									<label class="col-md-4 control-label">Area/m2</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->area }}">
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label class="col-md-4 control-label">Aplica recargo</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->m_vence == 0 ? 'Mes corriente' : 'Proximo mes' }}">
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label class="col-md-4 control-label">Despues del dia</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->d_vence }}">
-									</div>
-								</div>							
-
-								<div class="form-group">
-									<label class="col-md-4 control-label">Meses para descuento</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->m_descuento }}">
-									</div>
-								</div>							
-
-							@elseif ($seccion->tipo==2) <!-- Residencias -->
-								<legend>Sección tipo residencias</legend>
-								<div class="form-group">
-									<label class="col-md-4 control-label">Avenida</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->avenida }}">
-									</div>
-								</div>						
-
-								<div class="form-group">
-									<label class="col-md-4 control-label">No de Cuartos</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->cuartos }}">
-									</div>
-								</div>						
-
-								<div class="form-group">
-									<label class="col-md-4 control-label">No de baños</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->banos }}">
-									</div>
-								</div>	
-
-								<div class="form-group">
-									<label class="col-md-4 control-label">Agua caliente</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->agua_caliente }}">
-									</div>
-								</div>											
-
-								<div class="form-group">
-									<label class="col-md-4 control-label">Estacionamientos</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->estacionamientos }}">
-									</div>
-								</div>						
-								
-								<div class="form-group">
-									<label class="col-md-4 control-label">Cuota</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->cuota_mant }}">
-									</div>
-								</div>
-												
-								<div class="form-group">
-									<label class="col-md-4 control-label">Area/m2</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->area }}">
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label class="col-md-4 control-label">Aplica recargo</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->m_vence == 0 ? 'Mes corriente' : 'Proximo mes' }}">
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label class="col-md-4 control-label">Despues del dia</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->d_vence }}">
-									</div>
-								</div>							
-
-								<div class="form-group">
-									<label class="col-md-4 control-label">Meses para descuento</label>
-									<div class="col-md-8">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secre->m_descuento }}">
-									</div>
-								</div>						
-
-							@elseif ($seccion->tipo==3) <!-- Local comercial en edificio -->
-								<legend>Sección tipo Oficina o Local comercial en edificio</legend>
-								<div class="form-group">
-									<label class="col-md-3 control-label">No de baños</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->banos }}">
-									</div>
-								</div>						
-
-								<div class="form-group">
-									<label class="col-md-3 control-label">Agua caliente</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->agua_caliente }}">
-									</div>
-								</div>	
-
-								<div class="form-group">
-									<label class="col-md-3 control-label">Estacionamientos</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->estacionamientos }}">
-									</div>
-								</div>	
-
-								<div class="form-group">
-									<label class="col-md-3 control-label">Cuota mantenimiento</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->cuota_mant }}">
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label class="col-md-3 control-label">Area/m2</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclced->area }}">
-									</div>
-								</div>
-						
-							@elseif ($seccion->tipo==4) <!-- Local comercial en residencial -->
-								<legend>Sección tipo Oficina o Local comercial en residencial</legend>
-								<div class="form-group">
-									<label class="col-md-3 control-label">Avenida</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->avenida }}">
-									</div>
-								</div>						
-
-								<div class="form-group">
-									<label class="col-md-3 control-label">No de baños</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->banos }}">
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label class="col-md-3 control-label">Agua caliente</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->agua_caliente }}">
-									</div>
-								</div>
-				
-								<div class="form-group">
-									<label class="col-md-3 control-label">Estacionamientos</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->estacionamientos }}">
-									</div>
-								</div>
-				
-								<div class="form-group">
-									<label class="col-md-3 control-label">Cuota mantenimiento</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->cuota_mant }}">
-									</div>
-								</div>				
-								
-								<div class="form-group">
-									<label class="col-md-3 control-label">Area/m2</label>
-									<div class="col-md-9">
-										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seclcre->area }}">
-									</div>
-								</div>
 							@endif
+							
+							<div class="form-group">
+								<label class="col-md-4 control-label">No de baños</label>
+								<div class="col-md-8">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->banos }}">
+								</div>
+							</div>	
+
+							<div class="form-group">
+								<label class="col-md-4 control-label">Agua caliente</label>
+								<div class="col-md-8">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->agua_caliente }}">
+								</div>
+							</div>											
+
+							<div class="form-group">
+								<label class="col-md-4 control-label">Estacionamientos</label>
+								<div class="col-md-8">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->estacionamientos }}">
+								</div>
+							</div>						
+							
+							<div class="form-group">
+								<label class="col-md-4 control-label">Cuota</label>
+								<div class="col-md-8">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuota_mant }}">
+								</div>
+							</div>
+											
+							<div class="form-group">
+								<label class="col-md-4 control-label">Area/m2</label>
+								<div class="col-md-8">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->area }}">
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-md-4 control-label">Aplica recargo</label>
+								<div class="col-md-8">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->m_vence == 0 ? 'Mes corriente' : 'Proximo mes' }}">
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-md-4 control-label">Despues del dia</label>
+								<div class="col-md-8">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->d_vence }}">
+								</div>
+							</div>							
+
+							<div class="form-group">
+								<label class="col-md-4 control-label">Meses para descuento</label>
+								<div class="col-md-8">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->m_descuento }}">
+								</div>
+							</div>							
 						</fieldset>
 					</form>
 				  </div>
@@ -313,25 +160,25 @@
 						<legend></legend>
 						<div class="row">
 						  <div class="col-md-12">
-		                    <table id="dt_basic" class="table table-hover">
-		                        <thead>
-		                            <tr>
-		                                <th>CEDULA</th>
-		                                <th>NOMBRE</th>                          
-		                                <th>RESPONSABLE</th>       
-		                            </tr>
-		                        </thead>
-		                        <tbody>
+                <table id="dt_basic" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>CEDULA</th>
+                            <th>NOMBRE</th>                          
+                            <th>RESPONSABLE</th>       
+                        </tr>
+                    </thead>
+                    <tbody>
 
-		                            @foreach ($props as $prop)
-		                                <tr>
-		                                    <td col width="100px">{{ $prop->user->cedula }}</td>
-		                                    <td>{{ $prop->user->fullname }}</td>
-		                                    <td col width="10px">{{ $prop->encargado ? 'Si' : 'No' }}</td>
-		                                </tr>
-		                            @endforeach
-		                        </tbody>
-		                    </table>
+                        @foreach ($props as $prop)
+                            <tr>
+                                <td col width="100px">{{ $prop->user->cedula }}</td>
+                                <td>{{ $prop->user->fullname }}</td>
+                                <td col width="10px">{{ $prop->encargado ? 'Si' : 'No' }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 						  </div>
 						</div>
 				  </div>
