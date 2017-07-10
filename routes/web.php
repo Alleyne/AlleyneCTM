@@ -21,6 +21,7 @@ Route::group(['namespace' => 'core'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador JdsController
 	//---------------------------------------------------------// 	
+	Route::post('subirImagenJd/{id}', 'JdsController@subirImagenJd')->name('subirImagenJd');
 	Route::resource('jds', 'JdsController');
     
 	//---------------------------------------------------------//
@@ -83,12 +84,6 @@ Route::group(['namespace' => 'core'], function()
 	//---------------------------------------------------------// 	
  	Route::post('subirImagenUser/{user_id}', 'BloquesController@subirImagenUser')->name('subirImagenUser');
 	Route::resource('users', 'UsersController');
-
-	//---------------------------------------------------------//
-	// Funciones del controlador PhsController
-	//---------------------------------------------------------// 	
-	Route::post('subirImagenPh/{id}', 'PhsController@subirImagenPh')->name('subirImagenPh');
-	Route::resource('phs', 'PhsController');
 
 	//---------------------------------------------------------//
 	// Funciones del controlador PermissionsController

@@ -48,12 +48,12 @@
 								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'storeungrupo')) }}		
 									<fieldset>
 				 						{{ csrf_field() }}
-                                        {{ Form::hidden('seccione_id', $dato->seccione_id) }}
-                                        {{ Form::hidden('tipo', $dato->tipo) }}
-                                        {{ Form::hidden('codigoseccion', $dato->codigoseccion) }}
-                                        {{ Form::hidden('bloque_id', $dato->bloque_id) }}
-                                        {{ Form::hidden('codigobloque', $dato->codigobloque) }}									
-										{{ Form::hidden('codigoph', $dato->codigoph) }}	
+                    {{ Form::hidden('seccione_id', $dato->seccione_id) }}
+                    {{ Form::hidden('tipo', $dato->tipo) }}
+                    {{ Form::hidden('codigoseccion', $dato->codigoseccion) }}
+                    {{ Form::hidden('bloque_id', $dato->bloque_id) }}
+                    {{ Form::hidden('codigobloque', $dato->codigobloque) }}									
+										{{ Form::hidden('codigo_ph', $codigo_ph) }}	
 										
 										@if ($dato->tipo==1) 
 											<legend>Crear grupo de Unidades tipo apartamento</legend>

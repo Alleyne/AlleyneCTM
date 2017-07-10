@@ -30,10 +30,13 @@
 
 					<ul class="nav nav-tabs pull-right in" id="myTab">
 						<li class="active">
-							<a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Bloque</span></a>
+							<a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Seccion</span></a>
 						</li>
 						<li>
-							<a data-toggle="tab" href="#s2"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Junta Directiva</span></a>
+							<a data-toggle="tab" href="#s2"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Bloque</span></a>
+						</li>
+						<li>
+							<a data-toggle="tab" href="#s3"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Junta Directiva</span></a>
 						</li>
 					</ul>
 
@@ -53,15 +56,23 @@
 							<div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1">
 								<div class="row no-space">
 									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 show-stats">
-										@include('core.bloques.info')
+										@include('core.secciones.info')
 									</div>
 								</div>
 							</div>
 							<!-- end s1 tab pane -->
-					
 							<div class="tab-pane fade" id="s2">
 								<div class="row no-space">
-									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-11 show-stats">
+									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 show-stats">
+										@include('core.bloques.info')
+									</div>
+								</div>
+							</div>
+							<!-- end s3 tab pane -->
+							
+							<div class="tab-pane fade" id="s3">
+								<div class="row no-space">
+									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 show-stats">
 										@include('core.jds.info')
 									</div>
 								</div>

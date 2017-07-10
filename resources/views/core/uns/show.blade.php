@@ -86,7 +86,7 @@
 							<div class="form-group">
 								<label class="col-md-4 control-label">Agua caliente</label>
 								<div class="col-md-8">
-									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->agua_caliente }}">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->agua_caliente  == 0 ? 'No' : 'Si'}}">
 								</div>
 							</div>											
 

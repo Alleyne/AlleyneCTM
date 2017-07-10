@@ -14,7 +14,6 @@ use App\Bloque;
 use App\Seccione;
 use App\Un;
 use App\Org;
-use App\Ph;
 use App\Seclcre;
 use App\Seclced;
 use App\Secapto;
@@ -91,27 +90,10 @@ class SeccionesController extends Controller {
 
 		//dd($seccione_id);
 		//Obtiene datos de la Seccion administrativa que se desea ver no importa el tipo
-		$sec=Seccione::with('ph')->find($seccione_id);
+		$sec=Seccione::find($seccione_id);
 		//dd($sec->toArray());
 
-		if (is_null($sec->ph)) {
-			Session::flash('warning', 'Es necesario asignar un Ph a cada Sección, favor utilizar el botón Editar para asignarle un Ph a esta Sección!');
-					return back();
-		}
-		
-		if ($sec->tipo == 1) {
-			$seccion = Seccione::with('secapto')->find($seccione_id); // trae los datos de las dos tablas
-		
-		} elseif ($sec->tipo == 2) {
-				$seccion = Seccione::with('secre')->find($seccione_id);
-		
-		} elseif ($sec->tipo == 3) {
-				$seccion = Seccione::with('seclced')->find($seccione_id);
-		
-		} elseif ($sec->tipo == 4) {
-				$seccion = Seccione::with('seclcre')->find($seccione_id);
-		
-		} 	
+		$seccion = Seccione::with('secapto')->find($seccione_id); // trae los datos de las dos tablas
 		//dd($seccion->toArray());
 		
 		//Obtiene los datos del Bloque
@@ -239,15 +221,11 @@ class SeccionesController extends Controller {
 		$sec = Seccione::find($seccione_id);
 		//dd($sec->toArray());
 		
-		//Almacena una lista de todos los Phs para ser enviados al view.
-		$phs = Ph::pluck('nombre', 'id')->all();  		
-
 		$dato = Seccione::with('secapto')->find($seccione_id); // trae los datos de las dos tablas
 		//dd($dato->toArray());		
 		
 		return view('core.secciones.edit')
-									->with('dato', $dato)
-									->with('phs', $phs);
+									->with('dato', $dato);
 	}
 
 	/*************************************************************************************
@@ -284,7 +262,6 @@ class SeccionesController extends Controller {
 				$dato = Seccione::find($id);
 				$dato->nombre       	 = Input::get('nombre');
 				$dato->descripcion     = Input::get('descripcion');
-				$dato->ph_id           = Input::get('ph_id');			
 				$dato->save();
 				
 				// Relaciones de uno a uno con Secciones

@@ -24,7 +24,7 @@
 		</div><!-- end widget edit box -->
 
 		<div class="row show-grid">
-		    <div class="col-xs-12 col-sm-6 col-md-8">
+		    <div class="col-xs-12 col-sm-12 col-md-12">
 				<div class="widget-body"><!-- widget content -->
 					<form class="form-horizontal">
 						<fieldset>
@@ -41,13 +41,6 @@
 									{{ Form::textarea('descripcion', $seccion->descripcion, array('class' => 'form-control input-sm', 'rows' => '2', 'readonly' => 'readonly')) }}
 								</div>
 							</div>	
-							
-							<div class="form-group">
-								<label class="col-md-3 control-label">Ph</label>
-								<div class="col-md-9">
-									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->ph->nombre }}">
-								</div>
-							</div>			
 
 							@if ($seccion->tipo== 1) <!-- Apartamentos -->
 								<legend>Sección tipo apartamentos</legend>
@@ -76,7 +69,7 @@
 							<div class="form-group">
 								<label class="col-md-3 control-label">Agua caliente</label>
 								<div class="col-md-9">
-									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->agua_caliente }}">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->agua_caliente  == 0 ? 'No' : 'Si' }}">
 								</div>
 							</div>											
 
@@ -95,7 +88,7 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="col-md-3 control-label">Envia Orden de Cobro</label>
+								<label class="col-md-3 control-label">Genera Orden de Cobro el dia</label>
 								<div class="col-md-9">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->d_registra_cmpc }}">
 								</div>
@@ -109,18 +102,25 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="col-md-3 control-label">Dias de gracia</label>
+								<label class="col-md-3 control-label">Aplica recargo</label>
 								<div class="col-md-9">
-									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->d_gracias }}">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->m_vence == 0 ? 'Mes corriente' : 'Proximo mes' }}">
 								</div>
 							</div>
 							
+							<div class="form-group">
+								<label class="col-md-3 control-label">Despues del dia</label>
+								<div class="col-md-9">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->d_vence }}">
+								</div>
+							</div>							
+
 							<div class="form-group">
 								<label class="col-md-3 control-label">Meses para descuento</label>
 								<div class="col-md-9">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->m_descuento }}">
 								</div>
-							</div>							
+							</div>	
 						</fieldset>
 					
 						<div class="form-actions">
@@ -130,13 +130,6 @@
 				
 				</div><!-- end widget content -->	
 			</div>
-			
-			<div class="col-xs-6 col-sm-6 col-md-4">
-				<div class="well">
-					<p><img style="border-radius:8px;" src="{{ asset($seccion->imagen_L) }}" class="img-responsive" alt="Responsive image"></p>
-				</div>
-			</div>			
-
 		</div>
 	</div><!-- end widget div -->
 </div><!-- end widget -->

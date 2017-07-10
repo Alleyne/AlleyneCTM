@@ -32,7 +32,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-							<h2>Datos de la Junta directiva </h2>
+							<h2>Datos de la Junta Directiva </h2>
 		
 						</header>
 		
@@ -51,73 +51,48 @@
 				
 										<form class="form-horizontal">
 											<fieldset>
-
 												<div class="form-group">
-													<label class="col-md-3 control-label">Nombre</label>
-													<div class="col-md-9">
+													<label class="col-md-2 control-label">Nombre</label>
+													<div class="col-md-10">
 														<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $dato->nombre }}">
 													</div>
 												</div>					
 												<div class="form-group">
-													<label class="col-md-3 control-label">Código</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="codigo" type="text" readonly value="{{ $dato->codigo }}">
+													<label class="col-md-2 control-label">Descripción</label>
+													<div class="col-md-10">
+														<input class="form-control input-sm" name="descripcion" type="text" readonly value="{{ $dato->descripcion }}">
+													</div>
+												</div>	
+<!-- 												<div class="form-group">
+													<label class="col-md-2 control-label">Período</label>
+													<div class="col-md-10">
+														<input class="form-control input-sm" name="periodo" type="text" readonly value="{{ $dato->periodo }}">
 													</div>
 												</div>	
 												<div class="form-group">
-													<label class="col-md-3 control-label">País</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="pais" type="text" readonly value="{{ $dato->pais }}">
+													<label class="col-md-2 control-label">Presidente</label>
+													<div class="col-md-10">
+														<input class="form-control input-sm" name="presidente" type="text" readonly value="{{ $dato->presidente }}">
 													</div>
 												</div>	
 												<div class="form-group">
-													<label class="col-md-3 control-label">Provincia</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="provincia" type="text" readonly value="{{ $dato->provincia }}">
-													</div>
-												</div>	
-												<div class="form-group">
-													<label class="col-md-3 control-label">Distrito</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="distrito" type="text" readonly value="{{ $dato->distrito }}">
+													<label class="col-md-2 control-label">Secretario</label>
+													<div class="col-md-10">
+														<input class="form-control input-sm" name="secretario" type="text" readonly value="{{ $dato->secretario }}">
 													</div>
 												</div>					
 												<div class="form-group">
-													<label class="col-md-3 control-label">Corregimiento</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="corregimiento" type="text" readonly value="{{ $dato->corregimiento }}">
+													<label class="col-md-2 control-label">Vocal</label>
+													<div class="col-md-10">
+														<input class="form-control input-sm" name="vocal" type="text" readonly value="{{ $dato->vocal }}">
 													</div>
 												</div>	
 												<div class="form-group">
-													<label class="col-md-3 control-label">Comunidad</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="comunidad" type="text" readonly value="{{ $dato->comunidad }}">
+													<label class="col-md-2 control-label">Tesorero</label>
+													<div class="col-md-10">
+														<input class="form-control input-sm" name="tesorero" type="text" readonly value="{{ $dato->tesorero }}">
 													</div>
-												</div>	
-												<div class="form-group">
-													<label class="col-md-3 control-label">Calle</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="calle" type="text" readonly value="{{ $dato->calle }}">
-													</div>
-												</div>	
-												<div class="form-group">
-													<label class="col-md-3 control-label">Teléfono</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="telefono" type="text" readonly value="{{ $dato->telefono }}">
-													</div>
-												</div>					
-												<div class="form-group">
-													<label class="col-md-3 control-label">Celular</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="celular" type="text" readonly value="{{ $dato->celular }}">
-													</div>
-												</div>	
-												<div class="form-group">
-													<label class="col-md-3 control-label">Email</label>
-													<div class="col-md-9">
-														<input class="form-control input-sm" name="email" type="text" readonly value="{{ $dato->email }}">
-													</div>
-												</div>	
+												</div>	 -->
 											</fieldset>
 											
 											<div class="form-actions">
@@ -152,9 +127,8 @@
 						data-widget-fullscreenbutton="false"
 						data-widget-custombutton="false"
 						data-widget-collapsed="true"
-						data-widget-sortable="false"
-		
-						-->
+						data-widget-sortable="false" -->
+						
 						<header>
 							<span class="widget-icon"> <i class="fa fa-sitemap"></i> </span>
 							<h2>Simple View </h2>
@@ -197,36 +171,22 @@
 @stop
 
 @section('relatedplugins')
-<!-- PAGE RELATED PLUGIN(S) 
-<script src="..."></script>-->
-
-
-
 <script type="text/javascript">
+	$(document).ready(function() {
+		PageSetUp();
 
-// DO NOT REMOVE : GLOBAL FUNCTIONS!
-
-$(document).ready(function() {
-	
-	pageSetUp();
-	
-	// PAGE RELATED SCRIPTS
-
-	$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
-	$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
-		var children = $(this).parent('li.parent_li').find(' > ul > li');
-		if (children.is(':visible')) {
-			children.hide('fast');
-			$(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
-		} else {
-			children.show('fast');
-			$(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
-		}
-		e.stopPropagation();
-	});			
-
-})
-
+		$('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
+		$('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function(e) {
+			var children = $(this).parent('li.parent_li').find(' > ul > li');
+			if (children.is(':visible')) {
+				children.hide('fast');
+				$(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
+			} else {
+				children.show('fast');
+				$(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
+			}
+			e.stopPropagation();
+		});			
+	})
 </script>
-
 @stop

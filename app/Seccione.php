@@ -10,10 +10,6 @@ class Seccione extends Model
       return $this->belongsTo('App\Bloque');
   }
   
-  public function ph() {
-      return $this->belongsTo('App\Ph');
-  }    
-    
 	public function secapto()
   {
       return $this->hasOne('App\Secapto');

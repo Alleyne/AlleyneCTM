@@ -3,6 +3,7 @@
 @section('title', '| Crear Junta Directiva')
 
 @section('content')
+
 	<!-- widget grid -->
 	<section id="widget-grid" class="">
 	
@@ -29,7 +30,7 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear una nueva Junta directiva</h2>
+						<h2>Crear un nueva Junta Directiva</h2>
 	
 					</header>
 	
@@ -48,84 +49,20 @@
 								{{ Form::open(array('class' => 'form-horizontal', 'route' => 'jds.store')) }}		
 									<fieldset>
 										{{ csrf_field() }}
-								
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{{ Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre del Ph...', 'autocomplete' => 'off')) }}
+												{{ Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre de la Junta Directiva...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
-										</div>					
-										<div class="form-group">
-											<label class="col-md-2 control-label">Código</label>
-											<div class="col-md-10">
-												{{ Form::text('codigo', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el código del Ph...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('codigo', '<li style="color:red">:message</li>') !!}
-											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-2 control-label">País</label>
+											<label class="col-md-2 control-label">Descripción</label>
 											<div class="col-md-10">
-												{{ Form::text('pais', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el país...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('pais', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>	
-										<div class="form-group">
-											<label class="col-md-2 control-label">Provincia</label>
-											<div class="col-md-10">
-												{{ Form::text('provincia', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la provincia...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('provincia', '<li style="color:red">:message</li>') !!}
+												{{ Form::text('descripcion', '', array('class' => 'form-control input-sm', 'title' => 'Escriba una descripción de la Junta Directiva...', 'autocomplete' => 'off')) }}
+												{!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-md-2 control-label">Distrito</label>
-											<div class="col-md-10">
-												{{ Form::text('distrito', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el distrito...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('distrito', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>					
-										<div class="form-group">
-											<label class="col-md-2 control-label">Corregimiento</label>
-											<div class="col-md-10">
-												{{ Form::text('corregimiento', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el corregimiento...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('corregimiento', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>					
-										<div class="form-group">
-											<label class="col-md-2 control-label">Comunidad</label>
-											<div class="col-md-10">
-												{{ Form::text('comunidad', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la comunidad...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('comunidad', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>	
-										<div class="form-group">
-											<label class="col-md-2 control-label">Calle</label>
-											<div class="col-md-10">
-												{{ Form::text('calle', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la calle...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('calle', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>	
-										<div class="form-group">
-											<label class="col-md-2 control-label">Teléfono</label>
-											<div class="col-md-10">
-												{{ Form::text('telefono', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el teléfono...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('telefono', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>					
-										<div class="form-group">
-											<label class="col-md-2 control-label">Celular</label>
-											<div class="col-md-10">
-												{{ Form::text('celular', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el celular...', 'autocomplete' => 'off')) }}
-												{!! $errors->first('celular', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>					
-										<div class="form-group">
-											<label class="col-md-2 control-label">email</label>
-											<div class="col-md-10">
-												{{ Form::text('email', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el email...')) }}
-												{!! $errors->first('email', '<li style="color:red">:message</li>') !!}
-											</div>
-										</div>	
 									</fieldset>
 									
 									<div class="form-actions">
@@ -197,7 +134,13 @@
 		<!-- end row -->
 	
 		<!-- row -->
-
+	
+		<div class="row">
+	
+		</div>
+	
+		<!-- end row -->
+	
 	</section>
 	<!-- end widget grid -->
 @stop
@@ -226,5 +169,41 @@ $(document).ready(function() {
 	});			
 })
 
+/*
+* SmartAlerts
+*/
+// With Callback
+$("#smart-mod-eg1").click(function(e) {
+	$.SmartMessageBox({
+		title : "Smart Alert!",
+		content : "This is a confirmation box. Can be programmed for button callback",
+		buttons : '[No][Yes]'
+	}, function(ButtonPressed) {
+		if (ButtonPressed === "Yes") {
+
+			$.smallBox({
+				title : "Salvar nueva Junta Directiva",
+				content : "<i class='fa fa-clock-o'></i> <i>Usted presionó SI...</i>",
+				color : "#659265",
+				iconSmall : "fa fa-check fa-2x fadeInRight animated",
+				timeout : 4000
+			});
+		}
+		if (ButtonPressed === "No") {
+			$.smallBox({
+				title : "Salvar nueva Junta Directiva",
+				content : "<i class='fa fa-clock-o'></i> <i>Usted presionó No...</i>",
+				color : "#C46A69",
+				iconSmall : "fa fa-times fa-2x fadeInRight animated",
+				timeout : 4000
+			});
+		}
+
+	});
+	e.preventDefault();
+})
+
+
 </script>
+
 @stop

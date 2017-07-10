@@ -65,14 +65,6 @@
                                       </div>
                                   </div>                                                    
                                   
-                                  <div class="form-group">
-                                      <label class="col-md-4 control-label">Ph</label>
-                                      <div class="col-md-8">
-                                          {{ Form::select('ph_id', array('' => 'Selecione un Ph') + $phs, $dato->ph_id, array('class' => 'form-control', 'title' => 'Escoja el Ph al cual pertenece la presente Sección administrativa')) }}
-                                          {!! $errors->first('ph_id', '<li style="color:red">:message</li>') !!}
-                                      </div>
-                                  </div>      
-                                 
                                   @if ($dato->codigo == 'AP') <!-- Apartamentos -->
                                     <legend>Sección tipo apartamentos</legend>
                                     {{ Form::hidden('codigo', 'AP') }}

@@ -2252,7 +2252,7 @@ Work::with(
 
   
   /*************************************************************************************
-   * bitacora tipo resouce store, update y destroy
+   * bitacora tipo resouce store, update 
    ************************************************************************************/
   // store 
   $dato = new Bloque;

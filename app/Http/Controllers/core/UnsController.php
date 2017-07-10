@@ -96,13 +96,8 @@ class UnsController extends Controller {
     //dd($seccione_id);
     //Obtiene todas las Secciones administrativas que pertenecen a un determinado Bloque
     //no importa el tipo de sección.
-    $seccion = Seccione::with('ph')->find($seccione_id);
+    $seccion = Seccione::find($seccione_id);
     //dd($secciones->toArray());        
-
-		if (is_null($seccion->ph)) {
-			Session::flash('warning', 'Es necesario asignar un Ph a cada Sección, favor utilizar el botón Editar para asignarle un Ph a esta Sección!');
-        	return back();
-		}	    
 
     //Obtiene los datos del Bloques 
     $bloque = Bloque::find($seccion->bloque_id);
@@ -292,11 +287,14 @@ class UnsController extends Controller {
     //dd($seccione_id);
     $dato = Seccione::where('secciones.id', $seccione_id)
     				->join('bloques','bloques.id', '=', 'secciones.bloque_id')
-    				->join('phs','phs.id', '=', 'secciones.ph_id')
-    				->first(array('secciones.id as seccione_id','bloques.id as bloque_id','secciones.tipo','bloques.codigo as codigobloque','secciones.codigo as codigoseccion','phs.codigo as codigoph'));
+    				->first(array('secciones.id as seccione_id','bloques.id as bloque_id','secciones.tipo','bloques.codigo as codigobloque','secciones.codigo as codigoseccion'));
 		//dd($dato->toArray());
         
+   	$codigo_ph = Seccione::find($seccione_id)->bloque->jd->codigo;     
+    //dd($codigo_ph);
+    
     return view('core.uns.createungrupo')
+    			->with('codigo_ph', $codigo_ph)
     			->with('dato', $dato);
 	}     
 
@@ -321,54 +319,46 @@ class UnsController extends Controller {
 				return back()->withInput();
 	    }
 	      
-	    if (Input::get('tipo') == 1 or Input::get('tipo') == 2 or Input::get('tipo') == 3 or Input::get('tipo') == 4) {
-				//dd(Input::get('tipo'));
-	      $rules = array(
-	        'letras' 	=> 'required',
-	      	'alpiso' 	=> 'Integer|Between:1,100|required',
-	      	'delpiso' => 'Integer|Between:1,100|required'
-	      );
-	  
-	      $messages = [
-	        'required' => 'El campo :attribute es requerido!',
-	        'unique'   => 'Este :attribute ya existe, no se admiten duplicados!',
-	        'between'  => 'El valor de :attribute debe estar entre 1 y 100 pisos!'
-	      ];        
-	          
-	      $validation = \Validator::make($input, $rules, $messages);      	
+			//dd(Input::get('tipo'));
+      $rules = array(
+        'letras' 	=> 'required',
+      	'alpiso' 	=> 'Integer|Between:1,100|required',
+      	'delpiso' => 'Integer|Between:1,100|required'
+      );
+  
+      $messages = [
+        'required' => 'El campo :attribute es requerido!',
+        'unique'   => 'Este :attribute ya existe, no se admiten duplicados!',
+        'between'  => 'El valor de :attribute debe estar entre 1 y 100 pisos!'
+      ];        
+          
+      $validation = \Validator::make($input, $rules, $messages);      	
+			
+			if ($validation->passes()) {
+				for ($x = $delpiso; $x <= $alpiso; $x++) {
+				  foreach ($letras as $letra) {
+						$dato = new Un;
+						$dato->piso 				= $x;	
+						$dato->letra 				= strtoupper($letra);	
+						$dato->seccione_id 	= Input::get('seccione_id');				
+						$dato->save();					
+
+						$dto = Un::find($dato->id);
+						$dto->codigofull = $x.strtoupper($letra).'-'.strtoupper(Input::get('codigobloque')).strtoupper(Input::get('codigoseccion')).'+'.strtoupper(Input::get('codigo_ph')).'#'.$dato->id;	
+						$dto->codigo =     $x.strtoupper($letra).'-'.strtoupper(Input::get('codigobloque')).strtoupper(Input::get('codigoseccion'));	
+						$dto->save();
+					}
+				} 
+  
+				//Sity::RegistrarEnBitacora(1, 'uns', $dato->id, $detalle);
+  			
+  			Cache::forever('unsAllkey', Un::all());
+  			DB::commit();
 				
-				if ($validation->passes()) {
-					for ($x = $delpiso; $x <= $alpiso; $x++) {
-					  foreach ($letras as $letra) {
-							$dato = new Un;
-							$dato->piso 				= $x;	
-							$dato->letra 				= strtoupper($letra);	
-							$dato->seccione_id 	= Input::get('seccione_id');				
-							$dato->save();					
-
-							$dto = Un::find($dato->id);
-							$dto->codigofull = $x.strtoupper($letra).'-'.strtoupper(Input::get('codigobloque')).strtoupper(Input::get('codigoseccion')).'+'.strtoupper(Input::get('codigoph')).'#'.$dato->id;	
-							$dto->codigo = $x.strtoupper($letra).'-'.strtoupper(Input::get('codigobloque')).strtoupper(Input::get('codigoseccion'));	
-							$dto->save();
-						}
-					} 
-
-					// Registra en bitacoras
-					/*$detalle =	'codigo= '.		   	  $codigo. ', '.
-								'finca= '.   		  $dato->finca. ', '.
-								'documento= '.   	  $dato->documento. ', '.
-								'caracteristicas= '.  $dato->caracteristicas;
-	   
-					Sity::RegistrarEnBitacora(1, 'uns', $dato->id, $detalle);*/
-	  			
-	  			Cache::forever('unsAllkey', Un::all());
-	  			DB::commit();
-					
-					Session::flash('success', 'Se ha registrado y enumerado un nuevo grupo de unidades.');
-	        return redirect()->route('indexsecplus', array(Input::get('bloque_id')));
-	      }
-		    return back()->withInput()->withErrors($validation);
-			}
+				Session::flash('success', 'Se ha registrado y enumerado un nuevo grupo de unidades.');
+        return redirect()->route('indexsecplus', array(Input::get('bloque_id')));
+      }
+	    return back()->withInput()->withErrors($validation);
 
 	  } catch (\Exception $e) {
 	    DB::rollback();
