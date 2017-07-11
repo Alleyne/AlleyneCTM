@@ -66,7 +66,7 @@
                             @foreach ($datos as $dato)
                                 <tr>
                                     <td col width="40px">{{ $dato->id }}</td>
-                                    <td col width="100px"><strong>{{ $dato->codigo }}</strong></td>
+                                    <td><strong>{{ $dato->codigo }}</strong></td>
 
                                     @if ($dato->estatus == 'Paz y salvo')
                                         <td col width="60px"><span class="label label-success">Paz y salvo</span></td>

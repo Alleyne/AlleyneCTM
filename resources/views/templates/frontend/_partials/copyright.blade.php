@@ -5,9 +5,9 @@
             {{-- <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> --}}
         </p>
     </div>
-    <div class="col-md-5">  
-        <a href="index.html">
-            <img class="pull-right" id="logo-footer" src="{{ asset(Cache::get('jdkey')->imagen_S) }}" alt="" />
+    <div class="col-md-5">  /public/assets/img/jds/logo.png
+        <a href="#">
+            <img style="width: 35px" class="pull-right" id="logo-footer" src="{{ asset('assets/img/jds/logo.png') }}" alt="ctmaster logo" />
         </a>
     </div>
 </div>

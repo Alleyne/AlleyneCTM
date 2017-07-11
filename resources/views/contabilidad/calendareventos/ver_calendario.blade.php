@@ -167,11 +167,11 @@
           
           eventClick:  function(event, jsEvent, view) {
             //set the values and open the modal
+            $("#eventUnidad").html(event.un_id);            
             $("#startTime").html(moment(event.start).format('dddd, MMMM D\/ YYYY h:mm A'));
             $("#endTime").html(moment(event.end).format('dddd, MMMM D\/ YYYY h:mm A'));
-            $("#eventUnidad").html(event.un_id);
-            $("#eventInfo").html(event.description);
-            $("#eventLink").attr('href', event.url);
+            /*$("#eventInfo").html(event.description);
+            $("#eventLink").attr('href', event.url);*/
             
             //$("#eventContent").dialog({ modal: true, title: event.title });
             $("#eventContent").dialog({ modal: true, title: event.title, width:350, resizable: false, draggable: false});
