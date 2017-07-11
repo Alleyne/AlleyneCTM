@@ -112,8 +112,8 @@ class CtdasmsController extends Controller {
     // dd($seccion->toArray());
     
     // Encuentra los datos del Ph al que pertenece la unidad
-    $ph = Ph::find($seccion->ph_id);
-    // dd($ph->toArray()); 
+    $ph = $seccion->bloque->jd;
+    //dd($ph->toArray()); 
     
     // encuentra el periodo mas antiguo abierto
     $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
@@ -138,19 +138,24 @@ class CtdasmsController extends Controller {
       'Titulo'    => 'Bienvenido al ctmaster.net',
       'Contenido'   => 'Contenido del email',
       
-      'phlogo'    => $ph->logo,
+      'phlogo'    => $ph->imagen_L,
       'phnombre'    => $ph->nombre,
       'phcalle'   => $ph->calle,
       'phlote'    => $ph->lote,
       'phdistrito'  => $ph->distrito,
       'phprovincia' => $ph->provincia,
       'phtelefono'  => $ph->telefono,
+      'phcorregimiento'  => $ph->corregimiento,
+      'phpais'  => $ph->pais,
       'phemail'   => $ph->email,          
       
       'propnombre'    => $prop->user->nombre_completo,          
+      'propdireccion'   => $prop->user->direccion,
       'propprovincia'   => $prop->user->provincia,
       'propdistrito'    => $prop->user->distrito,
       'propcorregimiento' => $prop->user->corregimiento,
+      'proppais' => $prop->user->pais,
+      'proptelefono' => $prop->user->telefono,      
       
       'un_id'       => $un->id, 
       'activa'      => $un->activa,

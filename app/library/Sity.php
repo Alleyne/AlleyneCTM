@@ -219,7 +219,7 @@ class Sity {
   *  Registra en Bitacoras tipo resource store, update y destroy.
   *****************************************************************************************/
   public static function RegistrarEnBitacora($dato, $input = Null, $modelo, $accion) {      
-    //dd($dato, $input);
+    //dd($dato->isDirty(), $dato, $input);
    
     $attributes = array_keys($dato->toArray());
     $detalle = '';

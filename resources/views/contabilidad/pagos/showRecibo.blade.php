@@ -54,14 +54,14 @@
       <div class="row"><!-- row -->
           <div class="col-xs-9">
               <address>
-                <strong>{{ $pago->un->seccione->ph->nombre }}</strong><br>
-                795 Via Espana, Pueblo Nuevo<br>
-                Panama<br>
-                <abbr title="Telefono">P:</abbr> (507) 456-7890
+                <strong>{{ Cache::get('jdkey')->nombre }}</strong><br>
+                {{ Cache::get('jdkey')->calle }}, {{ Cache::get('jdkey')->corregimiento }}<br>
+                {{ Cache::get('jdkey')->distrito }}, {{ Cache::get('jdkey')->provincia }}, {{ Cache::get('jdkey')->pais }} <br>
+                {{ Cache::get('jdkey')->telefono }}, {{ Cache::get('jdkey')->email }}
               </address>
           </div>
           <div class="col-xs-3">
-              <img style="height: 40px; border-radius: 8px;" src="{{asset('assets/backend/img/logo.png')}}" class="img-responsive" alt="Responsive image">
+              <img style="height: 100px; border-radius: 8px;" src="{{ asset(Cache::get('jdkey')->imagen_L) }}" class="img-responsive" alt="Responsive image">
           </div>
       </div><!-- end row  -->
 
@@ -95,7 +95,7 @@
       
       <div class="row">
         <div class="col-md-12">
-           <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $pago->un->codigofull }}</strong>, la suma de <strong>B/. {{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trantipo->nombre }} {{{ $pago->trans_no or '' }}}</strong> el dia <strong>{{ Date::parse($pago->f_pago)->format('l\, j F Y') }}</strong>, en concepto de {{ $pago->concepto }} del {{ $pago->un->seccione->ph->nombre }}.</p>
+           <p class="text-justify">RECIBIMOS de <strong>{{ $prop->user->nombre_completo }}</strong>, propietario(a) del apartamento <strong>{{ $pago->un->codigofull }}</strong>, la suma de <strong>B/. {{ $pago->monto }}</strong>, mediante <strong>{{ $pago->trantipo->nombre }} {{{ $pago->trans_no or '' }}}</strong> el dia <strong>{{ Date::parse($pago->f_pago)->format('l\, j F Y') }}</strong>, en concepto de {{ $pago->concepto }} del {{ Cache::get('jdkey')->nombre }}.</p>
         </div>
       </div>
       

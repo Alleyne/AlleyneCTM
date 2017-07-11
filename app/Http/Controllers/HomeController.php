@@ -8,6 +8,7 @@ use Cache;
 use App\Un;
 use App\User;
 use App\Post;
+use App\Jd;
 
 class HomeController extends Controller
 {
@@ -57,6 +58,8 @@ class HomeController extends Controller
         Cache::forever('unsAllkey', Un::all());
 
         Cache::forever('recentPostkey', Post::orderBy('created_at', 'desc')->limit(3)->get());
+        
+        Cache::forever('jdkey', Jd::first());
 
         return view('home');
     }

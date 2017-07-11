@@ -163,7 +163,9 @@ class SeccionesController extends Controller {
 				$dato->descripcion = Input::get('descripcion');
 				$dato->bloque_id   = Input::get('bloque_id');			
 				$dato->save();
-				
+  			
+  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Crea nueva seccion');
+
 				// Relaciones de uno a uno con Secciones
 				$t1 = new Secapto;
 				$t1->avenida               = Input::get('avenida');
@@ -195,7 +197,7 @@ class SeccionesController extends Controller {
 				$img_path->imagen_L = "assets/img/secciones/sec_L".$dato->id.".jpg";
 				$img_path->save();		
 
-  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Crea nueva seccion');
+  			Sity::RegistrarEnBitacora($t1, Input::get(), 'Seccione', 'Crea detalle de seccion');
 				DB::commit();
 				
 				Session::flash('success', 'La Sección administrativa ' .$dato->nombre. ' ha sido creada con éxito.');
@@ -234,8 +236,8 @@ class SeccionesController extends Controller {
 	public function update($id)
 	{
 		
-		//DB::beginTransaction();
-		//try {
+		DB::beginTransaction();
+		try {
 			//dd(Input::get());
 			$input = Input::all();
 			$rules = array(
@@ -263,10 +265,11 @@ class SeccionesController extends Controller {
 				$dato->nombre       	 = Input::get('nombre');
 				$dato->descripcion     = Input::get('descripcion');
 				$dato->save();
+  			//dd($dato->isDirty());
+  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Edita seccion');				
 				
 				// Relaciones de uno a uno con Secciones
 				// Actualiza en la tabla Secapto
-
 				$t1 = Seccione::find($id)->Secapto;
 				
 				if (Input::get('codigo') != 'LC') {
@@ -289,7 +292,7 @@ class SeccionesController extends Controller {
 				$t1->area                  = Input::get('area');
 				$t1->save();			
 
-  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Edita seccion');
+  			Sity::RegistrarEnBitacora($t1, Input::get(), 'Secapto', 'Edita detalle de seccion');
   			DB::commit();				
 				
 				Session::flash('success', 'La Sección administrativa ' . $dato->nombre . ' ha sido editada con éxito.');
@@ -297,11 +300,11 @@ class SeccionesController extends Controller {
 			}
 			return back()->withInput()->withErrors($validation);
 
-		//} catch (\Exception $e) {
-			//DB::rollback();
-			//Session::flash('warning', ' Ocurrio un error en SeccionesController.update, la transaccion ha sido cancelada!');
-			//return back()->withInput();
-		//}  	
+		} catch (\Exception $e) {
+			DB::rollback();
+			Session::flash('warning', ' Ocurrio un error en SeccionesController.update, la transaccion ha sido cancelada!');
+			return back()->withInput();
+		}  	
 	}
 
 	/*************************************************************************************

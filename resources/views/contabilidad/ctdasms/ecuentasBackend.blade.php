@@ -36,16 +36,17 @@
                 <div class="widget-body padding"><!-- widget content -->
                     
                     <div class="row"><!-- row -->
-                        <div class="col-xs-10">
+                        <div class="col-xs-9">
                             <address>
                               <strong>{{ $data['phnombre'] }}</strong><br>
-                              795 Folsom Ave, Suite 600<br>
-                              San Francisco, CA 94107<br>
-                              <abbr title="Phone">P:</abbr> (123) 456-7890
+                              {{ $data['phcalle'] }}, {{ $data['phcorregimiento'] }}<br>
+                              {{ $data['phdistrito'] }}, {{ $data['phprovincia'] }}, {{ $data['phpais'] }}<br>
+                              {{ $data['phtelefono'] }}, {{ $data['phemail'] }}
                             </address>
                         </div>
-                        <div class="col-xs-2">
-                            <img style="height: 40px; border-radius: 8px;" src="{{asset('assets/backend/img/logo.png')}}" class="img-responsive" alt="Responsive image">
+
+                        <div class="col-xs-3" align="right">
+                            <img style="height: 100px; border-radius: 3px;" src="{{ asset($data['phlogo']) }}" class="img-responsive" alt="Responsive image">
                         </div>
                     </div><!-- end row -->
 
@@ -63,9 +64,9 @@
                         <div class="col-xs-4">
                             <address>
                               <strong>{{ $data['propnombre'] }}</strong><br>
-                              795 Folsom Ave, Suite 600<br>
-                              San Francisco, CA 94107<br>
-                              <abbr title="Phone">P:</abbr> (123) 456-7890
+                              {{ $data['propdireccion'] }}, {{ $data['propcorregimiento'] }}<br>
+                              {{ $data['propdistrito'] }}, {{ $data['propprovincia'] }}<br>
+                              {{ $data['proppais'] }}, {{ $data['proptelefono'] }}
                             </address>
                         </div>
                             

@@ -276,8 +276,7 @@ class PagosController extends Controller {
 		//dd($nota);    
     
  		// determina si la unidad tiene algun propietario encargado
- 		$prop= $pago->un->props()->where('encargado', '1')->first();
- 		//dd($prop->toArray());
+ 		$prop = $pago->un->props()->where('encargado', '1')->first();
 		//dd($prop->user->nombre_completo);
  		
  		if (empty($prop)) {
