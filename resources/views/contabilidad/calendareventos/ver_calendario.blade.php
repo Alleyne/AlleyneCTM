@@ -37,10 +37,10 @@
   <div id="calendar"></div>
   
   <div id="eventContent" title="Event Details" style="display:none;">
-      Reservado por Unidad: <span id="eventUnidad"></span><br>
-      Inicia: <span id="startTime"></span><br>
-      Termina: <span id="endTime"></span><br><br>                                
-      <div id="eventInfo"></div>
+      Reservado por Unidad: <strong><span id="eventUnidad"></span></strong><br>
+      Inicia: <strong><span id="startTime"></span></strong><br>
+      Termina: <strong><span id="endTime"></strong></span>                            
+      {{-- <div id="eventInfo"></div> --}}
   </div>       
 @stop
 
@@ -167,8 +167,8 @@
           
           eventClick:  function(event, jsEvent, view) {
             //set the values and open the modal
-            $("#startTime").html(moment(event.start).format('MMM Do h:mm A'));
-            $("#endTime").html(moment(event.end).format('MMM Do h:mm A'));
+            $("#startTime").html(moment(event.start).format('dddd, MMMM D\/ YYYY h:mm A'));
+            $("#endTime").html(moment(event.end).format('dddd, MMMM D\/ YYYY h:mm A'));
             $("#eventUnidad").html(event.un_id);
             $("#eventInfo").html(event.description);
             $("#eventLink").attr('href', event.url);
