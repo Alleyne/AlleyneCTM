@@ -6,7 +6,7 @@
             <span class="fa fa-bars"></span>
         </button>
         <a class="navbar-brand" href="{{ URL::route('frontend') }}"></a>
-            <img id="logo-header" src="{{asset('assets/frontend/img/logo1-default.png')}}" alt="Logo">
+            <img style="border-radius: 3px;" id="logo-header" src="{{ asset(Cache::get('jdkey')->imagen_S) }}" alt="Logo">
         </a>
     </div>
 

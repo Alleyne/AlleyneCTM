@@ -40,14 +40,15 @@
         <div class="row"><!-- row -->
           <div class="col-xs-10">
             <address>
-              <strong>{{ $data['phnombre'] }}</strong><br>
-              795 Folsom Ave, Suite 600<br>
-              San Francisco, CA 94107<br>
-              <abbr title="Phone">P:</abbr> (123) 456-7890
+              <strong>{{ Cache::get('jdkey')->nombre }}</strong><br>
+              {{ Cache::get('jdkey')->calle }}, {{ Cache::get('jdkey')->corregimiento }}<br>
+              {{ Cache::get('jdkey')->distrito }}, {{ Cache::get('jdkey')->provincia }}, {{ Cache::get('jdkey')->pais }} <br>
+              Tel: {{ Cache::get('jdkey')->telefono }}<br>
+              Email: {{ Cache::get('jdkey')->email }}
             </address>
           </div>
           <div class="col-xs-2">
-            <img style="height: 40px; border-radius: 8px;" src="{{asset('assets/backend/img/logo.png')}}" class="img-responsive" alt="Responsive image">
+            <img style="border-radius: 8px;" src="{{ asset(Cache::get('jdkey')->imagen_S) }}" class="img-responsive" alt="Responsive image">
           </div>
         </div><!-- end row -->
 
@@ -65,9 +66,9 @@
           <div class="col-xs-4">
             <address>
               <strong>{{ $data['propnombre'] }}</strong><br>
-              795 Folsom Ave, Suite 600<br>
-              San Francisco, CA 94107<br>
-              <abbr title="Phone">P:</abbr> (123) 456-7890
+              {{ $data['propdireccion'] }}, {{ $data['propcorregimiento'] }}<br>
+              {{ $data['propdistrito'] }}, {{ $data['propprovincia'] }}<br>
+              {{ $data['proppais'] }}, {{ $data['proptelefono'] }}
             </address>
           </div>
               

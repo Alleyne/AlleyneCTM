@@ -38,15 +38,16 @@
                     <div class="row"><!-- row -->
                         <div class="col-xs-9">
                             <address>
-                              <strong>{{ $data['phnombre'] }}</strong><br>
-                              {{ $data['phcalle'] }}, {{ $data['phcorregimiento'] }}<br>
-                              {{ $data['phdistrito'] }}, {{ $data['phprovincia'] }}, {{ $data['phpais'] }}<br>
-                              {{ $data['phtelefono'] }}, {{ $data['phemail'] }}
+                              <strong>{{ Cache::get('jdkey')->nombre }}</strong><br>
+                              {{ Cache::get('jdkey')->calle }}, {{ Cache::get('jdkey')->corregimiento }}<br>
+                              {{ Cache::get('jdkey')->distrito }}, {{ Cache::get('jdkey')->provincia }}, {{ Cache::get('jdkey')->pais }} <br>
+                              Tel: {{ Cache::get('jdkey')->telefono }}<br>
+                              Email: {{ Cache::get('jdkey')->email }}
                             </address>
                         </div>
 
                         <div class="col-xs-3" align="right">
-                            <img style="height: 100px; border-radius: 3px;" src="{{ asset($data['phlogo']) }}" class="img-responsive" alt="Responsive image">
+                            <img style="border-radius: 3px;" src="{{ asset(Cache::get('jdkey')->imagen_S) }}" class="img-responsive" alt="Responsive image">
                         </div>
                     </div><!-- end row -->
 

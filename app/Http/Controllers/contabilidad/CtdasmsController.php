@@ -135,20 +135,6 @@ class CtdasmsController extends Controller {
 
     // Prepara datos del encabezado del Estado de cuenta
     $data = [
-      'Titulo'    => 'Bienvenido al ctmaster.net',
-      'Contenido'   => 'Contenido del email',
-      
-      'phlogo'    => $ph->imagen_L,
-      'phnombre'    => $ph->nombre,
-      'phcalle'   => $ph->calle,
-      'phlote'    => $ph->lote,
-      'phdistrito'  => $ph->distrito,
-      'phprovincia' => $ph->provincia,
-      'phtelefono'  => $ph->telefono,
-      'phcorregimiento'  => $ph->corregimiento,
-      'phpais'  => $ph->pais,
-      'phemail'   => $ph->email,          
-      
       'propnombre'    => $prop->user->nombre_completo,          
       'propdireccion'   => $prop->user->direccion,
       'propprovincia'   => $prop->user->provincia,

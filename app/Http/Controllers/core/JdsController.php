@@ -274,7 +274,7 @@ class JdsController extends Controller {
 
 			// crea thumpnail No 2 
 			// resize the image to a height of 90 and constrain aspect ratio (auto width)
-			$img = Image::make($img_path->imagen_L)->resize(90, 90);
+			$img = Image::make($img_path->imagen_L)->resize(105, 40);
 			$img->save("assets/img/jds/jd-S".$id.".jpg");			
 			
 			//Sity::RegistrarEnBitacora(2, 'jds', $id, $detalle);

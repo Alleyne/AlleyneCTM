@@ -57,11 +57,11 @@
                 <strong>{{ Cache::get('jdkey')->nombre }}</strong><br>
                 {{ Cache::get('jdkey')->calle }}, {{ Cache::get('jdkey')->corregimiento }}<br>
                 {{ Cache::get('jdkey')->distrito }}, {{ Cache::get('jdkey')->provincia }}, {{ Cache::get('jdkey')->pais }} <br>
-                {{ Cache::get('jdkey')->telefono }}, {{ Cache::get('jdkey')->email }}
+                Tel: {{ Cache::get('jdkey')->telefono }} Email: {{ Cache::get('jdkey')->email }}<br>
               </address>
           </div>
-          <div class="col-xs-3">
-              <img style="height: 100px; border-radius: 8px;" src="{{ asset(Cache::get('jdkey')->imagen_L) }}" class="img-responsive" alt="Responsive image">
+          <div class="col-xs-3" align="right">
+              <img style="border-radius: 8px;" src="{{ asset(Cache::get('jdkey')->imagen_S) }}" class="img-responsive" alt="Responsive image">
           </div>
       </div><!-- end row  -->
 
@@ -73,7 +73,9 @@
         </div>
       </div>    
 
-      <HR WIDTH=95% ALIGN=CENTER COLOR="BLACK">
+      <br>
+      <br>
+      {{-- <HR WIDTH=95% ALIGN=CENTER COLOR="BLACK"> --}}
       
       <div class="row">
           <div class="col-xs-7">
@@ -89,7 +91,7 @@
               </div>
               <br>
           </div>
-      </
+      </div>
       
       <br>
       

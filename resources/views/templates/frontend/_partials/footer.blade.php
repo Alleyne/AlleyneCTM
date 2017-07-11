@@ -38,11 +38,11 @@
         <!-- Contact Us -->
         <div class="headline"><h2>Contactenos</h2></div> 
         <address class="md-margin-bottom-40">
-            25, Lorem Lis Street, Orange <br />
-            California, US <br />
-            Phone: 800 123 3456 <br />
-            Fax: 800 123 3456 <br />
-            Email: <a href="mailto:info@anybiz.com" class="">info@anybiz.com</a>
+            <strong>{{ Cache::get('jdkey')->nombre }}</strong><br>
+            {{ Cache::get('jdkey')->calle }}, {{ Cache::get('jdkey')->corregimiento }}<br>
+            {{ Cache::get('jdkey')->distrito }}, {{ Cache::get('jdkey')->provincia }}, {{ Cache::get('jdkey')->pais }} <br>
+            Tel: {{ Cache::get('jdkey')->telefono }}<br>
+            Email: {{ Cache::get('jdkey')->email }}
         </address>
         <!-- End Contact Us -->
     </div><!--/col-md-4-->

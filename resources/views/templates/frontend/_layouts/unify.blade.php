@@ -30,7 +30,7 @@
       <!--=== End Header ===--> 
       
       <!--=== Slider ===-->
-      @yield('slider')   
+      {{-- @yield('slider') --}}   
       <!--=== End Slider ===-->  
       
       <!--=== Content Part ===-->
