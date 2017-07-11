@@ -133,8 +133,8 @@ class JdsController extends Controller {
 	{
 		//dd(Input::get());
 
-	  DB::beginTransaction();
-	  try {
+	  //DB::beginTransaction();
+	  //try {
 
 			$input = Input::all();
 			$rules = array(
@@ -143,8 +143,8 @@ class JdsController extends Controller {
 			);
 
 			$messages = [
-					'required' => 'El campo :attribute es requerido!',
-					'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
+				'required' => 'El campo :attribute es requerido!',
+				'unique'   => 'Este :attribute ya existe, no se admiten duplicados!'
 			];        
 					
 			$validation = \Validator::make($input, $rules, $messages);      	
@@ -152,6 +152,7 @@ class JdsController extends Controller {
 			if ($validation->passes())
 			{
 				$dato = Jd::find($id);
+				
 				$dato->nombre       	= Input::get('nombre');
 				$dato->codigo	       	= Input::get('codigo');
 				$dato->pais 	       	= Input::get('pais');
@@ -163,6 +164,7 @@ class JdsController extends Controller {
 				$dato->telefono       = Input::get('telefono');
 				$dato->celular	      = Input::get('celular');
 				$dato->email 	       	= Input::get('email');
+				
 				$dato->save();			
 				
 				Sity::RegistrarEnBitacora($dato, Input::get(), 'Jd', 'Actualiza Junta directiva');
@@ -173,11 +175,11 @@ class JdsController extends Controller {
 			}
 			return back()->withInput()->withErrors($validation);
 
-	  } catch (\Exception $e) {
-	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en JdController@update, la transaccion ha sido cancelada!');
-	    return back()->withInput();
-	  }
+	  //} catch (\Exception $e) {
+	    //DB::rollback();
+	    //Session::flash('warning', ' Ocurrio un error en JdController@update, la transaccion ha sido cancelada!');
+	    //return back()->withInput();
+	  //}
 	}
 
 
