@@ -133,8 +133,8 @@ class JdsController extends Controller {
 	{
 		//dd(Input::get());
 
-	  //DB::beginTransaction();
-	  //try {
+	  DB::beginTransaction();
+	  try {
 
 			$input = Input::all();
 			$rules = array(
@@ -175,11 +175,11 @@ class JdsController extends Controller {
 			}
 			return back()->withInput()->withErrors($validation);
 
-	  //} catch (\Exception $e) {
-	    //DB::rollback();
-	    //Session::flash('warning', ' Ocurrio un error en JdController@update, la transaccion ha sido cancelada!');
-	    //return back()->withInput();
-	  //}
+	  } catch (\Exception $e) {
+	    DB::rollback();
+	    Session::flash('warning', ' Ocurrio un error en JdController@update, la transaccion ha sido cancelada!');
+	    return back()->withInput();
+	  }
 	}
 
 

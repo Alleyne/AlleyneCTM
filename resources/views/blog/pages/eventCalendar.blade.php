@@ -357,6 +357,11 @@
     text-align: right;
     border-top: 1px solid #eeeeee;
   }
+  
+  a.fc-event, .fc-event-draggable {
+      cursor: pointer;
+}
+
 </style>
 
 @endsection
@@ -398,7 +403,7 @@
       -----------------------------------------------------------------*/
       $('#calendar').fullCalendar({
           header: hdr,
-          editable: true,
+          editable: false,
           droppable: false,
           timeFormat: "h:mma",
           slotLabelFormat: "h:mma",
