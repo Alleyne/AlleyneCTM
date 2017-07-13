@@ -166,6 +166,11 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador HojadetrabajosController
 	//---------------------------------------------------------// 	
+  
+
+  Route::get('hjProyectada/{pcontable_id}', 'HojadetrabajosController@hjProyectada')->name('hjProyectada');
+
+
   Route::get('estadoderesultado/{pcontable_id}', 'HojadetrabajosController@estadoderesultado')->name('estadoderesultado');
   Route::get('er/{pcontable_id}', 'HojadetrabajosController@er')->name('er');
   Route::get('bg/{pcontable_id}', 'HojadetrabajosController@bg')->name('bg');
@@ -340,76 +345,32 @@ Route::get('/estado_resultado', array('as' => 'estado_resultado', function() {
 
 
 Route::get('/test', function () {
-/***********************************************  
-  $diaFact= 1;
-  $f_ocobro= "2016/01/01";
-  $m_vence= 0; 
-  $d_vence= 9;
-	  +"date": "2016-01-09 00:00:00.000000"
+  $data = collect([
+    'periodo'=> 1,
+    'cuenta'=> 2,      
+    'tipo'=> 3,
+    'codigo'=> '$cta->codigo',
+    'clase'=> '$cta->corriente_siono',
+    'un_id'=> 0,
+    'cta_nombre'=> '$cta->nombre',
+    'saldo_debito'=> 0,
+    'saldo_credito'=> 0,
+    'saldoAjuste_debito'=> 0,
+    'saldoAjuste_credito'=> 0,
+    'saldoAjustado_debito'=> 0,
+    'saldoAjustado_credito'=> 0
+  ]);
+	
+  $data->put('saldo_debito', '$saldo');
+  $data->put('saldo_credito', 0);
+    
+  $data->put('saldoAjustado_debito', '$saldo');
+  $data->put('saldoAjustado_credito', 0);
 
-  $diaFact= 1;
-  $f_ocobro= "2016/02/01";
-  $m_vence= 0; 
-  $d_vence= 31; 
-	  +"date": "2016-02-29 23:59:59.000000"
-  
-  $diaFact= 1;
-  $f_ocobro= "2016/01/01";
-  $m_vence= 1; 
-  $d_vence= 9;
-	  +"date": "2016-02-09 00:00:00.000000"
-  
-  $diaFact= 1;
-  $f_ocobro= "2016/01/01";
-  $m_vence= 10; 
-  $d_vence= 31;
-  		+"date": "2016-11-30 23:59:59.000000"
-  
-  $diaFact= 1;
-  $f_ocobro= "2016/01/01";
-  $m_vence= 10; 
-  $d_vence= 23;
-  		+"date": "2016-11-23 00:00:00.000000"
- **************************************************/   
-  
-/***********************************************  
-  $diaFact= 16;
-  $f_ocobro= "2016/01/16";
-  $m_vence= 0; 
-  $d_vence= 24;
-  	+"date": "2016-01-24 00:00:00.000000"
-  
-  $diaFact= 16;
-  $f_ocobro= "2016/02/16";
-  $m_vence= 0; 
-  $d_vence= 31; 
-	  +"date": "2016-02-29 23:59:59.000000"
- 
+  $data->put('bg_debito', '$saldo');
+  $data->put('bg_credito', 0);
 
-  $diaFact= 16;
-  $f_ocobro= "2016/01/16";
-  $m_vence= 1; 
-  $d_vence= 31;
-  	+"date": "2016-02-29 23:59:59.000000"
-
-
-  $diaFact= 16;
-  $f_ocobro= "2016/01/16";
-  $m_vence= 10; 
-  $d_vence= 31;
-  	+"date": "2016-11-30 23:59:59.000000"
-   
-  $diaFact= 16;
-  $f_ocobro= "2016/01/16";
-  $m_vence= 10; 
-  $d_vence= 23;
-  	+"date": "2016-11-23 00:00:00.000000"
-  
-
-  $f_vence= Sity::fechaLimiteRecargo($diaFact, $f_ocobro, $m_vence, $d_vence);
-  dd('fecha limite para recargo: ',$f_vence);
-  return $f_vence;
-**************************************************/
+	dd($data);
 });
 
 use App\Seccione;

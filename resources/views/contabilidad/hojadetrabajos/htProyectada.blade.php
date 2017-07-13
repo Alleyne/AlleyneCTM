@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Hoja de trabajo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+	<style type="text/css">
+		.borde {
+			border: 1px; 
+			border-style: solid; 
+			border-color: #bfbfc8;
+		}
+		
+		.celBg-green {
+		  background-color: rgba(0, 255, 0, 0.14);
+		}
+
+		.celBg-red {
+		  background-color: rgba(255, 0, 24, 0.08);
+		}
+
+		.celBg-yellow {
+		    background-color: rgba(233, 233, 157, 0.21);
+		}
+
+		.celBg-blue {
+		    background-color: rgba(12, 41, 249, 0.11);
+		}
+		
+		.celBg-cian {
+		    background-color: rgba(0, 244, 255, 0.14);
+		}	
+
+		.celBg-gray {
+		    background-color: #bfbfc8;
+		}
+
+		p.mix {
+		    border-style: solid hidden double hidden;
+		    font-weight: bold;
+		}
+		
+		p.lineup {
+		    border-style: solid hidden hidden hidden;
+		    font-weight: bold;
+		}
+		
+		.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+		    padding: 2px;
+		    line-height: 1.4;
+		    vertical-align: top;
+		    border-top: 0px solid #ddd;
+		}
+	</style>
+</head>
+
+<body style="font-size:13px;"">
+	<div class="container" style="width:14in; background-color:white";>
+	  <h4 class="text-center">{{ Cache::get('jdkey')->nombre }}</h4>
+	  <p class="text-center" style="margin:0px">HOJA DE TRABAJO PROYECTADA</p>
+	  <p class="text-center" style="margin:0px">Periodo contable del mes de {{ $periodo->periodo }}</p>
+	  <p class="text-center" style="margin:0px">(en balboas)</p>
+
+		@if (Cache::get('esAdminkey') || Cache::get('esContadorkey'))
+			@if ($permitirAjustes=='Si')
+				<a href="{{ URL::route('createAjustes', $periodo->id) }}" class="btn btn-warning">Ajustar</a>
+			@endif	
+			
+			@if ($permitirCerrar=='Si')
+        {{Form::open(array(
+          'route' => array('cierraPeriodo',$periodo->id, $periodo->periodo, $periodo->fecha),
+          'method' => 'GET',
+          'style' => 'display:inline'
+        ))}}
+        
+        {{Form::button('Cerrar periodo', array(
+          'class' => 'btn btn-danger',
+          'data-toggle' => 'modal',
+          'data-target' => '#confirmAction',
+          'data-title' => 'Cerrar periodo contable',
+          'data-message' => 'Esta seguro(a) que desea cerrar el presente periodo contable?',
+          'data-btntxt' => 'SI, cerrar periodo contable',
+          'data-btncolor' => 'btn-danger'
+        ))}}
+        {{Form::close()}}                                                    
+			@endif	
+		@endif
+
+		<span>
+			@if ($total_ba_debito == $total_ba_credito) 
+				<i style="color:green" class="glyphicon glyphicon-ok"></i> 
+			@else
+				<i style="color:red" class="glyphicon glyphicon-remove"></i>
+			@endif	
+		</span>
+
+		<table class="table table-hove table-hover">
+		  <thead>
+			  <tr>
+			   <th col width="65px"></th> 
+			   <th col width="395px"></th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Balance de pruebas</th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Ajustes</th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Balance Ajustado</th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Estado de Resultado</th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Balance General</th> 
+			  </tr>
+			  
+			  <tr align="right">
+			   <th>Codigo</th> 
+			   <th>Cuenta</th> 
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 	  
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 
+			  </tr>
+		  </thead> 
+		  <tbody> 
+				@foreach ($datos as $dato)		   
+				  <tr> 
+						<td><a href="{{ URL::route('verMayorAux', array($dato['periodo'], $dato['cuenta'], $dato['un_id'])) }}"> {{ $dato['codigo'] }} </a></td>
+						<td>{{ $dato['cta_nombre'] }}</td>
+					
+						<td class="text-right celBg-yellow borde">
+							@if ($dato['saldo_debito'] != "0.00")
+							  {{ $dato['saldo_debito'] }} 
+							@endif
+						</td>
+						
+						<td class="text-right celBg-yellow borde">
+							@if ($dato['saldo_credito'] != "0.00")
+								{{ $dato['saldo_credito'] }}
+							@endif
+						</td>
+
+						<td class="text-right celBg-red borde">
+							@if ($dato['saldoAjuste_debito'] != "0.00")
+								{{ $dato['saldoAjuste_debito'] }}
+							@endif
+						</td>
+						
+						<td class="text-right celBg-red borde">
+							@if ($dato['saldoAjuste_credito'] != "0.00")
+								{{ $dato['saldoAjuste_credito'] }}
+							@endif
+						</td>
+
+						<td class="text-right celBg-green borde">
+							@if ($dato['saldoAjustado_debito'] != "0.00")
+								{{ $dato['saldoAjustado_debito'] }}
+							@endif
+						</td>
+					    
+						<td class="text-right celBg-green borde">
+							@if ($dato['saldoAjustado_credito'] != "0.00")
+								{{ $dato['saldoAjustado_credito'] }}
+							@endif
+						</td>
+					    
+						<td class="text-right celBg-blue borde">
+							@if ($dato['er_debito'] != "0.00")
+								{{ $dato['er_debito'] }}
+							@endif
+						</td>
+					    
+						<td class="text-right celBg-blue borde">
+							@if ($dato['er_credito'] != "0.00")
+								{{ $dato['er_credito'] }}
+							@endif
+						</td>
+		                
+						<td class="text-right celBg-cian borde">
+							@if ($dato['bg_debito'] != "0.00")
+								{{ $dato['bg_debito'] }}
+							@endif
+						</td>
+					    
+						<td class="text-right celBg-cian borde">
+							@if ($dato['bg_credito'] != "0.00")
+								{{ $dato['bg_credito'] }}
+							@endif
+						</td>
+					</tr>
+				@endforeach
+
+				<tr> 
+					<td>&nbsp;</td>
+					<td>&nbsp;</td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_bp_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_bp_credito,2) }}</p></td> 
+					<th class="text-right"><p class="mix">{{ number_format($total_aj_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_aj_credito,2) }}</p></td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_ba_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_ba_credito,2) }}</p></td> 
+					<th class="text-right"><p class="mix lineup">{{ number_format($total_er_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix lineup">{{ number_format($total_er_credito,2) }}</p></td> 
+					<td class="text-right"><p class="mix lineup">{{ number_format($total_bg_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix lineup">{{ number_format($total_bg_credito,2) }}</p></td> 
+				</tr>		  
+
+				<tr> 
+					<th></th> 
+					<td>Utilidad</td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					
+					@if ($utilidad > 0)
+						<th class="text-right"><strong>{{ number_format($utilidad,2) }}</strong></td> 
+						<th class="text-right"><strong>&nbsp;</strong></td> 
+					@else
+						<th class="text-right"><strong>&nbsp;</strong></td> 
+						<th class="text-right"><strong>{{ number_format(abs($utilidad),2) }}</strong></td> 
+					@endif
+					
+					@if ($utilidad > 0)
+						<th class="text-right"><strong>&nbsp;</strong></td> 
+						<th class="text-right"><strong>{{ number_format($utilidad,2) }}</strong></td> 
+					@else
+						<th class="text-right"><strong>{{ number_format(abs($utilidad),2) }}</strong></td> 
+						<th class="text-right"><strong>&nbsp;</strong></td> 
+					@endif 
+				</tr>	
+				
+				<tr> 
+					<th scope="row"></th> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+						
+					@if ($utilidad > 0)
+						<th class="text-right"><strong><p class="mix">{{ number_format(($total_er_debito+$utilidad),2) }}</p></strong></td> 
+						<th class="text-right"><strong><p class="mix">{{ number_format($total_er_credito,2) }}</p></strong></td> 
+					@else
+						<th class="text-right"><strong><p class="mix">{{ number_format($total_er_debito,2) }}</p></strong></td> 
+						<th class="text-right"><strong><p class="mix">{{ number_format(($total_er_credito+abs($utilidad)),2) }}</p></strong></td> 
+					@endif
+					
+					@if ($utilidad > 0)
+						<th class="text-right"><strong><p class="mix">{{ number_format($total_bg_debito,2) }}</p></strong></td> 
+						<th class="text-right"><strong><p class="mix">{{ number_format(($total_bg_credito+$utilidad),2) }}</p></strong></td> 
+					@else
+						<th class="text-right"><strong><p class="mix">{{ number_format(($total_bg_debito+abs($utilidad)),2) }}</p></strong></td> 
+						<th class="text-right"><strong><p class="mix">{{ number_format($total_bg_credito,2) }}</p></strong></td> 
+					@endif 
+				</tr>		 
+		  </tbody>
+		</table>
+    
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')
+    
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="text-center">© Copyright 2016-2025 ctmaster.net - All Rights Reserved</p>
+      </div>
+    </div> 
+
+	</div> <!-- end container -->
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
+
+</body>
+</html>

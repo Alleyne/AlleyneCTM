@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Contabilidad;
 
+use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\library\Sity;
@@ -156,12 +157,14 @@ class HojadetrabajosController extends Controller {
       'totalAjustadoCredito' => number_format($totalAjustadoCredito,2)
     ];
     
-    if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey') || Cache::get('esJuntaDirectivakey') || Cache::get('esContadorkey')) {
+    /*if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey') || Cache::get('esJuntaDirectivakey') || Cache::get('esContadorkey')) {
       return view('contabilidad.hojadetrabajos.show', $viewData);  
     
     } elseif (Cache::get('esPropietariokey')) {
       return view('contabilidad.hojadetrabajos.showFrontend', $viewData); 
-    }
+    }*/
+      return view('contabilidad.hojadetrabajos.htProyectada', $viewData);  
+
   }	
 
   /***********************************************************************************
@@ -631,8 +634,43 @@ class HojadetrabajosController extends Controller {
 
     } catch (\Exception $e) {
       DB::rollback();
-      Session::flash('warning', ' Ocurrio un error en el modulo HojadetrabajosController.cierraPeriodoxxx, la transaccion ha sido cancelada! '.$e->getMessage());
+      Session::flash('warning', ' Ocurrio un error en el modulo HojadetrabajosController.cierraPeriodo, la transaccion ha sido cancelada! '.$e->getMessage());
       return back();
     }
   }
+
+  /***********************************************************************************
+  * Despliega la hoja de trabajo proyectada de un determinado periodo
+  ************************************************************************************/ 
+  public function hjProyectada($periodo) {
+    
+    // encuentra los datos de la hoja de trabajo para un periodo determinado
+    $data = Hojat::getDataParaHojaDeTrabajo($periodo);
+    $datos = Collection::make($data);
+    //dd($datos);
+    
+    $utilidad= $datos->sum('er_credito')-$datos->sum('er_debito'); 
+    //dd($utilidad);
+
+    return \View::make('contabilidad.hojadetrabajos.htProyectada')
+                ->with('datos', $datos)
+                ->with('total_bp_debito', $datos->sum('saldo_debito'))                  
+                ->with('total_bp_credito', $datos->sum('saldo_credito')) 
+                ->with('total_aj_debito', $datos->sum('saldoAjuste_debito'))                  
+                ->with('total_aj_credito', $datos->sum('saldoAjuste_credito')) 
+                ->with('total_ba_debito', $datos->sum('saldoAjustado_debito'))                  
+                ->with('total_ba_credito', $datos->sum('saldoAjustado_credito')) 
+                ->with('total_er_debito', $datos->sum('er_debito'))                  
+                ->with('total_er_credito', $datos->sum('er_credito')) 
+                ->with('total_bg_debito', $datos->sum('bg_debito'))                  
+                ->with('total_bg_credito', $datos->sum('bg_credito')) 
+                ->with('utilidad', $utilidad) 
+                ->with('permitirAjustes', 'Si') 
+                ->with('permitirCerrar', 'Si') 
+                ->with('periodo', Pcontable::find($periodo));
+  } 
+
+
+
+
 } // fin de controller

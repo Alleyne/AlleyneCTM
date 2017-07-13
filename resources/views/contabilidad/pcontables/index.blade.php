@@ -92,7 +92,7 @@
 																</div>
 															</li>	
 															<li>
-																<a href="{{ URL::route('hojadetrabajos.show', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> HT</a>
+																<a href="{{ URL::route('hjProyectada', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> HT</a>
 															</li>	
 															<li>
 																<a href="{{ URL::route('ctdiarios.show', $dato->id) }}" class="btn bg-color-green txt-color-white btn-xs"><i class="fa fa-search"></i> Diario</a>

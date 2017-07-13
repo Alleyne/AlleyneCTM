@@ -1,4 +1,5 @@
 <?php namespace App\library;
+
 use Jenssegers\Date\Date;
 use Carbon\Carbon;
 use App\library\Sity;
@@ -25,77 +26,77 @@ class Hojat {
   * @return void
   *===========================================================================================*/
   public static function inicializaCuentasPerm($pcontable_id, $fecha) {
-      //dd($pcontable_id, $fecha);
-      
-      // encuentras los datos, los mismos datos que se utilizaron para la Hoja de trabajo
-      $datos= self::getDataParaHojaDeTrabajo($pcontable_id);
-      //dd($datos);
-      
-      $pdo= Pcontable::find($pcontable_id)->periodo;
+    //dd($pcontable_id, $fecha);
+    
+    // encuentras los datos, los mismos datos que se utilizaron para la Hoja de trabajo
+    $datos= self::getDataParaHojaDeTrabajo($pcontable_id);
+    //dd($datos);
+    
+    $pdo= Pcontable::find($pcontable_id)->periodo;
 
-      $i=1;
-      foreach($datos as $dato) {
-        if ($dato['tipo'] == 1) {
-          // registra en la tabla ctmayores
-          $data = new Ctmayore;
-          $data->pcontable_id     = $pcontable_id + 1;
-          $data->tipo             = $dato['tipo'];
-          $data->cuenta           = $dato['cuenta'];
-          $data->codigo           = $dato['codigo'];
-          $data->fecha            = $fecha;
-          $data->detalle          = 'Inicializa, '.$dato['cta_nombre'].', por cierre '.$pdo;
-          $data->debito           = $dato['saldoAjustado_debito'];
-          $data->credito          = $dato['saldoAjustado_credito'];
+    $i=1;
+    foreach($datos as $dato) {
+      if ($dato['tipo'] == 1) {
+        // registra en la tabla ctmayores
+        $data = new Ctmayore;
+        $data->pcontable_id     = $pcontable_id + 1;
+        $data->tipo             = $dato['tipo'];
+        $data->cuenta           = $dato['cuenta'];
+        $data->codigo           = $dato['codigo'];
+        $data->fecha            = $fecha;
+        $data->detalle          = 'Inicializa, '.$dato['cta_nombre'].', por cierre '.$pdo;
+        $data->debito           = $dato['saldoAjustado_debito'];
+        $data->credito          = $dato['saldoAjustado_credito'];
+        $data->save();
+        
+        if ($i == 1) {
+          // registra en Ctdiario principal
+          $data = new Ctdiario;
+          $data->pcontable_id  = $pcontable_id + 1;
+          $data->fecha         = $fecha;
+          $data->detalle = $dato['cta_nombre'].' '.$pdo;
+          $data->debito  = $dato['saldoAjustado_debito'] >= 0 ? $dato['saldoAjustado_debito'] : Null;
+          $data->credito = $dato['saldoAjustado_credito'] >= 0 ? $dato['saldoAjustado_credito'] : Null;
           $data->save();
-          
-          if ($i == 1) {
-            // registra en Ctdiario principal
-            $data = new Ctdiario;
-            $data->pcontable_id  = $pcontable_id + 1;
-            $data->fecha         = $fecha;
-            $data->detalle = $dato['cta_nombre'].' '.$pdo;
-            $data->debito  = $dato['saldoAjustado_debito'] >= 0 ? $dato['saldoAjustado_debito'] : Null;
-            $data->credito = $dato['saldoAjustado_credito'] >= 0 ? $dato['saldoAjustado_credito'] : Null;
-            $data->save();
 
-          } else {
-            // registra en Ctdiario principal
-            $data = new Ctdiario;
-            $data->pcontable_id  = $pcontable_id + 1;
-            $data->detalle = $dato['cta_nombre'].' '.$pdo;
-            $data->debito  = $dato['saldoAjustado_debito'] >= 0 ? $dato['saldoAjustado_debito'] : Null;
-            $data->credito = $dato['saldoAjustado_credito'] >= 0 ? $dato['saldoAjustado_credito'] : Null;
-            $data->save();
-          }
-          $i++;
-
-        } elseif(($dato['tipo']==2 && $dato['cuenta']!=5) || $dato['tipo']==3) {
-          // se excluye la cuenta 5 2010.00 "Anticipos o avances recibidos de propietarios (Pasivo diferido)"
-          // ya que es una cuenta que comparten diferentes unidades. La inicializacion tiene un trato especial debido
-          // a que como es una cuenta compartida se debe inicializar un saldo por cada unidad que comparta esta cuenta.
-          
-          // registra en la tabla ctmayores
-          $data = new Ctmayore;
-          $data->pcontable_id     = $pcontable_id + 1;
-          $data->tipo             = $dato['tipo'];
-          $data->cuenta           = $dato['cuenta'];
-          $data->codigo           = $dato['codigo'];
-          $data->fecha            = $fecha;
-          $data->detalle          = 'Inicializa, '.$dato['cta_nombre'].', por cierre '.$pdo;
-          $data->debito           = $dato['saldoAjustado_debito'];
-          $data->credito          = $dato['saldoAjustado_credito'];
-          $data->un_id            = 0;
-          $data->save();
-          
+        } else {
           // registra en Ctdiario principal
           $data = new Ctdiario;
           $data->pcontable_id  = $pcontable_id + 1;
           $data->detalle = $dato['cta_nombre'].' '.$pdo;
           $data->debito  = $dato['saldoAjustado_debito'] >= 0 ? $dato['saldoAjustado_debito'] : Null;
           $data->credito = $dato['saldoAjustado_credito'] >= 0 ? $dato['saldoAjustado_credito'] : Null;
-          $data->save();  
+          $data->save();
         }
+        $i++;
+
+      } elseif(($dato['tipo']==2 && $dato['cuenta']!=5) || $dato['tipo']==3) {
+        // se excluye la cuenta 5 2010.00 "Anticipos o avances recibidos de propietarios (Pasivo diferido)"
+        // ya que es una cuenta que comparten diferentes unidades. La inicializacion tiene un trato especial debido
+        // a que como es una cuenta compartida se debe inicializar un saldo por cada unidad que comparta esta cuenta.
+        
+        // registra en la tabla ctmayores
+        $data = new Ctmayore;
+        $data->pcontable_id     = $pcontable_id + 1;
+        $data->tipo             = $dato['tipo'];
+        $data->cuenta           = $dato['cuenta'];
+        $data->codigo           = $dato['codigo'];
+        $data->fecha            = $fecha;
+        $data->detalle          = 'Inicializa, '.$dato['cta_nombre'].', por cierre '.$pdo;
+        $data->debito           = $dato['saldoAjustado_debito'];
+        $data->credito          = $dato['saldoAjustado_credito'];
+        $data->un_id            = 0;
+        $data->save();
+        
+        // registra en Ctdiario principal
+        $data = new Ctdiario;
+        $data->pcontable_id  = $pcontable_id + 1;
+        $data->detalle = $dato['cta_nombre'].' '.$pdo;
+        $data->debito  = $dato['saldoAjustado_debito'] >= 0 ? $dato['saldoAjustado_debito'] : Null;
+        $data->credito = $dato['saldoAjustado_credito'] >= 0 ? $dato['saldoAjustado_credito'] : Null;
+        $data->save();  
       }
+    }
     
     // inicializacion especial de la cuenta 5  2010.00 "Anticipos o avances recibidos de propietarios (Pasivo diferido)"
 
@@ -137,11 +138,11 @@ class Hojat {
       $data->save();  
     }
   
-  // registra la utilidad en el diario del periodo posterior
-  $data = new Ctdiario;
-  $data->pcontable_id     = $pcontable_id + 1;
-  $data->detalle          = 'Para registrar aperturas de cuentas permanentes y utilidad neta del periodo anterior '.Pcontable::find($pcontable_id)->periodo;
-  $data->save(); 
+    // registra la utilidad en el diario del periodo posterior
+    $data = new Ctdiario;
+    $data->pcontable_id     = $pcontable_id + 1;
+    $data->detalle          = 'Para registrar aperturas de cuentas permanentes y utilidad neta del periodo anterior '.Pcontable::find($pcontable_id)->periodo;
+    $data->save(); 
   } 
 
   /** 
@@ -154,10 +155,8 @@ class Hojat {
   public static function getDataParaHojaDeTrabajo($periodo)
   {
     //dd($periodo);    
-
     $data=array();    
     $i=0;   
-
     //=== Primero =========================================================================================
     // Encuentra todas las cuentas activas en ctmayores para un determinado periodo
     // excluyendo la cuenta no 5 de Pagos anticipados
@@ -175,7 +174,6 @@ class Hojat {
       // encuentra las generales de la cuenta
       $cta= Catalogo::find($cuenta->cuenta);
       //dd($cta->toArray());
-
       // Calcula el saldo de la cuenta tomando en cuenta el periodo y eliminado los ajustes hechos a la misma      
       $totalDebito= Ctmayore::where('pcontable_id', $periodo)
                     ->where('cuenta', $cta->id)
@@ -203,12 +201,12 @@ class Hojat {
       $data[$i]["saldoAjuste_credito"]= 0;
       $data[$i]["saldoAjustado_debito"]= 0;
       $data[$i]["saldoAjustado_credito"]= 0;
-
+      
       // De acuerdo al tipo de cuenta, determina como aumenta o disminuye la cuenta
       // Si se trata de una cuenta de activo, aumenta por el debito y disminuye por el credito
       if ($cta->tipo == 1) {
         $saldo= floatval($totalDebito) - floatval($totalCredito);
-
+        
         if ($saldo >= 0) {                            
           // si el saldo de la cuenta es mayor o igual a cero, quiere decir que hubo un aumento en la cuenta de activo,
           // por lo tanto de registra por el lado debito          
@@ -217,9 +215,12 @@ class Hojat {
           
           $data[$i]["saldoAjustado_debito"] = $saldo;
           $data[$i]["saldoAjustado_credito"] = 0;
-
+         
+          $data[$i]["er_debito"] = 0;
+          $data[$i]["er_credito"] = 0; 
+          
           $data[$i]["bg_debito"] = $saldo;
-          $data[$i]["bg_credito"] = 0;    
+          $data[$i]["bg_credito"] = 0;
         
         } else {
           // si el saldo de la cuenta es menor que cero, quiere decir que hubo una disminucion en la cuenta de activo,
@@ -229,11 +230,14 @@ class Hojat {
           
           $data[$i]["saldoAjustado_debito"] = 0;
           $data[$i]["saldoAjustado_credito"] = abs($saldo);
-
+          
+          $data[$i]["er_debito"] = 0;
+          $data[$i]["er_credito"] = 0;           
+          
           $data[$i]["bg_debito"] = 0; 
           $data[$i]["bg_credito"] = abs($saldo);  
         }
-
+      
       // Si se trata de una cuenta de gasto, aumenta por el debito y disminuye por el credito
       } elseif ($cta->tipo == 6) {
         $saldo= floatval($totalDebito) - floatval($totalCredito);
@@ -249,6 +253,9 @@ class Hojat {
         
           $data[$i]["er_debito"] = $saldo;
           $data[$i]["er_credito"] = 0;        
+        
+          $data[$i]["bg_debito"] = 0; 
+          $data[$i]["bg_credito"] = 0;
 
         } else {
           // si el saldo de la cuenta es menor que cero, quiere decir que hubo una disminucion en la cuenta de gasto,
@@ -261,6 +268,9 @@ class Hojat {
         
           $data[$i]["er_debito"] = 0;
           $data[$i]["er_credito"] = abs($saldo);
+        
+          $data[$i]["bg_debito"] = 0; 
+          $data[$i]["bg_credito"] = 0;
         }
      
       // Si se trata de una cuenta de pasivo, aumenta por el credito y disminuye por el debito
@@ -275,10 +285,13 @@ class Hojat {
           
           $data[$i]["saldoAjustado_debito"] = 0;
           $data[$i]["saldoAjustado_credito"] = $saldo;
+          
+          $data[$i]["er_debito"] = 0;
+          $data[$i]["er_credito"] = 0;
 
           $data[$i]["bg_debito"] = 0;
           $data[$i]["bg_credito"] = $saldo;
-
+        
         } else {
           // si el saldo de la cuenta es menor que cero, quiere decir que hubo una disminucion en la cuenta de pasivo,
           // por lo tanto de registra el valor absoluto por el lado debito
@@ -287,11 +300,14 @@ class Hojat {
           
           $data[$i]["saldoAjustado_debito"] = abs($saldo);
           $data[$i]["saldoAjustado_credito"] = 0;
+          
+          $data[$i]["er_debito"] = 0;
+          $data[$i]["er_credito"] = 0;
 
           $data[$i]["bg_debito"] = abs($saldo);
           $data[$i]["bg_credito"] = 0; 
         }
-
+      
       // Si se trata de una cuenta de patrimonio, aumenta por el credito y disminuye por el debito
       } elseif ($cta->tipo == 3) {
         $saldo= floatval($totalCredito) - floatval($totalDebito);        
@@ -305,6 +321,9 @@ class Hojat {
           $data[$i]["saldoAjustado_debito"] = 0;
           $data[$i]["saldoAjustado_credito"] = $saldo;      
         
+          $data[$i]["er_debito"] = 0;
+          $data[$i]["er_credito"] = 0;
+
           $data[$i]["bg_debito"] = 0;
           $data[$i]["bg_credito"] = $saldo; 
         
@@ -317,6 +336,9 @@ class Hojat {
           $data[$i]["saldoAjustado_debito"] = abs($saldo);
           $data[$i]["saldoAjustado_credito"] = 0;     
         
+          $data[$i]["er_debito"] = 0;
+          $data[$i]["er_credito"] = 0;
+
           $data[$i]["bg_debito"] = abs($saldo);
           $data[$i]["bg_credito"] = 0;
         }
@@ -333,9 +355,12 @@ class Hojat {
           
           $data[$i]["saldoAjustado_debito"] = 0;
           $data[$i]["saldoAjustado_credito"] = $saldo;
-
+          
           $data[$i]["er_debito"] = 0;
           $data[$i]["er_credito"] = $saldo;        
+        
+          $data[$i]["bg_debito"] = 0;
+          $data[$i]["bg_credito"] = 0;
 
         } else {
           // si el saldo de la cuenta es menor que cero, quiere decir que hubo una disminucion en la cuenta de ingreso,
@@ -345,9 +370,12 @@ class Hojat {
           
           $data[$i]["saldoAjustado_debito"] = abs($saldo);
           $data[$i]["saldoAjustado_credito"] = 0;
-
+          
           $data[$i]["er_debito"] = abs($saldo);
           $data[$i]["er_credito"] = 0;
+        
+          $data[$i]["bg_debito"] = 0;
+          $data[$i]["bg_credito"] = 0;
         }
       }
       
@@ -375,7 +403,6 @@ class Hojat {
                                     ->where('ajuste_siono', 1)
                                     ->sum('credito');
         //dd($totalAjusteDebito, $totalAjusteCredito); 
-
         // clasifica el total de ajuste hechos a la cuenta de acuerdo a si es tipo debito o credito
         if ($cta->tipo == 1) {
           $totalAjuste = floatval($totalAjusteDebito) - floatval($totalAjusteCredito); 
@@ -387,17 +414,23 @@ class Hojat {
             $data[$i]["saldoAjustado_debito"] = $saldo + $totalAjuste;
             $data[$i]["saldoAjustado_credito"] = 0;           
           
+            $data[$i]["er_debito"] = 0;
+            $data[$i]["er_credito"] = 0;
+
             $data[$i]["bg_debito"] = $saldo + $totalAjuste;
             $data[$i]["bg_credito"] = 0;    
-
+          
           } elseif ($totalAjuste < 0) {
             // si es menor que cero huvo una disminucion en la cuenta
             $data[$i]["saldoAjuste_debito"] = 0;
             $data[$i]["saldoAjuste_credito"] = abs($totalAjuste);
-
+            
             $data[$i]["saldoAjustado_debito"] = $saldo - abs($totalAjuste); 
             $data[$i]["saldoAjustado_credito"] = 0;
           
+            $data[$i]["er_debito"] = 0;
+            $data[$i]["er_credito"] = 0;
+
             $data[$i]["bg_debito"] = $saldo - abs($totalAjuste); 
             $data[$i]["bg_credito"] = 0;
           }
@@ -414,19 +447,26 @@ class Hojat {
           
             $data[$i]["er_debito"] = $saldo + $totalAjuste;
             $data[$i]["er_credito"] = 0;        
+          
+            $data[$i]["bg_debito"] = 0;
+            $data[$i]["bg_credito"] = 0;
 
           } elseif ($totalAjuste < 0) {
             // si es menor que cero huvo una disminucion en la cuenta
             $data[$i]["saldoAjuste_debito"] = 0;
             $data[$i]["saldoAjuste_credito"] = abs($totalAjuste);
-
+            
             $data[$i]["saldoAjustado_debito"] = $saldo - abs($totalAjuste); 
             $data[$i]["saldoAjustado_credito"] = 0;
           
             $data[$i]["er_debito"] = $saldo - abs($totalAjuste); 
             $data[$i]["er_credito"] = 0;
-          }        
+          
+            $data[$i]["bg_debito"] = 0;
+            $data[$i]["bg_credito"] = 0;
 
+          }        
+        
         } elseif ($cta->tipo == 2) {
           $totalAjuste= $totalAjusteCredito - $totalAjusteDebito; 
           if ($totalAjuste >= 0) {
@@ -437,17 +477,23 @@ class Hojat {
             $data[$i]["saldoAjustado_debito"] = 0;
             $data[$i]["saldoAjustado_credito"] = $saldo + $totalAjuste;           
           
+            $data[$i]["er_debito"] = 0;
+            $data[$i]["er_credito"] = 0;
+
             $data[$i]["bg_debito"] = 0;
             $data[$i]["bg_credito"] = $saldo + $totalAjuste; 
-
+          
           } elseif ($totalAjuste < 0) {
             // si es menor que cero huvo una disminucion en la cuenta
             $data[$i]["saldoAjuste_debito"] = abs($totalAjuste);
             $data[$i]["saldoAjuste_credito"] = 0;
-
+            
             $data[$i]["saldoAjustado_debito"] = 0; 
             $data[$i]["saldoAjustado_credito"] = $saldo - abs($totalAjuste);
           
+            $data[$i]["er_debito"] = 0;
+            $data[$i]["er_credito"] = 0;
+
             $data[$i]["bg_debito"] = 0; 
             $data[$i]["bg_credito"] = $saldo - abs($totalAjuste);
           }
@@ -462,6 +508,9 @@ class Hojat {
             $data[$i]["saldoAjustado_debito"] = 0;
             $data[$i]["saldoAjustado_credito"] = $saldo + $totalAjuste;           
             
+            $data[$i]["er_debito"] = 0;
+            $data[$i]["er_credito"] = 0;
+
             $data[$i]["bg_debito"] = 0;
             $data[$i]["bg_credito"] = $saldo + $totalAjuste;              
           
@@ -469,14 +518,17 @@ class Hojat {
             // si es menor que cero huvo una disminucion en la cuenta
             $data[$i]["saldoAjuste_debito"] = abs($totalAjuste);
             $data[$i]["saldoAjuste_credito"] = 0;
-
+            
             $data[$i]["saldoAjustado_debito"] = abs($saldo - abs($totalAjuste));
             $data[$i]["saldoAjustado_credito"] = 0; 
+            
+            $data[$i]["er_debito"] = 0;
+            $data[$i]["er_credito"] = 0;
 
             $data[$i]["bg_debito"] = abs($saldo - abs($totalAjuste));
             $data[$i]["bg_credito"] = 0;
           }
-
+        
         } elseif ($cta->tipo == 4) {
           $totalAjuste= $totalAjusteCredito - $totalAjusteDebito; 
           if ($totalAjuste >= 0) {
@@ -489,17 +541,23 @@ class Hojat {
           
             $data[$i]["er_debito"] = 0;
             $data[$i]["er_credito"] = $saldo + $totalAjuste;
+          
+            $data[$i]["bg_debito"] = 0;
+            $data[$i]["bg_credito"] = 0;
 
           } elseif ($totalAjuste < 0) {
             // si es menor que cero huvo una disminucion en la cuenta
             $data[$i]["saldoAjuste_debito"] = abs($totalAjuste);
             $data[$i]["saldoAjuste_credito"] = 0;
-
+            
             $data[$i]["saldoAjustado_debito"] = 0; 
             $data[$i]["saldoAjustado_credito"] = $saldo - abs($totalAjuste);
-
+            
             $data[$i]["er_debito"] = 0; 
             $data[$i]["er_credito"] = $saldo - abs($totalAjuste);
+          
+            $data[$i]["bg_debito"] = 0;
+            $data[$i]["bg_credito"] = 0;
           }
         }
       }
@@ -519,11 +577,9 @@ class Hojat {
     
     // procesa cada una de las unidades que tubieron Pagos anticipados en el periodo
     foreach ($uns as $un) {
-
       // encuentra las generales de la cuenta
       $cta= Catalogo::find(5);
       //dd($cta->toArray());
-
       // encuentra el codigo de la unidad
       $cod= Un::find($un->un_id)->codigo;
       
@@ -556,7 +612,6 @@ class Hojat {
       $data[$i]["saldoAjuste_credito"]= 0;
       $data[$i]["saldoAjustado_debito"]= 0;
       $data[$i]["saldoAjustado_credito"]= 0;
-
       // coloca el saldo de la cuenta sin ajustes
       $saldo= floatval($totalCredito)-floatval($totalDebito);
       $data[$i]["saldo_debito"]= 0;
@@ -564,10 +619,12 @@ class Hojat {
       
       $data[$i]["saldoAjustado_debito"]= 0;
       $data[$i]["saldoAjustado_credito"]= $saldo;
+      
+      $data[$i]["er_debito"] = 0;
+      $data[$i]["er_credito"] = 0;
 
       $data[$i]["bg_debito"]= 0;
       $data[$i]["bg_credito"]= $saldo;
-
       //=====================================================================================================
       //verifica si la cuenta en estudio tuvo ajustes
       //=====================================================================================================
@@ -606,24 +663,29 @@ class Hojat {
             $data[$i]["saldoAjustado_debito"] = 0;
             $data[$i]["saldoAjustado_credito"] = $saldo + $totalAjuste;           
           
+            $data[$i]["er_debito"] = 0;
+            $data[$i]["er_credito"] = 0;
+
             $data[$i]["bg_debito"] = 0;
             $data[$i]["bg_credito"]= $saldo + $totalAjuste; 
-
+          
           } elseif ($totalAjuste < 0) {
             // si es menor que cero huvo una disminucion en la cuenta
             $data[$i]["saldoAjuste_debito"] = abs($totalAjuste);
             $data[$i]["saldoAjuste_credito"] = 0;
-
+            
             $data[$i]["saldoAjustado_debito"] = 0; 
             $data[$i]["saldoAjustado_credito"] = $saldo - abs($totalAjuste);
           
+            $data[$i]["er_debito"] = 0;
+            $data[$i]["er_credito"] = 0;
+
             $data[$i]["bg_debito"] = 0; 
             $data[$i]["bg_credito"] = $saldo - abs($totalAjuste);
           }
       }
       $i++;  
     }    
-
     // ordena el arreglo por codigo de cuenta ascendente
     $data = array_values(array_sort($data, function ($value) {
         return $value['codigo'];

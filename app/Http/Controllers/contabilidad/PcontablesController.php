@@ -53,8 +53,8 @@ class PcontablesController extends Controller {
 	public function store()
 	{
 
-		//DB::beginTransaction();
-		//try {
+		DB::beginTransaction();
+		try {
 			//dd(Input::all());
 			$input = Input::all();
 			$rules = array(
@@ -113,11 +113,11 @@ class PcontablesController extends Controller {
 			}
 			return back()->withInput()->withErrors($validation);
 		
-		//} catch (\Exception $e) {
-			//DB::rollback();
-			//Session::flash('warning', ' Ocurrio un error en el modulo PcontablesController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-			//return back();
-		//}
+		} catch (\Exception $e) {
+			DB::rollback();
+			Session::flash('warning', ' Ocurrio un error en el modulo PcontablesController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+			return back();
+		}
 	} 
 
 } // end of class
