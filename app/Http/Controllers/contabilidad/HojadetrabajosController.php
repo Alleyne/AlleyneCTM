@@ -632,7 +632,7 @@ class HojadetrabajosController extends Controller {
 
     $saldoAjustado_debito = $datos->sum('saldoAjustado_debito');
     $saldoAjustado_credito = $datos->sum('saldoAjustado_credito');
-
+    //dd($saldoAjustado_debito - $saldoAjustado_credito);
     // verifica si el presente periodo admite ajustes, solo se permiten
     // hacer ajustes si se cumplen las siguientes condiciones:
     // 1. Si el periodo esta abierto
@@ -742,7 +742,7 @@ class HojadetrabajosController extends Controller {
     $datos = Ht::where('pcontable_id', $pcontable_id)->get();
     //dd($datos->toArray());
 
-    $utilidad= $datos->sum('er_credito') - $datos->sum('er_debito'); 
+    $utilidad = $datos->sum('er_credito') - $datos->sum('er_debito'); 
     //dd($utilidad);
 
     return \View::make('contabilidad.hojadetrabajos.htFinal')

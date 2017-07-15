@@ -61,7 +61,7 @@
               </address>
           </div>
           <div class="col-xs-3" align="right">
-              <img style="border-radius: 8px;" src="{{ asset(Cache::get('jdkey')->imagen_S) }}" class="img-responsive" alt="Responsive image">
+            <img style="width: 90px; border-radius: 4px;" src="{{ asset(Cache::get('jdkey')->imagen_M) }}" class="img-responsive" alt="Logo">
           </div>
       </div><!-- end row  -->
 

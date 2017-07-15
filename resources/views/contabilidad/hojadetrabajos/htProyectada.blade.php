@@ -74,17 +74,17 @@
 			  <p class="text-center" style="margin:0px">(en balboas)</p>
       </div>
       <div class="col-xs-1">
-        <img style="margin-top:10px; border-radius: 4px;" src="{{ asset(Cache::get('jdkey')->imagen_M) }}" class="img-responsive" alt="Responsive image">
+        <img style="margin-top:10px; border-radius: 4px;" src="{{ asset(Cache::get('jdkey')->imagen_M) }}" class="img-responsive" alt="Logo">
       </div>
     </div><!-- end row -->
 
     @if ((Cache::get('esAdminkey') || Cache::get('esContadorkey')) && Auth::user()->activated)
 			<div class="row hidden-print">
-				@if ($permitirAjustes=='Si')
+				@if ($permitirAjustes == 'Si')
 					<a href="{{ URL::route('createAjustes', $periodo->id) }}" class="btn btn-warning">Ajustar</a>
 				@endif	
 				
-				@if ($permitirCerrar=='Si')
+				@if ($permitirCerrar == 'Si')
 	        {{Form::open(array(
 	          'route' => array('cierraPeriodo',$periodo->id, $periodo->periodo, $periodo->fecha),
 	          'method' => 'GET',

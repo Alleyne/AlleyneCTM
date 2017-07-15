@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Session, Validator, Image, Cache, DB;
+use Session, Validator, Image, Cache, DB, File;
 use App\library\Sity;
 
 use App\Jd;
@@ -133,12 +133,11 @@ class BloquesController extends Controller {
 				$blqadmin->save();
 
 				// Actualiza la ruta de la imagen del Administrador
-				$img_path = Bloque::find($dato->id);
-				$img_path->imagen_L = "assets/img/bloques/bloq_L".$dato->id.".jpg";
-				$img_path->imagen_M = "assets/img/bloques/bloq-M".$dato->id.".jpg";
-				$img_path->imagen_S = "assets/img/bloques/bloq-S".$dato->id.".jpg";
-
-				$img_path->save();			
+				//$img_path = Bloque::find($dato->id);
+				//$img_path->imagen_L = "assets/img/bloques/bloq_L".$dato->id.".jpg";
+				//$img_path->imagen_M = "assets/img/bloques/bloq-M".$dato->id.".jpg";
+				//$img_path->imagen_S = "assets/img/bloques/bloq-S".$dato->id.".jpg";
+				//$img_path->save();			
 				
 	  		DB::commit();
 				
@@ -294,19 +293,19 @@ class BloquesController extends Controller {
   				//Sity::RegistrarEnBitacora($img_path, $input, 'Bloque', 'Actualiza imagen de bloque');	
 					$img_path->save();
 					
-					// crea imagen normal
-					// resize the image to a height of 300 and constrain aspect ratio (auto width)
+					// crea imagen normal y resize the image
 					$img = Image::make($img_path->imagen_L)->resize(900, 500);
+					File::delete($img_path->imagen_L);					
 					$img->save("assets/img/bloques/bloq-L".$id.".jpg");
 					
 					// crea thumpnail No 1
-					// resize the image to a height of 189 and constrain aspect ratio (auto width)
 					$img = Image::make($img_path->imagen_L)->resize(189, 189);
+					File::delete($img_path->imagen_M);					
 					$img->save("assets/img/bloques/bloq-M".$id.".jpg");
 
 					// crea thumpnail No 2 
-					// resize the image to a height of 90 and constrain aspect ratio (auto width)
 					$img = Image::make($img_path->imagen_L)->resize(90, 90);
+					File::delete($img_path->imagen_S);					
 					$img->save("assets/img/bloques/bloq-S".$id.".jpg");			
   			
 	  			DB::commit();

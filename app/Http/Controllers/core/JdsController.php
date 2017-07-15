@@ -3,8 +3,9 @@ namespace App\Http\Controllers\core;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Session, Validator,Image, DB;
+use Session, Validator,Image, DB, File;
 use App\library\Sity;
+use Carbon\Carbon;
 
 use App\Bitacora;
 use App\Jd;
@@ -96,9 +97,9 @@ class JdsController extends Controller {
 				$dato->save();	
 				
 				// Actualiza la ruta de la imagen del Administrador
-				$img_path = Jd::find($dato->id);
-				$img_path->imagen_L = "assets/img/jds/jd_".$dato->id.".jpg";
-				$img_path->save();			
+				//$img_path = Jd::find($dato->id);
+				//$img_path->imagen_L = "assets/img/jds/jd_".$dato->id.".jpg";
+				//$img_path->save();			
 
 				Sity::RegistrarEnBitacora($dato, Input::get(), 'Jd', 'Crea nueva Junta directiva');
 				Session::flash('success', 'La Junta directiva No. ' .$dato->nombre. ' ha sido creada con éxito.');
@@ -249,34 +250,34 @@ class JdsController extends Controller {
 		if ($validation->fails()) {
 			return back()->withInput()->withErrors($validation);
 		}
-
+		
 		$file = Input::file('file'); 
 		$destinationPath = "assets/img/jds";
 		$filename = "jd-L".$id.".jpg";
 
 		$uploadSuccess = Input::file('file')->move($destinationPath, $filename);
 		if( $uploadSuccess ) {
-			// Actualiza la ruta de la imagen del nuevo producto
+			// Actualiza la ruta de la imagen de la Junta directiva
 			$img_path = Jd::find($id);
 			$img_path->imagen_L = "assets/img/jds/jd-L".$id.".jpg";
 			$img_path->imagen_M = "assets/img/jds/jd-M".$id.".jpg";
 			$img_path->imagen_S = "assets/img/jds/jd-S".$id.".jpg";
 			$img_path->save();
 			
-			// crea imagen normal
-			// resize the image to a height of 300 and constrain aspect ratio (auto width)
+			// crea imagen normal y resize the image
 			$img = Image::make($img_path->imagen_L)->resize(900, 500);
+			File::delete($img_path->imagen_L);				
 			$img->save("assets/img/jds/jd-L".$id.".jpg");
 			
 			// crea thumpnail No 1
-			// resize the image to a height of 189 and constrain aspect ratio (auto width)
 			$img = Image::make($img_path->imagen_L)->resize(189, 189);
+			File::delete($img_path->imagen_M);			
 			$img->save("assets/img/jds/jd-M".$id.".jpg");
 
 			// crea thumpnail No 2 
-			// resize the image to a height of 90 and constrain aspect ratio (auto width)
 			$img = Image::make($img_path->imagen_L)->resize(105, 40);
-			$img->save("assets/img/jds/jd-S".$id.".jpg");			
+			File::delete($img_path->imagen_S);				
+			$img->save("assets/img/jds/jd-S".$id.".jpg");
 			
 			//Sity::RegistrarEnBitacora(2, 'jds', $id, $detalle);
 			

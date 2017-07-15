@@ -12,7 +12,7 @@
 				<!-- <h1 class="semi-bold"><img src="{{asset('assets/admin/img/logo-o.png')}}" alt="" /> Sityweb</h1> -->
 			</div>
 			<div>
-				<img src="{{asset(Auth::user()->imagen)}}" alt="" width="110" height="110" />
+				<img src="{{asset(Auth::user()->imagen_L)}}" alt="" width="110" height="110" />
 				<div>
 					<h2><i class="fa fa-user fa-2x text-muted air air-top-right hidden-mobile"></i>{{ Auth::user()->nombre_completo }} <small><i class="fa fa-unlock-o text-muted"></i> &nbsp;AUTORIZADO</small></h2>
 					<p class="text-muted">

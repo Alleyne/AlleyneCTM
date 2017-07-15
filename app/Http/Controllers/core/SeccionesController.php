@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Session, DB, Validator, Image;
+use Session, DB, Validator, Image, File;
 use Carbon\Carbon;
 
 use App\User;
@@ -193,9 +193,9 @@ class SeccionesController extends Controller {
 				$t1->save();			
 				
 				// Actualiza la ruta de la imagen de la Sección
-				$img_path = Seccione::find($dato->id);
-				$img_path->imagen_L = "assets/img/secciones/sec_L".$dato->id.".jpg";
-				$img_path->save();		
+				//$img_path = Seccione::find($dato->id);
+				//$img_path->imagen_L = "assets/img/secciones/sec_L".$dato->id.".jpg";
+				//$img_path->save();		
 
   			Sity::RegistrarEnBitacora($t1, Input::get(), 'Seccione', 'Crea detalle de seccion');
 				DB::commit();
@@ -387,19 +387,19 @@ class SeccionesController extends Controller {
   				//Sity::RegistrarEnBitacora($img_path, $input, 'Bloque', 'Actualiza imagen de bloque');	
 					$img_path->save();
 					
-					// crea imagen normal
-					// resize the image to a height of 300 and constrain aspect ratio (auto width)
+					// crea imagen normal y resize the image
 					$img = Image::make($img_path->imagen_L)->resize(900, 500);
+					File::delete($img_path->imagen_L);						
 					$img->save("assets/img/secciones/sec-L".$id.".jpg");
 					
 					// crea thumpnail No 1
-					// resize the image to a height of 189 and constrain aspect ratio (auto width)
 					$img = Image::make($img_path->imagen_L)->resize(189, 189);
+					File::delete($img_path->imagen_M);					
 					$img->save("assets/img/secciones/sec-M".$id.".jpg");
 
 					// crea thumpnail No 2 
-					// resize the image to a height of 90 and constrain aspect ratio (auto width)
 					$img = Image::make($img_path->imagen_L)->resize(90, 90);
+					File::delete($img_path->imagen_S);					
 					$img->save("assets/img/secciones/sec-S".$id.".jpg");			
   			
 	  			DB::commit();

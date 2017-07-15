@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
 use App\Hash;
-use Session, Validator,Image, DB;
+use Session, Validator,Image, DB, File;
 use Role;
 
 use App\User;
@@ -244,11 +244,11 @@ class UsersController extends Controller {
 	/*************************************************************************************
 	 * Sube una imagen a la carpeta de phadmins
 	 ************************************************************************************/	
-	public function subirImagen($id)
+	public function subirImagenUser($id)
 	{
 			
-		DB::beginTransaction();
-		try {
+		//DB::beginTransaction();
+		//try {
 			$input = Input::all();
 			$rules = array(
 				'file' => 'required|image|max:10000|mimes:jpeg,jpg,gif,png,bmp'
@@ -268,37 +268,37 @@ class UsersController extends Controller {
 			}
 
 			$file = Input::file('file'); 
-			$destinationPath = "assets/img/phadmins";
-			$filename = "adm-L_".$id.".jpg";
+			$destinationPath = "assets/img/users";
+			$filename = "user-L_".$id.".jpg";
 
 			$uploadSuccess = Input::file('file')->move($destinationPath, $filename);
 			if( $uploadSuccess ) {
 				// Actualiza la ruta de la imagen del nuevo producto
 				$img_path = User::find($id);
-				$img_path->imagen_L = "assets/img/phadmins/adm-L_".$id.".jpg";
-				$img_path->imagen_M = "assets/img/phadmins/adm-M_".$id.".jpg";
-				$img_path->imagen_S = "assets/img/phadmins/adm-S_".$id.".jpg";
+				$img_path->imagen_L = "assets/img/users/user-L_".$id.".jpg";
+				$img_path->imagen_M = "assets/img/users/user-M_".$id.".jpg";
+				$img_path->imagen_S = "assets/img/users/user-S_".$id.".jpg";
 				$img_path->save();
 				
-				// crea imagen normal
-				// resize the image to a height of 300 and constrain aspect ratio (auto width)
-				$img = Image::make($img_path->imagen_L)->resize(null, 500, true);
-				$img->save("assets/img/phadmins/adm-L_".$id.".jpg");
+				// crea imagen normal resize the image
+				$img = Image::make($img_path->imagen_L)->resize(900, 500);
+				File::delete($img_path->imagen_L);					
+				$img->save("assets/img/users/user-L_".$id.".jpg");
 				
 				// crea thumpnail No 1
-				// resize the image to a height of 189 and constrain aspect ratio (auto width)
-				$img = Image::make($img_path->imagen_L)->resize(189, null, true);
-				$img->save("assets/img/phadmins/adm-M_".$id.".jpg");
+				$img = Image::make($img_path->imagen_L)->resize(189, 189);
+				File::delete($img_path->imagen_M);				
+				$img->save("assets/img/users/user-M_".$id.".jpg");
 
 				// crea thumpnail No 2 
-				// resize the image to a height of 90 and constrain aspect ratio (auto width)
-				$img = Image::make($img_path->imagen_L)->resize(null, 90, true);
-				$img->save("assets/img/phadmins/adm-S_".$id.".jpg");			
+				$img = Image::make($img_path->imagen_L)->resize(90, 90);
+				File::delete($img_path->imagen_S);				
+				$img->save("assets/img/users/user-S_".$id.".jpg");			
 				
 				// Registra en bitacoras
-				$detalle =	'Usuario cambió la imagen del producto';       
+				//$detalle =	'Usuario cambió la imagen del producto';       
 				
-				Sity::RegistrarEnBitacora(2, 'users', $id, $detalle);
+				//Sity::RegistrarEnBitacora(2, 'users', $id, $detalle);
 				DB::commit();
 				
 				Session::flash('success', 'La imagen se actualizó con éxito.');
@@ -309,11 +309,11 @@ class UsersController extends Controller {
 				return back()->withInput();
 			}
 
-		} catch (\Exception $e) {
-			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en UnsController.subirImagen, la transaccion ha sido cancelada!');
-			return back()->withInput();
-		}
+		//} catch (\Exception $e) {
+			//DB::rollback();
+			//Session::flash('warning', ' Ocurrio un error en UnsController.subirImagen, la transaccion ha sido cancelada!');
+			//return back()->withInput();
+		//}
 	}
 
 }

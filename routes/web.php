@@ -82,7 +82,7 @@ Route::group(['namespace' => 'core'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador UsersController
 	//---------------------------------------------------------// 	
- 	Route::post('subirImagenUser/{user_id}', 'BloquesController@subirImagenUser')->name('subirImagenUser');
+ 	Route::post('subirImagenUser/{user_id}', 'UsersController@subirImagenUser')->name('subirImagenUser');
 	Route::resource('users', 'UsersController');
 
 	//---------------------------------------------------------//
