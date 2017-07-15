@@ -29,26 +29,38 @@
             </li>
             <!-- End Articulos -->
             @if (Auth::check())
-                </li>
-                <!-- End Reservaciones -->
-
+                @if (Cache::get('esPropietariokey') && Auth::user()->activated)
+                    <!-- Reportes -->
+                    <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Reportes</a>
+                        <ul class="dropdown-menu">  
+                            @foreach (Auth::user()->props as $un)
+                                <li><a href="{{ URL::route('ecuentas', array($un->un_id, 'frontend')) }}">Estado de cuentas {{ $un->un->codigo }}</a></li>
+                                <li><a href="{{ URL::route('indexPagosfrontend', array($un->un_id, $un->un->codigo)) }}">Recibos {{ $un->un->codigo }}</a></li>                                
+                            @endforeach
+                        </ul>            
+                    </li>                              
+                    <!-- End Reportes -->
+                    
+                    <!-- Gerencia -->
+                    <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Gerencia</a>
+                        <ul class="dropdown-menu">  
+                            <li><a href="{{ URL::route('indexPeriodosfrontend') }}">Periodos contables</a></li>
+                            <li><a href="{{ URL::route('eventCalendar') }}">Reservaciones</a></li>    
+                            <li><a href="{{ URL::route('vigente') }}">Graficas periodo vigente</a></li>                                
+                            <li><a href="{{ URL::route('historico') }}">Graficas historico</a></li>   
+                        </ul>   
+                    </li>
+                    <!-- End Gerencia -->                    
+                @endif
             @endif
-            
-            <!-- Junta Directiva -->
-            <li class="dropdown">
-                <a href="{{ URL::route('directivos') }}" class="dropdown-toggle">
-                    Directivos
-                </a>
+            <!-- Directiva -->            
+            <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Directiva</a>
+                <ul class="dropdown-menu">  
+                    <li><a href="{{ URL::route('directivos') }}">Junta Directiva</a></li>
+                    <li><a href="{{ URL::route('reglamento') }}">Reglamentos</a></li>                                
+                    <li><a href="{{ URL::route('contact') }}">Contactar</a></li>
+                </ul>   
             </li>
-            <!-- End Junta Directiva -->
-
-            <!-- Contactar -->
-            <li class="dropdown">
-                <a href="{{ URL::route('contact') }}" class="dropdown-toggle">
-                    Contactar
-                </a>
-            </li>                    
-            <!-- End Contactar -->
             <!-- End Directiva -->
 
             <!-- Search Block -->
