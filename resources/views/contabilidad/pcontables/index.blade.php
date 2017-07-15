@@ -72,13 +72,13 @@
 												<td col width="70px" align="left"><strong>{{ $dato->periodo }}</strong></td>
 												<td col width="70px" align="left">{{ $dato->f_cierre }}</td>
 												<td col width="30px" align="center">{{ $dato->cerrado ? 'Si' : 'No' }}</td>
-												<td col width="315px" align="right">
+												<td col width="275px" align="right">
 													<ul class="demo-btns">
 														@if ( $dato->cerrado == 0 )
 															<li>
 																<div class="btn-group">
 																	<button class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">
-																		<span class="glyphicon glyphicon-usd"></span> Manejo del efectivo <span class="caret"></span>
+																		<span class="glyphicon glyphicon-usd"></span> Maneja efectivo <span class="caret"></span>
 																	</button>
 																	<ul class="dropdown-menu">
 																		<li>
@@ -92,29 +92,29 @@
 																</div>
 															</li>	
 															<li>
-																<a href="{{ URL::route('hjProyectada', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-search"></i> HT</a>
+																<a href="{{ URL::route('htProyectada', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-unlock-o"></i> HT</a>
 															</li>	
 															<li>
-																<a href="{{ URL::route('ctdiarios.show', $dato->id) }}" class="btn bg-color-green txt-color-white btn-xs"><i class="fa fa-search"></i> Diario</a>
+																<a href="{{ URL::route('ctdiarios.show', $dato->id) }}" class="btn bg-color-green txt-color-white btn-xs"><i class="fa fa-unlock-o"></i> Diario</a>
 															</li>
 															<li>
-																<a href="{{ URL::route('estadoderesultado', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> ER Proyectado</a>
+																<a href="{{ URL::route('estadoderesultado', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-unlock-o"></i> ER</a>
 															</li>				
 															<li>
-																<a href="{{ URL::route('balancegeneral', array($dato->id, $dato->periodo)) }}" class="btn btn-warning btn-xs"><i class="fa fa-search"></i> BG Proyectado</a>
+																<a href="{{ URL::route('balancegeneral', array($dato->id, $dato->periodo)) }}" class="btn btn-warning btn-xs"><i class="fa fa-unlock-o"></i> BG</a>
 															</li>
 														@else
 															<li>
-																<a href="{{ URL::route('hojadetrabajo', $dato->id) }}" class="btn btn-default txt-color-purple btn-xs"><i class="glyphicon glyphicon-lock"></i> HT</a>
+																<a href="{{ URL::route('htFinal', $dato->id) }}" class="btn btn-default txt-color-purple btn-xs"><i class="fa fa-lock"></i> HT</a>
 															</li>	
 															<li>
-																<a href="{{ URL::route('diarioFinal', $dato->id) }}" class="btn btn-default txt-color-green btn-xs"><i class="glyphicon glyphicon-lock"></i> Diario</a>
+																<a href="{{ URL::route('diarioFinal', $dato->id) }}" class="btn btn-default txt-color-green btn-xs"><i class="fa fa-lock"></i> Diario</a>
 															</li>
 															<li>
-																<a href="{{ URL::route('er', $dato->id) }}" class="btn btn-default txt-color-blue btn-xs"><i class="glyphicon glyphicon-lock"></i> ER Final</a>
+																<a href="{{ URL::route('er', $dato->id) }}" class="btn btn-default txt-color-blue btn-xs"><i class="fa fa-lock"></i> ER Final</a>
 															</li>				
 															<li>
-																<a href="{{ URL::route('bg', $dato->id) }}" class="btn btn-default txt-color-yellow btn-xs"><i class="glyphicon glyphicon-lock"></i> BG Final</a>
+																<a href="{{ URL::route('bg', $dato->id) }}" class="btn btn-default txt-color-yellow btn-xs"><i class="fa fa-lock"></i> BG Final</a>
 															</li>
 														@endif															
 													</ul>

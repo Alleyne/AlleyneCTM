@@ -22,10 +22,10 @@
           <a href="javascript:void(0);" id="show-shortcut">
             @if (Auth::check())
               <img src="{{asset(Auth::user()->imagen)}}" alt="me" class="online"> 
-              <span><a href="#" class="navbar-link"> {{Cache::get('userFullNamekey')}}</a></span> 
-                @else
-                    <span>Invitado</span>
-                @endif 
+              <span><a href="#" class="navbar-link"> {{ Auth::user()->username }}</a></span> 
+            @else
+                <span>Invitado</span>
+            @endif 
           </a> 
         </span>
       </div>

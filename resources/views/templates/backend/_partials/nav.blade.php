@@ -119,28 +119,11 @@
 
 @elseif (Cache::get('esJuntaDirectivakey'))
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Juntas Directivas</span></a>
-		<ul>
-			<li>
-			<a href="{{ URL::route('jds.index') }}" ><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Ver Juntas</span></a>  
-			</li>
-			<li>
-				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Periodos</span></a>
-			</li>
-		</ul>
-	</li>		
-	
+		<a href="{{ URL::route('jds.index') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Junta Directiva</span></a>
+	</li>	
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
-		<ul>
-			<li>
-				<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Ver Bloques</span></a>
-			</li>
-			<li>
-				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Blqadmins</span></a>
-			</li>
-		</ul>
-	</li>
+		<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
+	</li>	
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Contabilidad</span></a>
 		<ul>
@@ -180,16 +163,8 @@
 
 @elseif (Cache::get('esAdministradorkey'))
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
-		<ul>
-			<li>
-				<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Ver Bloques</span></a>
-			</li>
-			<li>
-				<a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Blqadmins</span></a>
-			</li>
-		</ul>
-	</li>
+		<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
+	</li>	
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Ingresos</span></a>
 		<ul>
@@ -264,13 +239,8 @@
 
 @elseif (Cache::get('esContadorkey'))
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
-		<ul>
-			<li>
-				<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent">Ver Bloques</span></a>
-			</li>
-		</ul>
-	</li>
+		<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
+	</li>	
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Contabilidad</span></a>
 		<ul>

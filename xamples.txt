@@ -2717,3 +2717,14 @@ Work::with(
    ************************************************************************************/
     $str = "The quick brown fox jumps over the lazy dog."
     $str2 = substr($str, 4); // "quick brown fox jumps over the lazy dog."
+
+
+  /*************************************************************************************
+   * trait AuthenticatesUsers Lugar apropiado para determinar el role o roles del usuario logueado
+   ************************************************************************************/
+    use Log;
+
+    protected function authenticated(Request $request, $user)
+    {
+        //Log::info(Auth::user()->roles);
+    }

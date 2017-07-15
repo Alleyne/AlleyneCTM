@@ -47,7 +47,7 @@
                         </div>
 
                         <div class="col-xs-3" align="right">
-                            <img style="border-radius: 3px;" src="{{ asset(Cache::get('jdkey')->imagen_S) }}" class="img-responsive" alt="Responsive image">
+                            <img style="margin-top: 10px; border-radius: 3px;" src="{{ asset(Cache::get('jdkey')->imagen_S) }}" class="img-responsive" alt="Responsive image">
                         </div>
                     </div><!-- end row -->
 

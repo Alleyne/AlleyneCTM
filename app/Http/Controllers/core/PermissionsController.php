@@ -3,7 +3,7 @@ namespace App\Http\Controllers\core;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Grupo, DB, Session;
+use DB, Session;
 use App\library\Sity;
 
 use App\Permission;
@@ -178,7 +178,7 @@ class PermissionsController extends Controller
 			//dd($permissions->toArray());
 			
 			if(!empty($permissions)) {
-				Session::flash('success', 'El permiso ' .$dato->name. ' no puede ser borrado porque esta asignadoa a uno mas roles.');
+				Session::flash('warning', 'El permiso ' .$dato->name. ' no puede ser borrado porque esta asignadoa a uno mas roles.');
 				return redirect()->route('permissions.index');	
 			}
 			

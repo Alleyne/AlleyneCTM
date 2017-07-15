@@ -97,7 +97,7 @@
         <div class="shadow-wrapper">
             <blockquote class="hero box-shadow shadow-effect-2">
                 <p><em>"Lorem ipsum dolor sit amet, consectetur adipiscing duis mollis, est non commodo luctus elit posuere erat a ante. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis lorem ipsum dolor sit amet, consectetur adipiscing"</em></p>
-                <small><em>Etiam porta sem malesuada</em></small>
+                <small><em>Junta Directiva del Ph Woodland</em></small>
             </blockquote>
         </div>
 

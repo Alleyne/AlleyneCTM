@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Session, Grupo, Validator, Image, URL, Cache, DB;
+use Session, Validator, Image, URL, Cache, DB;
 
 use App\Jd;
 use App\Bloque;

@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Session, Validator, Image, Cache, DB;
 use App\library\Sity;
-use App\Http\Helpers\Grupo;
 
 use App\Jd;
 use App\Bitacora;

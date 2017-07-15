@@ -3,10 +3,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Session, DB;
+use Session, DB, Validator;
 use App\library\Sity;
-use App\Http\Helpers\Grupo;
-use Validator;
 
 use App\Org;
 use App\Factura;

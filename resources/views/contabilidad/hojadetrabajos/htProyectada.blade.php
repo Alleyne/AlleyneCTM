@@ -55,49 +55,64 @@
 		    vertical-align: top;
 		    border-top: 0px solid #ddd;
 		}
+		
+  	.rojo {
+  		color:#FF0000;
+  	}
+
 	</style>
 </head>
 
 <body style="font-size:13px;"">
 	<div class="container" style="width:14in; background-color:white";>
-	  <h4 class="text-center">{{ Cache::get('jdkey')->nombre }}</h4>
-	  <p class="text-center" style="margin:0px">HOJA DE TRABAJO PROYECTADA</p>
-	  <p class="text-center" style="margin:0px">Periodo contable del mes de {{ $periodo->periodo }}</p>
-	  <p class="text-center" style="margin:0px">(en balboas)</p>
 
-		@if (Cache::get('esAdminkey') || Cache::get('esContadorkey'))
-			@if ($permitirAjustes=='Si')
-				<a href="{{ URL::route('createAjustes', $periodo->id) }}" class="btn btn-warning">Ajustar</a>
-			@endif	
-			
-			@if ($permitirCerrar=='Si')
-        {{Form::open(array(
-          'route' => array('cierraPeriodo',$periodo->id, $periodo->periodo, $periodo->fecha),
-          'method' => 'GET',
-          'style' => 'display:inline'
-        ))}}
-        
-        {{Form::button('Cerrar periodo', array(
-          'class' => 'btn btn-danger',
-          'data-toggle' => 'modal',
-          'data-target' => '#confirmAction',
-          'data-title' => 'Cerrar periodo contable',
-          'data-message' => 'Esta seguro(a) que desea cerrar el presente periodo contable?',
-          'data-btntxt' => 'SI, cerrar periodo contable',
-          'data-btncolor' => 'btn-danger'
-        ))}}
-        {{Form::close()}}                                                    
-			@endif	
-		@endif
+    <div class="row"><!-- row -->
+      <div class="col-xs-11">
+			  <h4 class="text-center">{{ Cache::get('jdkey')->nombre }}</h4>
+			  <p class="text-center" style="margin:0px">HOJA DE TRABAJO PROYECTADA</p>
+			  <p class="text-center" style="margin:0px">Periodo contable del mes de {{ $periodo->periodo }}</p>
+			  <p class="text-center" style="margin:0px">(en balboas)</p>
+      </div>
+      <div class="col-xs-1">
+        <img style="margin-top:10px; border-radius: 4px;" src="{{ asset(Cache::get('jdkey')->imagen_M) }}" class="img-responsive" alt="Responsive image">
+      </div>
+    </div><!-- end row -->
 
-		<span>
-			@if ($total_ba_debito == $total_ba_credito) 
-				<i style="color:green" class="glyphicon glyphicon-ok"></i> 
-			@else
-				<i style="color:red" class="glyphicon glyphicon-remove"></i>
-			@endif	
-		</span>
+    @if ((Cache::get('esAdminkey') || Cache::get('esContadorkey')) && Auth::user()->activated)
+			<div class="row hidden-print">
+				@if ($permitirAjustes=='Si')
+					<a href="{{ URL::route('createAjustes', $periodo->id) }}" class="btn btn-warning">Ajustar</a>
+				@endif	
+				
+				@if ($permitirCerrar=='Si')
+	        {{Form::open(array(
+	          'route' => array('cierraPeriodo',$periodo->id, $periodo->periodo, $periodo->fecha),
+	          'method' => 'GET',
+	          'style' => 'display:inline'
+	        ))}}
+	        
+	        {{Form::button('Cerrar periodo', array(
+	          'class' => 'btn btn-danger',
+	          'data-toggle' => 'modal',
+	          'data-target' => '#confirmAction',
+	          'data-title' => 'Cerrar periodo contable',
+	          'data-message' => 'Esta seguro(a) que desea cerrar el presente periodo contable?',
+	          'data-btntxt' => 'SI, cerrar periodo contable',
+	          'data-btncolor' => 'btn-danger'
+	        ))}}
+	        {{Form::close()}}                                                    
+				@endif	
 
+				<span>
+					@if ($total_ba_debito == $total_ba_credito) 
+						<i style="color:green" class="glyphicon glyphicon-ok"></i> 
+					@else
+						<i style="color:red" class="glyphicon glyphicon-remove"></i>
+					@endif	
+				</span>
+			</div>
+		@endif		
+		
 		<table class="table table-hove table-hover">
 		  <thead>
 			  <tr>
@@ -125,6 +140,7 @@
 			   <th class="text-center borde celBg-gray">Credito</th> 
 			  </tr>
 		  </thead> 
+		  
 		  <tbody> 
 				@foreach ($datos as $dato)		   
 				  <tr> 
@@ -132,63 +148,43 @@
 						<td>{{ $dato['cta_nombre'] }}</td>
 					
 						<td class="text-right celBg-yellow borde">
-							@if ($dato['saldo_debito'] != "0.00")
-							  {{ $dato['saldo_debito'] }} 
-							@endif
+							{{ $dato['saldo_debito'] == '0.00' ? '' : number_format($dato['saldo_debito'],2) }}
 						</td>
 						
 						<td class="text-right celBg-yellow borde">
-							@if ($dato['saldo_credito'] != "0.00")
-								{{ $dato['saldo_credito'] }}
-							@endif
+							{{ $dato['saldo_credito'] == '0.00' ? '' : number_format($dato['saldo_credito'],2) }}
 						</td>
 
 						<td class="text-right celBg-red borde">
-							@if ($dato['saldoAjuste_debito'] != "0.00")
-								{{ $dato['saldoAjuste_debito'] }}
-							@endif
+							{{ $dato['saldoAjuste_debito'] == '0.00' ? '' : number_format($dato['saldoAjuste_debito'],2) }}
 						</td>
 						
 						<td class="text-right celBg-red borde">
-							@if ($dato['saldoAjuste_credito'] != "0.00")
-								{{ $dato['saldoAjuste_credito'] }}
-							@endif
+							{{ $dato['saldoAjuste_credito'] == '0.00' ? '' : number_format($dato['saldoAjuste_credito'],2) }}
 						</td>
 
 						<td class="text-right celBg-green borde">
-							@if ($dato['saldoAjustado_debito'] != "0.00")
-								{{ $dato['saldoAjustado_debito'] }}
-							@endif
+							{{ $dato['saldoAjustado_debito'] == '0.00' ? '' : number_format($dato['saldoAjustado_debito'],2) }}
 						</td>
 					    
 						<td class="text-right celBg-green borde">
-							@if ($dato['saldoAjustado_credito'] != "0.00")
-								{{ $dato['saldoAjustado_credito'] }}
-							@endif
+							{{ $dato['saldoAjustado_credito'] == '0.00' ? '' : number_format($dato['saldoAjustado_credito'],2) }}
 						</td>
 					    
 						<td class="text-right celBg-blue borde">
-							@if ($dato['er_debito'] != "0.00")
-								{{ $dato['er_debito'] }}
-							@endif
+							{{ $dato['er_debito'] == '0.00' ? '' : number_format($dato['er_debito'],2) }}
 						</td>
 					    
 						<td class="text-right celBg-blue borde">
-							@if ($dato['er_credito'] != "0.00")
-								{{ $dato['er_credito'] }}
-							@endif
+							{{ $dato['er_credito'] == '0.00' ? '' : number_format($dato['er_credito'],2) }}
 						</td>
 		                
 						<td class="text-right celBg-cian borde">
-							@if ($dato['bg_debito'] != "0.00")
-								{{ $dato['bg_debito'] }}
-							@endif
+							{{ $dato['bg_debito'] == '0.00' ? '' : number_format($dato['bg_debito'],2) }}
 						</td>
 					    
 						<td class="text-right celBg-cian borde">
-							@if ($dato['bg_credito'] != "0.00")
-								{{ $dato['bg_credito'] }}
-							@endif
+							{{ $dato['bg_credito'] == '0.00' ? '' : number_format($dato['bg_credito'],2) }}
 						</td>
 					</tr>
 				@endforeach
@@ -217,21 +213,21 @@
 					<td></td> 
 					<td></td> 
 					<td></td> 
-					
+
 					@if ($utilidad > 0)
-						<th class="text-right"><strong>{{ number_format($utilidad,2) }}</strong></td> 
-						<th class="text-right"><strong>&nbsp;</strong></td> 
+						<td class="text-right"><strong>{{ number_format($utilidad,2) }}</strong></td> 
+						<td class="text-right">&nbsp;</td> 
 					@else
-						<th class="text-right"><strong>&nbsp;</strong></td> 
-						<th class="text-right"><strong>{{ number_format(abs($utilidad),2) }}</strong></td> 
+						<td class="text-right">&nbsp;</td> 
+						<td class="text-right rojo"><strong>{{ number_format(abs($utilidad),2) }}</strong></td> 
 					@endif
 					
 					@if ($utilidad > 0)
-						<th class="text-right"><strong>&nbsp;</strong></td> 
-						<th class="text-right"><strong>{{ number_format($utilidad,2) }}</strong></td> 
+						<td class="text-right">&nbsp;</td> 
+						<td class="text-right"><strong>{{ number_format($utilidad,2) }}</strong></td> 
 					@else
-						<th class="text-right"><strong>{{ number_format(abs($utilidad),2) }}</strong></td> 
-						<th class="text-right"><strong>&nbsp;</strong></td> 
+						<td class="text-right rojo"><strong>{{ number_format(abs($utilidad),2) }}</strong></td> 
+						<td class="text-right">&nbsp;</td> 
 					@endif 
 				</tr>	
 				

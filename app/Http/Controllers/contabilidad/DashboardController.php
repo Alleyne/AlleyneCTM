@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\contabilidad;
 use App\Http\Controllers\Controller;
 use App\library\Graph;
-use App\library\Grupo;
 use Carbon\Carbon;
+use Cache;
 
 use App\Ctdasm;
 use App\Pcontable;
@@ -174,7 +174,7 @@ class DashboardController extends Controller
                   'totalGastos' => $totalGastos                                  
                  ];
     
-    if (Grupo::esPropietario() ) {
+    if (Cache::get('esPropietariokey')) {
       return view('contabilidad.dashboard.historicoFrontend', $viewData); 
     
     } else {
@@ -333,7 +333,7 @@ class DashboardController extends Controller
                 'gastos' => $gastos
               ]; 
   
-    if (Grupo::esPropietario() ) {
+    if (Cache::get('esPropietariokey')) {
       return view('contabilidad.dashboard.vigenteFrontend', $viewData); 
     
     } else {

@@ -30,8 +30,6 @@ class hasAccess {
       
       // encuentra todos los roles del usuario logueado
       $roles= User::find(Auth::user()->id)->roles;
-      //dd(Cache::get('userRoleskey')->toArray());
-      //$roles = Cache::get('userRoleskey');
       
       // si el usuario no tiene ningun role
       if(empty($roles)) {

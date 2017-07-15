@@ -82,4 +82,8 @@ class PagesController extends Controller {
 			return redirect('frontend');
 		}
 	} // end function
+
+	public function reglamento() {
+		return view('blog.pages.reglamento');
+	}
 }

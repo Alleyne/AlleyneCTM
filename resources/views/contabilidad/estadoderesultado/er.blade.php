@@ -53,7 +53,7 @@
 			<div>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				  <tr>
-					<td width="14%"> <img src="{{asset('assets/backend/img/ctmaster_logo.png') }}" width=70 height=70 alt="Responsive image"></td>
+					<td width="14%"> <img src="{{ asset(Cache::get('jdkey')->imagen_M) }}" width=70 height=70 alt="Responsive image"></td>
 					<td width="66%">
 						<div class="encabezado-principal">
 							<label>MONAGRE CORP. S.A.</label><br>

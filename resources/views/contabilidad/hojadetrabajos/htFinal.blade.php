@@ -1,236 +1,245 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<title>Hoja de trabajo</title>
-    <style type="text/css">
-		@page { margin: 0px; }
-		html { margin: 0px}
-		
-		body {
-			margin: 0px;
-			font-family: Arial, Helvetica, sans-serif;
+  <title>Hoja de trabajo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+	<style type="text/css">
+		.borde {
+			border: 1px; 
+			border-style: solid; 
+			border-color: #bfbfc8;
 		}
 		
-		.contenedor-principal {
-			height: 8.5in;
-			width: 14in;
-			padding: 0.25in;
-			margin-right: auto;
-			margin-left: auto;
+		.celBg-green {
+		  background-color: rgba(0, 255, 0, 0.14);
+		}
+
+		.celBg-red {
+		  background-color: rgba(255, 0, 24, 0.08);
+		}
+
+		.celBg-yellow {
+		    background-color: rgba(233, 233, 157, 0.21);
+		}
+
+		.celBg-blue {
+		    background-color: rgba(12, 41, 249, 0.11);
 		}
 		
-		.contenedor {
-			font-family: Arial, Helvetica, sans-serif;
-			font-size: 10px;
-			font-style: normal;
-			line-height: normal;
-			font-weight: normal;
-			height: 100%;
-			width: 100%;
-		}
-		
-		.encabezado-principal {
-			font-size: 16px;
-			font-style: normal;
-			font-weight: bold;
-			color: #000000;
-			text-align: center;
-			height: auto;
-			line-height: 18px;
+		.celBg-cian {
+		    background-color: rgba(0, 244, 255, 0.14);
+		}	
+
+		.celBg-gray {
+		    background-color: #bfbfc8;
 		}
 
 		p.mix {
-			border-style: solid hidden double hidden;
-			font-weight:bold,
-		}
-
-		p.lineup {
-			border-style: solid hidden hidden hidden;
-			font-weight:bold,
+		    border-style: solid hidden double hidden;
+		    font-weight: bold;
 		}
 		
-		p.linedown {
-			border-style: hidden hidden hidden solid;
-			font-weight:bold,
+		p.lineup {
+		    border-style: solid hidden hidden hidden;
+		    font-weight: bold;
 		}
-    
-		p.doublelinedown {
-			border-style: hidden hidden double hidden;
-			font-weight:bold,
+		
+		.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+		    padding: 2px;
+		    line-height: 1.4;
+		    vertical-align: top;
+		    border-top: 0px solid #ddd;
 		}
-    	
-    	.rojo {
-    		color:#FF0000;
-    	}
-    </style>
+		
+  	.rojo {
+  		color:#FF0000;
+  	}
+	</style>
 </head>
-<body>
-	<div class="contenedor-principal">	 
-		<div class="contenedor">		
-			<div>
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				  <tr>
-					<td width="14%"> <img src="{{asset('assets/backend/img/ctmaster_logo.png') }}" width=70 height=70 alt="Responsive image"></td>
-					<td width="69%">
-						<div class="encabezado-principal">
-							<label>MONAGRE CORP. S.A.</label><br>
-							<label>HOJA DE TRABAJO</label><br>
-							<label>Periodo contable del mes de {{ $periodo }}</label>
-					</div>					</td>
-					<td width="17%"><div align="center" class="Estilo1 Estilo2"></div></td>
-				  </tr>
-				</table>
-			</div>
-			<br />	
-			<div>
-				<table width="100%" border="0" cellspacing="1" cellpadding="0">
-					<tr bgcolor="#999999">
-						<th  bgcolor="#FFFFFF" colspan="2" scope="col">&nbsp;</th>
-						<th colspan="2" bgcolor="#CCCCCC" scope="col">Balance de Pruebas</th>
-						<th colspan="2" bgcolor="#CCCCCC" scope="col">Ajustes</th>
-						<th colspan="2" bgcolor="#CCCCCC" scope="col">Balance Ajustado</th>
-						<th colspan="2" bgcolor="#CCCCCC" scope="col">Estado de Resultado</th>
-						<th colspan="2" bgcolor="#CCCCCC" scope="col">Balance General</th>
-					</tr>
-					<tr bgcolor="#999999">
-						<th width="5%" bgcolor="#CCCCCC" scope="col">C&oacute;digo</th>
-						<th width="32%"  align="left" bgcolor="#CCCCCC" scope="col">Cuenta</th>
-						<th width="5.5%" bgcolor="#CCCCCC" scope="col">D&eacute;bito</th>
-						<th width="5.5%" bgcolor="#CCCCCC" scope="col">Cr&eacute;dito</th>
-						<th width="5.5%" bgcolor="#CCCCCC" scope="col">D&eacute;bito</th>
-						<th width="5.5%" bgcolor="#CCCCCC" scope="col">Cr&eacute;dito</th>
-						<th width="5.5%" bgcolor="#CCCCCC" scope="col">D&eacute;bito</th>
-					    <th width="5.5%" bgcolor="#CCCCCC" scope="col">Cr&eacute;dito</th>
-						<th width="5.5%" bgcolor="#CCCCCC" scope="col">D&eacute;bito</th>
-						<th width="5.5%" bgcolor="#CCCCCC" scope="col">Cr&eacute;dito</th>
-						<th width="5.5%" bgcolor="#CCCCCC" scope="col">D&eacute;bito</th>
-					    <th width="5.5%" bgcolor="#CCCCCC" scope="col">Cr&eacute;dito</th>
-					</tr>
 
-					@foreach ($datos as $dato)
-						<tr align="right">
-							<td align="left">{{ $dato->codigo }}</td>
-							<td align="left">{{ $dato->nombre }}</td>
-							<td>@if ($dato->bp_debito!="0.00") {{ $dato->bp_debito }} 
-								@endif
-							</td>
-							
-							<td>@if ($dato->bp_credito!="0.00")
-									{{ $dato->bp_credito }}
-								@endif
-							</td>
+<body style="font-size:13px;"">
+	<div class="container" style="width:14in; background-color:white";>
 
-							<td>@if ($dato->aj_debito!="0.00")
-									{{ $dato->aj_debito }}
-								@endif
-							</td>
-							
-							<td>@if ($dato->aj_credito!="0.00")
-									{{ $dato->aj_credito }}
-								@endif
-							</td>
-
-							<td>@if ($dato->ba_debito!="0.00")
-									{{ $dato->ba_debito }}
-								@endif
-							</td>
-						    
-							<td>@if ($dato->ba_credito!="0.00")
-									{{ $dato->ba_credito }}
-								@endif
-							</td>
-						    
-							<td>@if ($dato->er_debito!="0.00")
-									{{ $dato->er_debito }}
-								@endif
-							</td>
-						    
-							<td>@if ($dato->er_credito!="0.00")
-									{{ $dato->er_credito }}
-								@endif
-							</td>
-			                
-							<td>@if ($dato->bg_debito!="0.00")
-									{{ $dato->bg_debito }}
-								@endif
-							</td>
-						    
-							<td>@if ($dato->bg_credito!="0.00")
-									{{ $dato->bg_credito }}
-								@endif
-							</td>
-						</tr>
-					@endforeach
-
-					<tr align="right">
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td><p class="mix">{{ number_format($total_bp_debito,2) }}</p></td>
-						<td><p class="mix">{{ number_format($total_bp_credito,2) }}</p></td>
-						<td><p class="mix">{{ number_format($total_aj_debito,2) }}</p></td>
-						<td><p class="mix">{{ number_format($total_aj_credito,2) }}</p></td>
-						<td><p class="mix">{{ number_format($total_ba_debito,2) }}</p></td>
-						<td><p class="mix">{{ number_format($total_ba_credito,2) }}</p></td>
-						<td><p class="lineup">{{ number_format($total_er_debito,2) }}</p></td>
-						<td><p class="lineup">{{ number_format($total_er_credito,2) }}</p></td>
-						<td><p class="lineup">{{ number_format($total_bg_debito,2) }}</p></td>
-						<td><p class="lineup">{{ number_format($total_bg_credito,2) }}</p></td>
-					</tr>
-					<tr align="right">
-						<td>&nbsp;</td>
-						<td align="left">Utilidad neta</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						@if ($utilidad>0)
-							<td><p class="doublelinedown">{{ number_format($utilidad,2) }}</p></td>
-							<td><p class="doublelinedown">&nbsp;</p></td>						
-						@else
-							<td><p class="doublelinedown">&nbsp;</p></td>	
-							<td><p class="doublelinedown rojo">{{ number_format(abs($utilidad),2) }}</p></td>
-						@endif
-
-						@if ($utilidad>0)
-							<td><p class="doublelinedown">&nbsp;</p></td>
-							<td><p class="doublelinedown">{{ number_format($utilidad,2) }}</p></td>
-						@else
-							<td><p class="doublelinedown rojo">{{ number_format(abs($utilidad),2) }}</p></td>
-							<td><p class="doublelinedown">&nbsp;</p></td>							
-						@endif
-					</tr>
+    <div class="row"><!-- row -->
+      <div class="col-xs-11">
+			  <h4 class="text-center">{{ Cache::get('jdkey')->nombre }}</h4>
+			  <p class="text-center" style="margin:0px">HOJA DE TRABAJO FINAL</p>
+			  <p class="text-center" style="margin:0px">Periodo contable del mes de {{ $periodo->periodo }}</p>
+			  <p class="text-center" style="margin:0px">(en balboas)</p>
+      </div>
+      <div class="col-xs-1">
+        <img style="margin-top:10px; border-radius: 4px;" src="{{ asset(Cache::get('jdkey')->imagen_M) }}" class="img-responsive" alt="Responsive image">
+      </div>
+    </div><!-- end row -->
+		
+		<br />
+		
+		<table class="table table-hove table-hover">
+		  <thead>
+			  <tr>
+			   <th col width="65px"></th> 
+			   <th col width="395px"></th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Balance de pruebas</th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Ajustes</th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Balance Ajustado</th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Estado de Resultado</th> 
+			   <th colspan="2" class="text-center borde celBg-gray">Balance General</th> 
+			  </tr>
+			  
+			  <tr align="right">
+			   <th>Codigo</th> 
+			   <th>Cuenta</th> 
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 	  
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 
+			   <th class="text-center borde celBg-gray">Debito</th> 
+			   <th class="text-center borde celBg-gray">Credito</th> 
+			  </tr>
+		  </thead> 
+		  
+		  <tbody> 
+				@foreach ($datos as $dato)		   
+				  <tr> 
+						<td><strong>{{ $dato['codigo'] }}</strong></td>
+						<td>{{ $dato['nombre'] }}</td>
 					
-					<tr align="right">
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						@if ($utilidad>0)
-							<td><p class="doublelinedown">{{ number_format(($total_er_debito+$utilidad),2) }}</p></td>
-							<td><p class="doublelinedown">{{ number_format($total_er_credito,2) }}</p></td>						
-						@else
-							<td><p class="doublelinedown">{{ number_format($total_er_debito,2) }}</p></td>	
-							<td><p class="doublelinedown" color:"red">{{ number_format(($total_er_credito+abs($utilidad)),2) }}</p></td>
-						@endif
+						<td class="text-right celBg-yellow borde">
+							{{ $dato['bp_debito'] == '0.00' ? '' : number_format($dato['bp_debito'],2) }}
+						</td>
+						
+						<td class="text-right celBg-yellow borde">
+							{{ $dato['bp_credito'] == '0.00' ? '' : number_format($dato['bp_credito'],2) }}
+						</td>
 
-						@if ($utilidad>0)
-							<td><p class="doublelinedown">{{ number_format($total_bg_debito,2) }}</p></td>
-							<td><p class="doublelinedown">{{ number_format(($total_bg_credito+$utilidad),2) }}</p></td>
-						@else
-							<td><p class="doublelinedown">{{ number_format(($total_bg_debito+abs($utilidad)),2) }}</p></td>
-							<td><p class="doublelinedown">{{ number_format($total_bg_credito,2) }}</p></td>							
-						@endif
+						<td class="text-right celBg-red borde">
+							{{ $dato['aj_debito'] == '0.00' ? '' : number_format($dato['aj_debito'],2) }}
+						</td>
+						
+						<td class="text-right celBg-red borde">
+							{{ $dato['aj_credito'] == '0.00' ? '' : number_format($dato['aj_credito'],2) }}
+						</td>
 
+						<td class="text-right celBg-green borde">
+							{{ $dato['ba_debito'] == '0.00' ? '' : number_format($dato['ba_debito'],2) }}
+						</td>
+					    
+						<td class="text-right celBg-green borde">
+							{{ $dato['ba_credito'] == '0.00' ? '' : number_format($dato['ba_credito'],2) }}
+						</td>
+					    
+						<td class="text-right celBg-blue borde">
+							{{ $dato['er_debito'] == '0.00' ? '' : number_format($dato['er_debito'],2) }}
+						</td>
+					    
+						<td class="text-right celBg-blue borde">
+							{{ $dato['er_credito'] == '0.00' ? '' : number_format($dato['er_credito'],2) }}
+						</td>
+		                
+						<td class="text-right celBg-cian borde">
+							{{ $dato['bg_debito'] == '0.00' ? '' : number_format($dato['bg_debito'],2) }}
+						</td>
+					    
+						<td class="text-right celBg-cian borde">
+							{{ $dato['bg_credito'] == '0.00' ? '' : number_format($dato['bg_credito'],2) }}
+						</td>
 					</tr>
-			  </table>
-			</div>
-		</div>
-	</div>
+				@endforeach
+
+				<tr> 
+					<td>&nbsp;</td>
+					<td>&nbsp;</td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_bp_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_bp_credito,2) }}</p></td> 
+					<th class="text-right"><p class="mix">{{ number_format($total_aj_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_aj_credito,2) }}</p></td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_ba_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_ba_credito,2) }}</p></td> 
+					<th class="text-right"><p class="mix lineup">{{ number_format($total_er_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix lineup">{{ number_format($total_er_credito,2) }}</p></td> 
+					<td class="text-right"><p class="mix lineup">{{ number_format($total_bg_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix lineup">{{ number_format($total_bg_credito,2) }}</p></td> 
+				</tr>		  
+
+				<tr> 
+					<th></th> 
+					<td>Utilidad</td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					
+					@if ($utilidad > 0)
+						<td class="text-right"><strong>{{ number_format($utilidad,2) }}</strong></td> 
+						<td class="text-right">&nbsp;</td> 
+					@else
+						<td class="text-right">&nbsp;</td> 
+						<td class="text-right rojo"><strong>{{ number_format(abs($utilidad),2) }}</strong></td> 
+					@endif
+					
+					@if ($utilidad > 0)
+						<td class="text-right">&nbsp;</td> 
+						<td class="text-right"><strong>{{ number_format($utilidad,2) }}</strong></td> 
+					@else
+						<td class="text-right rojo"><strong>{{ number_format(abs($utilidad),2) }}</strong></td> 
+						<td class="text-right">&nbsp;</td> 
+					@endif 
+				</tr>	
+				
+				<tr> 
+					<th scope="row"></th> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+					<td></td> 
+						
+					@if ($utilidad > 0)
+						<th class="text-right"><strong><p class="mix">{{ number_format(($total_er_debito+$utilidad),2) }}</p></strong></td> 
+						<th class="text-right"><strong><p class="mix">{{ number_format($total_er_credito,2) }}</p></strong></td> 
+					@else
+						<th class="text-right"><strong><p class="mix">{{ number_format($total_er_debito,2) }}</p></strong></td> 
+						<th class="text-right"><strong><p class="mix">{{ number_format(($total_er_credito+abs($utilidad)),2) }}</p></strong></td> 
+					@endif
+					
+					@if ($utilidad > 0)
+						<th class="text-right"><strong><p class="mix">{{ number_format($total_bg_debito,2) }}</p></strong></td> 
+						<th class="text-right"><strong><p class="mix">{{ number_format(($total_bg_credito+$utilidad),2) }}</p></strong></td> 
+					@else
+						<th class="text-right"><strong><p class="mix">{{ number_format(($total_bg_debito+abs($utilidad)),2) }}</p></strong></td> 
+						<th class="text-right"><strong><p class="mix">{{ number_format($total_bg_credito,2) }}</p></strong></td> 
+					@endif 
+				</tr>		 
+		  </tbody>
+		</table>
+    
+    <!-- Incluye la modal box -->
+    @include('templates.backend._partials.modal_confirm')
+    
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="text-center">© Copyright 2016-2025 ctmaster.net - All Rights Reserved</p>
+      </div>
+    </div> 
+
+	</div> <!-- end container -->
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
+
 </body>
 </html>

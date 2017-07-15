@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Session, Validator,Image, DB;
 use App\library\Sity;
-use App\Http\Helpers\Grupo;
 
 use App\Bitacora;
 use App\Jd;

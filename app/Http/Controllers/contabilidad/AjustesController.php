@@ -4,8 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\library\Sity;
-use Session, DB;
-use Validator;
+use Session, DB, Validator;
 use Carbon\Carbon;
 
 use App\Ctmayore;

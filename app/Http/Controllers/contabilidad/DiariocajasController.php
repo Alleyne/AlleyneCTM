@@ -4,7 +4,7 @@ namespace App\Http\Controllers\contabilidad;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Jenssegers\Date\Date;
-use Session, DB, Cache;
+use Session, DB, Cache, Auth;
 use App\library\Sity;
 
 use App\Diariocaja;
@@ -237,8 +237,8 @@ class DiariocajasController extends Controller
           // aprueba informe
           $diariocaja = Diariocaja::find($diariocaja_id);
           $diariocaja->aprobado = $aprobado;
-          $diariocaja->aprobadopor = Cache::get('userFullNamekey');
-          $diariocaja->save();
+          $diariocaja->aprobadopor = Auth::user()->nombre_completo;
+          $diariocaja->save(); 
     
           // Registra en bitacoras
           $detalle = 'Aprueba informe de Caja General el dia '.$diariocaja->fecha;

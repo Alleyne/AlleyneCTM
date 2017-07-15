@@ -166,16 +166,14 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador HojadetrabajosController
 	//---------------------------------------------------------// 	
-  
-
-  Route::get('hjProyectada/{pcontable_id}', 'HojadetrabajosController@hjProyectada')->name('hjProyectada');
-
+  Route::get('htProyectada/{pcontable_id}', 'HojadetrabajosController@htProyectada')->name('htProyectada');
+  Route::get('htFinal/{pcontable_id}', 'HojadetrabajosController@htFinal')->name('htFinal');
 
   Route::get('estadoderesultado/{pcontable_id}', 'HojadetrabajosController@estadoderesultado')->name('estadoderesultado');
   Route::get('er/{pcontable_id}', 'HojadetrabajosController@er')->name('er');
   Route::get('bg/{pcontable_id}', 'HojadetrabajosController@bg')->name('bg');
   Route::get('balancegeneral/{pcontable_id},{periodo}', 'HojadetrabajosController@balancegeneral')->name('balancegeneral');
-  Route::get('hojadetrabajo/{periodo}', 'HojadetrabajosController@hojadetrabajo')->name('hojadetrabajo');
+  //Route::get('hojadetrabajo/{periodo}', 'HojadetrabajosController@hojadetrabajo')->name('hojadetrabajo');
   Route::get('verMayorAux/{periodo}, {cuenta}, {un_id?}', 'HojadetrabajosController@verMayorAux')->name('verMayorAux');
   Route::get('cierraPeriodo/{pcontable_id},{periodo},{fecha}', 'HojadetrabajosController@cierraPeriodo')->name('cierraPeriodo');
 	Route::resource('hojadetrabajos', 'HojadetrabajosController');
@@ -327,6 +325,7 @@ Route::group(['namespace' => 'blog'], function()
   Route::get('contact', 'PagesController@getContact')->name('contact');
   Route::post('contact', 'PagesController@postContact');
 	Route::get('directivos', 'PagesController@getDirectivos')->name('directivos');
+	Route::get('reglamento', 'PagesController@reglamento')->name('reglamento');
 	Route::get('pages', 'PagesController@getIndex')->name('pages');
 	Route::resource('posts', 'PostController');
 });
@@ -377,7 +376,6 @@ use App\Seccione;
 use App\User;
 use App\Pago;
 use App\Ctmayore;
-use App\library\Grupo;
 
 Route::get('/query', function () {
       

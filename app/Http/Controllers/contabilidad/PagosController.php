@@ -2,7 +2,7 @@
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Auth, Session, DB, Grupo, Validator;
+use Auth, Session, DB, Validator;
 use App\library\Sity;
 use App\library\Npago;
 use Carbon\Carbon;

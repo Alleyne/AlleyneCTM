@@ -30,7 +30,7 @@ class HojadetrabajosController extends Controller {
   /***********************************************************************************
   * Despliega hoja de trabajo proyectada
   ************************************************************************************/	
-  public function show($pcontable_id) {
+/*  public function show($pcontable_id) {
   $periodo= Pcontable::find($pcontable_id);
     //dd($periodo->id);
     
@@ -157,15 +157,15 @@ class HojadetrabajosController extends Controller {
       'totalAjustadoCredito' => number_format($totalAjustadoCredito,2)
     ];
     
-    /*if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey') || Cache::get('esJuntaDirectivakey') || Cache::get('esContadorkey')) {
+    if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey') || Cache::get('esJuntaDirectivakey') || Cache::get('esContadorkey')) {
       return view('contabilidad.hojadetrabajos.show', $viewData);  
     
     } elseif (Cache::get('esPropietariokey')) {
       return view('contabilidad.hojadetrabajos.showFrontend', $viewData); 
-    }*/
+    }
       return view('contabilidad.hojadetrabajos.htProyectada', $viewData);  
 
-  }	
+  }	*/
 
   /***********************************************************************************
   * Despliega el estado de resultado proyectado
@@ -478,32 +478,6 @@ class HojadetrabajosController extends Controller {
             ->with('cuenta', $cuenta);
   }
 
-  /***********************************************************************************
-  * Despliega la hoja de trabajo final de un determinado periodo
-  ************************************************************************************/ 
-  public function hojadetrabajo($periodo) {
-    $datos = Ht::where('pcontable_id', $periodo)->get();
-    //dd($datos->toArray());
-    
-    $utilidad= $datos->sum('er_credito')-$datos->sum('er_debito'); 
-    //dd($utilidad);
-
-    return \View::make('contabilidad.hojadetrabajos.hojadetrabajo')
-                ->with('datos', $datos)
-                ->with('total_bp_debito', $datos->sum('bp_debito'))                  
-                ->with('total_bp_credito', $datos->sum('bp_credito')) 
-                ->with('total_aj_debito', $datos->sum('aj_debito'))                  
-                ->with('total_aj_credito', $datos->sum('aj_credito')) 
-                ->with('total_ba_debito', $datos->sum('ba_debito'))                  
-                ->with('total_ba_credito', $datos->sum('ba_credito')) 
-                ->with('total_er_debito', $datos->sum('er_debito'))                  
-                ->with('total_er_credito', $datos->sum('er_credito')) 
-                ->with('total_bg_debito', $datos->sum('bg_debito'))                  
-                ->with('total_bg_credito', $datos->sum('bg_credito')) 
-                ->with('utilidad', $utilidad) 
-                ->with('periodo', Pcontable::find($periodo)->periodo);
-  } 
-
   /** 
   *==================================================================================================
   * Cierra definitivamente un determinado periodo contable
@@ -642,15 +616,100 @@ class HojadetrabajosController extends Controller {
   /***********************************************************************************
   * Despliega la hoja de trabajo proyectada de un determinado periodo
   ************************************************************************************/ 
-  public function hjProyectada($periodo) {
+  public function htProyectada($pcontable_id) {
+    //dd($pcontable_id);
+    
+    // encuentra los datos de periodo
+    $periodo= Pcontable::find($pcontable_id);
     
     // encuentra los datos de la hoja de trabajo para un periodo determinado
-    $data = Hojat::getDataParaHojaDeTrabajo($periodo);
+    $data = Hojat::getDataParaHojaDeTrabajo($pcontable_id);
     $datos = Collection::make($data);
     //dd($datos);
     
     $utilidad= $datos->sum('er_credito')-$datos->sum('er_debito'); 
     //dd($utilidad);
+
+    $saldoAjustado_debito = $datos->sum('saldoAjustado_debito');
+    $saldoAjustado_credito = $datos->sum('saldoAjustado_credito');
+
+    // verifica si el presente periodo admite ajustes, solo se permiten
+    // hacer ajustes si se cumplen las siguientes condiciones:
+    // 1. Si el periodo esta abierto
+    // 2. Si el periodo previo esta cerrado
+    // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
+    
+    // verifica si exite balance entre el $totalAjustadoDebito y $totalAjustadoCredito
+    $p3 = $saldoAjustado_debito == $saldoAjustado_credito;
+
+    // verifica si se trata del primer periodo en la base de datos y no esta cerrado
+    if ($pcontable_id == 1 && $p3 == true) {
+      $permitirAjustes= 'Si';
+      $permitirCerrar= 'Si';
+    
+    } elseif ($pcontable_id == 1 && $p3 == false) {
+      $permitirAjustes= 'Si';
+      $permitirCerrar= 'No';
+    } else {
+
+      // verifica si el periodo esta abierto
+      $p1 = Pcontable::where('id', $pcontable_id)->first()->cerrado;
+      
+      // verifica si el periodo previo esta cerrado
+      $p2 = Pcontable::where('id', ($pcontable_id - 1))->first()->cerrado;
+      //dd($p1, $p2);
+      
+      // permitir ajustes 
+      if ($p1 == 0 && $p2 == 1) {
+        $permitirAjustes = 'Si';
+      
+      } else {
+        $permitirAjustes = 'No';
+      }
+      //dd($permitirAjustes);
+
+      // verifica si el presente periodo admite ser cerrado, solo se permiten
+      // cerrar un periodo si se cumplen las siguientes condiciones:
+      // 1. Si se trata de un periodo no esta cerrado
+      // 2. El periodo anterior debe estar cerrado       
+      // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
+      // 4. Si se trata del periodo previo al periodo real pero elperiodo real aun no existe
+
+      // Construye la fecha del periodo real
+      $yearReal = Carbon::today()->year;
+      $monthReal = Carbon::today()->month;
+      $pdoReal= Sity::getMonthName($monthReal).'-'.$yearReal; 
+      
+      // Construye la fecha del periodo actual mas un mes
+      $year = Carbon::parse($periodo->fecha)->year;
+      $month = Carbon::parse($periodo->fecha)->addMonth()->month;
+      $pdo = Sity::getMonthName($month).'-'.$year; 
+
+      // verifica si el periodo real ya existe
+      $periodoRealExiste = Pcontable::where('periodo', $pdoReal)->first();
+      //dd($periodoRealExiste, $pdoReal, $pdo);
+      
+      // Si se trata de periodo previo al periodo real y el periodo real no existe no debe permitir cerrar
+      $p4 = 'Si';
+      if ($pdoReal == $pdo) {
+        if (!$periodoRealExiste) {
+            $p4 = 'No';
+        }
+      } elseif ($periodoRealExiste) {
+        if (!Pcontable::where('periodo', $pdo)->first()) {
+            $p4 = 'No';
+        }
+      }
+      //dd($p1, $p2, $p3, $p4);
+      
+      // permite cerrar 
+      if ($p1 == 0 && $p2 == 1 && $p3 && $p4 == 'Si') {
+        $permitirCerrar = 'Si';
+      } else {
+        $permitirCerrar = 'No';
+      }
+    }
+    //dd($permitirCerrar);
 
     return \View::make('contabilidad.hojadetrabajos.htProyectada')
                 ->with('datos', $datos)
@@ -658,19 +717,49 @@ class HojadetrabajosController extends Controller {
                 ->with('total_bp_credito', $datos->sum('saldo_credito')) 
                 ->with('total_aj_debito', $datos->sum('saldoAjuste_debito'))                  
                 ->with('total_aj_credito', $datos->sum('saldoAjuste_credito')) 
-                ->with('total_ba_debito', $datos->sum('saldoAjustado_debito'))                  
-                ->with('total_ba_credito', $datos->sum('saldoAjustado_credito')) 
+                ->with('total_ba_debito', $saldoAjustado_debito)                  
+                ->with('total_ba_credito', $saldoAjustado_credito) 
                 ->with('total_er_debito', $datos->sum('er_debito'))                  
                 ->with('total_er_credito', $datos->sum('er_credito')) 
                 ->with('total_bg_debito', $datos->sum('bg_debito'))                  
                 ->with('total_bg_credito', $datos->sum('bg_credito')) 
                 ->with('utilidad', $utilidad) 
-                ->with('permitirAjustes', 'Si') 
-                ->with('permitirCerrar', 'Si') 
-                ->with('periodo', Pcontable::find($periodo));
+                ->with('permitirAjustes', $permitirAjustes) 
+                ->with('permitirCerrar', $permitirCerrar) 
+                ->with('periodo', $periodo);
   } 
 
+  /***********************************************************************************
+  * Despliega la hoja de trabajo proyectada de un determinado periodo
+  ************************************************************************************/ 
+  public function htFinal($pcontable_id) {
+    //dd($pcontable_id);
+    
+    // encuentra los datos de periodo
+    $periodo= Pcontable::find($pcontable_id);
+    
+    //encuentra los datos del periodo en la tabla de hoja de trabajo historicas
+    $datos = Ht::where('pcontable_id', $pcontable_id)->get();
+    //dd($datos->toArray());
 
+    $utilidad= $datos->sum('er_credito') - $datos->sum('er_debito'); 
+    //dd($utilidad);
+
+    return \View::make('contabilidad.hojadetrabajos.htFinal')
+                ->with('datos', $datos)
+                ->with('total_bp_debito', $datos->sum('bp_debito'))                  
+                ->with('total_bp_credito', $datos->sum('bp_credito')) 
+                ->with('total_aj_debito', $datos->sum('aj_debito'))                  
+                ->with('total_aj_credito', $datos->sum('aj_credito')) 
+                ->with('total_ba_debito', $datos->sum('ba_debito'))                  
+                ->with('total_ba_credito', $datos->sum('ba_credito')) 
+                ->with('total_er_debito', $datos->sum('er_debito'))                  
+                ->with('total_er_credito', $datos->sum('er_credito')) 
+                ->with('total_bg_debito', $datos->sum('bg_debito'))                  
+                ->with('total_bg_credito', $datos->sum('bg_credito')) 
+                ->with('utilidad', $utilidad) 
+                ->with('periodo', $periodo);
+  }  
 
 
 } // fin de controller
