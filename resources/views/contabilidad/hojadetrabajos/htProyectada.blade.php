@@ -64,7 +64,7 @@
 </head>
 
 <body style="font-size:13px;"">
-	<div class="container" style="width:14in; background-color:white";>
+	<div class="container" style="width:13in; background-color:white";>
 
     <div class="row"><!-- row -->
       <div class="col-xs-11">

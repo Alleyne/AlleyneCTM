@@ -71,26 +71,26 @@ class PagosController extends Controller {
     $bancos = Banco::orderBy('nombre')->pluck('nombre', 'id')->all();
 		//dd($bancos);	    
     
-    if ($key == 1) {
+    if ($key == 1) { // tipo cheque
 	    return view('contabilidad.pagos.createPagoTipo1')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
     
-    } elseif ($key == 4) {
+    } elseif ($key == 4) { //tipo banca en linea
 	    return view('contabilidad.pagos.createPagoTipo4')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
     
-    } elseif ($key == 5 || $key == 7) {
-	    return view('contabilidad.pagos.createPagoTipo57')        			
+    } elseif ($key == 5) { 	// tipo efectivo
+	    return view('contabilidad.pagos.createPagoTipo5')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
     
-    } elseif ($key == 6) {
-	    return view('contabilidad.pagos.createPagoTipo6')        			
+    } elseif ($key == 6 || $key == 7 ) {
+	    return view('contabilidad.pagos.createPagoTipo67')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
@@ -197,31 +197,32 @@ class PagosController extends Controller {
 				} else {
 					
 					// Registra el pago recibido
-					$dato = new Pago;
-					$dato->banco_id    = Input::get('banco_id');
-					$dato->trantipo_id = Input::get('key');
-				  $dato->trans_no    = Input::get('transno'); 
-					$dato->monto       = $montoRecibido;
-					$dato->f_pago      = Input::get('f_pago');
-					$dato->descripcion = Input::get('descripcion');
-					$dato->concepto		 = 'pago por servicios de mantenimiento';
-				  $dato->fecha 	   	 = Carbon::today(); 		    
-					$dato->entransito  = 0;
-					$dato->un_id       = Input::get('un_id');
-			    $dato->user_id 	   = Auth::user()->id; 		    
-			    $dato->save();
+					$pago = new Pago;
+					$pago->banco_id    = Input::get('banco_id');
+					$pago->trantipo_id = Input::get('key');
+				  $pago->trans_no    = Input::get('transno'); 
+					$pago->monto       = $montoRecibido;
+					$pago->f_pago      = Input::get('f_pago');
+					$pago->descripcion = Input::get('descripcion');
+					$pago->concepto		 = 'pago por servicios de mantenimiento';
+				  $pago->fecha 	   	 = Carbon::today(); 		    
+					$pago->entransito  = 0;
+					$pago->un_id       = Input::get('un_id');
+			    $pago->user_id 	   = Auth::user()->id; 		    
+			    $pago->save();
 
-					$tipoPago = Input::get('key');
+					//$tipoPago = Input::get('key');
 					//dd($tipoPago);
 					
 					// proceso de contabilizar el pago recibido
-					Npago::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo, $tipoPago);
+					//Npago::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo, $tipoPago);
+					Npago::iniciaPago($pago, $periodo);
 
 					// Registra en bitacoras
-  				Sity::RegistrarEnBitacora($dato, Input::get(), 'Pago', 'Registra pago de propietario');
+  				Sity::RegistrarEnBitacora($pago, Input::get(), 'Pago', 'Registra pago de propietario');
 
 					DB::commit();		            
-		      Session::flash('success', 'El pago ' .$dato->id. ' ha sido registrado con éxito.');
+		      Session::flash('success', 'El pago ' .$pago->id. ' ha sido registrado con éxito.');
 				}
 				return redirect()->route('indexPagos',  Input::get('un_id'));
 			}
@@ -364,39 +365,37 @@ class PagosController extends Controller {
 		DB::beginTransaction();
 		try {
 			// Procesa el pago recibido			
-			$dato = Pago::where('pagos.id', $pago_id)
-	                    ->select('un_id','monto','id','f_pago')
-	                    ->first();
-			//dd($dato->toArray());
+			$pago = Pago::find($pago_id);
+			//dd($pago->toArray());
 			
 			// encuentra la fecha del periodo contable mas antiguo abierto
-			$periodo= Pcontable::where('cerrado', 0)->orderBy('id', 'asc')->first();
-			//dd($periodo->fecha);  
+			$periodo = Pcontable::where('cerrado', 0)->orderBy('id', 'asc')->first();
+			//dd($periodo);  
 
 			// proceso de contabilizar el pago recibido
-			Npago::iniciaPago($dato->un_id, $dato->monto, $dato->id, $dato->f_pago, $periodo->id, $periodo->periodo, 1);
+			Npago::iniciaPago($pago, $periodo);
 
 			// Registra el pago como tramitado
-			$dato1 = Pago::find($pago_id);
-			$dato1->entransito = 0;
-		  $dato1->save(); 
+
+			$pago->entransito = 0;
+		  $pago->save(); 
 
 				// Registra en bitacoras
-			$detalle = 'Pago No '.$dato1->id.', con cheque No '.$dato1->trans_no.' se ha registrado con exito.';
+			$detalle = 'Pago No '.$pago->id.', con cheque No '.$pago->trans_no.' se ha registrado con exito.';
 			$tabla = 'pagos';
-			$registro = $dato1->id;
+			$registro = $pago->id;
 			$accion = 'Contabiliza pago por cheque';
 
 			Sity::RegistrarEnBitacoraEsp($detalle, $tabla, $registro, $accion);
 
 			DB::commit();    
-			Session::flash('success', 'El pago No.' .$dato->id. ' ha sido registrado con éxito.');
-			return redirect()->route('indexPagos',  $dato->un_id);
+			Session::flash('success', 'El pago No.' .$pago->id. ' ha sido registrado con éxito.');
+			return redirect()->route('indexPagos',  $pago->un_id);
 	
 		} catch (\Exception $e) {
 			DB::rollback();
 			Session::flash('warning', ' Ocurrio un error en el modulo PagosController.procesaChequeRecibido, la transaccion ha sido cancelada! '.$e->getMessage());
-			return redirect()->route('indexPagos',  $dato->un_id);
+			return redirect()->route('indexPagos',  $pago->un_id);
 		}
 	} 
 }

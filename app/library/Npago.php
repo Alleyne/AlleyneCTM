@@ -38,11 +38,13 @@ class Npago {
   * @param  string        $tipoPago       "5" 
   * @return void
   *===========================================================================================*/
-  public static function iniciaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $pdo, $tipoPago=Null) {
-    //dd($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $pdo, $tipoPago);
-
+  //public static function iniciaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $pdo, $tipoPago=Null) {
+  public static function iniciaPago($pago, $periodo) {
+    //dd($pago, $periodo);
+    
     // procesa el pago recibido
-    self::procesaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $tipoPago);
+    //self::procesaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $tipoPago);
+    self::procesaPago($pago, $periodo);
     
     // procede a notificar al propietario la generacion de una nueva order de cobro
     
@@ -84,35 +86,39 @@ class Npago {
   * @return void
   *===========================================================================================*/
   
-  public static function procesaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $tipoPago) {
+  //public static function procesaPago($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $tipoPago) {  
+  public static function procesaPago($pago, $periodo) {
     //dd($un_id, $montoRecibido, $pago_id, $f_pago, $periodo, $tipoPago);
 
     // trae los datos de las unidades almacenados en cache y encuentra el codigo de la unidad
-    $datos = Cache::get('unsAllkey');
-    $unCodigo = $datos->where('id', $un_id)->first()->codigo;
+    //$datos = Cache::get('unsAllkey');
+    //$unCodigo = $datos->where('id', $un_id)->first()->codigo;
     //dd($unCodigo);
 
     //Prioridad no 1, verifica si hay cuotas regulares pendiente por pagar.
-    $datos = self::cobraFacturas($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo);
-    $sobrante = $datos['sobrante'];
+    //$datos = self::cobraFacturas($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo);
+    $sobrante = $pago->monto;
+
+    $datos = self::cobraFacturas($pago, $sobrante, $periodo);
+    $sobrante = round((float)$datos['sobrante'], 2);
     $dineroFresco = $datos['dineroFresco'];
     //dd($sobrante, $dineroFresco);    
     
     //Prioridad no 2, verifica si hay recargos pendiente por pagar.
-    $datos = self::cobraRecargos($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago, $unCodigo);
-    $sobrante = $datos['sobrante'];
+    $datos = self::cobraRecargos($pago, $sobrante, $periodo);
+    $sobrante = round((float)$datos['sobrante'], 2);
     $dineroFresco = $datos['dineroFresco'];
     //dd($sobrante, $dineroFresco);
     
     //Prioridad no 3, verifica si hay cuotas extraordinarias por pagar.
-    $datos = self::cobraCuotaExtraordinaria($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago, $unCodigo);
-    $sobrante = $datos['sobrante'];
+    $datos = self::cobraCuotaExtraordinaria($pago, $sobrante, $periodo);
+    $sobrante = round((float)$datos['sobrante'], 2);
     $dineroFresco = $datos['dineroFresco'];
     //dd($sobrante, $dineroFresco);
     
     //Prioridad no 4, verifica si se trata de un pago anticipado con el proposito de obtener descuento
-    $datos = Desc::verificaDescuento($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago);
-    $sobrante = $datos['sobrante'];
+    $datos = Desc::verificaDescuento($pago, $sobrante, $periodo);
+    $sobrante = round((float)$datos['sobrante'], 2);
     $dineroFresco = $datos['dineroFresco'];
     //dd($sobrante, $dineroFresco);
 
@@ -122,7 +128,7 @@ class Npago {
     //dd($sobrante, $dineroFresco); 
 
     if ($sobrante > 0 && $dineroFresco) {
-       $sobrante = self::registraSobranteFinal($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago, $unCodigo);
+       $sobrante = self::registraSobranteFinal($pago, $sobrante, $periodo);
     }
   }
  
@@ -139,9 +145,26 @@ class Npago {
   * @param  string      $tipoPago      "1A-T100R2"  
   * @return void
   *=========================================================================================================*/
-  public static function cobraFacturas($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo) { 
-    //dd($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo);
+  //public static function cobraFacturas($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo) {   
+  public static function cobraFacturas($pago, $sobrante, $periodo) { 
 
+    // inicializa variables
+    $pago_id = $pago->id;
+    $un_id = $pago->un_id;
+    $montoRecibido = $sobrante;
+    $f_pago = $pago->f_pago;
+    $unCodigo = $pago->un->codigo;    
+    $tipoPago = $pago->trantipo_id;
+    $siglas = $pago->trantipo->siglas;
+    $trans_no = $pago->trans_no;
+    $periodo = $periodo->id;   
+    
+    if ($tipoPago == 5) { // si el pago es en efectivo, no tiene trans_no
+      $nota = ', Pago '.$siglas.' #'.$pago->id;
+    } else {
+      $nota = ', Pago '.$siglas.' #'.$pago->id.' -'.$trans_no;
+    }
+    
     // Encuentra todas las facturaciones por pagar en un determinado periodo contable o en los anteriores al mismo
     $datos = Ctdasm::where('pcontable_id', '<=', $periodo)
             ->where('un_id', $un_id)
@@ -150,7 +173,7 @@ class Npago {
             ->get();
     //dd($datos->toArray());
 
-    // incializa variables a utilizar
+    // determina si es dinero fresco o anticipado
     if ($montoRecibido > 0) {
       $dineroFresco = true;
     } else {
@@ -218,7 +241,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta Banco por "Cuotas de mantenimiento regulares por cobrar" 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);   
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo.$nota, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);   
             
             } else { // se registra un aumento en la cta Caja general
               
@@ -235,7 +258,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta de Caja general por "Cuotas de mantenimiento regulares por cobrar"
-              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);     
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo.$nota, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);     
             }
             
             // registra en el diario
@@ -249,7 +272,7 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1120.00 "Cuotas de mantenimiento regulares por cobrar"  
-            Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, $cuenta_1.' '.$mesAnio.', '.$unCodigo, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, $cuenta_1.' '.$mesAnio.', '.$unCodigo.$nota, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // Registra en Detallepago para generar un renglon en el recibo
             Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento regular '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
@@ -291,11 +314,11 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.$nota, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1120.00 "Cuotas de mantenimiento regulares por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, $cuenta_1.' '.$mesAnio.', '.$unCodigo, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, $cuenta_1.' '.$mesAnio.', '.$unCodigo.', Pago '.$siglas.' #'.$trans_no, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // salva un nuevo registro que representa una linea del recibo
             $dto = new Detallepago;
@@ -337,7 +360,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta Banco por "Cuotas de mantenimiento regulares por cobrar" 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id); 
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id); 
             
             } else { // se registra un aumento en la cta Caja general
               
@@ -353,7 +376,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta de Caja general 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);   
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);   
             }
              
             // registra en el diario
@@ -375,11 +398,11 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5, ($importe - $montoRecibido), $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.$nota, ($importe - $montoRecibido), $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1120.00 "Cuotas de mantenimiento regulares por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, $cuenta_1.' '.$mesAnio.', '.$unCodigo, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, $cuenta_1.' '.$mesAnio.', '.$unCodigo.$nota, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en Detallepago para generar un renglon en el recibo
             Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento regular de '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
@@ -411,7 +434,7 @@ class Npago {
       if ($hayPie) {
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de couta de mant regular, unidad '.$unCodigo.', Pago #'.$pago_id;
+        $diario->detalle = 'Para registrar cobro de cuota de mant regular, unidad '.$unCodigo.$nota;
         $diario->save();
       }
 
@@ -443,8 +466,20 @@ class Npago {
   * @param  string        $tipoPago      "1A-T100R2"  
   * @return void
   *===========================================================================================*/
-  public static function cobraRecargos($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo) { 
-    //dd($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo);
+  //public static function cobraRecargos($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo) {
+  public static function cobraRecargos($pago, $sobrante, $periodo) { 
+
+    // inicializa variables
+    $pago_id = $pago->id;
+    $un_id = $pago->un_id;
+    $montoRecibido = $sobrante;
+    $f_pago = $pago->f_pago;
+    $unCodigo = $pago->un->codigo;    
+    $tipoPago = $pago->trantipo_id;
+    $siglas = $pago->trantipo->siglas;
+    $trans_no = $pago->trans_no;
+    $periodo = $periodo->id;   
+    $nota = ', Pago '.$siglas.' #'.$pago->id.' -'.$trans_no;
 
     // Encuentra todos los recargos por pagar
     $datos = Ctdasm::where('pcontable_id','<=', $periodo)
@@ -522,7 +557,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta Banco por "Recargo en cuota de mantenimiento por cobrar" 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);   
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);   
             
             } else {  // se registra un aumento en la cta Caja general
               
@@ -539,7 +574,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta de Caja general por "Recargo en cuota de mantenimiento por cobrar"
-              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);     
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);     
             }
             
             // registra en el diario
@@ -553,7 +588,7 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar"  
-            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, $cuenta_2.', '.$mesAnio, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, $cuenta_2.', '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // Registra en Detallepago para generar un renglon en el recibo
             Self::registraDetallepago($periodo, $ocobro, 'Paga recargo en cuota de mantenimiento regular de '. $mesAnio, $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
@@ -595,11 +630,11 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, $cuenta_2.', '.$mesAnio, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, $cuenta_2.', '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // salva un nuevo registro que representa una linea del recibo
             $dto = new Detallepago;
@@ -641,7 +676,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta Banco por "Recargo en cuota de mantenimiento por cobrar" 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);
             
             } else {  // se registra un aumento en la cta Caja general
               
@@ -657,7 +692,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta de Caja general 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);
             }
              
             // registra en el diario
@@ -679,11 +714,11 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5, ($recargo - $montoRecibido), $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.$nota, ($recargo - $montoRecibido), $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, $cuenta_2.', '.$mesAnio, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, $cuenta_2.', '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en Detallepago para generar un renglon en el recibo
             Self::registraDetallepago($periodo, $ocobro, 'Paga recargo en cuota de mantenimiento regular de '. $mesAnio, $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
@@ -715,7 +750,7 @@ class Npago {
         // agrega ultima linea al libro diario
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de recargo en couta de mant regular, unidad '.$unCodigo.', Pago #'.$pago_id;
+        $diario->detalle = 'Para registrar cobro de recargo en couta de mant regular, unidad '.$unCodigo.$nota;
         $diario->save();
       }
 
@@ -747,8 +782,20 @@ class Npago {
   * @param  string    $tipoPago       "1A-T100R2"  
   * @return void
   *==================================================================================================================*/
-  public static function cobraCuotaExtraordinaria($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $tipoPago, $unCodigo) { 
+  public static function cobraCuotaExtraordinaria($pago, $sobrante, $periodo) { 
     //dd($periodo, $un_id, $montoRecibido, $pago_id, $f_pago, $unCodigo);
+
+    // inicializa variables
+    $pago_id = $pago->id;
+    $un_id = $pago->un_id;
+    $montoRecibido = $sobrante;
+    $f_pago = $pago->f_pago;
+    $unCodigo = $pago->un->codigo;    
+    $tipoPago = $pago->trantipo_id;
+    $siglas = $pago->trantipo->siglas;
+    $trans_no = $pago->trans_no;
+    $periodo = $periodo->id; 
+    $nota = ', Pago '.$siglas.' #'.$pago->id.' -'.$trans_no;
 
     // Encuentra todas las facturaciones por pagar en un determinado periodo contable o en los anteriores al mismo
     $datos = Ctdasm::where('pcontable_id', '<=', $periodo)
@@ -825,7 +872,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta Banco por "Cuotas de mantenimiento extraordinarias por cobrar" 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);    
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo.$nota, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);    
             
             } else {  // se registra un aumento en la cta Caja general
               
@@ -842,7 +889,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta de Caja general por "Cuotas de mantenimiento extraordinarias por cobrar"
-              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);   
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo.$nota, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);   
             }
             
             // registra en el diario
@@ -856,7 +903,7 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1110.00 "Cuotas de mantenimiento extraordinarias por cobrar"  
-            Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, $cuenta_16.' '.$mesAnio.', '.$unCodigo, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, $cuenta_16.' '.$mesAnio.', '.$unCodigo.$nota, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // Registra en Detallepago para generar un renglon en el recibo
             Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento extraordinaria '. $mesAnio, $dato->id, $extra, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
@@ -898,11 +945,11 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.$nota, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1120.00 "Cuotas de mantenimiento extraordinarias por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, $cuenta_16.' '.$mesAnio.', '.$unCodigo, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, $cuenta_16.' '.$mesAnio.', '.$unCodigo.$nota, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // salva un nuevo registro que representa una linea del recibo
             $dto = new Detallepago;
@@ -943,7 +990,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta Banco por "Cuotas de mantenimiento extraordinarias por cobrar" 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id); 
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id); 
             
             } else {  // se registra un aumento en la cta Caja general
               
@@ -959,7 +1006,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta de Caja general 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);  
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);  
             }
              
             // registra en el diario
@@ -981,11 +1028,11 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5, ($extra - $montoRecibido), $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.$nota, ($extra - $montoRecibido), $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1120.00 "Cuotas de mantenimiento extraordinarias por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, $cuenta_16.' '.$mesAnio.', '.$unCodigo, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, $cuenta_16.' '.$mesAnio.', '.$unCodigo.$nota, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en Detallepago para generar un renglon en el recibo
             Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento extraordinaria', $dato->id, $extra, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
@@ -1017,7 +1064,7 @@ class Npago {
         // agrega ultima linea al libro diario
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de couta de mant extraordinaria, unidad '.$unCodigo.', Pago #'.$pago_id;
+        $diario->detalle = 'Para registrar cobro de couta de mant extraordinaria, unidad '.$unCodigo.$nota;
         $diario->save();
       }
 
@@ -1049,10 +1096,21 @@ class Npago {
   * @param  string      $tipoPago       Null, "1"  
   * @return void
   *===========================================================================================*/
-  
-  public static function registraSobranteFinal($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago, $unCodigo) {
-    //dd($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago);
+  //public static function registraSobranteFinal($periodo, $sobrante, $pago_id, $f_pago, $tipoPago, $unCodigo) {  
+  public static function registraSobranteFinal($pago, $sobrante, $periodo) {
     
+    // inicializa variables
+    $pago_id = $pago->id;
+    $un_id = $pago->un_id;
+    $montoRecibido = $sobrante;
+    $f_pago = $pago->f_pago;
+    $unCodigo = $pago->un->codigo;    
+    $tipoPago = $pago->trantipo_id;
+    $siglas = $pago->trantipo->siglas;
+    $trans_no = $pago->trans_no;
+    $periodo = $periodo->id; 
+    $nota = ', Pago '.$siglas.' #'.$pago->id.' -'.$trans_no;
+
     // incializa variables a utilizar
     $cuenta_5 = Catalogo::find(5)->nombre;    // 2010.00 Anticipos recibidos de propietarios
     $cuenta_8 = Catalogo::find(8)->nombre;    // 1020.00 Banco Nacional
@@ -1087,15 +1145,15 @@ class Npago {
 
       $diario = new Ctdiario;
       $diario->pcontable_id  = $periodo;
-      $diario->detalle = 'Para registrar pago anticipado, unidad '.$unCodigo.', Pago #'.$pago_id;
+      $diario->detalle = 'Para registrar pago anticipado, unidad '.$unCodigo.$nota;
       $diario->save();
 
       // registra en el mayor
       // registra un aumento en la cuenta Banco por "Anticipos recibidos de propietarios"
-      Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_5.', '.$unCodigo, $sobrante, $un_id, $pago_id);  
+      Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_5.', '.$unCodigo.$nota, $sobrante, $un_id, $pago_id);  
       
       // registra un aumento en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-      Sity::registraEnCuentas($periodo, 'mas', 2, 5, $f_pago, $cuenta_5, $sobrante, $un_id, $pago_id); 
+      Sity::registraEnCuentas($periodo, 'mas', 2, 5, $f_pago, $cuenta_5.$nota, $sobrante, $un_id, $pago_id); 
     
     } else {  // se registra un aumento en la cta Caja general
 
@@ -1119,15 +1177,15 @@ class Npago {
 
       $diario = new Ctdiario;
       $diario->pcontable_id  = $periodo;
-      $diario->detalle = 'Para registrar pago anticipado, unidad '.$unCodigo.', Pago #'.$pago_id;
+      $diario->detalle = 'Para registrar pago anticipado, unidad '.$unCodigo.$nota;
       $diario->save();
 
       // registra en el mayor
       // registra un aumento en la cuenta de Caja general 
-      Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_5.', '.$unCodigo, $sobrante, $un_id, $pago_id);   
+      Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_5.', '.$unCodigo.$nota, $sobrante, $un_id, $pago_id);   
       
       // registra un aumento en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-      Sity::registraEnCuentas($periodo, 'mas', 2, 5, $f_pago, $cuenta_5, $sobrante, $un_id, $pago_id);
+      Sity::registraEnCuentas($periodo, 'mas', 2, 5, $f_pago, $cuenta_5.$nota, $sobrante, $un_id, $pago_id);
     }
 
     // salva un nuevo registro que representa una linea del recibo

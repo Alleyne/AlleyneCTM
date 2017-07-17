@@ -26,11 +26,23 @@ class Desc {
   * @param  string      $f_pago         "2016-01-30"
   * @return void
   **************************************************************************************************/
-  public static function verificaDescuento($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago) {
+  //public static function verificaDescuento($periodo, $un_id, $sobrante, $pago_id, $f_pago, $tipoPago) {
+  public static function verificaDescuento($pago, $sobrante, $periodo) {
 
     // verifica si la unidad tiene alguna deuda en el periodo actual o anteriores,
     // si la unidad tiene alguna deuda por pequena que sea no le permite participar en descuento
     
+    // inicializa variables
+    $pago_id = $pago->id;
+    $un_id = $pago->un_id;
+    $montoRecibido = $sobrante;
+    $f_pago = $pago->f_pago;
+    $unCodigo = $pago->un->codigo;    
+    $tipoPago = $pago->trantipo_id;
+    $siglas = $pago->trantipo->siglas;
+    $trans_no = $pago->trans_no;
+    $periodo = $periodo->id;     
+
     // verifica si tiene alguna cuota de mantenimiento regular por pagar
     $regulares = Ctdasm::where('un_id', $un_id)
                   ->where('pcontable_id', '<=', $periodo)
