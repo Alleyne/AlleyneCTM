@@ -199,10 +199,9 @@ class Npago {
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 2= Transferencia 3= ACH  4= Banca en linea
-            // se afecta derectamente a la cuenta de banco o caja general
-            if ($tipoPago == 2 || $tipoPago == 3 || $tipoPago == 4) {
-
+            // 4= Banca en linea
+            
+            if ($tipoPago == 4) { // si es Banca en linea se registra un aumento en la cta banco
               // registra en el diario
               // registra un aumento en la cuenta Banco  
               $diario = new Ctdiario;
@@ -221,7 +220,7 @@ class Npago {
               // registra un aumento en la cuenta Banco por "Cuotas de mantenimiento regulares por cobrar" 
               Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo, $importe, $un_id, $pago_id, Null, Null, $ctdasm_id);   
             
-            } else {
+            } else { // se registra un aumento en la cta Caja general
               
               // registra en el diario
               // registra un aumento en la cuenta de Caja general 
@@ -322,9 +321,9 @@ class Npago {
             $saldocpa = round(($saldocpa - ($importe - $montoRecibido)), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 2= Transferencia 3= ACH  4= Banca en linea
+            // 4= Banca en linea
             // se afecta derectamente a la cuenta de banco
-            if ($tipoPago == 2 || $tipoPago == 3 || $tipoPago == 4) {
+            if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -340,7 +339,7 @@ class Npago {
               // registra un aumento en la cuenta Banco por "Cuotas de mantenimiento regulares por cobrar" 
               Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.', '.$mesAnio.', '.$unCodigo, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id); 
             
-            } else {
+            } else { // se registra un aumento en la cta Caja general
               
               // registra en el diario
               // registra un aumento en la cuenta de Caja general 
@@ -506,9 +505,9 @@ class Npago {
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 2= Transferencia 3= ACH  4= Banca en linea
+            // 4= Banca en linea
             // se afecta derectamente a la cuenta de banco o caja general
-            if ($tipoPago == 2 || $tipoPago == 3 || $tipoPago == 4) {
+            if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -525,7 +524,7 @@ class Npago {
               // registra un aumento en la cuenta Banco por "Recargo en cuota de mantenimiento por cobrar" 
               Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);   
             
-            } else {
+            } else {  // se registra un aumento en la cta Caja general
               
               // registra en el diario
               // registra un aumento en la cuenta de Caja general 
@@ -626,9 +625,9 @@ class Npago {
             $saldocpa = round(($saldocpa - ($recargo - $montoRecibido)), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 2= Transferencia 3= ACH  4= Banca en linea
+            // 4= Banca en linea
             // se afecta derectamente a la cuenta de banco
-            if ($tipoPago == 2 || $tipoPago == 3 || $tipoPago == 4) {
+            if ($tipoPago == 4) { // si es Banca en linea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -644,7 +643,7 @@ class Npago {
               // registra un aumento en la cuenta Banco por "Recargo en cuota de mantenimiento por cobrar" 
               Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_2.', '.$mesAnio.', '.$unCodigo, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);
             
-            } else {
+            } else {  // se registra un aumento en la cta Caja general
               
               // registra en el diario
               // registra un aumento en la cuenta de Caja general 
@@ -809,9 +808,9 @@ class Npago {
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 2= Transferencia 3= ACH  4= Banca en linea
+            // 4= Banca en linea
             // se afecta derectamente a la cuenta de banco o caja general
-            if ($tipoPago == 2 || $tipoPago == 3 || $tipoPago == 4) {
+            if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -828,7 +827,7 @@ class Npago {
               // registra un aumento en la cuenta Banco por "Cuotas de mantenimiento extraordinarias por cobrar" 
               Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo, $extra, $un_id, $pago_id, Null, Null, $ctdasm_id);    
             
-            } else {
+            } else {  // se registra un aumento en la cta Caja general
               
               // registra en el diario
               // registra un aumento en la cuenta de Caja general 
@@ -928,9 +927,9 @@ class Npago {
             $saldocpa = round(($saldocpa - ($extra - $montoRecibido)), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 2= Transferencia 3= ACH  4= Banca en linea
+            // 4= Banca en linea
             // se afecta derectamente a la cuenta de banco
-            if ($tipoPago == 2 || $tipoPago == 3 || $tipoPago == 4) {
+            if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -946,7 +945,7 @@ class Npago {
               // registra un aumento en la cuenta Banco por "Cuotas de mantenimiento extraordinarias por cobrar" 
               Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_16.', '.$mesAnio.', '.$unCodigo, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id); 
             
-            } else {
+            } else {  // se registra un aumento en la cta Caja general
               
               // registra en el diario
               // registra un aumento en la cuenta de Caja general 
@@ -1064,9 +1063,9 @@ class Npago {
     //dd($saldocpa);
 
     // hace los asientos contables dependiendo del tipo de pago
-    // 2= Transferencia 3= ACH  4= Banca en linea
+    // 4= Banca en linea
     // se afecta derectamente a la cuenta de banco o caja general
-    if ($tipoPago == 2 || $tipoPago == 3 || $tipoPago == 4) {
+    if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
 
       // registra en el diario
       // registra un aumento en la cuenta Banco por "Anticipos recibidos de propietarios"
@@ -1098,7 +1097,7 @@ class Npago {
       // registra un aumento en la cuenta 2010.00 "Anticipos recibidos de propietarios"
       Sity::registraEnCuentas($periodo, 'mas', 2, 5, $f_pago, $cuenta_5, $sobrante, $un_id, $pago_id); 
     
-    } else {
+    } else {  // se registra un aumento en la cta Caja general
 
       // registra en el diario
       // registra un aumento en la cuenta de Caja general 

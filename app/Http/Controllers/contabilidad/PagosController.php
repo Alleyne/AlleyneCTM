@@ -111,41 +111,24 @@ class PagosController extends Controller {
 
       $f_final= Carbon::today()->addDay(1);
 
-      // 
-      if (Input::get('key')== '1') {
+      
+      if (Input::get('key') == '5') {	// pago tipo efectivo
 	      $rules = array(
+          'monto'   	 	=> 'required|Numeric|min:0.01',
+          'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
+          'descripcion'	=> 'required',
+          'un_id'		 		=> 'required'            
+	      );   
+      
+      } else {
+	      $rules = array(	// pago tipo Banca en linea, cheques, tarjetas debito o tarjetas credito
+          'banco_id'   	=> 'required|not_in:0',
           'transno'   	=> 'Required|Numeric|digits_between:1,10|min:1',
           'monto'   	 	=> 'required|Numeric|min:0.01',
           'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
           'descripcion'	=> 'required',
           'un_id'		 		=> 'required'            
 	      );  
-      
-      } elseif (Input::get('key')== '2' || Input::get('key')== '3' || Input::get('key')== '4') {
-	      $rules = array(
-          'banco_id'   	=> 'required|not_in:0',
-          'monto'   	 	=> 'required|Numeric|min:0.01',
-          'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
-          'descripcion'	=> 'required',
-          'un_id'		 		=> 'required'            
-	      );  
-      
-      } elseif (Input::get('key')== '5' || Input::get('key')== '7' || Input::get('key')== '8' || Input::get('key')== '9') {
-	      $rules = array(
-          'monto'   	 	=> 'required|Numeric|min:0.01',
-          'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
-          'descripcion'	=> 'required',
-          'un_id'		 		=> 'required'            
-	      );      
-      
-      } elseif (Input::get('key')== '6') {
-	      $rules = array(
-          'banco_id'   	=> 'required|not_in:0',
-          'monto'   	 	=> 'required|Numeric|min:0.01',
-          'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
-          'descripcion'	=> 'required',
-          'un_id'		 		=> 'required'            
-	      );   
       }
 
       //dd($rules, $messages);
@@ -156,7 +139,7 @@ class PagosController extends Controller {
 			{
 				// verifica si existe registro para informe de diario de caja para el dia de hoy,
 				// si no existe entonces lo crea.
-				if (Input::get('key') != '2' && Input::get('key') != '3' && Input::get('key') != '4') {
+				if (Input::get('key') != '4') {  // que el tipo de pago no sea Banca en linea
 					$diariocaja= Diariocaja::where('fecha', Input::get('f_pago'))->first();
 
 			    if (!$diariocaja) {
@@ -167,13 +150,13 @@ class PagosController extends Controller {
 				}
 		    
 		    // calcula el periodo al que corresponde la fecha de pago
-		    $f_pago= Carbon::parse(Input::get('f_pago'));
-		    $year= $f_pago->year;
-		    $month= $f_pago->month;
-		    $pdo= Sity::getMonthName($month).'-'.$year;    
+		    $f_pago = Carbon::parse(Input::get('f_pago'));
+		    $year = $f_pago->year;
+		    $month = $f_pago->month;
+		    $pdo = Sity::getMonthName($month).'-'.$year;    
 			    
 			  // encuentra el periodo mas antiguo abierto
-				$periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
+				$periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
 		    //dd($pdo, $periodo->periodo);
 		    
 		    // solamente se permite registrar pagos que correspondan al periodo mas antiguo abierto
@@ -186,7 +169,7 @@ class PagosController extends Controller {
 				Npago::penalizarTipo2(Input::get('f_pago'), Input::get('un_id'), $periodo->id);
 
 				// Almacena el monto de la transaccion
-				$montoRecibido= round(floatval(Input::get('monto')),2);
+				$montoRecibido = round(floatval(Input::get('monto')),2);
 
 				// Procesa el pago recibido	si el tipo de transaccion es cheque
 				if (Input::get('key') == 1) {

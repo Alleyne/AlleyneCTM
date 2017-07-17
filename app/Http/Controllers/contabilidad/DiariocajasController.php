@@ -316,7 +316,7 @@ class DiariocajasController extends Controller
             
             // registra en el mayor
             // registra un aumento en la cuenta Banco
-            Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $fecha, 'Para anotar el deposito del efectivo de '.Date::parse($fecha)->toFormattedDateString(), $total);   
+            Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $fecha, 'Para anotar deposito de Caja general de '.Date::parse($fecha)->toFormattedDateString(), $total);   
                      
             // registra en el diario
             // registra una disminucion en la cuenta de Caja general 
@@ -327,9 +327,12 @@ class DiariocajasController extends Controller
             $diario->credito = $total;
             $diario->save();
 
+            // registra uns disminucion en la cuenta de Caja general
+            Sity::registraEnCuentas($periodo->id, 'menos', 1, 32, $fecha, 'Para anotar deposito al banco del efectivo de '.Date::parse($fecha)->toFormattedDateString(), $total);     
+
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo->id;
-            $diario->detalle = 'Para anotar el deposito del efectivo de '.Date::parse($fecha)->toFormattedDateString();
+            $diario->detalle = 'Para anotar deposito al banco del efectivo de '.Date::parse($fecha)->toFormattedDateString();
             $diario->save();
           
           } elseif (Input::get('arqueocc_radios') == '2') {
@@ -346,8 +349,10 @@ class DiariocajasController extends Controller
             
             // registra en el mayor
             // registra un aumento en la cuenta Banco
-            Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $fecha, 'Para anotar el deposito del efectivo con faltante de '.Date::parse($fecha)->toFormattedDateString(), $total - Input::get('montofaltante'));   
+            Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $fecha, 'Para anotar deposito de Caja general con faltante de '.Date::parse($fecha)->toFormattedDateString(), $total - Input::get('montofaltante'));   
                      
+            // registra en el diario
+            // registra un aumento en la cuenta Cuentas por cobrar - empleados
             $dato = new Ctdiario;
             $dato->pcontable_id = $periodo->id;
             $dato->detalle = Catalogo::find(35)->nombre; // Cuentas por cobrar - empleados
@@ -366,11 +371,11 @@ class DiariocajasController extends Controller
             $diario->save();
 
             // registra uns disminucion en la cuenta de Caja general
-            Sity::registraEnCuentas($periodo->id, 'menos', 1, 32, $fecha, 'Para anotar el deposito del efectivo de '.Date::parse($fecha)->toFormattedDateString(), $total);     
+            Sity::registraEnCuentas($periodo->id, 'menos', 1, 32, $fecha, 'Para anotar deposito al banco del efectivo de '.Date::parse($fecha)->toFormattedDateString(), $total);     
             
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo->id;
-            $diario->detalle = 'Para anotar el deposito del efectivo con faltante de '.Date::parse($fecha)->toFormattedDateString();
+            $diario->detalle = 'Para anotar deposito de Caja general con faltante de '.Date::parse($fecha)->toFormattedDateString();
             $diario->save();          
           
           } elseif (Input::get('arqueocc_radios') == '3') {          
@@ -387,7 +392,7 @@ class DiariocajasController extends Controller
             
             // registra en el mayor
             // registra un aumento en la cuenta Banco
-            Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $fecha, 'Para anotar el deposito del efectivo con sobrante de '.Date::parse($fecha)->toFormattedDateString(), $total - Input::get('montosobrante'));   
+            Sity::registraEnCuentas($periodo->id, 'mas', 1, 8, $fecha, 'Para anotar deposito de Caja general con sobrante de '.Date::parse($fecha)->toFormattedDateString(), $total - Input::get('montosobrante'));   
                      
             // registra en Ctdiario principal
             $dato = new Ctdiario;
@@ -408,11 +413,11 @@ class DiariocajasController extends Controller
             $diario->save();
 
             // registra uns disminucion en la cuenta de Caja general
-            Sity::registraEnCuentas($periodo->id, 'menos', 1, 32, $fecha, 'Para anotar el deposito del efectivo de '.Date::parse($fecha)->toFormattedDateString(), $total);     
+            Sity::registraEnCuentas($periodo->id, 'menos', 1, 32, $fecha, 'Para anotar deposito al banco del efectivo de '.Date::parse($fecha)->toFormattedDateString(), $total);     
             
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo->id;
-            $diario->detalle = 'Para anotar el deposito del efectivo con sobrante de '.Date::parse($fecha)->toFormattedDateString();
+            $diario->detalle = 'Para anotar deposito de Caja general con sobrante de '.Date::parse($fecha)->toFormattedDateString();
             $diario->save();    
           }
 
