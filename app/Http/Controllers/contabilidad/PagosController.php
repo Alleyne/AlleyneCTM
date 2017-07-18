@@ -71,14 +71,16 @@ class PagosController extends Controller {
     $bancos = Banco::orderBy('nombre')->pluck('nombre', 'id')->all();
 		//dd($bancos);	    
     
+    //dd($key);
+    
     if ($key == 1) { // tipo cheque
 	    return view('contabilidad.pagos.createPagoTipo1')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
     
-    } elseif ($key == 4) { //tipo banca en linea
-	    return view('contabilidad.pagos.createPagoTipo4')        			
+    } elseif ($key == 4 || $key == 6 || $key == 7 ) { //tipo banca en linea
+	    return view('contabilidad.pagos.createPagoTipo467')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
@@ -88,12 +90,9 @@ class PagosController extends Controller {
 						->with('bancos', $bancos)
 						->with('key', $key)
 						->with('un_id', $un_id);
-    
-    } elseif ($key == 6 || $key == 7 ) {
-	    return view('contabilidad.pagos.createPagoTipo67')        			
-						->with('bancos', $bancos)
-						->with('key', $key)
-						->with('un_id', $un_id);
+
+    } else {
+    	Session::flash('danger', 'Tipo de pago '. $key.' no existe!');	
     }
     	
 	} 
@@ -104,8 +103,8 @@ class PagosController extends Controller {
 	public function store()
 	{
         
-		DB::beginTransaction();
-		try {
+		//DB::beginTransaction();
+		//try {
       //dd(Input::all());
       $input = Input::all();
 
@@ -216,6 +215,7 @@ class PagosController extends Controller {
 					
 					// proceso de contabilizar el pago recibido
 					//Npago::iniciaPago(Input::get('un_id'), $montoRecibido, $dato->id, Input::get('f_pago'), $periodo->id, $periodo->periodo, $tipoPago);
+					// dd('$key');
 					Npago::iniciaPago($pago, $periodo);
 
 					// Registra en bitacoras
@@ -228,11 +228,11 @@ class PagosController extends Controller {
 			}
 	    return back()->withInput()->withErrors($validation);
 		
-		} catch (\Exception $e) {
-			DB::rollback();
-			Session::flash('warning', 'Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
-			return back()->withInput()->withErrors($validation);
-		}
+		//} catch (\Exception $e) {
+			//DB::rollback();
+			//Session::flash('warning', 'Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+			//return back()->withInput()->withErrors($validation);
+		//}
 	}
 
   /*************************************************************************************

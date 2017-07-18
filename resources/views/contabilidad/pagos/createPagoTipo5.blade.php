@@ -160,30 +160,5 @@
 			$("#fecha").datepicker();
 		});
 	
-		var tipoDePago = jQuery('#trantipo_id');
-		var select = this.value;
-		tipoDePago.change(function () {
-		    if ($(this).val() == '1') {
-		      $('.bancos').show();		
-		      $('.transNo').hide();	
-		      $('.quecheNo').show();			    
-		    
-		    } else if ($(this).val() == '2' || $(this).val() == '3'|| $(this).val() == '4') {
-		      $('.bancos').show();		    	
-		      $('.transNo').show();	
-		      $('.quecheNo').hide();	
-
-		    } else if ($(this).val() == '5') {
-		      $('.bancos').hide();		    	
-		      $('.transNo').hide();	
-		      $('.quecheNo').hide();	
-
-		    } else if ($(this).val() == '6') {
-		      $('.bancos').show();		    	
-		      $('.transNo').hide();	
-		      $('.quecheNo').hide();	
-		    }		
-		});
-
 	</script>
 @stop

@@ -267,7 +267,7 @@ class FacturasController extends Controller {
 						6,
 						$cuenta->catalogo_id,
 						$f_factura,
-						'Egreso por Caja general, factura #'.$factura->doc_no.' - '.$factura->afavorde,
+						'Egreso por gastos, factura #'.$factura->doc_no.' - '.$factura->afavorde,
 						$monto,
 						Null,
 						Null,
@@ -284,7 +284,7 @@ class FacturasController extends Controller {
 						6,
 						15,
 						$f_factura,
-						'Egreso por Caja general, factura #'.$factura->doc_no.' - '.$factura->afavorde,
+						'Egreso por gastos, factura #'.$factura->doc_no.' - '.$factura->afavorde,
 						$itbms,
 						Null,
 						Null,
@@ -328,7 +328,7 @@ class FacturasController extends Controller {
 				2, 
 				6,
 				$f_factura,
-				'Egreso por Caja general, factura #'.$factura->doc_no.' - '.$factura->afavorde,
+				'Egreso por gastos, factura #'.$factura->doc_no.' - '.$factura->afavorde,
 				$montoTotal + $itbmsTotal,
 				Null,
 				Null,
@@ -348,7 +348,7 @@ class FacturasController extends Controller {
 	    // registra en Ctdiario principal
 	    $diario = new Ctdiario;
 	    $diario->pcontable_id  = $periodo->id;
-	    $diario->detalle = 'Para registrar egreso por Caja general, factura #'.$factura->doc_no.' - '.$factura->afavorde;
+	    $diario->detalle = 'Para registrar egreso por gastos, factura #'.$factura->doc_no.' - '.$factura->afavorde;
 	    $diario->save(); 
 
 			// cambia la factura de etapa pagar			
@@ -357,7 +357,7 @@ class FacturasController extends Controller {
 			$factura->save();	
 		  
 		  // Registra en bitacoras
-  		Sity::RegistrarEnBitacora($factura, Null, 'Factura', 'Contabiliza factura de egreso de Caja general'); 
+  		Sity::RegistrarEnBitacora($factura, Null, 'Factura', 'Contabiliza factura de egreso por gastos'); 
 			
 			DB::commit();		
 			

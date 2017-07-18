@@ -33,7 +33,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Registrar pagos tipo Banca en linea</h2>
+						<h2>Registrar pagos tipo Banca en linea, Tarjetas de debito y credito</h2>
 					</header>
 	
 					<!-- widget div-->
