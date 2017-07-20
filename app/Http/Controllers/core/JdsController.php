@@ -21,14 +21,14 @@ class JdsController extends Controller {
 	/*************************************************************************************
 	 * Despliega un grupo de registros en formato de tabla
 	 ************************************************************************************/	
-	public function index()
+	/*public function index()
 	{
 		//Obtiene todos las Jds actualmente registrados en la base de datos.
 		$datos = Jd::orderBy('nombre', 'asc')->get();
 		//dd($datoss->toArray());
 
 		return view('core.jds.index')->with('datos', $datos);     	
-	}	
+	}*/	
 
 		/*************************************************************************************
 		 * Despliega el registro especificado en formato formulario sólo lectura
@@ -49,15 +49,15 @@ class JdsController extends Controller {
 	 /*************************************************************************************
 		 * Despliega formulario para crear un nuevo registro
 		 ************************************************************************************/	
-	public function create()
+	/*public function create()
 	{
 		return view('core.jds.create');
-	}     
+	}*/     
 		
 		/*************************************************************************************
 		 * Almacena un nuevo registro en la base de datos
 		 ************************************************************************************/	
-	public function store()
+	/*public function store()
 	{
 		//dd(Input::all());
 			
@@ -114,7 +114,7 @@ class JdsController extends Controller {
 	    Session::flash('warning', ' Ocurrio un error en JdController@store, la transaccion ha sido cancelada!');
 	    return back()->withInput();
 	  }	
-	}
+	}*/
 		
 		
 	/*************************************************************************************
@@ -171,7 +171,7 @@ class JdsController extends Controller {
 				Session::flash('success', 'La Junta directiva ' .$dato->nombre. ' ha sido editada con éxito.');
 	  		
 	  		DB::commit();			
-				return redirect()->route('jds.index');
+				return redirect()->route('jds.show', 1);
 			}
 			return back()->withInput()->withErrors($validation);
 
@@ -187,12 +187,12 @@ class JdsController extends Controller {
   /*************************************************************************************
    * Borra registro de la base de datos
    ************************************************************************************/		
-	public function destroy($jd_id)
+	/*public function destroy($jd_id)
 	{
 		//dd($jd_id);
 		/*
 		No se permitirá borrar aquellas Juntas directivas que cumplan con por lo menos una de siguientes condiciones:
-		1. Juntas directivas que tengan por lo menos un Bloque asignado a la misma.*/
+		1. Juntas directivas que tengan por lo menos un Bloque asignado a la misma.
 		
 	  DB::beginTransaction();
 	  try {
@@ -222,7 +222,7 @@ class JdsController extends Controller {
 	    Session::flash('warning', ' Ocurrio un error en JdController@destroy, la transaccion ha sido cancelada!');
 	    return back()->withInput();
 	  }		
-	}
+	}*/
 
 		
 	//=====================================================================================

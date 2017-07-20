@@ -122,6 +122,7 @@
 											
 											<div class="form-actions">
 												<a href="{{ URL::route('jds.index') }}" class="btn btn-primary btn-large">Regresar</a>
+												<a href="{{ URL::route('jds.edit', $dato->id) }}" class="btn btn-warning "><i class="fa fa-pencil"></i></a>
 											</div>						
 										</form>
 				

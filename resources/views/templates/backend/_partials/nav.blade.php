@@ -6,7 +6,7 @@
 <!-- Escoje la navegación de acuerdo al grupo al que pertenece el usuario -->
 @if (Cache::get('esAdminkey'))
 	<li>
-		<a href="{{ URL::route('jds.index') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Junta Directiva</span></a>
+		<a href="{{ URL::route('jds.show', 1) }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Junta Directiva</span></a>
 	</li>
 	<li>
 		<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>

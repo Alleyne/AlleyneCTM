@@ -129,7 +129,7 @@
 									
 									<div class="form-actions">
 										{{ Form::submit('Salvar', array('class' => 'btn btn-success btn-save btn-large')) }}
-										<a href="{{ URL::route('jds.index') }}" class="btn btn-large">Cancelar</a>
+										<a href="{{ URL::route('jds.show', 1) }}" class="btn btn-large">Cancelar</a>
 									</div>
 							{{ Form::close() }}
 							</div>
