@@ -1561,10 +1561,10 @@ class Npago {
 
     // verifica si se trata de un pago en efectivo
     if ($dato->pagotipo == 5) {
-      $nota = $dato->pagotipo.' '.$dato->trantipo->siglas.', de la factura #'.$factura->doc_no.' '.$factura->afavorde;
+      $nota = $dato->pagotipo.' '.$dato->trantipo->siglas.' de la factura #'.$factura->doc_no.' '.$factura->afavorde;
     
     } else {
-      $nota = $dato->pagotipo.' '.$dato->trantipo->siglas.' #'.$dato->doc_no.', de la factura #'.$factura->doc_no.' '.$factura->afavorde;
+      $nota = $dato->pagotipo.' '.$dato->trantipo->siglas.' '.$dato->doc_no.' de la factura #'.$factura->doc_no.' '.$factura->afavorde;
     } 
     //dd($nota);
     

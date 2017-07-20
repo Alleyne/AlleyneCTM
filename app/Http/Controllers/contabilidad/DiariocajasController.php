@@ -272,30 +272,47 @@ class DiariocajasController extends Controller
                              ->where('tipo', 1)
                              ->where('debito', '>', 0);
                       })
-                    ->join('trantipos', function($join)
-                      {
-                        $join->on('pagos.trantipo_id', '=', 'trantipos.id');
-                      })
-                    ->get(['pagos.id as pagoNo', 'trantipos.id as trantipo_id', 'trantipos.nombre','codigo','trans_no','detalle','debito as monto']);
+                    ->get(['debito as monto']);
           //dd($ingresoEfectivos->toArray()); 
 
-          // calcula el total de ingresos recibidos por efectivo solamente
-          $totalEfectivos = $ingresoEfectivos->where('trantipo_id', 5)->sum('monto');  
-          //dd($totalEfectivos);
-          
-          // calcula el total de ingresos recibidos por cheque solamente
-          $totalCheques = $ingresoEfectivos->where('trantipo_id', 1)->sum('monto');  
-          //dd($totalCheques);
-          
-          // calcula el total de ingresos recibidos por cheque solamente
-          $totalTajetaDebito = $ingresoEfectivos->where('trantipo_id', 6)->sum('monto');  
-          //dd($totalCheques);       
-          
-          // calcula el total de ingresos recibidos por cheque solamente
-          $totalTarjetaCredito = $ingresoEfectivos->where('trantipo_id', 7)->sum('monto');  
-          //dd($totalCheques);
+          // calcula el total de ingresos recibidos por efectivo y cheques
+          $totalIngresoEfectivos = $ingresoEfectivos->sum('monto');  
+          //dd($totalIngresoEfectivos);
 
-          $total = $totalEfectivos + $totalCheques + $totalTajetaDebito + $totalTarjetaCredito;
+          // encuentra los datos para la seccion de Desembolsos de efectivo del Informe de caja diario (Cheque,Efectivo y tarjetas de credito)
+          // 1. encuentra la cantidad de efectivo desembolsado
+          $desembolsoEfectivos = Detallepagofactura::where('detallepagofacturas.fecha', $fecha)
+                    ->where(function($query){
+                              return $query
+                              ->where('trantipo_id', 1)
+                              ->orWhere('trantipo_id', 5)
+                              ->orWhere('trantipo_id', 6)
+                              ->orWhere('trantipo_id', 7);
+                                            })                
+                    ->join('ctmayores', function($join)
+                      {
+                        $join->on('detallepagofacturas.id', '=', 'ctmayores.detallepagofactura_id')
+                             ->where('tipo', 1)
+                             ->where('credito', '>', 0);
+                      })
+                    ->join('trantipos', function($join)
+                      {
+                        $join->on('detallepagofacturas.trantipo_id', '=', 'trantipos.id');
+                      })
+                    ->get(['credito as monto']);
+          
+          //dd($desembolsoEfectivos->toArray()); 
+
+          // encuentra las devoluciones por cancelacion o culminacion de eventos de reservacion de amenidades
+          $devoluciones = Eventodevolucione::where('fecha', $fecha)->get();
+          //dd($devoluciones->toArray());
+          
+          // calcula el total desembolsado en efectivo solamente      
+          $totalDesembolsoEfectivos = $desembolsoEfectivos->sum('monto') + $devoluciones->sum('monto');  
+          //dd($totalDesembolsoEfectivos);
+
+          $total = $totalIngresoEfectivos - $totalDesembolsoEfectivos;
+          //dd($total);
           
           // encuentra el periodo mas antiguo abierto
           $periodo= Pcontable::where('cerrado',0)->orderBy('id')->first();
