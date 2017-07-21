@@ -146,6 +146,7 @@ class Ppago {
       $cuenta_8 =  Catalogo::find(8)->nombre;    // 1020.00 Banco Nacional
       $cuenta_32 = Catalogo::find(32)->nombre;   // 1000.00 Caja general
       $i = 0;
+      
       $cuotasText='';
                
       foreach ($datos as $dato) {
@@ -183,20 +184,20 @@ class Ppago {
           // agrega ultima linea al libro diario
           $diario = new Ctdiario;
           $diario->pcontable_id  = $periodo;
-          $diario->detalle = 'Para registrar cobro de couta de mantenimiento regular, unidad '.$ocobro;
+          $diario->detalle = 'Para registrar cobro de couta de mant regular, unidad '.$ocobro;
           $diario->save();  
           
           // almacena en la variable global los datos del cobro para luego notificar al propietario via email, del descuento
           // realizado de su cuenta de pagos anticipados
           $cuotasText = $cuotasText.'Se descuenta B/.'.$importe.' para cancelar la cuota de mantenimiento de '.$ocobro.', ';
 
-          // registra en el mayor
+          // registra en el mayor 
           // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_1.', unidad '.$mesAnio, $importe, $un_id);
+          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, 'Descuenta cuota de mant regular de '.$mesAnio, $importe, $un_id);
 
           // registra en el mayor
           // registra un disminucion en la cuenta 1120.00 "Cuota de mantenimiento regular por cobrar" 
-          Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, $cuenta_1.', unidad '.$mesAnio, $importe, $un_id);
+          Sity::registraEnCuentas($periodo, 'menos', 1, 1, $f_pago, 'Cobra cuota de mant regular de '.$mesAnio.' (Anticipos)', $importe, $un_id);
         
         } // endif 2
       } //endforeach 1
@@ -286,11 +287,11 @@ class Ppago {
           
           // registra en el mayor
           // registra un disminucion en la cuenta 2 1130.00 Recargo en cuota de mantenimiento por cobrar
-          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.', unidad '.$mesAnio, $recargo, $un_id);
+          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, 'Descuenta recargo en cuota de mant regular de '.$mesAnio, $recargo, $un_id);
 
           // registra en el mayor
           // registra un disminucion en la cuenta 2 1130.00 Recargo en cuota de mantenimiento por cobrar
-          Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, $cuenta_2.', unidad '.$mesAnio, $importe, $un_id);
+          Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en cuota de mant regular de '.$mesAnio.' (Anticipos)', $importe, $un_id);
 
         } // endif 2
       } // endforeach 1
@@ -380,11 +381,11 @@ class Ppago {
 
           // registra en el mayor
           // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"
-          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_16.', unidad '.$mesAnio, $importe, $un_id);
+          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, 'Descuenta cuota de mant extraordinaria de '.$mesAnio, $importe, $un_id);
 
           // registra en el mayor
           // registra un disminucion en la cuenta 1120.00 "Cuota de mantenimiento regular por cobrar" 
-          Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, $cuenta_16.', unidad '.$mesAnio, $importe, $un_id);
+          Sity::registraEnCuentas($periodo, 'menos', 1, 16, $f_pago, 'Cobra cuota de mant extraordinaria de '.$mesAnio.' (Anticipos)', $importe, $un_id);
         
         } // endif 2
       } //endforeach 1
@@ -392,8 +393,5 @@ class Ppago {
       self::$mensaje = rtrim($cuotasText,',');    
     } // endif 1
   } // end function 
-
-
-
 
 } //fin de Class Ppago

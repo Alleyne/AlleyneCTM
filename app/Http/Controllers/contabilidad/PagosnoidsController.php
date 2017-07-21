@@ -112,6 +112,10 @@ class PagosnoidsController extends Controller
 					//return back()->withInput()->withErrors($validation);
 		    //}
 
+	      // incializa variables a utilizar
+	      $cuenta_31 = Catalogo::find(31)->nombre;    // 2030.00 Pagos no indentificados
+	      $cuenta_8 = Catalogo::find(8)->nombre;    // 1020.00 Banco Nacional
+
 				$pagosnoid = new Pagosnoid;
 				$pagosnoid->f_pago = Input::get('fecha');
 				$pagosnoid->banco_id = Input::get('banco_id');
@@ -135,13 +139,13 @@ class PagosnoidsController extends Controller
 	      $dato = new Ctdiario;
 	      $dato->pcontable_id = $periodo->id;
     		$dato->fecha = Input::get('fecha');
-        $dato->detalle = Catalogo::find(8)->nombre;        
+        $dato->detalle = $cuenta_8;        
         $dato->debito = Input::get('monto');
 	      $dato->save();
         
-	      $dato = new Ctdiario;
+	      $dato = new Ctdiario;  //31 2030.00 Pagos no indentificados
 	      $dato->pcontable_id = $periodo->id;
-        $dato->detalle = 'Pagos no indentificados'; 
+        $dato->detalle = $cuenta_31;
         $dato->credito = Input::get('monto');
 	      $dato->save(); 
 
@@ -157,7 +161,7 @@ class PagosnoidsController extends Controller
           1,
           8,
           Input::get('fecha'),
-          Catalogo::find(8)->nombre,
+          $cuenta_31,
           Input::get('monto'),
           Null,
           Null,
@@ -173,7 +177,7 @@ class PagosnoidsController extends Controller
           2,
           31,
           Input::get('fecha'),
-          'Pagos no identificados',
+          $cuenta_31,
           Input::get('monto'),
           Null,
           Null,
@@ -328,7 +332,7 @@ class PagosnoidsController extends Controller
 	    $dto->save();
 
 			// proceso de contabilizar el pago recibido
-			Npago::iniciaPago($un_id, $monto, $dato->id, $f_pago, $periodo->id, $periodo->periodo, 3);
+			Npago::iniciaPago($dato, $periodo);
 
 			DB::commit();		            
       Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado y procesado con éxito.');

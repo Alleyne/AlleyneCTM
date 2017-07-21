@@ -60,7 +60,7 @@
                                     <td><strong>{{ $dato->aprobadopor }}</strong></td>
 
                                     @if (Cache::get('esAdminkey'))
-                                        <td col width="320px" align="right">
+                                        <td col width="250px" align="right">
                                             <ul class="demo-btns">
                                                 @if ($dato->aprobado == 0)
                                                     <li>
@@ -68,9 +68,6 @@
                                                     </li> 
                                                     <li>
                                                         <a href="{{ URL::route('diariocajas.edit', $dato->id) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Depositar</a>
-                                                    </li> 
-                                                    <li>
-                                                        <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Ajustar</a>
                                                     </li> 
                                                 @else
                                                     <li>
@@ -86,9 +83,6 @@
                                                     <li>
                                                         <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
                                                     </li>                
-                                                    <li>
-                                                        <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Ajustar</a>
-                                                    </li> 
                                                 @else
                                                     <li>
                                                         <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
@@ -103,9 +97,6 @@
                                                     <li>
                                                         <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
                                                     </li>                
-                                                    <li>
-                                                        <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-wrench"></span> Ajustar</a>
-                                                    </li> 
                                                 @else
                                                     <li>
                                                         <a href="{{ URL::route('diariocajas.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe Diario de Caja</a>
