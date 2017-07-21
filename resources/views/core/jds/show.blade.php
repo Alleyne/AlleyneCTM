@@ -32,7 +32,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-							<h2>Datos de la Junta directiva </h2>
+							<h2>Junta directiva </h2>
 		
 						</header>
 		

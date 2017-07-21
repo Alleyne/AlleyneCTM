@@ -155,16 +155,17 @@ class Hojat {
   public static function getDataParaHojaDeTrabajo($periodo)
   {
     //dd($periodo);    
-    $data=array();    
-    $i=0;   
+    $data = array();    
+    $i = 0;   
+    
     //=== Primero =========================================================================================
     // Encuentra todas las cuentas activas en ctmayores para un determinado periodo
     // excluyendo la cuenta no 5 de Pagos anticipados
     //=====================================================================================================
-    $cuentas= Ctmayore::where('pcontable_id', $periodo)->where('cuenta','!=', 5)->select('cuenta')->get();
+    $cuentas = Ctmayore::where('pcontable_id', $periodo)->where('cuenta','!=', 5)->select('cuenta')->get();
     //dd($cuentas->toArray());
     
-    $cuentas= $cuentas->unique('cuenta');
+    $cuentas = $cuentas->unique('cuenta');
     //dd($cuentas->toArray());
       
     // procesa cada una de las cuentas encontradas excluyendo la cuenta no 5 de Pagos anticipados ya
@@ -175,13 +176,13 @@ class Hojat {
       $cta= Catalogo::find($cuenta->cuenta);
       //dd($cta->toArray());
       // Calcula el saldo de la cuenta tomando en cuenta el periodo y eliminado los ajustes hechos a la misma      
-      $totalDebito= Ctmayore::where('pcontable_id', $periodo)
+      $totalDebito = Ctmayore::where('pcontable_id', $periodo)
                     ->where('cuenta', $cta->id)
                     ->where('ajuste_siono', 0)
                     ->sum('debito');
       //dd($totalDebito);
       
-      $totalCredito= Ctmayore::where('pcontable_id', $periodo)
+      $totalCredito = Ctmayore::where('pcontable_id', $periodo)
                     ->where('cuenta', $cta->id)
                     ->where('ajuste_siono', 0)
                     ->sum('credito');
@@ -382,7 +383,7 @@ class Hojat {
       //=====================================================================================================
       //verifica si la cuenta en estudio tuvo ajustes
       //=====================================================================================================
-      $ajustes= Ctmayore::where('pcontable_id', $periodo)
+      $ajustes = Ctmayore::where('pcontable_id', $periodo)
                         ->where('cuenta', $cta->id)
                         ->where('ajuste_siono', 1)
                         ->first();
@@ -391,14 +392,14 @@ class Hojat {
       if ($ajustes) {
         // si la cuenta tuvo ajustes entonces
         // calcula el total de ajustes debito que tuvo la cuentao
-        $totalAjusteDebito= Ctmayore::where('pcontable_id', $periodo)
+        $totalAjusteDebito = Ctmayore::where('pcontable_id', $periodo)
                                     ->where('cuenta', $cuenta->cuenta)
                                     ->where('ajuste_siono', 1)
                                     ->sum('debito');
         // dd($totalAjusteDebito);
      
         // calcula el total de ajustes credito que tuvo la cuenta
-        $totalAjusteCredito= Ctmayore::where('pcontable_id', $periodo)
+        $totalAjusteCredito = Ctmayore::where('pcontable_id', $periodo)
                                     ->where('cuenta', $cuenta->cuenta)
                                     ->where('ajuste_siono', 1)
                                     ->sum('credito');
@@ -468,7 +469,7 @@ class Hojat {
           }        
         
         } elseif ($cta->tipo == 2) {
-          $totalAjuste= $totalAjusteCredito - $totalAjusteDebito; 
+          $totalAjuste = $totalAjusteCredito - $totalAjusteDebito; 
           if ($totalAjuste >= 0) {
             // si es mayor que cero huvo aumento en la cuenta
             $data[$i]["saldoAjuste_debito"] = 0;
@@ -567,12 +568,12 @@ class Hojat {
     //=== Segundo =========================================================================================
     // procesa individualmente cada una de las cuentas que comparten la cuenta de  Pagos anticipados 
     //=====================================================================================================
-    $uns= Ctmayore::where('pcontable_id', $periodo)
+    $uns = Ctmayore::where('pcontable_id', $periodo)
                   ->where('cuenta', 5)
                   ->select('un_id')->get();
     //dd($uns->toArray());
     
-    $uns= $uns->unique('un_id');
+    $uns = $uns->unique('un_id');
     //dd($uns->toArray());    
     
     // procesa cada una de las unidades que tubieron Pagos anticipados en el periodo
@@ -628,7 +629,7 @@ class Hojat {
       //=====================================================================================================
       //verifica si la cuenta en estudio tuvo ajustes
       //=====================================================================================================
-      $ajustes= Ctmayore::where('pcontable_id', $periodo)
+      $ajustes = Ctmayore::where('pcontable_id', $periodo)
                         ->where('cuenta', $cta->id)
                         ->where('un_id', $un->un_id)
                         ->where('ajuste_siono', 1)
@@ -638,7 +639,7 @@ class Hojat {
       if ($ajustes) {
         // si la cuenta tuvo ajustes entonces
         // calcula el total de ajustes debito que tuvo la cuentao
-        $totalAjusteDebito= Ctmayore::where('pcontable_id', $periodo)
+        $totalAjusteDebito = Ctmayore::where('pcontable_id', $periodo)
                                     ->where('cuenta', $cuenta->cuenta)
                                     ->where('un_id', $un->un_id)
                                     ->where('ajuste_siono', 1)
@@ -965,7 +966,7 @@ class Hojat {
       $dato->cuenta           = $cuenta->cuenta;
       $dato->codigo           = $cuenta->codigo;
       $dato->fecha            = $fecha->endOfMonth();
-      $dato->detalle          = Catalogo::find($cuenta->cuenta)->nombre.' '.$cuenta->codigo;
+      $dato->detalle          = 'Cierra '.Catalogo::find($cuenta->cuenta)->nombre;
       $dato->debito           = $saldoIngresos;
       $dato->credito          = 0;
       $dato->save();
@@ -1011,7 +1012,7 @@ class Hojat {
       $dato->cuenta           = $cuenta->cuenta;
       $dato->codigo           = $cuenta->codigo;
       $dato->fecha            = $fecha;
-      $dato->detalle          = '   '.Catalogo::find($cuenta->cuenta)->nombre;
+      $dato->detalle          = 'Cierra '.Catalogo::find($cuenta->cuenta)->nombre;
       $dato->debito           = 0;
       $dato->credito          = $saldoGastos;
       $dato->save();

@@ -175,6 +175,8 @@ Route::group(['namespace' => 'contabilidad'], function()
   Route::get('balancegeneral/{pcontable_id},{periodo}', 'HojadetrabajosController@balancegeneral')->name('balancegeneral');
   //Route::get('hojadetrabajo/{periodo}', 'HojadetrabajosController@hojadetrabajo')->name('hojadetrabajo');
   Route::get('verMayorAux/{periodo}, {cuenta}, {un_id?}', 'HojadetrabajosController@verMayorAux')->name('verMayorAux');
+  Route::get('verMayorAuxHis/{periodo}, {cuenta}', 'HojadetrabajosController@verMayorAuxHis')->name('verMayorAuxHis');
+
   Route::get('cierraPeriodo/{pcontable_id},{periodo},{fecha}', 'HojadetrabajosController@cierraPeriodo')->name('cierraPeriodo');
 	Route::resource('hojadetrabajos', 'HojadetrabajosController');
 

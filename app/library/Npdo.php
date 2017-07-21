@@ -84,7 +84,7 @@ class Npdo {
       $dato->cuenta        = $cuenta->id;
       $dato->codigo        = $cuenta->codigo;
       $dato->fecha         = $fecha;
-      $dato->detalle       = 'Inicializa cuenta '.$cuenta->codigo.' en cero por inicio de periodo contable '.$periodo;
+      $dato->detalle       = 'Inicializa cuenta en cero por inicio de periodo contable de '.$periodo;
       $dato->debito        = 0;
       $dato->credito       = 0;
       $dato->save();
@@ -105,7 +105,7 @@ class Npdo {
       $dato->cuenta       = $cuenta->id;
       $dato->codigo       = $cuenta->codigo;
       $dato->fecha        = $fecha;
-      $dato->detalle      = 'Inicializa cuenta '.$cuenta->codigo.' en cero por inicio de periodo contable '.$periodo;
+      $dato->detalle      = 'Inicializa cuenta en cero por inicio de periodo contable de '.$periodo;
       $dato->debito       = 0;
       $dato->credito      = 0;
       $dato->save();
@@ -176,7 +176,7 @@ class Npdo {
                 1,      // cuenta id
                 1,      // '1120.00',
                 $fecha,   // fecha
-                'Resumen de Cuota de mantenimiento regular por cobrar '.$periodo.'- OC dia '.$dia, // detalle
+                'Cuota de mant regular por cobrar para '.$periodo.'- OC dia '.$dia, // detalle
                 $totalIngresos // monto
               );
 
@@ -187,7 +187,7 @@ class Npdo {
                 4,        // cuenta id
                 3,        //'4120.00'
                 $fecha,   // fecha
-                'Resumen de Ingreso por cuota de mantenimiento regular'.$periodo.'- OC dia '.$dia, // detalle
+                'Ingresos esperados por cuota de mant regular para '.$periodo.'- OC dia '.$dia, // detalle
                 $totalIngresos // monto
               );
       } // end if 2

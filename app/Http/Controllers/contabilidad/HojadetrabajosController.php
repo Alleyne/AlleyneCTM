@@ -13,6 +13,7 @@ use Input, Session, Carbon\Carbon;
 use Validator, DB, Cache;
 
 use App\Ctmayore;
+use App\Ctmayorehi;
 use App\Catalogo;
 use App\Pcontable;
 use App\Ht;
@@ -392,7 +393,7 @@ class HojadetrabajosController extends Controller {
   * Despliega el mayor auxiliar de una determinada cuenta
   ************************************************************************************/   
   public function verMayorAux($periodo, $cuenta, $un_id) {
-    
+
     if ($un_id != 0) {
       $unCodigo = Un::find($un_id)->codigo;
       $datos= Ctmayore::where('pcontable_id', $periodo)
@@ -406,8 +407,8 @@ class HojadetrabajosController extends Controller {
                      ->where('cuenta', $cuenta)
                      ->get();
     }
-    //dd($datos->toArray());    
-        
+    //dd($datos->toArray());      
+
     $data=array();    
     $i=1;
     
@@ -469,6 +470,80 @@ class HojadetrabajosController extends Controller {
             ->with('unCodigo', $unCodigo)
             ->with('cuenta', $cuenta);
   }
+
+
+  /***********************************************************************************
+  * Despliega el mayor auxiliar de una determinada cuenta
+  ************************************************************************************/   
+  public function verMayorAuxHis($periodo, $cuenta) {
+
+    $datos = Ctmayorehi::where('pcontable_id', $periodo)
+                   ->where('cuenta', $cuenta)
+                   ->get();
+    //dd($periodo, $cuenta, $datos->toArray());
+    
+    $data = array();    
+    $i = 1;
+    
+    foreach ($datos as $dato) {
+      if ($dato->tipo == 1 || $dato->tipo == 6) {  
+        if ($i==1) {
+          $saldo = $dato->debito - $dato->credito;
+          $datas[$i]['fecha']= $dato->fecha;
+          $datas[$i]['codigo']= $dato->codigo;
+          $datas[$i]['detalle']= $dato->detalle;
+          $datas[$i]['ref']= "";   
+          $datas[$i]['debito']= $dato->debito;
+          $datas[$i]['credito']= $dato->credito;
+          $datas[$i]['saldo']=  $saldo;
+            
+        } else {
+          $saldo = ($dato->debito - $dato->credito) + $saldo;
+          $datas[$i]['fecha']= $dato->fecha;
+          $datas[$i]['codigo']= $dato->codigo;
+          $datas[$i]['detalle']= $dato->detalle;
+          $datas[$i]['ref']= ""; 
+          $datas[$i]['debito']= $dato->debito;
+          $datas[$i]['credito']= $dato->credito;
+          $datas[$i]['saldo']=  $saldo;
+        }       
+
+      } elseif ($dato->tipo == 2 || $dato->tipo == 3 || $dato->tipo == 4) {  
+          if ($i==1) {
+              $saldo = $dato->credito - $dato->debito;
+              $datas[$i]['fecha']= $dato->fecha;
+              $datas[$i]['codigo']= $dato->codigo;
+              $datas[$i]['detalle']= $dato->detalle;
+              $datas[$i]['ref']= "";
+              $datas[$i]['debito']= $dato->debito;
+              $datas[$i]['credito']= $dato->credito;
+              $datas[$i]['saldo']=  $saldo;
+              
+          } else {
+              $saldo = ($dato->credito - $dato->debito) + $saldo;
+              $datas[$i]['fecha']= $dato->fecha;
+              $datas[$i]['codigo']= $dato->codigo;
+              $datas[$i]['detalle']= $dato->detalle;
+              $datas[$i]['ref']= "";
+              $datas[$i]['debito']= $dato->debito;
+              $datas[$i]['credito']= $dato->credito;
+              $datas[$i]['saldo']=  $saldo;
+          }       
+
+      } else {
+        return 'Error: tipo de cuenta no exite en function Sity::getSaldoCuenta()';
+      }
+      $i++;
+    }
+    //dd($datas);
+
+    $cuenta= Catalogo::find($cuenta);
+    return view('contabilidad.hojadetrabajos.verMayorAux')
+            ->with('datas', $datas)
+            ->with('unCodigo', 0)
+            ->with('cuenta', $cuenta);
+  }
+
 
   /** 
   *==================================================================================================
@@ -619,7 +694,7 @@ class HojadetrabajosController extends Controller {
     $datos = Collection::make($data);
     //dd($datos);
     
-    $utilidad= $datos->sum('er_credito')-$datos->sum('er_debito'); 
+    $utilidad = $datos->sum('er_credito')-$datos->sum('er_debito'); 
     //dd($utilidad);
 
     $saldoAjustado_debito = $datos->sum('saldoAjustado_debito');
@@ -752,6 +827,11 @@ class HojadetrabajosController extends Controller {
                 ->with('utilidad', $utilidad) 
                 ->with('periodo', $periodo);
   }  
+
+
+
+
+
 
 
 } // fin de controller

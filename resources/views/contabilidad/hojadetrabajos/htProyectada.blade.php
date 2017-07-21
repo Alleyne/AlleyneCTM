@@ -116,6 +116,7 @@
 		<table class="table table-hove table-hover">
 		  <thead>
 			  <tr>
+			   <th class="hidden-print"></th>
 			   <th col width="65px"></th> 
 			   <th col width="395px"></th> 
 			   <th colspan="2" class="text-center borde celBg-gray">Balance de pruebas</th> 
@@ -126,6 +127,7 @@
 			  </tr>
 			  
 			  <tr align="right">
+			   <th col width="20px" class="hidden-print"></th>
 			   <th>Codigo</th> 
 			   <th>Cuenta</th> 
 			   <th class="text-center borde celBg-gray">Debito</th> 
@@ -144,7 +146,15 @@
 		  <tbody> 
 				@foreach ($datos as $dato)		   
 				  <tr> 
-						<td><a href="{{ URL::route('verMayorAux', array($dato['periodo'], $dato['cuenta'], $dato['un_id'])) }}"> {{ $dato['codigo'] }} </a></td>
+						<td class="hidden-print"><a href="{{ URL::route('verMayorAux',
+														 array($dato['periodo'],
+																  $dato['cuenta'],
+																	0 ,
+																	$dato['un_id']
+																)) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-book"></i></a>
+						</td>
+
+						<td>{{ $dato['codigo'] }}</td>
 						<td>{{ $dato['cta_nombre'] }}</td>
 					
 						<td class="text-right celBg-yellow borde">
@@ -190,6 +200,7 @@
 				@endforeach
 
 				<tr> 
+					<td class="hidden-print">&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_bp_debito,2) }}</p></td> 
@@ -205,7 +216,8 @@
 				</tr>		  
 
 				<tr> 
-					<th></th> 
+					<td class="hidden-print"></td>
+					<td></td> 
 					<td>Utilidad</td> 
 					<td></td> 
 					<td></td> 
@@ -232,7 +244,8 @@
 				</tr>	
 				
 				<tr> 
-					<th scope="row"></th> 
+					<td class="hidden-print"></td> 
+					<td></td>
 					<td></td> 
 					<td></td> 
 					<td></td> 
