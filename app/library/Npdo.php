@@ -14,7 +14,8 @@ use App\Blqadmin;
 use App\Detalledescuento;
 
 class Npdo {
-
+  // Nuevo periodo contable
+  
   /** 
   *=============================================================================================
   * Esta function crea un nuevo periodo contable
@@ -36,17 +37,17 @@ class Npdo {
 
     // inicializa en el libro mayor todas las cuentas temporales activas presentes en el
     // catalogo de cuentas, no registra en el diario principal      
-    Npdo::inicializaCuentasTemp($periodo->id, $periodo->periodo, $fecha);
+    self::inicializaCuentasTemp($periodo->id, $periodo->periodo, $fecha);
     
     // calcula y contabiliza en libros los ingresos esperados en cuotas de mantenimiento regulares
     // para todas las secciones cuya ocobro se genera los dias primero o dieciseis de cada mes
-    Npdo::ingresoEsperadoCuotaRegular(1, $fecha, $periodo->id, $periodo->periodo); 
-    Npdo::ingresoEsperadoCuotaRegular(16, $fecha, $periodo->id, $periodo->periodo);
+    self::ingresoEsperadoCuotaRegular(1, $fecha, $periodo->id, $periodo->periodo); 
+    self::ingresoEsperadoCuotaRegular(16, $fecha, $periodo->id, $periodo->periodo);
     
     // calcula y contabiliza en libros los ingresos esperados en cuotas de mantenimiento extraordinarias
     // para todas las secciones cuya ocobro se genera los dias primero o dieciseis de cada mes
-    Npdo::ingresoEsperadoCuotaExtraordinaria(1, $fecha, $periodo->id, $periodo->periodo);
-    Npdo::ingresoEsperadoCuotaExtraordinaria(16, $fecha, $periodo->id, $periodo->periodo);
+    self::ingresoEsperadoCuotaExtraordinaria(1, $fecha, $periodo->id, $periodo->periodo);
+    self::ingresoEsperadoCuotaExtraordinaria(16, $fecha, $periodo->id, $periodo->periodo);
     
     // Registra en bitacoras
     $detalle = 'Registra periodo contable de '.$periodo->periodo;
@@ -285,6 +286,5 @@ class Npdo {
       } // end if 2
     } // end if 1
   } // end of function
-
 
 } //fin de Class Npdo

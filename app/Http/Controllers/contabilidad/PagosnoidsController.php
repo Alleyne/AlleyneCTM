@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
+use App\library\Npagonoid;
 use App\library\Npago;
 use App\library\Sity;
 use Session, DB;
@@ -121,17 +122,20 @@ class PagosnoidsController extends Controller
 				$pagosnoid->banco_id = Input::get('banco_id');
 				$pagosnoid->banco = Banco::find(Input::get('banco_id'))->nombre;
 				
-				if (Input::get('tipodoc_radios') == 1) {
+				/*if (Input::get('tipodoc_radios') == 1) {
 					$pagosnoid->tipo = 1;
 				
 				} elseif (Input::get('tipodoc_radios') == 2) {
 					$pagosnoid->tipo = 2;
-				}
+				}*/
 				
 				$pagosnoid->doc_no = Input::get('doc_no');  
 				$pagosnoid->monto = Input::get('monto');
 				$pagosnoid->save();
 			
+  			// cambia el formato de la fecha del pago no identificado
+  			$fecha = Date::parse($pagosnoid->f_pago)->toFormattedDateString();
+
   			Sity::RegistrarEnBitacora($pagosnoid, Input::get(), 'Pagosnoid', 'Registra pago no identificado');
 
 				// registra en libros
@@ -151,8 +155,8 @@ class PagosnoidsController extends Controller
 
 	      // registra en Ctdiario principal
 	      $dato = new Ctdiario;
-	      $dato->pcontable_id = $periodo->id;
-        $dato->detalle = 'Para registrar pago no identificado';
+	      $dato->pcontable_id = $periodo->id;	
+        $dato->detalle = 'Para registrar pago no identificado #'.$pagosnoid->id.' '.$fecha;
 	      $dato->save(); 
 	      
         Sity::registraEnCuentas(
@@ -161,7 +165,7 @@ class PagosnoidsController extends Controller
           1,
           8,
           Input::get('fecha'),
-          $cuenta_31,
+          $cuenta_31.' #'.$pagosnoid->id.' '.$fecha,
           Input::get('monto'),
           Null,
           Null,
@@ -177,7 +181,7 @@ class PagosnoidsController extends Controller
           2,
           31,
           Input::get('fecha'),
-          $cuenta_31,
+          $cuenta_31.' #'.$pagosnoid->id.' '.$fecha,
           Input::get('monto'),
           Null,
           Null,
@@ -282,13 +286,16 @@ class PagosnoidsController extends Controller
   /*************************************************************************************
    * Almacena un nuevo registro en la base de datos
    ************************************************************************************/	
-	public function contabilizaPagonoid($pagosnoid_id, $f_pago, $un_id, $monto, $banco_id, $doc_no) {
-
+	public function contabilizaPagonoid($pagonoid_id) {
+		//dd($pagosnoid_id, $f_pago, $un_id, $monto, $banco_id, $doc_no);
 		DB::beginTransaction();
 		try {
-		    
+		  // encuentra los detalles del pago ya identificado
+	    $pagoid = Pagosnoid::find($pagonoid_id);
+	    
 	    // calcula el periodo al que corresponde la fecha de pago
 	    //$f_pago= Carbon::parse($f_pago);
+	    //$f_pago= Carbon::today();
 	    //$year= $f_pago->year;
 	    //$month= $f_pago->month;
 	    //$pdo= Sity::getMonthName($month).'-'.$year;    
@@ -304,43 +311,43 @@ class PagosnoidsController extends Controller
 	   //}
 
 			// antes de iniciar el proceso de pago, ejecuta el proceso de penalizacion
-			Npago::penalizarTipo2($f_pago, $un_id, $periodo->id);
+			//Npago::penalizarTipo2(Carbon::today(), $pagoid->un_id, $periodo->id);
 
 			// Almacena el monto de la transaccion
-			$montoRecibido= round(floatval($monto),2);
+			$montoRecibido = round(floatval($pagoid->monto),2);
 
 			// Registra el pago recibido
 			$dato = new Pago;
-			$dato->banco_id    = $banco_id;
-			$dato->trantipo_id = 4;           //ACH
-		  $dato->trans_no    = $doc_no; 
-			$dato->monto       = $monto;
-			$dato->f_pago      = $f_pago;
+			$dato->banco_id    = $pagoid->banco_id;
+			$dato->trantipo_id = 4;
+		  $dato->trans_no    = $pagoid->doc_no; 
+			$dato->monto       = $montoRecibido;
+			$dato->f_pago      = Carbon::today();
 			$dato->descripcion = 'Para registrar pago no identificado';
 		  $dato->fecha 	   	 = Carbon::today(); 		    
 			$dato->entransito  = 0;
-			$dato->un_id       = $un_id;
+			$dato->un_id       = $pagoid->un_id;
 	    $dato->user_id 	   = Auth::user()->id; 		    
 	    $dato->save();
 			
 			// Registra en bitacoras
-  		Sity::RegistrarEnBitacora($dato, Null, 'Pago', 'Contabiliza pago no identificado');
+  		Sity::RegistrarEnBitacora($dato, Null, 'Pago', 'Contabiliza pago identificado');
 			
 			// actualiza pago no identificado como contabilizado
-			$dto = Pagosnoid::find($pagosnoid_id);
+			$dto = Pagosnoid::find($pagonoid_id);
 			$dto->contabilizado = 1;
 	    $dto->save();
 
 			// proceso de contabilizar el pago recibido
-			Npago::iniciaPago($dato, $periodo);
+			Npagonoid::iniciaPago($dato, $periodo);
 
 			DB::commit();		            
-      Session::flash('success', 'El pago ' .$dato->id. ' ha sido creado y procesado con éxito.');
+      Session::flash('success', 'El pago identificado ha sido creado y procesado con éxito.');
 			return redirect()->route('pagosnoids.index');
 	
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', 'Ocurrio un error en el modulo PagosController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+			Session::flash('warning', 'Ocurrio un error en el modulo PagosController.contabilizaPagonoid, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back();
 		}
 	}

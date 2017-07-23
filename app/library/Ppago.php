@@ -6,7 +6,7 @@ use App\library\Sity;
 use App\library\Pant;
 //use App\Notifications\emailNuevaOcobro;
 use App\Notifications\emailUsoDeCuentaAnticipados;
-use Session, DB;
+use Session, DB, Log;
 
 use App\Un;
 use App\Prop;
@@ -19,8 +19,6 @@ use App\Pcontable;
 use App\Ctmayore;
 use App\Pago;
 
-use Log;
-
 class Ppago {
 
   // variable global a la clase
@@ -28,7 +26,10 @@ class Ppago {
   
   /** 
   *=============================================================================================
-  * Esta function comienza el proceso de contabilizar los pagos recibidos y notifica al propietario
+  * Este proceso se encarga de cobrar todas las facturaciones posibles dependiendo del monto disponible en la
+  * al cuenta de pagos por adelantados al momento de crear un nuevo periodo contable. Tambien notifica
+  * al propietario del uso de su cuenta de pagos anticipados para cubri la deuda o parte de la deuda total
+  *
   * @param  string        $un_id          "1"
   * @param  string        $f_pago         "2016-01-30"
   * @param  integer       $periodo        3
@@ -38,22 +39,10 @@ class Ppago {
   public static function iniciaPago($un_id, $f_pago, $periodo, $pdo) {
   //dd($un_id, $f_pago, $periodo, $pdo);
 
-    
     // procesa el pago recibido
     self::$mensaje = '';
     self::procesaPago($un_id, $f_pago, $periodo, $pdo);
     //dd(self::$mensaje);
-
-    // procede a notificar a cada uno de los propietario encargados sobre la generacion de una nueva order de cobro
-    /*foreach ($props as $prop) {
-      $user= User::find($prop->id);
-      //dd($user);
-      $user->notify(new emailNuevaOcobro($pdo, $user->nombre_completo));      
-    } */
-  
-    // procede a notificar a cada uno de los propietario encargados sobre la generacion de una nueva order de cobro  
-    // encuentra todos los propietarios encargados de la unidad
-    $props= Prop::where('un_id', $un_id)->where('encargado', 1)->get();
 
     // contruye el mensaje a enviar de acuerdo a si se utilizo la cuenta de pagos anticipados de la unidad
     if (self::$mensaje != "") {
@@ -68,6 +57,10 @@ class Ppago {
     } 
     //dd($nota);
     
+    // procede a notificar a cada uno de los propietario encargados sobre la generacion de una nueva order de cobro  
+    // encuentra todos los propietarios encargados de la unidad
+    $props= Prop::where('un_id', $un_id)->where('encargado', 1)->get();
+
     // notifica a cada uno
     foreach ($props as $prop) {
       $user= User::find($prop->user_id);              
@@ -75,9 +68,6 @@ class Ppago {
       //$user->notify(new emailUsoDeCuentaAnticipados($nota, $user->nombre_completo));
       //$user->notify(new emailNuevaOcobro($pdo, $prop->user->nombre_completo));   
     }  
-
-
-
   } // end function
 
   /** 

@@ -69,7 +69,7 @@
 											</div>
 										</div>	
 
-										<!-- Multiple Radios (inline) -->
+										<!-- Multiple Radios (inline)
 										<div class="form-group">
 										  <label class="col-md-3 control-label" for="radios">Tipo de documento:</label>
 										  <div class="col-md-9"> 
@@ -82,7 +82,7 @@
 										      Tipo 2
 										    </label>
 										  </div>
-										</div>
+										</div> -->
 
 										<div class="form-group factura">
 											<label class="col-md-3 control-label">Transaccion No.</label>

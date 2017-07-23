@@ -75,8 +75,10 @@
                                                         <a href="{{ URL::route('identificarPagoCreate', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> </a>
                                                     </li> 
                                                     <li>
+                                                        
                                                         {{Form::open(array(
-                                                            'route' => array('contabilizaPagonoid',$dato->id, $dato->f_pago, $dato->un_id, $dato->monto, $dato->banco_id, $dato->doc_no),
+                                                            //'route' => array('contabilizaPagonoid',$dato->id, $dato->f_pago, $dato->un_id, $dato->monto, $dato->banco_id, $dato->doc_no),
+                                                            'route' => array('contabilizaPagonoid', $dato->id),
                                                             'method' => 'GET',
                                                             'style' => 'display:inline'
                                                         ))}}
@@ -86,7 +88,7 @@
                                                             'data-toggle' => 'modal',
                                                             'data-target' => '#confirmAction',
                                                             'data-title' => 'Contabilizar pago identificado',
-                                                            'data-message' => 'Esta seguro(a) que desea contabilizar el presente pago identificado?',
+                                                            'data-message' => 'ATENCION: Para contabilizar el pago ya identificado, el sistema tomara la fecha del dia de hoy como fecha real de pago, asi que existira la posibilidad de que el propietario se penalizado con recargo por pago tardio. Es responsabilidad del propietario presentar el comprobante de pago el mismo dia en que efectua el deposito en el banco. Esta seguro(a) que desea contabilizar el presente pago identificado?',
                                                             'data-btntxt' => 'SI, contabilizar pago',
                                                             'data-btncolor' => 'btn-success'
                                                         ))}}

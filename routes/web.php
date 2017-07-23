@@ -246,7 +246,8 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------//
 	// Funciones del controlador EcajachicasController
 	//---------------------------------------------------------// 		
-  Route::get('contabilizaPagonoid/{pagosnoid_id},{f_pago},{un_id},{monto},{banco_id},{doc_no}', 'PagosnoidsController@contabilizaPagonoid')->name('contabilizaPagonoid');
+  //Route::get('contabilizaPagonoid/{pagosnoid_id},{f_pago},{un_id},{monto},{banco_id},{doc_no}', 'PagosnoidsController@contabilizaPagonoid')->name('contabilizaPagonoid');
+  Route::get('contabilizaPagonoid/{pagonoid_id}', 'PagosnoidsController@contabilizaPagonoid')->name('contabilizaPagonoid');
   Route::post('identificarPagoStore', 'PagosnoidsController@identificarPagoStore')->name('identificarPagoStore');
   Route::get('identificarPagoCreate/{pagosnoid_id}', 'PagosnoidsController@identificarPagoCreate')->name('identificarPagoCreate');
 	Route::resource('pagosnoids', 'PagosnoidsController');
@@ -378,26 +379,22 @@ use App\Seccione;
 use App\User;
 use App\Pago;
 use App\Ctmayore;
-
+use App\Notifications\emailUsoDeCuentaAnticipados;
+use App\Notifications\emailNuevaOcobro;
 Route::get('/query', function () {
       
-     $tcredito= Ctmayore::where('un_id', 1)
-                  ->where('pcontable_id', 2)
-                  ->where('cuenta', 5)
-                  ->sum('credito');
+    // procede a notificar a cada uno de los propietario encargados sobre la generacion de una nueva order de cobro  
+    // encuentra todos los propietarios encargados de la unidad
+    //$props= Prop::where('un_id', $un_id)->where('encargado', 1)->get();
 
-      $tdebito= Ctmayore::where('un_id', 1)
-                  ->where('pcontable_id',2)
-                  ->where('cuenta', 5)
-                  ->sum('debito');
-      //dd($tcredito, $tdebito);        
-      
-      $sa= round(floatval($tcredito),2) - round(floatval($tdebito),2);
-    
-    // si no tiene saldo, iniciliza en cero
-    $sa = ($sa) ? $sa : 0;
-    //dd($sa);    
-    return $sa;
+    // notifica a cada uno
+    //foreach ($props as $prop) {
+      $user= User::find(17);              
+      $nota = 'Para notificarle que se ha generado la orden de cobro proveniente de su cuenta de pagos anticipados para cancelar lo siguiente: ';
+ 
+      $user->notify(new emailUsoDeCuentaAnticipados($nota, $user->nombre_completo));
+      $user->notify(new emailNuevaOcobro($pdo, $prop->user->nombre_completo));   
+    //}  
 
 //$data= Seccione::find(1)->secapto;
 

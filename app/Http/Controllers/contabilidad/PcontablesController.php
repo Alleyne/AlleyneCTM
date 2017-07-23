@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use App\library\Sity;
 use App\library\Npdo;
 use App\library\Fact;
-use App\library\Ppago;
 use App\Pcontable;
 use App\Bitacora;
 use App\Concilia;
