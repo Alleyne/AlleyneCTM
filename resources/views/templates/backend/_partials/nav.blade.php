@@ -12,7 +12,7 @@
 		<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
 	</li>	
 	<li class="active">
-		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Ingresos</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Cobros</span></a>
 		<ul>
 			<li>
 				<a href="{{ URL::route('indexunall') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Por Unidades</span></a>
@@ -27,7 +27,7 @@
 	</li>
 
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja General</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Compras</span></a>
 		<ul>
 			<li>
 				<a href="{{ URL::route('facturas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Registrar facturas</span></a>

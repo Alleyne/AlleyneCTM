@@ -34,7 +34,7 @@ class Graph {
     $totalAdeudado= $uns->where('deuda', '>', 0)->sum('deuda');
     
     // ordena de forma descenciente la colleccion
-    $uns= $uns->where('deuda', '>', 0)->sortByDesc('deuda');
+    $uns= $uns->where('deuda', '>', 0)->sortByDesc('deuda')->take(15);
     //dd($uns->toArray()); 
 
     if ($uns->count()) {

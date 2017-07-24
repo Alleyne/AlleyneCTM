@@ -60,7 +60,7 @@ class Fact {
       if ($secapto->f_iniciaextra) {
         $f_inicio = Carbon::parse($secapto->f_iniciaextra); // fecha en que inicia el cobro de la cuota extraordinaria
         $f_final = Carbon::parse($secapto->f_iniciaextra)->addMonths($secapto->extra_meses); // fecha en que termina el cobro de la cuota extraordinaria
-
+        
         if ($fecha->between($f_inicio, $f_final)) {
           // si la fecha del periodo en estudio esta entre la fecha de inicio y la fecha final,
           // quiere decir que hay que aplicar el cobro de la cuota extraordinaria a todas las unidades de la seccion en estudio

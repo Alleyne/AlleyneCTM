@@ -445,7 +445,21 @@ class Npagonoid {
           if ($montoRecibido >= $recargo) {
             // se recibio suficiente dinero para pagar por lo menos un recargo,
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
-              
+            
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->fecha = $f_pago;
+            $diario->detalle = 'Pagos no indentificados';
+            $diario->debito  = $recargo;
+            $diario->save();
+            
+            $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
+            
+            // registra en el mayor
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            Sity::registraEnCuentas($periodo, 'menos', 2, 31, $f_pago, 'Descuenta para recargo en mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id);       
+
             // registra en el diario
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar"  
             $diario = new Ctdiario;
@@ -475,6 +489,20 @@ class Npagonoid {
             // disminuye el saldo de la cuenta Pagos anticipados
             // redondeo el resultado para eliminar decimales extras producto de la resta
             $saldocpa = round(($saldocpa - $recargo), 2);
+
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->fecha = $f_pago;
+            $diario->detalle = 'Pagos no indentificados';
+            $diario->debito  = $recargo;
+            $diario->save();
+            
+            $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
+            
+            // registra en el mayor
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            Sity::registraEnCuentas($periodo, 'menos', 2, 31, $f_pago, 'Descuenta para recargo en cuota de mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id);       
 
             // registra en el diario
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"  
@@ -522,7 +550,20 @@ class Npagonoid {
             // disminuye el saldo de la cuenta Pagos anticipados
             // redondeo el resultado para eliminar decimales extras producto de la resta
             $saldocpa = round(($saldocpa - ($recargo - $montoRecibido)), 2);
-
+            
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->fecha = $f_pago;
+            $diario->detalle = 'Pagos no indentificados';
+            $diario->debito  = ($recargo - $montoRecibido);
+            $diario->save();
+            
+            $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
+            
+            // registra en el mayor
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            Sity::registraEnCuentas($periodo, 'menos', 2, 31, $f_pago, 'Descuenta para cuota de mant regular de '.$mesAnio.$nota, ($recargo - $montoRecibido), $un_id, $pago_id);       
              
             // registra en el diario
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"  
@@ -669,6 +710,20 @@ class Npagonoid {
             // se recibio suficiente dinero para pagar por lo menos una cuota,
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->fecha = $f_pago;
+            $diario->detalle = 'Pagos no indentificados';
+            $diario->debito  = $extra;
+            $diario->save();
+            
+            $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
+            
+            // registra en el mayor
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            Sity::registraEnCuentas($periodo, 'menos', 2, 31, $f_pago, 'Descuenta para cuota de mant regular de '.$mesAnio.$nota, $extra, $un_id, $pago_id);       
+
             // registra en el diario
             // registra un disminucion en la cuenta 1120.00 "Cuotas de mantenimiento extraordinarias por cobrar"  
             $diario = new Ctdiario;
@@ -698,6 +753,20 @@ class Npagonoid {
             // disminuye el saldo de la cuenta Pagos anticipados
             // redondeo el resultado para eliminar decimales extras producto de la resta
             $saldocpa = round(($saldocpa - $extra), 2);
+
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->fecha = $f_pago;
+            $diario->detalle = 'Pagos no indentificados';
+            $diario->debito  = $extra;
+            $diario->save();
+            
+            $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
+            
+            // registra en el mayor
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            Sity::registraEnCuentas($periodo, 'menos', 2, 31, $f_pago, 'Descuenta para cuota de mant regular de '.$mesAnio.$nota, $extra, $un_id, $pago_id);       
 
             // registra en el diario
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"  
@@ -744,6 +813,20 @@ class Npagonoid {
 
             // disminuye el saldo de la cuenta Pagos anticipados
             $saldocpa = round(($saldocpa - ($extra - $montoRecibido)), 2);
+
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->fecha = $f_pago;
+            $diario->detalle = 'Pagos no indentificados';
+            $diario->debito  = ($extra - $montoRecibido);
+            $diario->save();
+            
+            $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
+            
+            // registra en el mayor
+            // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
+            Sity::registraEnCuentas($periodo, 'menos', 2, 31, $f_pago, 'Descuenta para cuota de mant regular de '.$mesAnio.$nota, ($extra - $montoRecibido), $un_id, $pago_id);       
 
             // registra en el diario
             // registra un disminucion en la cuenta 2010.00 "Anticipos recibidos de propietarios"  
