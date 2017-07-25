@@ -156,6 +156,7 @@ class Npagonoid {
       $cuenta_5 = Catalogo::find(5)->nombre;    // 2010.00 Anticipos recibidos de propietarios
       $cuenta_31 = Catalogo::find(31)->nombre;  // 2030.00 Pagos no indentificados
 
+      $i = 0;
       $hayPie = false;
 
       // me aseguro de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
@@ -185,11 +186,12 @@ class Npagonoid {
             // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo;
-            $diario->fecha = $f_pago;
+            if ($i == 0) { $diario->fecha = $f_pago; }
             $diario->detalle = 'Pagos no indentificados';
             $diario->debito  = $importe;
             $diario->save();
             
+            $i = 1;
             $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
             
             // registra en el mayor
@@ -229,11 +231,12 @@ class Npagonoid {
             // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo;
-            $diario->fecha = $f_pago;
+            if ($i == 0) { $diario->fecha = $f_pago; }
             $diario->detalle = 'Pagos no indentificados';
             $diario->debito  = $importe;
             $diario->save();
             
+            $i = 1;
             $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
             
             // registra en el mayor
@@ -290,11 +293,12 @@ class Npagonoid {
             // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo;
-            $diario->fecha = $f_pago;
+            if ($i == 0) { $diario->fecha = $f_pago; }
             $diario->detalle = 'Pagos no indentificados';
             $diario->debito  = ($importe - $montoRecibido);
             $diario->save();
             
+            $i = 1;
             $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
             
             // registra en el mayor
@@ -420,6 +424,7 @@ class Npagonoid {
       $cuenta_5 = Catalogo::find(5)->nombre;    // 2010.00 Anticipos recibidos de propietarios
       $cuenta_31 = Catalogo::find(31)->nombre;  // 2030.00 Pagos no indentificados
 
+      $i = 0;
       $hayPie = false;
 
       // me aseguro de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
@@ -449,11 +454,12 @@ class Npagonoid {
             // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo;
-            $diario->fecha = $f_pago;
+            if ($i == 0) { $diario->fecha = $f_pago; }
             $diario->detalle = 'Pagos no indentificados';
             $diario->debito  = $recargo;
             $diario->save();
             
+            $i = 1;
             $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
             
             // registra en el mayor
@@ -493,11 +499,12 @@ class Npagonoid {
             // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo;
-            $diario->fecha = $f_pago;
+            if ($i == 0) { $diario->fecha = $f_pago; }
             $diario->detalle = 'Pagos no indentificados';
             $diario->debito  = $recargo;
             $diario->save();
             
+            $i = 1;
             $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
             
             // registra en el mayor
@@ -554,11 +561,12 @@ class Npagonoid {
             // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo;
-            $diario->fecha = $f_pago;
+            if ($i == 0) { $diario->fecha = $f_pago; }
             $diario->detalle = 'Pagos no indentificados';
             $diario->debito  = ($recargo - $montoRecibido);
             $diario->save();
             
+            $i = 1;
             $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
             
             // registra en el mayor
@@ -619,7 +627,7 @@ class Npagonoid {
         // agrega ultima linea al libro diario
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de recargo en couta de mant regular, unidad'.$nota;
+        $diario->detalle = 'Para registrar cobro de recargo en cuota de mant regular, unidad'.$nota;
         $diario->save();
       }
 
@@ -684,6 +692,7 @@ class Npagonoid {
       $cuenta_5 = Catalogo::find(5)->nombre;    // 2010.00 Anticipos recibidos de propietarios
       $cuenta_31 = Catalogo::find(31)->nombre;  // 2030.00 Pagos no indentificados
 
+      $i = 0;
       $hayPie = false;
 
       // me aseguro de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
@@ -713,11 +722,12 @@ class Npagonoid {
             // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo;
-            $diario->fecha = $f_pago;
+            if ($i == 0) { $diario->fecha = $f_pago; }
             $diario->detalle = 'Pagos no indentificados';
             $diario->debito  = $extra;
             $diario->save();
             
+            $i = 1;
             $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
             
             // registra en el mayor
@@ -757,11 +767,12 @@ class Npagonoid {
             // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo;
-            $diario->fecha = $f_pago;
+            if ($i == 0) { $diario->fecha = $f_pago; }
             $diario->detalle = 'Pagos no indentificados';
             $diario->debito  = $extra;
             $diario->save();
             
+            $i = 1;
             $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
             
             // registra en el mayor
@@ -817,11 +828,12 @@ class Npagonoid {
             // registra una disminucion en la cuenta 31 2030.00 Pagos no indentificados 
             $diario = new Ctdiario;
             $diario->pcontable_id  = $periodo;
-            $diario->fecha = $f_pago;
+            if ($i == 0) { $diario->fecha = $f_pago; }
             $diario->detalle = 'Pagos no indentificados';
             $diario->debito  = ($extra - $montoRecibido);
             $diario->save();
             
+            $i = 1;
             $nota = ' '.$unCodigo.', Pago #'.$pago_id.' bl-'.$trans_no;
             
             // registra en el mayor
@@ -882,7 +894,7 @@ class Npagonoid {
         // agrega ultima linea al libro diario
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de couta de mant extraordinaria, unidad'.$nota;
+        $diario->detalle = 'Para registrar cobro de cuota de mant extraordinaria, unidad'.$nota;
         $diario->save();
       }
 

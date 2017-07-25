@@ -372,7 +372,7 @@ class Desc {
       if ($hayPie) {
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de couta de mantenimiento regular con descuento, unidad '.$un->codigo.', Pago #'.$pago_id;
+        $diario->detalle = 'Para registrar cobro de cuota de mantenimiento regular con descuento, unidad '.$un->codigo.', Pago #'.$pago_id;
         $diario->save();
       }
 

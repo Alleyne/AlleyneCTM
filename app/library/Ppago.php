@@ -174,7 +174,7 @@ class Ppago {
           // agrega ultima linea al libro diario
           $diario = new Ctdiario;
           $diario->pcontable_id  = $periodo;
-          $diario->detalle = 'Para registrar cobro de couta de mant regular, unidad '.$ocobro;
+          $diario->detalle = 'Para registrar cobro de cuota de mant regular, unidad '.$ocobro;
           $diario->save();  
           
           // almacena en la variable global los datos del cobro para luego notificar al propietario via email, del descuento
@@ -268,7 +268,7 @@ class Ppago {
           // agrega ultima linea al libro diario
           $diario = new Ctdiario;
           $diario->pcontable_id  = $periodo;
-          $diario->detalle = 'Para registrar cobro de recargo en couta de mantenimiento regular, unidad '.$ocobro;
+          $diario->detalle = 'Para registrar cobro de recargo en cuota de mantenimiento regular, unidad '.$ocobro;
           $diario->save();
           
           // almacena en la variable global los datos del cobro para luego notificar al propietario via email, del descuento
@@ -362,7 +362,7 @@ class Ppago {
           // agrega ultima linea al libro diario
           $diario = new Ctdiario;
           $diario->pcontable_id  = $periodo;
-          $diario->detalle = 'Para registrar cobro de couta de mantenimiento extraordinaria, unidad '.$ocobro;
+          $diario->detalle = 'Para registrar cobro de cuota de mantenimiento extraordinaria, unidad '.$ocobro;
           $diario->save();  
           
           // almacena en la variable global los datos del cobro para luego notificar al propietario via email, del descuento

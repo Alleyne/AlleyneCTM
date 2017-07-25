@@ -81,7 +81,7 @@ class DashboardController extends Controller
         //----------------------------------------------------------------------
         // calcula el total de pagos recibidos a la fecha
         //----------------------------------------------------------------------
-          // calcula el total de ingresos por coutas regulares
+          // calcula el total de ingresos por cuotas regulares
           $_totalPagRegulares= $ctdasm->where('pagada', 1)->sum('importe') - $_totalDescuentos;    
           
           // calcula el total de recargos
@@ -235,7 +235,7 @@ class DashboardController extends Controller
       //----------------------------------------------------------------------
       // calcula el total de pagos recibidos a la fecha
       //----------------------------------------------------------------------
-        // calcula el total de ingresos por coutas regulares
+        // calcula el total de ingresos por cuotas regulares
         $_totalPagRegulares= $ctdasm->where('pagada', 1)->sum('importe') - $_totalDescuentos;    
         
         // calcula el total de recargos

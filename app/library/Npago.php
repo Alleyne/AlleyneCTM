@@ -736,7 +736,7 @@ class Npago {
         // agrega ultima linea al libro diario
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de recargo en couta de mant regular, unidad'.$nota;
+        $diario->detalle = 'Para registrar cobro de recargo en cuota de mant regular, unidad'.$nota;
         $diario->save();
       }
 
@@ -1054,7 +1054,7 @@ class Npago {
         // agrega ultima linea al libro diario
         $diario = new Ctdiario;
         $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de couta de mant extraordinaria, unidad'.$nota;
+        $diario->detalle = 'Para registrar cobro de cuota de mant extraordinaria, unidad'.$nota;
         $diario->save();
       }
 
