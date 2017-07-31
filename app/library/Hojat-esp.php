@@ -14,6 +14,7 @@ use App\Pcontable;
 use App\Ht;
 use App\Ctmayorehi;
 use App\Ctdiariohi;
+use App\Bloque;
 
 class Hojat {
 
@@ -160,9 +161,13 @@ class Hojat {
     
     //=== Primero =========================================================================================
     // Encuentra todas las cuentas activas en ctmayores para un determinado periodo
-    // excluyendo la cuenta no 5 de Pagos anticipados
+    // excluyendo las siguientes cuentas
+    // No 1 Cuota de mant regular por cobrar,
+    // No 2 Recargos en cuota de mant regular por cobrar,
+    // No 16 Cuota de mant extraordinaria por cobrar,
+    // No 5 Anticipos recibidos de propietarios
     //=====================================================================================================
-    $cuentas = Ctmayore::where('pcontable_id', $periodo)->where('cuenta','!=', 5)->select('cuenta')->get();
+    $cuentas = Ctmayore::where('pcontable_id', $periodo)->where('cuenta','!=', 1)->where('cuenta','!=', 2)->where('cuenta','!=', 16)->where('cuenta','!=', 5)->select('cuenta')->get();
     //dd($cuentas->toArray());
     
     $cuentas = $cuentas->unique('cuenta');
@@ -194,7 +199,11 @@ class Hojat {
       $data[$i]["tipo"]= $cta->tipo;
       $data[$i]["codigo"]= $cta->codigo;
       $data[$i]["clase"]= $cta->corriente_siono;
-      $data[$i]["un_id"]= 0;
+      
+      $data[$i]["un_id"]= "";
+      $data[$i]["seccione_id"]= "";
+      $data[$i]["bloque_id"]= "";
+      
       $data[$i]["cta_nombre"]= $cta->nombre;
       $data[$i]["saldo_debito"]= 0;
       $data[$i]["saldo_credito"]= 0;
@@ -570,7 +579,7 @@ class Hojat {
     //=====================================================================================================
     $uns = Ctmayore::where('pcontable_id', $periodo)
                   ->where('cuenta', 5)
-                  ->select('un_id')->get();
+                  ->select('un_id', 'seccione_id', 'bloque_id')->get();
     //dd($uns->toArray());
     
     $uns = $uns->unique('un_id');
@@ -581,6 +590,7 @@ class Hojat {
       // encuentra las generales de la cuenta
       $cta= Catalogo::find(5);
       //dd($cta->toArray());
+      
       // encuentra el codigo de la unidad
       $cod= Un::find($un->un_id)->codigo;
       
@@ -606,7 +616,11 @@ class Hojat {
       $data[$i]["codigo"]= $cta->codigo;
       $data[$i]["clase"]= $cta->corriente_siono;
       $data[$i]["cta_nombre"]= $cta->nombre.' '.$cod;
+      
       $data[$i]["un_id"]= $un->un_id;
+      $data[$i]["seccione_id"]= $un->seccione_id;      
+      $data[$i]["bloque_id"]= $un->bloque_id;
+
       $data[$i]["saldo_debito"]= 0;
       $data[$i]["saldo_credito"]= 0;
       $data[$i]["saldoAjuste_debito"]= 0;
@@ -688,6 +702,137 @@ class Hojat {
       $i++;  
     }    
     
+    //=== Tercero ===================================================================================================
+    // procesa individualmente cada una de las cuentas que comparten la cuenta No 1 Cuota de mant regular por cobrar 
+    //===============================================================================================================
+    
+    // encuentra todos los bloques
+    $bloques = Bloque::all();
+
+    foreach ($bloques as $bloque) {
+
+        // encuentra las generales de la cuenta
+        $cta = Catalogo::find(1);
+        //dd($cta->toArray());
+        
+        // Calcula el saldo de la cuenta tomando en cuenta el periodo y eliminado los ajustes hechos a la misma      
+        $totalDebito= Ctmayore::where('pcontable_id', $periodo)
+                      ->where('cuenta', 1)
+                      ->where('bloque_id', $bloque->id)
+                      ->where('ajuste_siono', 0)
+                      ->sum('debito');
+        //dd($totalDebito);
+        
+        $totalCredito= Ctmayore::where('pcontable_id', $periodo)
+                      ->where('cuenta', 1)
+                      ->where('bloque_id', $bloque->id)
+                      ->where('ajuste_siono', 0)
+                      ->sum('credito');
+        //dd($totalCredito);
+        
+        // Arma un arreglo con la informacion de las cuenta en estudio
+        $data[$i]["periodo"]= $periodo;
+        $data[$i]["cuenta"]= 1;      
+        $data[$i]["tipo"]= $cta->tipo;
+        $data[$i]["codigo"]= $cta->codigo;
+        $data[$i]["clase"]= $cta->corriente_siono;
+        $data[$i]["cta_nombre"]= $cta->nombre.' '.$bloque->codigo;
+        
+        $data[$i]["un_id"]= "";
+        $data[$i]["seccione_id"]= "";        
+        $data[$i]["bloque_id"]= $bloque->id;
+        
+        $data[$i]["saldo_debito"]= 0;
+        $data[$i]["saldo_credito"]= 0;
+        $data[$i]["saldoAjuste_debito"]= 0;
+        $data[$i]["saldoAjuste_credito"]= 0;
+        $data[$i]["saldoAjustado_debito"]= 0;
+        $data[$i]["saldoAjustado_credito"]= 0;
+        // coloca el saldo de la cuenta sin ajustes
+        $saldo= floatval($totalCredito)-floatval($totalDebito);
+        $data[$i]["saldo_debito"]= 0;
+        $data[$i]["saldo_credito"]= $saldo;
+        
+        $data[$i]["saldoAjustado_debito"]= 0;
+        $data[$i]["saldoAjustado_credito"]= $saldo;
+        
+        $data[$i]["er_debito"] = 0;
+        $data[$i]["er_credito"] = 0;
+
+        $data[$i]["bg_debito"]= 0;
+        $data[$i]["bg_credito"]= $saldo;
+        
+        //=====================================================================================================
+        //verifica si la cuenta en estudio tuvo ajustes
+        //=====================================================================================================
+        $ajustes = Ctmayore::where('pcontable_id', $periodo)
+                          ->where('cuenta', 1)
+                          ->where('bloque_id', $bloque->id)
+                          ->where('ajuste_siono', 1)
+                          ->first();
+        //dd($ajustes->toArray());      
+        
+        if ($ajustes) {
+          // si la cuenta tuvo ajustes entonces
+          // calcula el total de ajustes debito que tuvo la cuentao
+          $totalAjusteDebito = Ctmayore::where('pcontable_id', $periodo)
+                                      ->where('cuenta', 1)
+                                      ->where('bloque_id', $bloque->id)
+                                      ->where('ajuste_siono', 1)
+                                      ->sum('debito');
+          // dd($totalAjusteDebito);
+       
+          // calcula el total de ajustes credito que tuvo la cuenta
+          $totalAjusteCredito = Ctmayore::where('pcontable_id', $periodo)
+                                      ->where('cuenta', 1)
+                                      ->where('bloque_id', $bloque->id)
+                                      ->where('ajuste_siono', 1)
+                                      ->sum('credito');
+          //dd($totalAjusteDebito, $totalAjusteCredito); 
+          
+          // clasifica el total de ajuste hechos a la cuenta de acuerdo a si es tipo debito o credito
+            $totalAjuste = $totalAjusteCredito - $totalAjusteDebito; 
+            if ($totalAjuste >= 0) {
+              // si es mayor que cero huvo aumento en la cuenta
+              $data[$i]["saldoAjuste_debito"] = 0;
+              $data[$i]["saldoAjuste_credito"] = $totalAjuste;          
+              
+              $data[$i]["saldoAjustado_debito"] = 0;
+              $data[$i]["saldoAjustado_credito"] = $saldo + $totalAjuste;           
+            
+              $data[$i]["er_debito"] = 0;
+              $data[$i]["er_credito"] = 0;
+
+              $data[$i]["bg_debito"] = 0;
+              $data[$i]["bg_credito"]= $saldo + $totalAjuste; 
+            
+            } elseif ($totalAjuste < 0) {
+              // si es menor que cero huvo una disminucion en la cuenta
+              $data[$i]["saldoAjuste_debito"] = abs($totalAjuste);
+              $data[$i]["saldoAjuste_credito"] = 0;
+              
+              $data[$i]["saldoAjustado_debito"] = 0; 
+              $data[$i]["saldoAjustado_credito"] = $saldo - abs($totalAjuste);
+            
+              $data[$i]["er_debito"] = 0;
+              $data[$i]["er_credito"] = 0;
+
+              $data[$i]["bg_debito"] = 0; 
+              $data[$i]["bg_credito"] = $saldo - abs($totalAjuste);
+            }
+        }
+        $i++;  
+      
+      //} // end foreach
+    } // end foreach bloques   
+
+
+
+
+
+
+
+
     // ordena el arreglo por codigo de cuenta ascendente
     $data = array_values(array_sort($data, function ($value) {
         return $value['codigo'];

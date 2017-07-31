@@ -160,7 +160,14 @@ class Sity {
     $dato->detalle                = $detalle;
     $dato->debito                 = $debito;
     $dato->credito                = $credito;
-    $dato->un_id                  = $un_id;
+    
+    if ($un_id) {
+      $un = Un::find($un_id);
+      $dato->un_id                  = $un_id;
+      $dato->seccione_id            = $un->seccione->id;
+      $dato->bloque_id              = $un->seccione->bloque_id;
+    }
+    
     $dato->detallepagofactura_id  = $detallepagofactura_id;
     $dato->org_id                 = $org_id; 
     $dato->pago_id                = $pago_id; 

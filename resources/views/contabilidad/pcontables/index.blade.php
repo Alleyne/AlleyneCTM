@@ -92,29 +92,55 @@
 																</div>
 															</li>	
 															<li>
+																<div class="btn-group">
+																	<button class="btn btn-xs btn-warning dropdown-toggle" data-toggle="dropdown">
+																		<span class="fa fa-unlock-o"></span> BG <span class="caret"></span>
+																	</button>
+																	<ul class="dropdown-menu">
+																		<li>
+																			<a href="{{ URL::route('balancegeneral', array($dato->id, $dato->periodo)) }}">Balance general Modelo 1</a>
+																		</li>
+																		<li>
+																			<a href="{{ URL::route('bg_m2_proyectado', $dato->id) }}">Balance general Modelo 2</a>																		</li>
+																		</li>
+																	</ul>
+																</div>
+															</li>							
+															<li>
+																<a href="{{ URL::route('estadoderesultado', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-unlock-o"></i> ER</a>
+															</li>																
+															<li>
 																<a href="{{ URL::route('htProyectada', $dato->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="fa fa-unlock-o"></i> HT</a>
 															</li>	
 															<li>
 																<a href="{{ URL::route('ctdiarios.show', $dato->id) }}" class="btn bg-color-green txt-color-white btn-xs"><i class="fa fa-unlock-o"></i> Diario</a>
 															</li>
-															<li>
-																<a href="{{ URL::route('estadoderesultado', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-unlock-o"></i> ER</a>
-															</li>				
-															<li>
-																<a href="{{ URL::route('balancegeneral', array($dato->id, $dato->periodo)) }}" class="btn btn-warning btn-xs"><i class="fa fa-unlock-o"></i> BG</a>
-															</li>
 														@else
+															<li>
+																<div class="btn-group">
+																	<button class="btn btn-xs btn-default txt-color-yellow dropdown-toggle" data-toggle="dropdown">
+																		<span class="fa fa-lock"></span> BG <span class="caret"></span>
+																	</button>
+																	<ul class="dropdown-menu">
+																		<li>
+																			<a href="{{ URL::route('bg', $dato->id) }}">Balance general Modelo 1</a>
+																		</li>
+																		<li>
+																			<a href="{{ URL::route('bg_m2_final', $dato->id) }}">Balance general Modelo 2</a>																		</li>
+																		</li>
+																	</ul>
+																</div>
+															</li>			
+
+															<li>
+																<a href="{{ URL::route('er', $dato->id) }}" class="btn btn-default txt-color-blue btn-xs"><i class="fa fa-lock"></i> ER Final</a>
+															</li>				
+																							
 															<li>
 																<a href="{{ URL::route('htFinal', $dato->id) }}" class="btn btn-default txt-color-purple btn-xs"><i class="fa fa-lock"></i> HT</a>
 															</li>	
 															<li>
 																<a href="{{ URL::route('diarioFinal', $dato->id) }}" class="btn btn-default txt-color-green btn-xs"><i class="fa fa-lock"></i> Diario</a>
-															</li>
-															<li>
-																<a href="{{ URL::route('er', $dato->id) }}" class="btn btn-default txt-color-blue btn-xs"><i class="fa fa-lock"></i> ER Final</a>
-															</li>				
-															<li>
-																<a href="{{ URL::route('bg', $dato->id) }}" class="btn btn-default txt-color-yellow btn-xs"><i class="fa fa-lock"></i> BG Final</a>
 															</li>
 														@endif															
 													</ul>

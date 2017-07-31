@@ -6,7 +6,7 @@ class Detallepagofactura extends Model
 	protected $table = 'detallepagofacturas';
   public $timestamps = true;    
  
-  public function pago() {
+  public function factura() {
     return $this->belongsTo('App\Factura');
   }
 

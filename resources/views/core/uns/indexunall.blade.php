@@ -98,6 +98,9 @@
          
             // DataTable
             var table = $('#dt_basic').DataTable( {
+                paging: false,
+                scrollY: "385px",
+                scrollCollapse: true,
                 stateSave: true,
           
                  "language": {

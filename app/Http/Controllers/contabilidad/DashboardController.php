@@ -173,6 +173,7 @@ class DashboardController extends Controller
                   
                   'totalGastos' => $totalGastos                                  
                  ];
+    //dd($viewData);
     
     if (Cache::get('esPropietariokey')) {
       return view('contabilidad.dashboard.historicoFrontend', $viewData); 

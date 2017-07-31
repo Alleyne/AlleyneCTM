@@ -38,7 +38,7 @@
 		</ul>
 	</li>
 	<li>
-		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
+		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Compras Caja Chica</span></a>
 	</li>
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-calendar"><em>3</em></i> <span class="menu-item-parent">Reservaciones</span></a>

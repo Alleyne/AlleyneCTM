@@ -10,7 +10,7 @@ use App\library\Hojat;
 use App\library\Ppago;
 
 use Input, Session, Carbon\Carbon;
-use Validator, DB, Cache;
+use Validator, DB, Cache, Date;
 
 use App\Ctmayore;
 use App\Ctmayorehi;
@@ -20,6 +20,10 @@ use App\Ht;
 use App\Un;
 use App\Secapto;
 use App\Concilia;
+use App\Cajachica;
+use App\Bloque;
+use App\Ctdasm;
+use App\Detallepagofactura;
 
 class HojadetrabajosController extends Controller {
     
@@ -28,146 +32,6 @@ class HojadetrabajosController extends Controller {
       $this->middleware('hasAccess');    
   }
   
-  /***********************************************************************************
-  * Despliega hoja de trabajo proyectada
-  ************************************************************************************/	
-/*  public function show($pcontable_id) {
-  $periodo= Pcontable::find($pcontable_id);
-    //dd($periodo->id);
-    
-    // encuentra la data necesaria para confeccionar la hoja de trabajo
-    $datos= Hojat::getDataParaHojaDeTrabajo($periodo->id);
-    //dd($datos);
-    
-    // calcula el total de la columna debito y el de la columna credito en el balance de pruebas
-    $totalDebito = 0;
-    $totalCredito = 0;    
-    
-    //calcula el total de la columna debito y el de la columna credito de ajustes
-    $totalAjusteDebito = 0;
-    $totalAjusteCredito = 0;
-    
-    //calcula el total de la columna debito y el de la columna credito en el balance ajustado
-    $totalAjustadoDebito = 0;
-    $totalAjustadoCredito = 0;
-    
-    foreach($datos as $dato) {
-      // totales de balance de prueba
-      $totalDebito += $dato['saldo_debito'];
-      $totalCredito += $dato['saldo_credito'];    
-      // totales de ajustes
-      $totalAjusteDebito += $dato['saldoAjuste_debito'];    
-      $totalAjusteCredito += $dato['saldoAjuste_credito'];
-    
-      $totalAjustadoDebito += $dato['saldoAjustado_debito'];
-      $totalAjustadoCredito += $dato['saldoAjustado_credito'];
-    }
-
-    //dd($totalAjustadoDebito, $totalAjustadoCredito);
-    $totalAjustadoDebito= round($totalAjustadoDebito,2);
-    $totalAjustadoCredito= round($totalAjustadoCredito,2);
-    
-    // verifica si el presente periodo admite ajustes, solo se permiten
-    // hacer ajustes si se cumplen las siguientes condiciones:
-    // 1. Si el periodo esta abierto
-    // 2. Si el periodo previo esta cerrado
-    // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
-    
-    // verifica si exite balance entre el $totalAjustadoDebito y $totalAjustadoCredito
-    $p3= $totalAjustadoDebito == $totalAjustadoCredito;
-
-    // verifica si se trata del primer periodo en la base de datos y no esta cerrado
-    if ($pcontable_id==1 && $p3==true) {
-      $permitirAjustes= 'Si';
-      $permitirCerrar= 'Si';
-    
-    } elseif ($pcontable_id==1 && $p3==false) {
-      $permitirAjustes= 'Si';
-      $permitirCerrar= 'No';
-    } else {
-
-      // verifica si el periodo esta abierto
-      $p1= Pcontable::where('id', $pcontable_id)->first()->cerrado;
-      
-      // verifica si el periodo previo esta cerrado
-      $p2= Pcontable::where('id', ($pcontable_id-1))->first()->cerrado;
-      //dd($p1, $p2);
-      
-      // permitir ajustes 
-      if ($p1==0 && $p2==1) {
-        $permitirAjustes= 'Si';
-      
-      } else {
-        $permitirAjustes= 'No';
-      }
-      //dd($permitirAjustes);
-
-      // verifica si el presente periodo admite ser cerrado, solo se permiten
-      // cerrar un periodo si se cumplen las siguientes condiciones:
-      // 1. Si se trata de un periodo no esta cerrado
-      // 2. El periodo anterior debe estar cerrado       
-      // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
-      // 4. Si se trata del periodo previo al periodo real pero elperiodo real aun no existe
-
-      // Construye la fecha del periodo real
-      $yearReal=Carbon::today()->year;
-      $monthReal=Carbon::today()->month;
-      $pdoReal= Sity::getMonthName($monthReal).'-'.$yearReal; 
-      
-      // Construye la fecha del periodo actual mas un mes
-      $year=Carbon::parse($periodo->fecha)->year;
-      $month=Carbon::parse($periodo->fecha)->addMonth()->month;
-      $pdo= Sity::getMonthName($month).'-'.$year; 
-
-      // verifica si el periodo real ya existe
-      $periodoRealExiste= Pcontable::where('periodo', $pdoReal)->first();
-      //dd($periodoRealExiste, $pdoReal, $pdo);
-      
-      // Si se trata de periodo previo al periodo real y el periodo real no existe no debe permitir cerrar
-      $p4='Si';
-      if ($pdoReal== $pdo) {
-        if (!$periodoRealExiste) {
-            $p4='No';
-        }
-      } elseif ($periodoRealExiste) {
-        if (!Pcontable::where('periodo', $pdo)->first()) {
-            $p4='No';
-        }
-      }
-      //dd($p1, $p2, $p3, $p4);
-      
-      // permite cerrar 
-      if ($p1==0 && $p2==1 && $p3 && $p4=='Si') {
-        $permitirCerrar= 'Si';
-      } else {
-        $permitirCerrar= 'No';
-      }
-    }
-    //dd($permitirCerrar);
-    
-    $viewData=[
-      'periodo' => $periodo,
-      'permitirAjustes' => $permitirAjustes,
-      'permitirCerrar' => $permitirCerrar,
-      'datos' => $datos,
-      'totalDebito' => number_format($totalDebito,2),
-      'totalCredito' => number_format($totalCredito,2),
-      'totalAjusteDebito' => number_format($totalAjusteDebito,2),
-      'totalAjusteCredito' => number_format($totalAjusteCredito,2),
-      'totalAjustadoDebito' => number_format($totalAjustadoDebito,2),
-      'totalAjustadoCredito' => number_format($totalAjustadoCredito,2)
-    ];
-    
-    if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey') || Cache::get('esJuntaDirectivakey') || Cache::get('esContadorkey')) {
-      return view('contabilidad.hojadetrabajos.show', $viewData);  
-    
-    } elseif (Cache::get('esPropietariokey')) {
-      return view('contabilidad.hojadetrabajos.showFrontend', $viewData); 
-    }
-      return view('contabilidad.hojadetrabajos.htProyectada', $viewData);  
-
-  }	*/
-
   /***********************************************************************************
   * Despliega el estado de resultado proyectado
   ************************************************************************************/ 
@@ -236,6 +100,41 @@ class HojadetrabajosController extends Controller {
   }
 
   /***********************************************************************************
+  * Despliega el estado de resultado final
+  ************************************************************************************/ 
+  public function facturasporpagar($pcontable_id) {
+    
+/*    $data = Org::has('facturas')->with(array(
+        'facturas' => function($query) { $query->where('pagada', '=', 0); },
+        'facturas.detallepagofacturas' => function($query) { $query->where('pagada', '=', 0); }
+    ))->get();*/
+    
+    $datos = Detallepagofactura::where('pagada', '=', 0)->get();
+    $i = 0;
+    foreach ($datos as $dato) {
+      // agrega los datos a la collection
+      $datos[$i]["afavorde"] = $dato->factura->afavorde;
+      $datos[$i]["factura_no"] = $dato->factura->doc_no;
+      $datos[$i]["f_pago"] = Date::parse($dato->fecha)->toFormattedDateString();
+      $i++;
+    }
+
+    //dd($datos->toArray());
+
+    $data = $datos->toJson();
+    
+    // Remove first and last char from string
+    $data = substr($data, 1, -1);
+    
+    $data = str_replace(array('[',']'), '',$data);
+    //dd($data); 
+    
+    return \View::make('contabilidad.estadoderesultado.facturasporpagar')
+            ->with('data', $data);
+  }  
+
+
+  /***********************************************************************************
   * Despliega el balance general final
   ************************************************************************************/ 
   public function bg($pcontable_id) {
@@ -281,7 +180,7 @@ class HojadetrabajosController extends Controller {
                 ->sum('ba_debito');
     //dd($total_gastos);
     
-    $utilidad= $total_ingresos- $total_gastos;          
+    $utilidad = $total_ingresos - $total_gastos;          
    
     return \View::make('contabilidad.balancegeneral.bg')
                 ->with('activoCorrientes', $activoCorrientes)
@@ -292,17 +191,325 @@ class HojadetrabajosController extends Controller {
                 
                 ->with('patrimonios', $patrimonios)
 
-                ->with('total_activoCorrientes', $activoCorrientes->sum('bg_debito'))                  
-                ->with('total_activoNoCorrientes', $activoNoCorrientes->sum('bg_debito')) 
+                ->with('total_activoCorrientes', ($activoCorrientes->sum('bg_debito') - $activoCorrientes->sum('bg_credito')))                
+                ->with('total_activoNoCorrientes', ($activoNoCorrientes->sum('bg_debito') - $activoNoCorrientes->sum('bg_credito')))
                 
-                ->with('total_pasivoCorrientes', $pasivoCorrientes->sum('bg_credito'))                  
-                ->with('total_pasivoNoCorrientes', $pasivoNoCorrientes->sum('bg_credito'))                     
+                ->with('total_pasivoCorrientes', ($pasivoCorrientes->sum('bg_credito') - $pasivoCorrientes->sum('bg_debito')))                  
+                ->with('total_pasivoNoCorrientes', ($pasivoNoCorrientes->sum('bg_credito') - $pasivoNoCorrientes->sum('bg_debito')))                     
                 
-                ->with('total_patrimonios', $patrimonios->sum('bg_credito'))                     
+                ->with('total_patrimonios', ($patrimonios->sum('bg_credito') - $patrimonios->sum('bg_debito')))                     
 
                 ->with('utilidad', $utilidad) 
                 ->with('periodo', Pcontable::find($pcontable_id)->periodo);
   }
+
+  /***********************************************************************************
+  * Despliega el balance general final
+  ************************************************************************************/ 
+  public function bg_m2_proyectado($pcontable_id) {
+    //dd($pcontable_id);      
+   
+    //------------------------------------------------------
+    //  Calcula Activos liquidos banco, caja generla y caja chica
+    //------------------------------------------------------
+    
+    // encuentra el saldo actual del banco
+    $saldoBanco = Sity::getSaldoCuenta(8, $pcontable_id); 
+    //dd($saldoBanco);
+    
+    // encuentra el saldo actual de la caja general
+    $cgeneralSaldo = Sity::getSaldoCuenta(32, $pcontable_id); 
+    //dd($cgeneralSaldo);      
+    
+    // encuentra el saldo actual de la caja chica
+    $cchicaSaldo = Sity::getSaldoCuenta(30, $pcontable_id); 
+    //dd($cchicaSaldo);
+
+    // calcula el total de activos liquido
+    $totalLiquido = $saldoBanco + $cgeneralSaldo + $cchicaSaldo;
+
+    //------------------------------------------------------
+    //  Calcula Cuentas por cobrar
+    //------------------------------------------------------    
+    // encuentra todos los bloques
+    $bloques = Bloque::all();
+    //dd($bloques->toArray());
+
+    $i=0;      
+    $totalCuotasPorCobrar = 0;
+    foreach ($bloques as $bloque) {
+      // encuentra el total de cuota regular por cobrar de un bloque en especial
+      $cuotaRegPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('pagada', 0)->sum('importe');    
+      //dd( $cuotaRegPorCobrar);
+
+      // encuentra el total de cuota extraordinaria por cobrar de un bloque en especial
+      $cuotaExtraPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('extra_pagada', 0)->where('extra_siono', 1)->sum('extra');    
+
+      // encuentra el total recargos por cobrar de un bloque en especial
+      $recargoPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('recargo_pagado', 0)->where('recargo_siono', 1)->sum('recargo'); 
+    
+       // Agrega la cantidad en almacen al array principal para enviar toda la información consolidada en un solo array
+      $bloques[$i]["cuotaRegPorCobrar"] = $cuotaRegPorCobrar;
+      $bloques[$i]["cuotaExtraPorCobrar"] = $cuotaExtraPorCobrar;
+      $bloques[$i]["recargoPorCobrar"] = $recargoPorCobrar;
+      $i++;
+      
+      // calcula el total de cuentas por cobrar
+      $totalCuotasPorCobrar = $totalCuotasPorCobrar + ($cuotaRegPorCobrar + $cuotaExtraPorCobrar + $recargoPorCobrar);
+    }
+
+    //------------------------------------------------------
+    //  Calcula otros Activos menos banco, caja general, caja chica, cuentas de mant regular, extraordinarias y recargos
+    //------------------------------------------------------
+
+    $cuentas = Catalogo::where('tipo', 1)
+                      ->where('id', '!=', 8)  // banco
+                      ->where('id', '!=', 30) // caja chica
+                      ->where('id', '!=', 32) // caja general
+                      ->where('id', '!=', 1)  // cuotas de mant regular por cobrar                        
+                      ->where('id', '!=', 2)  // recargos en cuotas de mant regular por cobrar
+                      ->where('id', '!=', 16) // cuotas de mant extraordinarias por cobrar
+                      ->get();
+    //dd($cuentas->toArray());
+
+    $otrosActivos = array();
+    $i = 0;
+    foreach ($cuentas as $cuenta) {
+      // encuentra el saldo actual de cada una de las cuentas
+      $otrosActivos[$i]['nombre'] = $cuenta->nombre; 
+      $otrosActivos[$i]['saldo'] = Sity::getSaldoCuenta($cuenta->id, $pcontable_id); 
+      $i++;
+    }
+      
+    // combierte el array a collection
+    $otrosActivos = Collection::make($otrosActivos);
+    
+    // calcula el total de otros activos
+    $totalOtrosActivos = $otrosActivos->sum('saldo');
+    //dd($otrosActivos,  $totalOtrosActivos);
+
+
+    //------------------------------------------------------
+    //  Calcula pasivos
+    //------------------------------------------------------
+    $pasivos = Catalogo::where('tipo', 2)->get();
+    //dd($pasivos);
+    
+    $i = 0;      
+    $totalPasivos = 0;
+    foreach ($pasivos as $pasivo) {
+
+      // calcula el saldo actual de la cuenta
+      $saldo = Sity::getSaldoCuenta($pasivo->id, $pcontable_id); 
+    
+      // Agrega la cantidad en almacen al array principal para enviar toda la información consolidada en un solo array
+      $pasivos[$i]['saldo'] = $saldo;  
+      $i++;
+
+      // calcula el total de cuentas por cobrar
+      $totalPasivos = $totalPasivos + $saldo;
+    }
+    //dd($pasivos->toArray());
+
+    //------------------------------------------------------
+    //  Calcula patrimonio
+    //------------------------------------------------------
+    $patrimonios = Catalogo::where('tipo', 3)->get();  // cuenta tipo patrimonio
+    //dd($cta_pasivos);
+    
+    $i=0;      
+    $totalPatrimonios = 0;
+    foreach ($patrimonios as $patrimonio) {
+
+      // calcula el saldo actual de la cuenta
+      $saldo = Sity::getSaldoCuenta($patrimonio->id, $pcontable_id); 
+    
+       // Agrega la cantidad en almacen al array principal para enviar toda la información consolidada en un solo array
+      $patrimonios[$i]['saldo'] = $saldo;  
+      $i++;
+
+      // calcula el total de cuentas por cobrar
+      $totalPatrimonios = $totalPatrimonios + $saldo;
+    }
+    //dd($patrimonios->toArray());
+
+    return \View::make('contabilidad.balancegeneral.bg_m2_proyectado')
+              ->with('bloques', $bloques) 
+              ->with('saldoBanco', $saldoBanco) 
+              ->with('cgeneralSaldo', $cgeneralSaldo)                    
+              ->with('cchicaSaldo', $cchicaSaldo)                     
+              ->with('totalLiquido', $totalLiquido) 
+              ->with('totalCuotasPorCobrar', $totalCuotasPorCobrar) 
+              ->with('otrosActivos', $otrosActivos) 
+              ->with('totalOtrosActivos', $totalOtrosActivos) 
+              ->with('pasivos', $pasivos) 
+              ->with('totalPasivos', $totalPasivos) 
+              ->with('patrimonios', $patrimonios) 
+              ->with('totalPatrimonios', $totalPatrimonios)
+              ->with('periodo', Pcontable::find($pcontable_id));
+  }
+
+
+  /***********************************************************************************
+  * Despliega el balance general final
+  ************************************************************************************/ 
+  public function bg_m2_final($pcontable_id) {
+    //dd($pcontable_id);      
+    
+    //----------------------------------------------------------
+    // calcula el saldo actual del banco en historicos
+    //----------------------------------------------------------
+    $bg_debito = Ht::where('pcontable_id', $pcontable_id)
+                ->where('cuenta', 8)
+                ->sum('bg_debito');
+    //dd($bg_debito);
+
+    $bg_credito = Ht::where('pcontable_id', $pcontable_id)
+                ->where('cuenta', 8)
+                ->sum('bg_credito');
+    //dd($bg_debito, $bg_credito);    
+
+    // calcula el saldo en banco
+    $saldoBanco = $bg_debito - $bg_credito;
+  
+    //----------------------------------------------------------
+    // calcula el saldo final de Caja general en historicos
+    //----------------------------------------------------------
+    $bg_debito = Ht::where('pcontable_id', $pcontable_id)
+                ->where('cuenta', 32)
+                ->sum('bg_debito');
+    //dd($bg_debito);
+
+    $bg_credito = Ht::where('pcontable_id', $pcontable_id)
+                ->where('cuenta', 32)
+                ->sum('bg_credito');
+    //dd($bg_debito, $bg_credito);    
+
+    // calcula el saldo de Caja general
+    $cgeneralSaldo = $bg_debito - $bg_credito;
+
+    //----------------------------------------------------------
+    // calcula el saldo final de Caja chica en historicos
+    //----------------------------------------------------------
+    $bg_debito = Ht::where('pcontable_id', $pcontable_id)
+                ->where('cuenta', 30)
+                ->sum('bg_debito');
+    //dd($bg_debito);
+
+    $bg_credito = Ht::where('pcontable_id', $pcontable_id)
+                ->where('cuenta', 30)
+                ->sum('bg_credito');
+    //dd($bg_debito, $bg_credito);    
+
+    // calcula el saldo de Caja chica
+    $cchicaSaldo = $bg_debito - $bg_credito;
+
+
+
+    // calcula el total de activos liquido
+    $totalLiquido = $saldoBanco + $cgeneralSaldo + $cchicaSaldo;
+
+    //------------------------------------------------------
+    //  Calcula Cuentas por cobrar
+    //------------------------------------------------------    
+    // encuentra todos los bloques
+    $bloques = Bloque::all();
+    //dd($bloques->toArray());
+
+    $i=0;      
+    $totalCuotasPorCobrar = 0;
+    foreach ($bloques as $bloque) {
+      // encuentra el total de cuota regular por cobrar de un bloque en especial
+      $cuotaRegPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('pagada', 0)->sum('importe');    
+      //dd( $cuotaRegPorCobrar);
+
+      // encuentra el total de cuota extraordinaria por cobrar de un bloque en especial
+      $cuotaExtraPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('extra_pagada', 0)->where('extra_siono', 1)->sum('extra');    
+
+      // encuentra el total recargos por cobrar de un bloque en especial
+      $recargoPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('recargo_pagado', 0)->where('recargo_siono', 1)->sum('recargo'); 
+    
+       // Agrega la cantidad en almacen al array principal para enviar toda la información consolidada en un solo array
+      $bloques[$i]["cuotaRegPorCobrar"] = $cuotaRegPorCobrar;
+      $bloques[$i]["cuotaExtraPorCobrar"] = $cuotaExtraPorCobrar;
+      $bloques[$i]["recargoPorCobrar"] = $recargoPorCobrar;
+      $i++;
+      
+      // calcula el total de cuentas por cobrar
+      $totalCuotasPorCobrar = $totalCuotasPorCobrar + ($cuotaRegPorCobrar + $cuotaExtraPorCobrar + $recargoPorCobrar);
+    }
+
+    //------------------------------------------------------
+    //  Calcula otros Activos menos banco, caja general, caja chica, cuentas de mant regular, extraordinarias y recargos
+    //------------------------------------------------------
+    $otrosActivos = Ht::where('pcontable_id', $pcontable_id)
+                      ->where('tipo', 1)  // tipo activos
+                      ->where('cuenta', '!=', 8)  // banco
+                      ->where('cuenta', '!=', 30) // caja chica
+                      ->where('cuenta', '!=', 32) // caja general
+                      ->where('cuenta', '!=', 1)  // cuotas de mant regular por cobrar                        
+                      ->where('cuenta', '!=', 2)  // recargos en cuotas de mant regular por cobrar
+                      ->where('cuenta', '!=', 16) // cuotas de mant extraordinarias por cobrar
+                      ->get();
+    
+    // calcula el total de otros activos
+    $totalOtrosActivos = $otrosActivos->sum('saldo');
+    //dd($otrosActivos,  $totalOtrosActivos);
+
+    //------------------------------------------------------
+    //  Calcula pasivos
+    //------------------------------------------------------
+    $pasivos = Ht::where('pcontable_id', $pcontable_id)
+                      ->where('tipo', 2)  // tipo pasivos
+                      ->get();
+    
+    // calcula el total de pasivos
+    $totalPasivos = $pasivos->sum('saldo');
+    //dd($pasivos,  $totalPasivos);    
+
+    //------------------------------------------------------
+    //  Calcula patrimonio
+    //------------------------------------------------------
+    $patrimonios = Ht::where('pcontable_id', $pcontable_id)
+                      ->where('tipo', 3)  // tipo patrimonio
+                      ->get();
+    
+    // calcula el total de patrimonio
+    $totalPatrimonios = $patrimonios->sum('saldo');
+    //dd($pasivos,  $totalPasivos);    
+  
+    //------------------------------------------------------
+    //  Calcula la utilidad
+    //------------------------------------------------------
+    $er_credito = Ht::where('pcontable_id', $pcontable_id)
+                      ->where('tipo', 4)  // tipo ingresos
+                      ->sum('er_credito'); 
+
+    $er_debito = Ht::where('pcontable_id', $pcontable_id)
+                      ->where('tipo', 4)  // tipo ingresos
+                      ->sum('er_debito');
+    
+    // calcula la utilidad
+    $utilidad = $er_credito - $er_debito;
+    //dd($utilidad);        
+
+    return \View::make('contabilidad.balancegeneral.bg_m2_final')
+              ->with('bloques', $bloques) 
+              ->with('saldoBanco', $saldoBanco) 
+              ->with('cgeneralSaldo', $cgeneralSaldo)                    
+              ->with('cchicaSaldo', $cchicaSaldo)                     
+              ->with('totalLiquido', $totalLiquido) 
+              ->with('totalCuotasPorCobrar', $totalCuotasPorCobrar) 
+              ->with('otrosActivos', $otrosActivos) 
+              ->with('totalOtrosActivos', $totalOtrosActivos) 
+              ->with('pasivos', $pasivos) 
+              ->with('totalPasivos', $totalPasivos) 
+              ->with('patrimonios', $patrimonios) 
+              ->with('totalPatrimonios', $totalPatrimonios)
+              ->with('utilidad', $utilidad)
+              ->with('periodo', Pcontable::find($pcontable_id));
+  }
+
 
   /***********************************************************************************
   * Despliega el balance general proyectado
@@ -335,35 +542,29 @@ class HojadetrabajosController extends Controller {
     $total_patrimonios= 0;
 
     foreach($activoCorrientes as $activoCorriente) {
-      $total_activoCorrientes += $activoCorriente['saldo_debito'];
+      $total_activoCorrientes += ($activoCorriente['saldo_debito'] - $activoCorriente['saldo_credito']);
     }
-
+//dd($total_activoCorrientes);
     foreach($activoNoCorrientes as $activoNoCorriente) {
-      $total_activoNoCorrientes += $activoNoCorriente['saldo_debito'];
+      $total_activoNoCorrientes += ($activoNoCorriente['saldo_debito'] - $activoNoCorriente['saldo_credito']);
     }
 
     foreach($pasivoCorrientes as $pasivoCorriente) {
-       $total_pasivoCorrientes += $pasivoCorriente['saldo_credito'];
+       $total_pasivoCorrientes += ($pasivoCorriente['saldo_credito'] - $pasivoCorriente['saldo_debito']);
     }
 
     foreach($pasivoNoCorrientes as $pasivoNoCorriente) {
-      $total_pasivoNoCorrientes += $pasivoNoCorriente['saldo_credito'];
+      $total_pasivoNoCorrientes += ($pasivoNoCorriente['saldo_credito'] - $pasivoNoCorriente['saldo_debito']);
     }
 
     foreach($patrimonios as $patrimonio) {
-      $total_patrimonios += $patrimonio['saldo_credito'];
+      $total_patrimonios += ($patrimonio['saldo_credito'] - $patrimonio['saldo_debito']);
     }
     // dd($total_activoCorrientes, $total_activoNoCorrientes, $total_pasivoCorrientes, $total_pasivoNoCorrientes, $total_patrimonios);        
 
-    $totalActivos= $total_activoCorrientes+$total_activoNoCorrientes;
-    $totalPasivos= $total_pasivoCorrientes+$total_pasivoNoCorrientes;
-    $totalPasivoPatrimonio= $totalPasivos+$total_patrimonios;       
-
-    $total_activoCorrientes=  $total_activoCorrientes;
-    $total_activoNoCorrientes= $total_activoNoCorrientes;
-    $total_pasivoCorrientes=  $total_pasivoCorrientes;
-    $total_pasivoNoCorrientes=  $total_pasivoNoCorrientes;
-    $total_patrimonio=  $total_patrimonios;
+    $totalActivos = $total_activoCorrientes + $total_activoNoCorrientes;
+    $totalPasivos = $total_pasivoCorrientes + $total_pasivoNoCorrientes;
+    $totalPasivoPatrimonio = $totalPasivos + $total_patrimonios;       
 
     // calcula la Utilidad retenida del periodo
     //$utilidad= Sity::getUtilidadRetenida($pcontable_id); 
@@ -379,7 +580,7 @@ class HojadetrabajosController extends Controller {
                 ->with('total_activoNoCorrientes', $total_activoNoCorrientes)
                 ->with('total_pasivoCorrientes', $total_pasivoCorrientes)
                 ->with('total_pasivoNoCorrientes', $total_pasivoNoCorrientes)
-                ->with('total_patrimonio', $total_patrimonio)                    
+                ->with('total_patrimonio', $total_patrimonios)                    
                 
                 ->with('totalActivos', $totalActivos)
                 ->with('totalPasivos', $totalPasivos)
@@ -827,11 +1028,5 @@ class HojadetrabajosController extends Controller {
                 ->with('utilidad', $utilidad) 
                 ->with('periodo', $periodo);
   }  
-
-
-
-
-
-
 
 } // fin de controller

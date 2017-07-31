@@ -172,8 +172,11 @@ Route::group(['namespace' => 'contabilidad'], function()
   Route::get('estadoderesultado/{pcontable_id}', 'HojadetrabajosController@estadoderesultado')->name('estadoderesultado');
   Route::get('er/{pcontable_id}', 'HojadetrabajosController@er')->name('er');
   Route::get('bg/{pcontable_id}', 'HojadetrabajosController@bg')->name('bg');
+  Route::get('bg_m2_proyectado/{pcontable_id}', 'HojadetrabajosController@bg_m2_proyectado')->name('bg_m2_proyectado');
+  Route::get('bg_m2_final/{pcontable_id}', 'HojadetrabajosController@bg_m2_final')->name('bg_m2_final');
   Route::get('balancegeneral/{pcontable_id},{periodo}', 'HojadetrabajosController@balancegeneral')->name('balancegeneral');
-  //Route::get('hojadetrabajo/{periodo}', 'HojadetrabajosController@hojadetrabajo')->name('hojadetrabajo');
+  Route::get('facturasporpagar/{pcontable_id}', 'HojadetrabajosController@facturasporpagar')->name('facturasporpagar');  
+
   Route::get('verMayorAux/{periodo}, {cuenta}, {un_id?}', 'HojadetrabajosController@verMayorAux')->name('verMayorAux');
   Route::get('verMayorAuxHis/{periodo}, {cuenta}', 'HojadetrabajosController@verMayorAuxHis')->name('verMayorAuxHis');
 
@@ -338,6 +341,10 @@ Route::group(['namespace' => 'blog'], function()
 //---------------------------------------------------------//
 Route::get('/balance_general', array('as' => 'balance_general', function() {
     return view('finanzas.bg');
+}));
+
+Route::get('/balance_general_2', array('as' => 'balance_general_2', function() {
+    return view('finanzas.bg_2');
 }));
 
 Route::get('/estado_resultado', array('as' => 'estado_resultado', function() {

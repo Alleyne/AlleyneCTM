@@ -102,7 +102,7 @@
 							<td width="3%" align="left"></td>
 							<td width="55%" align="left">{{ $activoCorriente->nombre }}</td>
 							<td width="7%" align="left">&nbsp;</td>
-							<td width="15%" align="left"><div align="right">{{ number_format($activoCorriente->bg_debito,2) }}</div></td>
+							<td width="15%" align="left"><div align="right">{{ number_format(($activoCorriente->bg_debito - $activoCorriente->bg_credito),2) }}</div></td>
 							<td width="15%">&nbsp;</td>
 						</tr>				
 					@endforeach

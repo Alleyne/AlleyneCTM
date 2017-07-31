@@ -169,11 +169,11 @@
 					<td>&nbsp;</td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_bp_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_bp_credito,2) }}</p></td> 
-					<th class="text-right"><p class="mix">{{ number_format($total_aj_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix">{{ number_format($total_aj_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_aj_credito,2) }}</p></td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_ba_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_ba_credito,2) }}</p></td> 
-					<th class="text-right"><p class="mix lineup">{{ number_format($total_er_debito,2) }}</p></td> 
+					<td class="text-right"><p class="mix lineup">{{ number_format($total_er_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix lineup">{{ number_format($total_er_credito,2) }}</p></td> 
 					<td class="text-right"><p class="mix lineup">{{ number_format($total_bg_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix lineup">{{ number_format($total_bg_credito,2) }}</p></td> 
