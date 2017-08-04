@@ -2274,30 +2274,58 @@ Work::with(
 
   // ejemplo no 7
     //=== primero ================================================================
-    // utilizando function call back map() con variables externas   
+    // utilizando function call back map() con variables externas para agregar datos a una collection
     //============================================================================ 
 
     // encuentra todos los bloques
+    $bloques = Bloque::find(1);
+
+    // encuentra el total de cuota regular por cobrar de un bloque en especial
+    $cuotaRegPorCobrar = Ctdasm::where('pcontable_id', $pcontable_id)->where('bloque_id', $bloque->id)->where('pagada', 0)->where('extra_siono', 0)->sum('importe');    
+
+    // encuentra el total de cuota extraordinaria por cobrar de un bloque en especial
+    $cuotaExtraPorCobrar = Ctdasm::where('pcontable_id', $pcontable_id)->where('bloque_id', $bloque->id)->where('extra_pagada', 0)->where('extra_siono', 1)->sum('extra');    
+
+    // encuentra el total recargos por cobrar de un bloque en especial
+    $recargoPorCobrar = Ctdasm::where('pcontable_id', $pcontable_id)->where('bloque_id', $bloque->id)->where('recargo_pagado', 0)->where('recargo_siono', 1)->sum('recargo');          
+  
+    // agrega los datos a la collection
+    $bloques->map(function ($dato)  use ( $cuotaRegPorCobrar, $cuotaExtraPorCobrar, $recargoPorCobrar) {
+        $dato->cuotaRegPorCobrar = $cuotaRegPorCobrar;
+        $dato->cuotaExtraPorCobrar = $cuotaExtraPorCobrar;
+        $dato->recargoPorCobrar = $recargoPorCobrar;
+    });
+    //dd($bloques->toArray());
+
+
+  // ejemplo no 8
+    // encuentra todos los bloques
     $bloques = Bloque::all();
-    
+    //dd($bloques->toArray());
+
+    $i=0;      
+    $totalCuotasPorCobrar = 0;
     foreach ($bloques as $bloque) {
       // encuentra el total de cuota regular por cobrar de un bloque en especial
-      $cuotaRegPorCobrar = Ctdasm::where('pcontable_id', $pcontable_id)->where('bloque_id', $bloque->id)->where('pagada', 0)->where('extra_siono', 0)->sum('importe');    
+      $cuotaRegPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('pagada', 0)->sum('importe');    
+      //dd( $cuotaRegPorCobrar);
 
       // encuentra el total de cuota extraordinaria por cobrar de un bloque en especial
-      $cuotaExtraPorCobrar = Ctdasm::where('pcontable_id', $pcontable_id)->where('bloque_id', $bloque->id)->where('extra_pagada', 0)->where('extra_siono', 1)->sum('extra');    
+      $cuotaExtraPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('extra_pagada', 0)->where('extra_siono', 1)->sum('extra');    
 
       // encuentra el total recargos por cobrar de un bloque en especial
-      $recargoPorCobrar = Ctdasm::where('pcontable_id', $pcontable_id)->where('bloque_id', $bloque->id)->where('recargo_pagado', 0)->where('recargo_siono', 1)->sum('recargo');          
+      $recargoPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('recargo_pagado', 0)->where('recargo_siono', 1)->sum('recargo'); 
     
-      // agrega los datos a la collection
-      $bloques->map(function ($dato)  use ( $cuotaRegPorCobrar, $cuotaExtraPorCobrar, $recargoPorCobrar){
-          $dato->cuotaRegPorCobrar = $cuotaRegPorCobrar;
-          $dato->cuotaExtraPorCobrar = $cuotaExtraPorCobrar;
-          $dato->recargoPorCobrar = $recargoPorCobrar;
-      });
-      //dd($bloques->toArray());
-    }
+       // Agrega la cantidad en almacen al array principal para enviar toda la información consolidada en un solo array
+      $bloques[$i]["cuotaRegPorCobrar"] = $cuotaRegPorCobrar;
+      $bloques[$i]["cuotaExtraPorCobrar"] = $cuotaExtraPorCobrar;
+      $bloques[$i]["recargoPorCobrar"] = $recargoPorCobrar;
+      $i++;
+      
+      // calcula el total de cuentas por cobrar
+      $totalCuotasPorCobrar = $totalCuotasPorCobrar + ($cuotaRegPorCobrar + $cuotaExtraPorCobrar + $recargoPorCobrar);
+    }  
+
 
 
   /*************************************************************************************

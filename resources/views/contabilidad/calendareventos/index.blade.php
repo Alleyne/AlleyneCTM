@@ -427,6 +427,10 @@
 	            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
 	        });
 		    
+	        $("#datetimepicker8").on("dp.change", function (e) {
+	            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+	        });					
+
 					var trantipo_id = jQuery('#trantipo_id');
 					var select = this.value;
 					

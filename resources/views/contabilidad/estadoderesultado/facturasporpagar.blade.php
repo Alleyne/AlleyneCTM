@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css">
 	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/1.0.1/css/dataTables.responsive.css">
-	<link rel="stylesheet" type="text/css" href="http://www.datatables.net/release-datatables/extensions/TableTools/css/dataTables.tableTools.css"	>
+	{{-- <link rel="stylesheet" type="text/css" href="http://www.datatables.net/release-datatables/extensions/TableTools/css/dataTables.tableTools.css"> --}}
 	
 	<style type="text/css">
 		td.details-control {
@@ -53,11 +53,11 @@
 		        <tfoot>
 		            <tr>
 		                <th></th>
-		                <th>Proveedor</th>
-		                <th>Factura #</th>
-		                <th>Pago</th>
-		                <th>Monto</th>
-		                <th>Fecha de pago</th>
+		                <th></th>
+		                <th></th>
+		                <th>Total por pagar</th>
+		                <th><strong>{{ number_format($totalPorPagar, 2) }}</strong></th>
+		                <th></th>
 		            </tr>
 		        </tfoot>
 		</table>
@@ -71,6 +71,19 @@
 		/* Formatting function for row details - modify as you need */
 		function format ( d ) {
 		    // `d` is the original data object for the row
+	    
+			/*"render": function(d){
+          if(d !== null){
+              var table = "<table>";
+              $.each(d, function(k, v){
+                  table += "<tr><td>" + v.Issue + "</td><td>" + v.IssueDate + "</td><td>" + v.Number + "</td></tr>";
+              });
+              return table + "</table>";
+          }else{
+              return "";
+          }
+      }*/
+
 	    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	        '<tr>'+
 	            '<td>Fecha: '+ d.factura.fecha+'</td>'+

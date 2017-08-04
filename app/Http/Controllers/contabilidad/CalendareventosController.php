@@ -42,6 +42,7 @@ class CalendareventosController extends Controller
 
       $datos = Calendarevento::all();
 
+      // formatea los datos de la colleccion
       $datos->map(function ($datos) {
         $datos->start = Date::parse($datos->start)->format('M j, Y g:i A');
         $datos->end = Date::parse($datos->end)->format('M j, Y g:i A');
@@ -49,12 +50,12 @@ class CalendareventosController extends Controller
         $datos->un_id = Un::find($datos->un_id)->codigo;       
         $props = User::find($datos->user_id);
         
-        // agrega el nuevo elemento a la collection
+        // agrega un nuevo elemento a la collection
         $datos->props = $props->cedula.' '.$props->nombre_completo;
       });
       // dd($datos);
 
-      //Encuentra todas las amenidades
+      //Encuentra todos los paquetes de amenidades alquilables
       $ams = Am_alquilere::orderBy('nombre')->pluck('nombre', 'id')->All();
       //dd($ams);
 
@@ -62,9 +63,10 @@ class CalendareventosController extends Controller
       $bancos = Banco::orderBy('nombre')->pluck('nombre', 'id')->all();
       //dd($bancos);
 
-      // encuentra todas las unidades disponibles
-      $uns = Un::orderBy('codigo')->get();
-      
+      // encuentra todas las unidades que tienen por lo menos un propietario
+      $uns = Un::orderBy('codigo')->has('props')->get();
+      //dd($uns);
+
       $uns->map(function ($uns) {
         
         // encuentra el o los propietarios de la unidad
@@ -75,15 +77,10 @@ class CalendareventosController extends Controller
         
         $propietarios = "";
         foreach ($props as $prop) {
-          if ($propietarios == "") {
-            $propietarios = $uns->codigo.' '.$prop->cedula.' '.$prop->nombre_completo;
-          }
-          else {
-            $propietarios = $uns->codigo.' '.$propietarios.', '.$prop->cedula. ' '.$prop->nombre_completo;         
-          }
+          $propietarios = $propietarios.', '.$prop->cedula. ' '.$prop->nombre_completo;         
         }
       
-        $uns->props = $propietarios;
+        $uns->props = $uns->codigo.' '.$propietarios;
       });
       //dd($uns);
 
@@ -276,6 +273,7 @@ class CalendareventosController extends Controller
 
       if ($validation->passes())
       {
+        //dd(Input::get('fecha'), Carbon::createFromFormat('d/m/Y', Input::get('fecha'))->toFormattedDateString()     );
         
         // verifica que exista un periodo de acuerdo a la fecha de pago
         $year = Carbon::createFromFormat('d/m/Y', Input::get('fecha'))->year;
@@ -284,7 +282,7 @@ class CalendareventosController extends Controller
 
         // encuentra el periodo mas antiguo abierto
         $periodo = Pcontable::where('cerrado',0)->orderBy('id')->first();
-        //dd($periodo);
+        //dd( $pdo, $periodo);
           
         // se puede registrar reservaciones de amenidades en cualquier fecha del presento o futuro, pero el pago del deposito 
         // debe corresponder al presente periodo contable
@@ -305,7 +303,7 @@ class CalendareventosController extends Controller
           $dato->trantipo_id = Input::get('trantipo_id');
           $dato->trans_no    = Input::get('chqno'); 
           $dato->monto       = $monto->deposito; 
-          $dato->f_pago      = Input::get('fecha');
+          $dato->f_pago      = Carbon::createFromFormat('d/m/Y', Input::get('fecha'));
           $dato->descripcion = 'Deposito por alquiler de amenidades';
           $dato->concepto    = 'deposito para alquiler de amenidades';   
           $dato->fecha       = Carbon::today();         
@@ -321,7 +319,7 @@ class CalendareventosController extends Controller
           $dato->trantipo_id = Input::get('trantipo_id');
           //$dato->trans_no    = Input::get('transno'); 
           $dato->monto       = $monto->deposito; 
-          $dato->f_pago      = Input::get('fecha');
+          $dato->f_pago      = Carbon::createFromFormat('d/m/Y', Input::get('fecha'));
           $dato->descripcion = 'Deposito por alquiler de amenidades';
           $dato->concepto    = 'deposito para alquiler de amenidades';   
           $dato->fecha       = Carbon::today();         
@@ -337,7 +335,7 @@ class CalendareventosController extends Controller
           $dato->trantipo_id = Input::get('trantipo_id');
           $dato->trans_no    = Input::get('transno'); 
           $dato->monto       = $monto->deposito; 
-          $dato->f_pago      = Input::get('fecha');
+          $dato->f_pago      = Carbon::createFromFormat('d/m/Y', Input::get('fecha'));
           $dato->descripcion = 'Deposito por alquiler de amenidades';
           $dato->concepto    = 'deposito para alquiler de amenidades';   
           $dato->fecha       = Carbon::today();         
@@ -355,7 +353,7 @@ class CalendareventosController extends Controller
         //dd($props);
 
         $evento = new Calendarevento;
-        
+
         $evento->title = Am_alquilere::find(Input::get('am_id'))->nombre;
         $evento->start = Carbon::createFromFormat('d/m/Y G:ia', Input::get('start'));
         $evento->end = Carbon::createFromFormat('d/m/Y G:ia', Input::get('end'));
@@ -380,10 +378,8 @@ class CalendareventosController extends Controller
         
         $evento->save();
         
-        $periodo = 1;
-        
         // contabiliza evento como reservado
-        Npago::contabilizaReservaAm($evento, $dato->id, $periodo);
+        Npago::contabilizaReservaAm($evento, $dato->id, $periodo->id);
 
         // Registra en Detallepago para generar un renglon en el recibo
         //Self::registraDetallepago($periodo, $ocobro, 'Paga cuota de mantenimiento regular '. $mesAnio.' (vence: '.Date::parse($dato->f_vencimiento)->toFormattedDateString().')', $dato->id, $importe, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);

@@ -79,11 +79,13 @@ class HojadetrabajosController extends Controller {
       
     $ingresos = Ht::where('pcontable_id', $pcontable_id)
                 ->where('tipo', 4)
+                ->where('er_credito', '>', 0)
                 ->get();
     //dd($ingresos->toArray());
     
     $gastos = Ht::where('pcontable_id', $pcontable_id)
                 ->where('tipo', 6)
+                ->where('er_debito', '>', 0)
                 ->get();
     //dd($ingresos->toArray());      
 
@@ -110,6 +112,11 @@ class HojadetrabajosController extends Controller {
     ))->get();*/
     
     $datos = Detallepagofactura::where('pagada', '=', 0)->get();
+    
+    // calcula el total por pagar
+    $totalPorPagar = $datos->sum('monto');
+    //dd($totalPorPagar);
+    
     $i = 0;
     foreach ($datos as $dato) {
       // agrega los datos a la collection
@@ -130,7 +137,8 @@ class HojadetrabajosController extends Controller {
     //dd($data); 
     
     return \View::make('contabilidad.estadoderesultado.facturasporpagar')
-            ->with('data', $data);
+            ->with('data', $data)
+            ->with('totalPorPagar', $totalPorPagar);
   }  
 
 
