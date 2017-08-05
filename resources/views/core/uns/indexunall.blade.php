@@ -89,14 +89,14 @@
     <script>
         $(document).ready(function() {
             // Setup - add a text input to each footer cell
-            $('#dt_basic tfoot th').each( function () {
-                var title = $('#dt_basic thead th').eq( $(this).index() ).text();
-                $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-            } );
+            // $('#dt_basic tfoot th').each( function () {
+            //     var title = $('#dt_basic thead th').eq( $(this).index() ).text();
+            //     $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+            // } );
          
             // DataTable
-            var table = $('#dt_basic').DataTable( {
-                 "paging": false,
+            $('#dt_basic').DataTable( {
+                "paging": false,
                 "scrollY": "385px",
                 "scrollCollapse": true,
                 "stateSave": true,
