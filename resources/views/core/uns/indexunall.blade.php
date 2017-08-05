@@ -85,15 +85,10 @@
 @stop
 
 @section('relatedplugins')
-
+    <script src="{{ URL::asset('assets/backend/js/libs/jquery-1.12.4.min.js') }}"></script>
     <script src="{{ URL::asset('assets/backend/js/datatables/jquery.dataTables-1.10.15.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            // Setup - add a text input to each footer cell
-            // $('#dt_basic tfoot th').each( function () {
-            //     var title = $('#dt_basic thead th').eq( $(this).index() ).text();
-            //     $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-            // } );
          
             // DataTable
             $('#dt_basic').DataTable( {
@@ -127,19 +122,6 @@
                     }
                 }
             } );           
-
-            // Restore state
-            if ( state ) {
-              table.columns().eq( 0 ).each( function ( colIdx ) {
-                var colSearch = state.columns[colIdx].search;
-                
-                if ( colSearch.search ) {
-                  $( 'input', table.column( colIdx ).footer() ).val( colSearch.search );
-                }
-              } );
-              
-              table.draw();
-            }
          
             // Apply the search
             table.columns().eq( 0 ).each( function ( colIdx ) {
