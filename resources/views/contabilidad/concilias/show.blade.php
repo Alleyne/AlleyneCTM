@@ -420,9 +420,8 @@
 
 </div> <!-- end container -->
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> --}}
-	<script type="text/javascript" src="{{ URL::asset('assets/frontend/plugins/bootstrap/js/bootstrap.min.js') }}"></script> 
+	<script src="{{ URL::asset('assets/backend/js/libs/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ URL::asset('assets/frontend/plugins/bootstrap/js/bootstrap-3.3.7.min.js') }}"></script> 
 	<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>
 
 <script type="text/javascript">

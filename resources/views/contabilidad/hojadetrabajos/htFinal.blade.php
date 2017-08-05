@@ -6,8 +6,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	
+	<link href="{{ URL::asset('assets/backend/css/bootstrap-3.3.7.min.css') }}" rel="stylesheet" type="text/css" media="screen">
+
 	<style type="text/css">
 		.borde {
 			border: 1px; 
@@ -248,8 +248,8 @@
 
 	</div> <!-- end container -->
   
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="{{ URL::asset('assets/backend/js/libs/jquery-3.2.1.min.js') }}"></script>
+	<script src="{{ URL::asset('assets/backend/js/bootstrap/bootstrap-3.3.7.min.js') }}"></script>
   <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
 
 </body>

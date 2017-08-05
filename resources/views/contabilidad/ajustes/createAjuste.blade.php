@@ -39,9 +39,9 @@
 							<!-- This area used as dropdown edit box -->
 						</div>
 						<head>
-
-							<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+							<script src="{{ URL::asset('assets/backend/js/libs/jquery-2.0.2.min.js') }}"></script>
 						</head>
+						
 						<body>
 						{{ Form::open(array('route' => 'ajustes.store')) }}		
 							{{ csrf_field() }}

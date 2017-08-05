@@ -85,9 +85,7 @@
 @stop
 
 @section('relatedplugins')
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
-    <script src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
- 
+    <script src="{{ URL::asset('assets/backend/js/datatables/jquery.dataTables-1.10.15.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             // Setup - add a text input to each footer cell
@@ -98,10 +96,10 @@
          
             // DataTable
             var table = $('#dt_basic').DataTable( {
-                paging: false,
-                scrollY: "385px",
-                scrollCollapse: true,
-                stateSave: true,
+                 "paging": false,
+                "scrollY": "385px",
+                "scrollCollapse": true,
+                "stateSave": true,
           
                  "language": {
                     "decimal":        "",

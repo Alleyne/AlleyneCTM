@@ -385,9 +385,11 @@
 
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/fullcalendar340/lib/moment.min.js') }}"></script>
-    <script src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-
+    
+    <script src="{{ URL::asset('assets/backend/js/datatables/jquery.dataTables-1.10.15.min.js') }}"></script>
+		{{-- <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script> --}}
+    <script src="{{ URL::asset('assets/backend/js/datetimepicker/bootstrap-datetimepicker-4.17.47.min.js') }}"></script>
+  	
   	<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>   
   	<script src="{{ URL::asset('assets/backend/js/plugin/bootstrap-progressbar/bootstrap-progressbar.js') }}"></script> 
 

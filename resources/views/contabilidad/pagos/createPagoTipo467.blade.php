@@ -142,7 +142,8 @@
 @stop
 
 @section('relatedplugins')
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	<script src="{{ URL::asset('assets/backend/js/libs/jquery-ui-1.10.3.min.js') }}"></script>
+	
 	{!! Html::script('js/parsley.min.js') !!}
 
 	<script type="text/javascript">

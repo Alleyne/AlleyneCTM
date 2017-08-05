@@ -1,11 +1,10 @@
 
 		<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script> 
+		<script src="{{ URL::asset('assets/backend/js/libs/jquery-2.0.2.min.js') }}"></script>
+		<script src="{{ URL::asset('assets/backend/js/libs/jquery-ui-1.10.3.min.js') }}"></script>
 		
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-
 		<!-- BOOTSTRAP JS -->
-		<script src="{{ URL::asset('assets/backend/js/bootstrap/bootstrap.min.js') }}"></script>
+		<script src="{{ URL::asset('assets/backend/js/bootstrap/bootstrap-3.3.7.min.js') }}"></script>
 		
 		<!-- CUSTOM NOTIFICATION -->
 		<script src="{{ URL::asset('assets/backend/js/notification/SmartNotification.min.js') }}"></script>
@@ -39,8 +38,9 @@
 		<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
 
 		<![endif]-->
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
+		{{-- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> --}}
+		<script src="{{ URL::asset('assets/backend/js/toastr/toastr.js') }}"></script>
+		
 		<!-- Demo purpose only-->
 		<script src="{{ URL::asset('assets/backend/js/demo.js') }}"></script>
 		
