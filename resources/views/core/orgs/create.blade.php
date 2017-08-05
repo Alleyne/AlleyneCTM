@@ -132,13 +132,13 @@
 												{!! $errors->first('email', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
-										<div class="form-group">
+										{{-- <div class="form-group">
 											<label class="col-md-2 control-label">Image</label>
 											<div class="col-md-10">
 												{{ Form::text('imagen', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el celular de la organizacion...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('imagen', '<li style="color:red">:message</li>') !!}
 											</div>
-										</div>	
+										</div>	 --}}
 									</fieldset>
 									
 									<div class="form-actions">

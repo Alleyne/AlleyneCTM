@@ -19,9 +19,9 @@
       <!-- User info -->
       <div class="login-info">
         <span> <!-- User image size is adjusted inside CSS, it should stay as it --> 
-          <a href="javascript:void(0);" id="show-shortcut">
+          <a href="#">
             @if (Auth::check())
-              <img src="{{asset(Auth::user()->imagen)}}" alt="me" class="online"> 
+              <img src="{{asset(Auth::user()->imagen_S)}}" alt="imagen del usuario" class="online"> 
               <span><a href="#" class="navbar-link"> {{ Auth::user()->username }}</a></span> 
             @else
                 <span>Invitado</span>
@@ -62,7 +62,7 @@
         <!-- breadcrumb -->
         <ol class="breadcrumb">
           <li>
-            Sistema de administración de Propiedades Horizontales...
+            Sistema para la administración transparente de propiedades...
           </li>
         </ol>
         <!-- end breadcrumb -->
@@ -94,34 +94,13 @@
 
     </div>
     <!-- END MAIN PANEL -->
-
+    
     <!-- SHORTCUT AREA : With large tiles (activated via clicking user name tag)
     Note: These tiles are completely responsive,
     you can add as many as you like
     -->
-    <div id="shortcut">
-      <ul>
-        <li>
-          <a href="#inbox.html" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-envelope fa-4x"></i> <span>Mail <span class="label pull-right bg-color-darken">14</span></span> </span> </a>
-        </li>
-        <li>
-          <a href="#calendar.html" class="jarvismetro-tile big-cubes bg-color-orangeDark"> <span class="iconbox"> <i class="fa fa-calendar fa-4x"></i> <span>Calendar</span> </span> </a>
-        </li>
-        <li>
-          <a href="#gmap-xml.html" class="jarvismetro-tile big-cubes bg-color-purple"> <span class="iconbox"> <i class="fa fa-map-marker fa-4x"></i> <span>Maps</span> </span> </a>
-        </li>
-        <li>
-          <a href="#invoice.html" class="jarvismetro-tile big-cubes bg-color-blueDark"> <span class="iconbox"> <i class="fa fa-book fa-4x"></i> <span>Invoice <span class="label pull-right bg-color-darken">99</span></span> </span> </a>
-        </li>
-        <li>
-          <a href="#gallery.html" class="jarvismetro-tile big-cubes bg-color-greenLight"> <span class="iconbox"> <i class="fa fa-picture-o fa-4x"></i> <span>Gallery </span> </span> </a>
-        </li>
-        <li>
-          <a href="javascript:void(0);" class="jarvismetro-tile big-cubes selected bg-color-pinkDark"> <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>
-        </li>
-      </ul>
-    </div>
-    <!-- END SHORTCUT AREA -->
+    @include('templates.backend._partials.shortcuts')
+    <!-- END SHORTCUT AREA -->    
 
     @include('templates.backend._partials.javascript')
     @yield('relatedplugins')

@@ -1184,7 +1184,7 @@ class Npago {
     // salva un nuevo registro que representa una linea del recibo
     $dto = new Detallepago;
     $dto->pcontable_id = $periodo;
-    $dto->detalle = 'Estimado propietario, producto de contabilizar el pago realizado contra la totalidad adeudada a la fecha, el sistema ha detectado que existe un sobrante de B/. '.number_format($sobrante,2). ', por lo tanto el mismo será depositado en su cuenta de pagos anticipados. Este saldo usted lo podrá utilizar para completar futuros pagos. El nuevo saldo de su cuenta de pagos anticipados a la fecha es de B/.'.number_format(($saldocpa+$sobrante),2);
+    $dto->detalle = 'Estimado propietario, al contabilizar su pago, el sistema ha detectado que existe un sobrante de B/. '.number_format($sobrante,2). ', por lo tanto el mismo será depositado en su cuenta de pagos anticipados. Este saldo usted lo podrá utilizar para completar futuros pagos. El nuevo saldo de su cuenta de pagos anticipados a la fecha es de B/.'.number_format(($saldocpa+$sobrante),2);
     $dto->monto = $sobrante;
     $dto->un_id = $un_id;
     $dto->tipo = 4;

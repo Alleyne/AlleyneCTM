@@ -27,7 +27,7 @@
                 <div class="widget-toolbar">
                     @if (Cache::get('esAdminkey'))
                         @if($cerrada == 1)
-                            <a href="{{ URL::route('cajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Abrir reabrir Caja chica</a>
+                            <a href="{{ URL::route('cajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Abrir Caja chica</a>
                          @endif  
                     @endif  
                 </div>

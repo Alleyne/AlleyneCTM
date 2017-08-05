@@ -107,7 +107,7 @@ class OrgsController extends Controller
 			$dato->telefono = $request->telefono;		
 			$dato->celular = $request->celular;					
 			$dato->email = $request->email;		
-			$dato->imagen = $request->imagen;
+			//$dato->imagen = $request->imagen;
 			$dato->save();
 
   		Sity::RegistrarEnBitacora($dato, $request, 'Org', 'Registra un nuevo proveedor');

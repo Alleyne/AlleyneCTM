@@ -72,7 +72,7 @@
 												<td col width="250px" align="right">
 													<ul class="demo-btns">
 														<li>
-															<a href="{{ URL::route('serviproductosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Vinvular serviproducto</a>
+															<a href="{{ URL::route('serviproductosPorOrg', $dato->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i> Vincular serviproducto</a>
 														</li>
 														<li>
 															<a href="{{ URL::route('orgs.edit', $dato->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>

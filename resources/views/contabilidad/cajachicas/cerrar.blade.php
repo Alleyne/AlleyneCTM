@@ -68,7 +68,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Aprobado por</label>
 											<div class="col-md-9">
-												{{ Form::select('aprueba_id', ['' => 'Selecione una persona responsable por aprobar el aumento de caja chica ...'] + $usuarios, 0, ['class' => 'form-control']) }}
+												{{ Form::select('aprueba_id', ['' => 'Selecione una persona responsable por aprobar el cierre de caja chica ...'] + $usuarios, 0, ['class' => 'form-control']) }}
 												{!! $errors->first('aprueba_id', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>

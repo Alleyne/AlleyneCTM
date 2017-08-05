@@ -48,7 +48,7 @@
 	 									{{ csrf_field() }}
                 
 									<!-- Form Name -->
-										<legend>Abrir o reabrir Caja Chica</legend>
+										<legend>Abrir Caja Chica</legend>
 
                     <div class="form-group">
                         <label class="col-md-3 control-label">Fecha</label>

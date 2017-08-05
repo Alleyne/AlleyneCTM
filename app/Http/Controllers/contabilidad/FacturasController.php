@@ -135,13 +135,13 @@ class FacturasController extends Controller {
             $factura->org_id = Input::get('org_id');
             $factura->afavorde = Org::find(Input::get('org_id'))->nombre;
 
-            if (Input::get('tipodoc_radios') == 1) {
+            //if (Input::get('tipodoc_radios') == 1) {
                 $factura->tipodoc = 1;
                 $factura->doc_no = Input::get('no');        
             
-            } elseif (Input::get('tipodoc_radios') == 2) {
-                $factura->tipodoc = 2;
-            }
+            //} elseif (Input::get('tipodoc_radios') == 2) {
+                //$factura->tipodoc = 2;
+            //}
 
             $factura->descripcion = Input::get('descripcion');
             $factura->total = Input::get('monto');
@@ -157,7 +157,7 @@ class FacturasController extends Controller {
             return redirect()->route('facturas.index');
         }       
     
-        Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
+        Session::flash('danger', 'Se encontraron errores en su formulario, recuerde llenar todos los campos!');
         return back()->withInput()->withErrors($validation);
 
     } catch (\Exception $e) {
@@ -178,7 +178,7 @@ class FacturasController extends Controller {
 			$dato = Detallefactura::where('factura_id', $factura_id)->first();		
 			
 			if($dato) {
-				Session::flash('warning', '<< ATENCION >> Esta factura no puede ser borrada porque tiene detalles!');
+				Session::flash('warning', 'Esta factura no puede ser borrada porque tiene detalles!');
 				return Redirect()->route('facturas.index');
 			}
 			
@@ -228,7 +228,7 @@ class FacturasController extends Controller {
 	    //dd($periodo); 
 
 	    if (!$periodo) {
-        Session::flash('warning', '<< ATENCION >> La presente factura no puede ser contabilizada ya que el periodo contable al cual pertenece ha sido cerrado. Borre la factura y sus detalles e ingrecela nuevamente con fecha del periodo actualmente abierto.');
+        Session::flash('warning', 'La presente factura no puede ser contabilizada ya que el periodo contable al cual pertenece ha sido cerrado. Borre la factura y sus detalles e ingrecela nuevamente con fecha del periodo actualmente abierto.');
         return back();
 	    }
 

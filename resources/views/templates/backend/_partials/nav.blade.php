@@ -5,12 +5,12 @@
 
 <!-- Escoje la navegación de acuerdo al grupo al que pertenece el usuario -->
 @if (Cache::get('esAdminkey'))
-	<li>
+{{-- 	<li>
 		<a href="{{ URL::route('jds.show', 1) }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Junta Directiva</span></a>
 	</li>
 	<li>
 		<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
-	</li>	
+	</li>	 --}}
 	<li class="active">
 		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Cobros</span></a>
 		<ul>
@@ -79,12 +79,12 @@
 			</li>
 		</ul>
 	</li>
-	<li>
+{{-- 	<li>
 		<a href="{{ URL::route('serviproductos.index') }}"><i class="fa fa-lg fa-fw fa-book"></i> <span class="menu-item-parent">Serviproductos</span></a>
 	</li>
 	<li>
 		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-truck"></i> <span class="menu-item-parent">Proveedores</span></a>
-	</li>
+	</li> --}}
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Noticias</span></a>
 		<ul>
@@ -113,9 +113,9 @@
 			</li>
 		</ul>
 	</li>	
-	<li>
+{{-- 	<li>
 		<a href="{{ URL::route('bitacoras.index') }}"><i class="fa fa-archive"></i> <span class="menu-item-parent">Bitácora</span></a>
-	</li>
+	</li> --}}
 
 @elseif (Cache::get('esJuntaDirectivakey'))
 	<li>
@@ -162,11 +162,11 @@
 	</li>
 
 @elseif (Cache::get('esAdministradorkey'))
-	<li>
+{{-- 	<li>
 		<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
-	</li>	
+	</li>	 --}}
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Ingresos</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Cobros</span></a>
 		<ul>
 			<li>
 				<a href="{{ URL::route('indexunall') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Por Unidades</span></a>
@@ -178,7 +178,7 @@
 	</li>
 
 	<li>
-		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja General</span></a>
+		<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Compras Caja General</span></a>
 		<ul>
 			<li>
 				<a href="{{ URL::route('facturas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Registrar facturas</span></a>
@@ -189,7 +189,7 @@
 		</ul>
 	</li>
 	<li>
-		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Egreso Caja Chica</span></a>
+		<a href="{{ URL::route('ecajachicas.index') }}"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Compras Caja Chica</span></a>
 	</li>
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Contabilidad</span></a>
@@ -213,12 +213,12 @@
 			</li>
 		</ul>
 	</li>
-	<li>
+{{-- 	<li>
 		<a href="{{ URL::route('serviproductos.index') }}"><i class="fa fa-lg fa-fw fa-book"></i> <span class="menu-item-parent">Serviproductos</span></a>
 	</li>
 	<li>
 		<a href="{{ URL::route('orgs.index') }}"><i class="fa fa-lg fa-fw fa-truck"></i> <span class="menu-item-parent">Proveedores</span></a>
-	</li>
+	</li> --}}
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-desktop"></i> <span class="menu-item-parent">Noticias</span></a>
 		<ul>
@@ -233,14 +233,14 @@
 			</li>
 		</ul>
 	</li>
-	<li>
+{{-- 	<li>
 		<a href="{{ URL::route('bitacoras.index') }}"><i class="fa fa-archive"></i> <span class="menu-item-parent">Bitácora</span></a>
-	</li>
+	</li> --}}
 
 @elseif (Cache::get('esContadorkey'))
-	<li>
+{{-- 	<li>
 		<a href="{{ URL::route('indexblqplus') }}"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">PH Bloques</span></a>
-	</li>	
+	</li> --}}	
 	<li>
 		<a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Contabilidad</span></a>
 		<ul>

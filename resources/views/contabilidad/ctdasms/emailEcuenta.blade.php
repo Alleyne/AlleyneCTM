@@ -18,7 +18,7 @@
             
             <header>
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Estado de cuentas </h2>
+                <h2>Estado de morosidad </h2>
                 <div class="widget-toolbar">
                     <a href="{{ URL::route('uns.show', $data['un_id']) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>            
                 </div>
@@ -49,7 +49,7 @@
 
                     <div class="row">
                       <div class="col-xs-12">
-                        <h4><p class="text-center"><strong>ESTADO DE CUENTAS</strong></p></h4>
+                        <h4><p class="text-center"><strong>ESTADO DE MOROSIDAD</strong></p></h4>
                         <h7><p class="text-center"><strong>UNIDAD NO. {{ $data['codigo'] }}</strong></p></h7>       
                         <h7><p class="text-center">al dia  {{ $data['fecha'] }}</p></h7>
                       </div>

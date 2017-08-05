@@ -50,18 +50,18 @@
 		<!-- NOTIFICACIONES VIA TOASTR-->
 		<script>
 		  @if(Session::has('success'))
-		      toastr.success("{{ Session::get('success') }}", 'FELICIDADES', {timeOut: 7000});
+		      toastr.success("{{ Session::get('success') }}", '<< FELICIDADES >>', {timeOut: 7000});
 		  @endif
 
 		  @if(Session::has('info'))
-		      toastr.info("{{ Session::get('info') }}", 'ATENCION', {timeOut: 7000});
+		      toastr.info("{{ Session::get('info') }}", '<< ATENCION >>', {timeOut: 7000});
 		  @endif
 
 		  @if(Session::has('warning'))
-		      toastr.warning("{{ Session::get('warning') }}", 'PRECAUCION', {timeOut: 7000});
+		      toastr.warning("{{ Session::get('warning') }}", '<< PRECAUCION >>', {timeOut: 7000});
 		  @endif
 
 		  @if(Session::has('danger'))
-		      toastr.error("{{ Session::get('danger') }}", 'ERROR', {timeOut: 7000});
+		      toastr.error("{{ Session::get('danger') }}", '<< ERROR >>', {timeOut: 7000});
 		  @endif
 		</script>

@@ -88,18 +88,18 @@ class DetallepagofacturasController extends Controller {
 		    
 		    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
 		    if (Carbon::parse($periodo->fecha)->gt(Carbon::parse(Input::get('fecha')))) {
-					Session::flash('danger', '<< ERROR >> Solamente se permite registrar pago de facturas de gastos cuya fecha se mayor o igual al dia primero del periodo vigente de '.$periodo->periodo);
+					Session::flash('danger', 'Solamente se permite programar pagos cuya fecha se mayor o igual al dia primero del periodo vigente de '.$periodo->periodo);
 					return back()->withInput()->withErrors($validation);
 		    }
 
-		    // encuentra la fecha del ultimo pago programado de la presente factura
-	 	    $ultimaFecha = Detallepagofactura::orderBy('id', 'desc')->where('factura_id', Input::get('factura_id'))->first();
+		    // encuentra la fecha del ultimo pago programado de la presente factura que haya sido pagado y contabilizado
+	 	    $ultimaFecha = Detallepagofactura::orderBy('fecha', 'desc')->where('factura_id', Input::get('factura_id'))->where('etapa', 2)->first();
 				//dd(Carbon::parse($ultimaFecha->fecha), Carbon::parse(Input::get('fecha')));
 
 				if ($ultimaFecha) {
-			    // solamente se permite registrar facturas de gastos que correspondan al periodo mas antiguo abierto
+			    // solamente se permite programar pagos cuya fecha se mayor o igual a la fecha del ultimo pago programado pagado y contabilizado
 			    if (Carbon::parse(Input::get('fecha'))->lt(Carbon::parse($ultimaFecha->fecha))) {
-						Session::flash('danger', '<< ERROR >> La fecha del pago programado debera ser mayor o igual a la ultima fecha de pago programado');
+						Session::flash('danger', 'Solamente se permite programar pagos con fecha igual o posterior a '. Date::parse($ultimaFecha->fecha)->toFormattedDateString());
 						return back()->withInput()->withErrors($validation);
 			    }
 				}
@@ -111,7 +111,7 @@ class DetallepagofacturasController extends Controller {
 			
 		    // verifica que el monto del nuevo detalle no sobrepase al monto total de la factura
 		    if (Input::get('monto')>$totalfactura) {
-					Session::flash('danger', '<< Error >>: No se pudo agregar el nuevo detalle ya que su monto sobrepasa al monto total de la factura!');
+					Session::flash('danger', 'Monto del pago programado sobrepasa al monto total de la factura!');
 					return redirect()->route('detallepagofacturas.show', $factura->id);
 		    } 
 
@@ -144,7 +144,7 @@ class DetallepagofacturasController extends Controller {
 
 			    // verifica que el monto total de los detalle incluyendo al nuevo no sobrepase al monto total de la factura
 			    if ($totaldetalles > $totalfactura) {
-					Session::flash('danger', '<< Error >>: No se pudo agregar el nuevo detalle ya con su monto sobrepasaria al monto total de la factura!');
+					Session::flash('danger', 'Monto del pago programado sobrepasa al monto total de la factura!');
 					return redirect()->route('detallepagofacturas.show', $factura->id);
 			   
 			    } else {
@@ -162,17 +162,17 @@ class DetallepagofacturasController extends Controller {
 	 	    }
 	 	    
 				//Sity::RegistrarEnBitacora(1, 'detallepagofacturas', $dato->id, Input::all());
-				Session::flash('success', 'El detalle de factura No. ' .$dato->id. ' ha sido creado con éxito.');
+				Session::flash('success', 'Se ha programado programado el pago con con éxito.');
 				DB::commit();				
 				return redirect()->route('detallepagofacturas.show', $dato->factura_id);
 			}
 
-			Session::flash('warning', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
+			Session::flash('warning', 'Se encontraron errores en su formulario, recuerde llenar todos los campos!');
 			return back()->withInput()->withErrors($validation);
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturaController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+			Session::flash('warning', 'Ocurrio un error en el modulo DetallepagofacturaController.store, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back()->withInput()->withErrors($validation);
 		}
 	}
@@ -233,14 +233,14 @@ class DetallepagofacturasController extends Controller {
 		    
 		    // solamente se permite registrar pagos de facturas que correspondan al periodo mas antiguo abierto
 		    if ($pdo != $periodo->periodo) {
-		      Session::flash('danger', '<< ERROR >> Solamente se permite contabilizar pagos que correspondan al periodo vigente de '.$periodo->periodo);
+		      Session::flash('danger', 'Solamente se permite contabilizar pagos que correspondan al periodo vigente de '.$periodo->periodo);
 		      return back();
 		    }
 
-		    // verifica si existe algun detalle de pago anterior al presente que no haya sido contabilizado
-		    $exiteAnterior= Detallepagofactura::where('id', '<', $detallepagofactura_id)->where('etapa', 1)->first();
+		    // verifica si existe algun pago programado anterior al presente que no haya sido contabilizado
+		    $exiteAnterior= Detallepagofactura::whereDate('fecha', '<', Carbon::parse($dato->fecha)->toDateString())->where('etapa', 1)->first();
 		    if ($exiteAnterior) {
-		      Session::flash('danger', '<< ERROR >> Debe pagar y contabilizar los detalles de pago en orden cronologico!');
+		      Session::flash('danger', 'Debe pagar sus pagos programados en orden cronologico!');
 		      return back();
 		    }
 
@@ -260,17 +260,17 @@ class DetallepagofacturasController extends Controller {
 				Npago::contabilizaDetallePagoFactura($detallepagofactura_id, $periodo);
 
 				//Sity::RegistrarEnBitacora($dato, Input::get(), 'Detallepagofactura', 'Programa pago parcial de factura de egreso de Caja general');
-				Session::flash('success', 'El detalle de factura No. ' .$dato->id. ' ha sido creado con éxito.');
+				Session::flash('info', 'Pago realizado con exito!');
 				DB::commit();				
 				return redirect()->route('detallepagofacturas.show', $dato->factura_id);	 	  
 	 	  }
 
-			Session::flash('warning', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
+			Session::flash('warning', 'Se encontraron errores en su formulario, recuerde llenar todos los campos!');
 			return back()->withInput()->withErrors($validation);
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturaController.store, la transaccion ha sido cancelada! '.$e->getMessage());
+			Session::flash('warning', ' Ocurrio un error en el modulo DetallepagofacturaController.pagarContabilizar, la transaccion ha sido cancelada! '.$e->getMessage());
 			return back()->withInput()->withErrors($validation);
 		}
 	}
@@ -283,12 +283,12 @@ class DetallepagofacturasController extends Controller {
 		DB::beginTransaction();
 		try {
 	    // verifica si existe algun pago programado posterior al presente
-			$exitePosterior= Detallepagofactura::where('id', '>', $detallepagofactura_id)->first();
+			//$exitePosterior= Detallepagofactura::where('id', '>', $detallepagofactura_id)->first();
 	    
-	    if ($exitePosterior) {
-        Session::flash('danger', '<< ERROR >> No puede eliminar el presente pago programado, solo se puede eliminar el ultimo pago programado!');
-    		return back();
-	    }
+	    //if ($exitePosterior) {
+        //Session::flash('danger', 'No puede eliminar el presente pago programado, solo se puede eliminar el ultimo pago programado!');
+    		//return back();
+	   // }
 			//dd($detallefactura_id);
 			
 			$dato = Detallepagofactura::find($detallepagofactura_id);
@@ -302,7 +302,7 @@ class DetallepagofacturasController extends Controller {
   		Sity::RegistrarEnBitacora($dato, Null, 'Factura', 'Elimina pago programado por Caja general'); 
 			
 			DB::commit();			
-			Session::flash('success', 'El detalle de factura "' .$dato->detalle .'" con monto de B/.'. $dato->monto.' ha sido borrado permanentemente de la base de datos.');
+			Session::flash('info', 'Pago programado ha sido eliminado con exito!');
 			return redirect()->route('detallepagofacturas.show', $dato->factura_id);
 		
 		} catch (\Exception $e) {

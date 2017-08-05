@@ -28,7 +28,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Registra factua por Caja General</h2>
+						<h2>Registra factura por Caja General</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -66,10 +66,10 @@
 											</div>
 										</div>
 							
-										<hr />
+										{{-- <hr /> --}}
 										
 										<!-- Multiple Radios (inline) -->
-										<div class="form-group">
+										{{-- <div class="form-group">
 										  <label class="col-md-3 control-label" for="radios">Tipo de documento:</label>
 										  <div class="col-md-9"> 
 										    <label class="radio-inline" for="radios-0">
@@ -81,10 +81,10 @@
 										      Comprobante de caja
 										    </label>
 										  </div>
-										</div>
+										</div> --}}
 
 										<div class="form-group factura">
-											<label class="col-md-3 control-label"></label>
+											<label class="col-md-3 control-label">Factura No.</label>
 											<div class="col-md-9">
 												{{ Form::text('no', old('no'),
 													array(
@@ -98,7 +98,7 @@
 											</div>
 										</div>	
 										
-										<hr />
+										{{-- <hr /> --}}
 
 										<div class="form-group">
 											<label class="col-md-3 control-label">Monto Total</label>
