@@ -15,7 +15,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <!-- Basic Styles -->
 
-<link href="{{ URL::asset('assets/backend/css/jquery.datatables-1.10.12.min.css') }}" rel="stylesheet" type="text/css" media="screen">
+{{-- <link href="{{ URL::asset('assets/backend/css/jquery.datatables-1.10.12.min.css') }}" rel="stylesheet" type="text/css" media="screen"> --}}
 <link href="{{ URL::asset('assets/backend/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" media="screen">			
 
 <link href="{{ URL::asset('assets/backend/css/bootstrap-datetimepicker-4.17.47.min.css') }}" rel="stylesheet" type="text/css" media="screen">			
