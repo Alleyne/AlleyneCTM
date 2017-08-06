@@ -214,16 +214,11 @@
 	        		dateFormat: 'yy-mm-dd'
 	    			});
 	    			
-            // Setup - add a text input to each footer cell
-            $('#dt_basic2 tfoot th').each( function () {
-                var title = $('#dt_basic2 thead th').eq( $(this).index() ).text();
-                $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-            } );
          
             // DataTable
-            var table = $('#dt_basic2').DataTable( {
-                stateSave: true,
-          
+            $('#dt_basic2').DataTable( {
+                 stateSave: true,
+                 order: [[ 0, "desc" ]],
                  "language": {
                     "decimal":        "",
                     "emptyTable":     "No hay datos disponibles para esta tabla",
@@ -249,32 +244,8 @@
                     }
                 }
             } );           
-
-            // Restore state
-            if ( state ) {
-              table.columns().eq( 0 ).each( function ( colIdx ) {
-                var colSearch = state.columns[colIdx].search;
-                
-                if ( colSearch.search ) {
-                  $( 'input', table.column( colIdx ).footer() ).val( colSearch.search );
-                }
-              } );
-              
-              table.draw();
-            }
-         
-            // Apply the search
-            table.columns().eq( 0 ).each( function ( colIdx ) {
-                $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
-                    table
-                        .column( colIdx )
-                        .search( this.value )
-                        .draw();
-                } );
-            } );
         } );
      
-
 
 	    $("input[type='submit']").attr("disabled", false);
 	    $("form").submit(function(){
