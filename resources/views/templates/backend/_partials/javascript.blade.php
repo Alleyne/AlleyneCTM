@@ -41,14 +41,14 @@
 		{{-- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> --}}
 		<script src="{{ URL::asset('assets/backend/js/toastr/toastr.js') }}"></script>
 		
-		<!-- Demo purpose only-->
-		<script src="{{ URL::asset('assets/backend/js/demo.js') }}"></script>
+		<!-- Demo purpose only
+		<script src="{{ URL::asset('assets/backend/js/demo.js') }}"></script>-->
 		
 		<!-- MAIN APP JS FILE-->
 		<script src="{{ URL::asset('assets/backend/js/app.js') }}"></script> 
 
-    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-		{{-- <script src="{{ URL::asset('assets/backend/js/datatables/jquery-dataTables-1-10-15-min.js') }}"></script> --}}
+    {{-- <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+		<script src="{{ URL::asset('assets/backend/js/datatables/jquery-dataTables-1-10-15-min.js') }}"></script> Nota: NO TRABAJA EN SERVIDOR DIGITAL OCEAN--}} 
 
 		<!-- NOTIFICACIONES VIA TOASTR-->
 		<script>

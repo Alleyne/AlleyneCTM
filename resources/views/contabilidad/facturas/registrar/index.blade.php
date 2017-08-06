@@ -2,6 +2,11 @@
 
 @section('title', '| Registrar Facturas')
 
+@section('stylesheets')
+	{{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> --}}
+	<link href="{{ URL::asset('assets/backend/css/jquery-datatables-1-10-12-min.css') }}" rel="stylesheet" type="text/css" media="screen">
+@endsection
+
 @section('content')
 
 	<!-- widget grid -->
@@ -54,7 +59,7 @@
 								</div>
 							</div>
 							
-							<table id="dt_basic" class="table table-hover">
+							<table id="dt_basic" class="display compact" cellspacing="0" width="100%">
 								<thead>
 									<tr>
 										<th>ID</th>
@@ -183,18 +188,44 @@
 @stop
 
 @section('relatedplugins')
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>  
+	{{-- <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script> --}}
+  <script src="{{ URL::asset('assets/backend/js/datatables/jquery-dataTables-1-10-15-min.js') }}"></script>
+  <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>  
 
-    <script type="text/javascript">
-    $(document).ready(function() {
-        pageSetUp();
- 
-        $('#dt_basic').dataTable({
-            "sPaginationType" : "bootstrap_full"
-        });
+  <script type="text/javascript">
+  	$(document).ready(function() {
+
+      $('#dt_basic').dataTable({
+        "paging": false,
+        "scrollY": "385px",
+        "scrollCollapse": true,
+        "stateSave": true,
+
+				"language": {
+					"decimal":        "",
+					"emptyTable":     "No hay datos disponibles para esta tabla",
+					"info":           "Mostrando _END_ de un total de _MAX_ unidades",
+					"infoEmpty":      "",
+					"infoFiltered":   "",
+					"infoPostFix":    "",
+					"thousands":      ",",
+					"lengthMenu":     "Mostrar _MENU_ unidades",
+					"loadingRecords": "Cargando...",
+					"processing":     "Procesando...",
+					"search":         "Buscar:",
+					"zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+					"paginate": {
+					    "first":      "Primer",
+					    "last":       "Ultimo",
+					    "next":       "Proximo",
+					    "previous":   "Anterior"
+					},
+					"aria": {
+					    "sortAscending":  ": active para ordenar ascendentemente",
+					    "sortDescending": ": active para ordenar descendentemente"
+					}
+        }
+      });
     })
     </script>
 @stop
