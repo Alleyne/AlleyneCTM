@@ -122,17 +122,9 @@
                         "sortDescending": ": active para ordenar descendentemente"
                     }
                 }
-            } );           
+            } )           
          
-            // Apply the search
-            table.columns().eq( 0 ).each( function ( colIdx ) {
-                $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
-                    table
-                        .column( colIdx )
-                        .search( this.value )
-                        .draw();
-                } );
-            } );
+ 
         } );
     </script>
 @stop
