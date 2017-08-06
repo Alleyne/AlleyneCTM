@@ -46,7 +46,7 @@
 					<a href="{{ URL::route('verDesembolsos', $cchica->id) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 				</div>
 
-				<table class="table table-condensed table-hover">
+				<table id="dt_basic" class="display compact" cellspacing="0" width="100%">
 					<thead>
 						<tr>
 							<th>ID</th>
