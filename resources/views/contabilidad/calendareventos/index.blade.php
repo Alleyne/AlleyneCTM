@@ -386,8 +386,9 @@
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/fullcalendar340/lib/moment.min.js') }}"></script>
     
-    <script src="{{ URL::asset('assets/backend/js/datatables/jquery.dataTables-1.10.15.min.js') }}"></script>
-		{{-- <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script> --}}
+
+
+
     <script src="{{ URL::asset('assets/backend/js/datetimepicker/bootstrap-datetimepicker-4.17.47.min.js') }}"></script>
   	
   	<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>   
@@ -470,7 +471,7 @@
 	    });
 
       // DataTable
-      var table = $('#dt_basic').DataTable({
+      $('#dt_basic').DataTable({
           stateSave: true,
     
          "language": {
@@ -497,29 +498,6 @@
                 "sortDescending": ": active para ordenar descendentemente"
           	}
         	}
-      });           
-
-      // Restore state
-      if ( state ) {
-        table.columns().eq( 0 ).each( function ( colIdx ) {
-          var colSearch = state.columns[colIdx].search;
-          
-          if ( colSearch.search ) {
-            $( 'input', table.column( colIdx ).footer() ).val( colSearch.search );
-          }
-        });
-        
-        table.draw();
-      }
-   
-      // Apply the search
-      table.columns().eq( 0 ).each( function ( colIdx ) {
-          $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
-              table
-                  .column( colIdx )
-                  .search( this.value )
-                  .draw();
-          });
-      });
+      })          
   </script>
 @stop
