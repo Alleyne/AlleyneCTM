@@ -49,6 +49,7 @@
 
     {{-- <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 		<script src="{{ URL::asset('assets/backend/js/datatables/jquery-dataTables-1-10-15-min.js') }}"></script> Nota: NO TRABAJA EN SERVIDOR DIGITAL OCEAN--}} 
+		<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 
 		<!-- NOTIFICACIONES VIA TOASTR-->
 		<script>
