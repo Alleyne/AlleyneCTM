@@ -211,9 +211,7 @@
   	$(document).ready(function() {
 
       $('#dt_basic').dataTable({
-        "paging": false,
-        "scrollY": "393px",
-        "scrollCollapse": true,
+        "paging": true,
         "stateSave": true,
 				"order": [[ 0, "desc" ]],
          
