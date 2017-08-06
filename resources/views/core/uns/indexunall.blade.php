@@ -85,7 +85,7 @@
 @stop
 
 @section('relatedplugins')
-    <script src="{{ URL::asset('assets/backend/js/libs/jquery-1.12.4.min.js') }}"></script>
+    {{-- <script src="{{ URL::asset('assets/backend/js/libs/jquery-1.12.4.min.js') }}"></script> --}}
     {{-- <script src="{{ URL::asset('assets/backend/js/datatables/jquery.dataTables-1.10.15.min.js') }}"></script> --}}
     <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <script>
