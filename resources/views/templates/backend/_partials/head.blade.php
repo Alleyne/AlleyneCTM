@@ -40,6 +40,7 @@
 <link rel="shortcut icon" href="{{ URL::asset('assets/backend/img/favicon/favicon.ico') }}" type="image/x-icon">		
 <link rel="icon" href="{{ URL::asset('assets/backend/img/favicon/favicon.ico') }}" type="image/x-icon">	
 <link href="{{ URL::asset('assets/backend/css/toastr.min.css') }}" rel="stylesheet" type="text/css" media="screen">	
+
 <link href="{{ URL::asset('assets/backend/css/jquery-datatables-1-10-12-min.css') }}" rel="stylesheet" type="text/css" media="screen">
 <!-- GOOGLE FONT -->
 <!-- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700"> -->

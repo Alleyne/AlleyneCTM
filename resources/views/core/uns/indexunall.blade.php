@@ -2,11 +2,6 @@
 
 @section('title', '| Unidades')
 
-@section('stylesheets')
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> --}}
-    {{-- <link href="{{ URL::asset('assets/backend/css/jquery-datatables-1-10-12-min.css') }}" rel="stylesheet" type="text/css" media="screen"> --}}
-@endsection
-
 @section('content')
     <div class="row show-grid">
         <div class="col-xs-12 col-sm-6 col-md-12">        

@@ -45,7 +45,7 @@
                       <div class="widget-body-toolbar">
                       </div>
 
-											<table id="dt_basic" class="table table-hover">
+											<table id="dt_basic" class="display compact" cellspacing="0" width="100%">
 												<thead>
 												<tr>
 													<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>
@@ -385,18 +385,53 @@
 
 @section('relatedplugins')
     <script src="{{ URL::asset('assets/fullcalendar340/lib/moment.min.js') }}"></script>
-    
-
-
-
     <script src="{{ URL::asset('assets/backend/js/datetimepicker/bootstrap-datetimepicker-4.17.47.min.js') }}"></script>
-  	
   	<script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>   
   	<script src="{{ URL::asset('assets/backend/js/plugin/bootstrap-progressbar/bootstrap-progressbar.js') }}"></script> 
 
     <script>
       $(document).ready(function() {
 		    
+      $('#dt_basic').dataTable({
+        "paging": true,
+        "stateSave": true,
+				"order": [[ 4, "desc" ]],
+         
+				"language": {
+					"decimal":        "",
+					"emptyTable":     "No hay datos disponibles para esta tabla",
+					"info":           "Mostrando _END_ de un total de _MAX_ unidades",
+					"infoEmpty":      "",
+					"infoFiltered":   "",
+					"infoPostFix":    "",
+					"thousands":      ",",
+					"lengthMenu":     "Mostrar _MENU_ unidades",
+					"loadingRecords": "Cargando...",
+					"processing":     "Procesando...",
+					"search":         "Buscar:",
+					"zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+					"paginate": {
+					    "first":      "Primer",
+					    "last":       "Ultimo",
+					    "next":       "Proximo",
+					    "previous":   "Anterior"
+					},
+					"aria": {
+					    "sortAscending":  ": active para ordenar ascendentemente",
+					    "sortDescending": ": active para ordenar descendentemente"
+					}
+        }
+      });
+    	
+    	$("input[type='submit']").attr("disabled", false);
+	    $("form").submit(function(){
+	      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+	      return true;
+	    });
+
+
+
+
 		    $(function () {
 
 	        // Fill all progress bars with animation
@@ -457,47 +492,9 @@
 
 		    })
 
-        // Setup - add a text input to each footer cell
-        $('#dt_basic tfoot th').each( function () {
-            var title = $('#dt_basic thead th').eq( $(this).index() ).text();
-            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-        });
-      });
 
-      $("input[type='submit']").attr("disabled", false);
-	    $("form").submit(function(){
-	      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
-	      return true;
-	    });
-
-      // DataTable
-      $('#dt_basic').DataTable({
-          stateSave: true,
     
-         "language": {
-            "decimal":        "",
-            "emptyTable":     "No hay datos disponibles para esta tabla",
-            "info":           "Mostrando _END_ de un total de _MAX_ reservaciones",
-            "infoEmpty":      "",
-            "infoFiltered":   "",
-            "infoPostFix":    "",
-            "thousands":      ",",
-            "lengthMenu":     "Mostrar _MENU_ unidades",
-            "loadingRecords": "Cargando...",
-            "processing":     "Procesando...",
-            "search":         "Buscar:",
-            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
-            "paginate": {
-                "first":      "Primer",
-                "last":       "Ultimo",
-                "next":       "Proximo",
-                "previous":   "Anterior"
-          	},
-            "aria": {
-                "sortAscending":  ": active para ordenar ascendentemente",
-                "sortDescending": ": active para ordenar descendentemente"
-          	}
-        	}
-      })          
+        });
+
   </script>
 @stop
