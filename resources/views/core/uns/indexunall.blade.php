@@ -3,8 +3,8 @@
 @section('title', '| Unidades')
 
 @section('stylesheets')
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> --}}
-    <link href="{{ URL::asset('assets/backend/css/jquery-datatables-1-10-12-min.css') }}" rel="stylesheet" type="text/css" media="screen">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+    {{-- <link href="{{ URL::asset('assets/backend/css/jquery-datatables-1-10-12-min.css') }}" rel="stylesheet" type="text/css" media="screen"> --}}
 @endsection
 
 @section('content')
@@ -91,8 +91,8 @@
 
 @section('relatedplugins')
 
-   {{--<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script> --}}
-  <script src="{{ URL::asset('assets/backend/js/datatables/jquery-dataTables-1-10-15-min.js') }}"></script>
+   <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+  {{--<script src="{{ URL::asset('assets/backend/js/datatables/jquery-dataTables-1-10-15-min.js') }}"></script> --}}
 
   <script type="text/javascript">
     $(document).ready(function() {
