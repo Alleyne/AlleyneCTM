@@ -247,8 +247,8 @@ class UsersController extends Controller {
 	public function subirImagenUser($id)
 	{
 			
-		//DB::beginTransaction();
-		//try {
+		DB::beginTransaction();
+		try {
 			$input = Input::all();
 			$rules = array(
 				'file' => 'required|image|max:10000|mimes:jpeg,jpg,gif,png,bmp'
@@ -309,11 +309,11 @@ class UsersController extends Controller {
 				return back()->withInput();
 			}
 
-		//} catch (\Exception $e) {
-			//DB::rollback();
-			//Session::flash('warning', ' Ocurrio un error en UnsController.subirImagen, la transaccion ha sido cancelada!');
-			//return back()->withInput();
-		//}
+		} catch (\Exception $e) {
+			DB::rollback();
+			Session::flash('warning', ' Ocurrio un error en UnsController.subirImagen, la transaccion ha sido cancelada!');
+			return back()->withInput();
+		}
 	}
 
 }

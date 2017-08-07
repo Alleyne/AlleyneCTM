@@ -96,8 +96,8 @@ class BloquesController extends Controller {
 	 ************************************************************************************/	
 	public function store()
 	{
-	  //DB::beginTransaction();
-	  //try {		
+	  DB::beginTransaction();
+	  try {		
 			//dd(Input::all());
 			$input = Input::all();
 			$rules = array(
@@ -146,11 +146,11 @@ class BloquesController extends Controller {
 			}
 			return back()->withInput()->withErrors($validation);
 
-/*	  } catch (\Exception $e) {
+	  } catch (\Exception $e) {
 	    DB::rollback();
 	    Session::flash('warning', ' Ocurrio un error en BloquesController.store, la transaccion ha sido cancelada!');
 	    return back()->withInput();
-	  }	*/
+	  }
 	}
 
 	/*************************************************************************

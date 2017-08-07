@@ -203,7 +203,7 @@
 	                  {!! $errors->first('fecha', '<li style="color:red">:message</li>') !!} 
                   </div>
                 </div>  
-								
+	
 								<div class="form-group">
 									<label class="col-md-3 control-label">Monto</label>
 									<div class="col-md-9">
@@ -248,10 +248,15 @@
 @stop
 
 @section('relatedplugins')
-    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>  
-    
-    <script type="text/javascript">
+  <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>  
+  
+  <script type="text/javascript">
     $(document).ready(function() {
+      
+
+
+$('.datepicker').datepicker();
+
 
       $('#dt_basic').dataTable({
         "paging": false,
@@ -260,75 +265,70 @@
         "stateSave": true,
 
         "language": {
-            "decimal":        "",
-            "emptyTable":     "No hay datos disponibles para esta tabla",
-            "info":           "Mostrando _END_ de un total de _MAX_ unidades",
-            "infoEmpty":      "",
-            "infoFiltered":   "",
-            "infoPostFix":    "",
-            "thousands":      ",",
-            "lengthMenu":     "Mostrar _MENU_ unidades",
-            "loadingRecords": "Cargando...",
-            "processing":     "Procesando...",
-            "search":         "Buscar:",
-            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
-            "paginate": {
-              "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
-              "previous":   "Anterior"
-            },
-            "aria": {
-              "sortAscending":  ": active para ordenar ascendentemente",
-              "sortDescending": ": active para ordenar descendentemente"
-            }
+          "decimal":        "",
+          "emptyTable":     "No hay datos disponibles para esta tabla",
+          "info":           "Mostrando _END_ de un total de _MAX_ unidades",
+          "infoEmpty":      "",
+          "infoFiltered":   "",
+          "infoPostFix":    "",
+          "thousands":      ",",
+          "lengthMenu":     "Mostrar _MENU_ unidades",
+          "loadingRecords": "Cargando...",
+          "processing":     "Procesando...",
+          "search":         "Buscar:",
+          "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+          "paginate": {
+            "first":      "Primer",
+            "last":       "Ultimo",
+            "next":       "Proximo",
+            "previous":   "Anterior"
+          },
+          "aria": {
+            "sortAscending":  ": active para ordenar ascendentemente",
+            "sortDescending": ": active para ordenar descendentemente"
+          }
         }
       });
-    })
 
-		$(function () {
-	    $("#fecha").datepicker({
-	        dateFormat: 'yy-mm-dd'
-	    });
+			$(function () {
 
-			$.datepicker.regional['es'] = {
-				closeText: 'Cerrar',
-				prevText: '<Ant',
-				nextText: 'Sig>',
-				currentText: 'Hoy',
-				monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-				monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-				dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-				dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
-				dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
-				weekHeader: 'Sm',
-				dateFormat: 'yy/mm/dd',
-				firstDay: 1,
-				isRTL: false,
-				showMonthAfterYear: false,
-				yearSuffix: ''
+
+				$.datepicker.regional['es'] = {
+					closeText: 'Cerrar',
+					prevText: '<Ant',
+					nextText: 'Sig>',
+					currentText: 'Hoy',
+					monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+					monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+					dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+					dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+					dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+					weekHeader: 'Sm',
+					dateFormat: 'yy/mm/dd',
+					firstDay: 1,
+					isRTL: false,
+					showMonthAfterYear: false,
+					yearSuffix: ''
 				};
+						
 				$.datepicker.setDefaults($.datepicker.regional['es']);
-				$(function () {
-				$("#fecha").datepicker();
-			});
 
-	    $("#dialog").dialog({
-	        autoOpen: false,
-	        show: {
-	            effect: "blind",
-	            duration: 1000
-	        },
-	        hide: {
-	            effect: "explode",
-	            duration: 1000
-	        }
-	    });
-		    
-			var trantipo_id = jQuery('#trantipo_id');
-			var select = this.value;
-			trantipo_id.change(function () {
+		    $("#dialog").dialog({
+		        autoOpen: false,
+		        show: {
+		            effect: "blind",
+		            duration: 1000
+		        },
+		        hide: {
+		            effect: "explode",
+		            duration: 1000
+		        }
+		    });
 			    
+				var trantipo_id = jQuery('#trantipo_id');
+				var select = this.value;
+				trantipo_id.change(function () {
+				    
 			    if ($(this).val() == 1) {
 		        $('.chequeNo').show();
 		    		$('.transaccionNo').hide();
@@ -345,20 +345,26 @@
 			    	$('.chequeNo').hide();
 			    	$('.transaccionNo').hide();
 			    }
-			});
+				});
 
-			// pasa el detallepagofactura_id al 
-			$('#myModalPagar').on('show.bs.modal', function(e) {
-			    var id = $(e.relatedTarget).data('detallepagofactura_id');
-			    $(e.currentTarget).find('input[name="detallepagofactura_id"]').val(id);
-			});
+				// pasa el detallepagofactura_id al 
+				$('#myModalPagar').on('show.bs.modal', function(e) {
+				    var id = $(e.relatedTarget).data('detallepagofactura_id');
+				    $(e.currentTarget).find('input[name="detallepagofactura_id"]').val(id);
+				});
 
-      $("input[type='submit']").attr("disabled", false);
-	    $("form").submit(function(){
-	      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
-	      return true;
-	    });
-		});
+	      $("input[type='submit']").attr("disabled", false);
+		    $("form").submit(function(){
+		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+		      return true;
+		    });
+			});
+      
+
+
+    })
+
+
 	</script>
 @stop
 

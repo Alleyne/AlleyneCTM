@@ -52,7 +52,7 @@
 									</div>
 								</div>
 								
-								<table id="dt_basic" class="table table-hover">
+								<table id="dt_basic" class="display compact" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th>ID</th>
@@ -130,18 +130,42 @@
 @stop
 
 @section('relatedplugins')
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
+  <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 
     
-    <script type="text/javascript">
+  <script type="text/javascript">
     $(document).ready(function() {
-        pageSetUp();
- 
-        $('#dt_basic').dataTable({
-            "sPaginationType" : "bootstrap_full"
-        });
+
+      $('#dt_basic').dataTable({
+        "paging": false,
+        "scrollY": "382px",
+        "scrollCollapse": true,
+        "stateSave": true,
+
+        "language": {
+            "decimal":        "",
+            "emptyTable":     "No hay datos disponibles para esta tabla",
+            "info":           "Mostrando _END_ de un total de _MAX_ unidades",
+            "infoEmpty":      "",
+            "infoFiltered":   "",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ unidades",
+            "loadingRecords": "Cargando...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+            "paginate": {
+              "first":      "Primer",
+              "last":       "Ultimo",
+              "next":       "Proximo",
+              "previous":   "Anterior"
+            },
+            "aria": {
+              "sortAscending":  ": active para ordenar ascendentemente",
+              "sortDescending": ": active para ordenar descendentemente"
+            }
+        }
+      });
     })
-    </script>
+  </script>
 @stop
