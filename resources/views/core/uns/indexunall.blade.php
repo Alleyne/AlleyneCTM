@@ -91,7 +91,7 @@
 
       $('#dt_basic').dataTable({
         "paging": false,
-        "scrollY": "393px",
+        "scrollY": "394px",
         "scrollCollapse": true,
         "stateSave": true,
 

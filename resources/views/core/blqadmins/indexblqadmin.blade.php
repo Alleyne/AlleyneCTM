@@ -180,17 +180,40 @@
 @stop
 
 @section('relatedplugins')
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/jquery.dataTables-cust.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/ColReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/backend/js/plugin/datatables/DT_bootstrap.js') }}"></script>
-    
-    <script type="text/javascript">
+
+  <script type="text/javascript">
     $(document).ready(function() {
-        pageSetUp();
- 
-        $('#dt_basic').dataTable({
-            "sPaginationType" : "bootstrap_full"
-        });
+
+      $('#dt_basic').dataTable({
+        "paging": false,
+        "scrollCollapse": true,
+        "stateSave": true,
+
+        "language": {
+            "decimal":        "",
+            "emptyTable":     "No hay datos disponibles para esta tabla",
+            "info":           "Mostrando _END_ de un total de _MAX_ unidades",
+            "infoEmpty":      "",
+            "infoFiltered":   "",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ unidades",
+            "loadingRecords": "Cargando...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+            "paginate": {
+              "first":      "Primer",
+              "last":       "Ultimo",
+              "next":       "Proximo",
+              "previous":   "Anterior"
+            },
+            "aria": {
+              "sortAscending":  ": active para ordenar ascendentemente",
+              "sortDescending": ": active para ordenar descendentemente"
+            }
+        }
+      });
     })
     </script>
 @stop

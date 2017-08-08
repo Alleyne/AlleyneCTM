@@ -2,6 +2,11 @@
 
 @section('title', '| Serviproductos por organizacion')
 
+{{-- @section('stylesheets')
+<link href="{{ URL::asset('assets/backend/css/jquery-datatables-1-10-12-min.css') }}" rel="stylesheet" type="text/css" media="screen">
+
+@endsection --}}
+
 @section('content')
 
 		<!-- widget grid -->

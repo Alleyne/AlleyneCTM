@@ -10,7 +10,7 @@
 */
 
 |-----------------------------------------------------------------------------------------
-|- Crea un array que contiene todos los productos que pertenecen a la requisición $req_id
+|- Crea un array que contienec todos los productos que pertenecen a la requisición $req_id
 |-----------------------------------------------------------------------------------------
 	-Crea un array de objetos
 	$detallereqs=Detallereq::where('req_id', '=', $req_id)->get();
@@ -2665,7 +2665,7 @@ Work::with(
         {!! $errors->first('fecha', '<li style="color:red">:message</li>') !!} 
       
       </div>
-    </div>  
+    </div>   
 
       $(function () {
       $("#fecha").datepicker({
@@ -2976,3 +2976,8 @@ Work::with(
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script> 
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+
+  /*************************************************************************************
+   * user->roles return null
+   ************************************************************************************/    
+   composer dump-autoload

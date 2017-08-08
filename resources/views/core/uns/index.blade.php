@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     
-                    <table id="dt_basic" class="table table-hover">
+                    <table id="dt_basic" class="display compact" cellspacing="0" width="100%">
                         <thead>
                             <tr>
                                 <th>ID</th>

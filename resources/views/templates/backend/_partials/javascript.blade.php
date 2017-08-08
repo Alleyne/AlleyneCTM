@@ -27,8 +27,8 @@
 		<!-- JQUERY UI + Bootstrap Slider
 		<script src="{{ URL::asset('assets/backend/js/plugin/bootstrap-slider/bootstrap-slider.min.js') }}"></script> -->
 		
-		<!-- browser msie issue fix -->
-		<script src="{{ URL::asset('assets/backend/js/plugin/msie-fix/jquery.mb.browser.min.js') }}"></script>
+		<!-- browser msie issue fix 
+		<script src="{{ URL::asset('assets/backend/js/plugin/msie-fix/jquery.mb.browser.min.js') }}"></script>-->
 		
 		<!-- FastClick: For mobile devices
 		<script src="{{ URL::asset('assets/backend/js/plugin/fastclick/fastclick.js') }}"></script> -->
