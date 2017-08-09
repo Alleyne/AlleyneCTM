@@ -28,7 +28,7 @@ class Ppago {
   *=============================================================================================
   * Este proceso se encarga de cobrar todas las facturaciones posibles dependiendo del monto disponible en la
   * al cuenta de pagos por adelantados al momento de crear un nuevo periodo contable. Tambien notifica
-  * al propietario del uso de su cuenta de pagos anticipados para cubri la deuda o parte de la deuda total
+  * al propietario del uso de su cuenta de pagos anticipados para cubrir la deuda o parte de la deuda total
   *
   * @param  string        $un_id          "1"
   * @param  string        $f_pago         "2016-01-30"

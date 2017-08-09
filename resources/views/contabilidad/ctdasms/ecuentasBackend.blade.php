@@ -95,13 +95,13 @@
                                               <td></td>                                        
                                               <td></td> 
                                             </tr>                                    
-        
+
                                             @foreach ($ants as $ant)
                                               <tr>
                                                 <td>{{ $ant->detalle }}</td>
-                                                <td col width="70px" align="right">{{ $ant->montoCuota }}</td>                       
-                                                <td col width="70px" align="right">{{ $ant->descuento }}</td>
-                                                <td col width="70px" align="right"><strong>{{ $ant->importe }}</strong></td>
+                                                <td col width="70px" align="right">{{ $ant->importe }}</td>                        
+                                                <td col width="70px" align="right">{{ $ant->descuento == "0.00" ?  "" : $ant->descuento }}</td>
+                                                <td col width="70px" align="right"><strong>{{ number_format($ant->montoCuota, 2) }}</strong></td>
                                               </tr>
                                             @endforeach
                                           @endif

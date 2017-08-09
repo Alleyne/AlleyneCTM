@@ -71,7 +71,7 @@
                  "language": {
                     "decimal":        "",
                     "emptyTable":     "No hay datos disponibles para esta tabla",
-                    "info":           "Mostrando _END_ de un total de _MAX_ pagos",
+                    "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ pagos",
                     "infoEmpty":      "",
                     "infoFiltered":   "",
                     "infoPostFix":    "",

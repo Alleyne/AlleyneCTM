@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Desembolsos de caja chica')
+@section('title', '| Informes de diario de Caja Chica')
 
 @section('content')
 
@@ -20,14 +20,13 @@
             data-widget-custombutton="false"
             data-widget-collapsed="true"
             data-widget-sortable="false"-->
-            
+
             <header>
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Desembolsos de Caja Chica</h2>
+                <h2>Identificar pago </h2>
                 <div class="widget-toolbar">
-                    <a href="{{ URL::route('cajachicas.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 
-                </div>  
+                </div>
             </header>
 
             <div><!-- widget div-->
@@ -45,49 +44,26 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>FECHA</th>  
-                                <th>CHEQUE</th>
-                                <th>MONTO</th>
-                                <th>APROBADO</th>
+                                <th>CÓDIGO</th>                          
+                                <th>PROPIETARIOS</th> 
                                 <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($datos as $dato)
                                 <tr>
-                                    <td col width="20px"><strong>{{ $dato->id }}</strong></td>
-                                    <td col width="70px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
-                                    <td col width="60px"><strong>{{ $dato->cheque }}</strong></td>
-                                    <td col width="60px"><strong>{{ $dato->monto }}</strong></td>                                    
-                                    <td col width="40px"><strong>{{ $dato->aprobado ? "Si" : 'No' }}</strong></td>
-                                    @if (Cache::get('esAdminkey'))
-                                        <td col width="170px" align="right">
-                                            @if($dato->aprobado == 0)
-                                                <ul class="demo-btns">
-                                                    <li>
-                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
-                                                    </li>                
-                                                    <li>
-                                                        <a href="{{ URL::route('aprobarInforme', array($dato->id, $cajachica_id)) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Desembolso</a>
-                                                    </li> 
-                                                </ul>
-                                            @else
-                                                <ul class="demo-btns">
-                                                    <li>
-                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
-                                                    </li>                
-                                                </ul>
-                                            @endif
-                                        </td>
-                                    @elseif (Cache::get('esContadorkey'))
-                                        <td col width="100px" align="right">
-                                            <ul class="demo-btns">
-                                                <li>
-                                                    <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
-                                                </li>                
-                                            </ul>
-                                        </td>
-                                    @endif
+                                    <td col width="40px">{{ $dato->id }}</td>
+                                    <td col width="110px"><strong>{{ $dato->codigo }}</strong></td>
+                                    <td>{{ $dato->propietarios }}</td>
+
+                                    <td col width="50px" align="right">
+                                        <ul class="demo-btns">
+                                            <li>
+                                                <a href="{{ URL::route('identificarPagoStore', [$dato->id, $pagosnoid_id]) }}" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-check"></i></a>
+                                            </li> 
+                                        </ul>
+                                    </td>
+
                                 </tr>
                             @endforeach
                         </tbody>

@@ -2326,7 +2326,42 @@ Work::with(
       $totalCuotasPorCobrar = $totalCuotasPorCobrar + ($cuotaRegPorCobrar + $cuotaExtraPorCobrar + $recargoPorCobrar);
     }  
 
+    // ejemplo no 9
+    // Almacena los datos de las unidades
+    $uns = Cache::get('unsAllkey');
+    //dd($datos->toArray());
+          
+    // Determina el estatus de la unidad (Paz y salvo o Moroso)
+    $i = 0;   
+    
+    foreach ($uns as $un) {
+ 
+      $props = Prop::where('un_id', $un->id)
+             ->join('users','users.id','=','props.user_id')
+             ->select('cedula','nombre_completo')
+             ->get();
+      //dd($props);     
 
+      $propietarios = "";
+      foreach ($props as $prop) {
+        if ($propietarios == "") {
+          $propietarios = $un->codigo.' '.$prop->cedula.' '.$prop->nombre_completo;
+        }
+        else {
+          $propietarios = $propietarios.', '.$prop->cedula. ' '.$prop->nombre_completo;         
+        }
+      }
+      
+      //dd($propietarios);        
+      $uns[$i]['propietarios'] = $propietarios;
+      $i ++;
+    }       
+    
+    //dd($uns);   ->orderBy('codigo')
+
+    // obtiene todas las unidades
+    $uns= $uns->where('propietarios', '!=', "")->pluck('propietarios', 'id')->all();
+    //dd($uns);
 
   /*************************************************************************************
    * La colacion utf8_spanish_ci o utf8_general_ci

@@ -251,8 +251,8 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------// 		
   //Route::get('contabilizaPagonoid/{pagosnoid_id},{f_pago},{un_id},{monto},{banco_id},{doc_no}', 'PagosnoidsController@contabilizaPagonoid')->name('contabilizaPagonoid');
   Route::get('contabilizaPagonoid/{pagonoid_id}', 'PagosnoidsController@contabilizaPagonoid')->name('contabilizaPagonoid');
-  Route::post('identificarPagoStore', 'PagosnoidsController@identificarPagoStore')->name('identificarPagoStore');
-  Route::get('identificarPagoCreate/{pagosnoid_id}', 'PagosnoidsController@identificarPagoCreate')->name('identificarPagoCreate');
+  Route::get('identificarPagoStore/{un_id},{pagonoid_id}', 'PagosnoidsController@identificarPagoStore')->name('identificarPagoStore');
+  Route::get('identificarPago/{pagosnoid_id}', 'PagosnoidsController@identificarPago')->name('identificarPago');
 	Route::resource('pagosnoids', 'PagosnoidsController');
 
 	//---------------------------------------------------------//

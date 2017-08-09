@@ -55,30 +55,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($datos as $dato)
+                            @foreach ($pagos as $pago)
                                 <tr>
-                                    <td col width="80px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_pago)->format('M j\\, Y') }}</td>
-                                    <td>{{ $dato->banco }}</td>
-                                    <td col width="20px" align="left">{{ $dato->tipo }}</td>                                    
-                                    <td col width="50px" align="left">{{ $dato->monto }}</td>  
-                                    <td col width="80px"><strong>{{ $dato->codigo }}</strong></td>
-                                    <td>{{ $dato->propietarios }}</td>
+                                    <td col width="80px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $pago->f_pago)->format('M j\\, Y') }}</td>
+                                    <td>{{ $pago->banco }}</td>
+                                    <td col width="20px" align="left">{{ $pago->tipo }}</td>                                    
+                                    <td col width="50px" align="left">{{ $pago->monto }}</td>  
+                                    <td col width="80px"><strong>{{ $pago->codigo }}</strong></td>
+                                    <td>{{ $pago->propietarios }}</td>
                                     @if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
                                         <td col width="125px" align="right">
                                             <ul class="demo-btns">
-                                                @if ($dato->identificado == 0 && $dato->contabilizado == 0)
+                                                @if ($pago->identificado == 0 && $pago->contabilizado == 0)
                                                     <li>
-                                                        <a href="{{ URL::route('identificarPagoCreate', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> </a>
+                                                        <a href="{{ URL::route('identificarPago', $pago->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> </a>
                                                     </li> 
-                                                @elseif ($dato->identificado == 1 && $dato->contabilizado == 0)
+                                                @elseif ($pago->identificado == 1 && $pago->contabilizado == 0)
                                                     <li>
-                                                        <a href="{{ URL::route('identificarPagoCreate', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> </a>
+                                                        <a href="{{ URL::route('identificarPago', $pago->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> </a>
                                                     </li> 
                                                     <li>
                                                         
                                                         {{Form::open(array(
                                                             //'route' => array('contabilizaPagonoid',$dato->id, $dato->f_pago, $dato->un_id, $dato->monto, $dato->banco_id, $dato->doc_no),
-                                                            'route' => array('contabilizaPagonoid', $dato->id),
+                                                            'route' => array('contabilizaPagonoid', $pago->id),
                                                             'method' => 'GET',
                                                             'style' => 'display:inline'
                                                         ))}}
@@ -88,13 +88,13 @@
                                                             'data-toggle' => 'modal',
                                                             'data-target' => '#confirmAction',
                                                             'data-title' => 'Contabilizar pago identificado',
-                                                            'data-message' => 'ATENCION: Para contabilizar el pago ya identificado, el sistema tomara la fecha del dia de hoy como fecha real de pago, asi que existira la posibilidad de que el propietario se penalizado con recargo por pago tardio. Es responsabilidad del propietario presentar el comprobante de pago el mismo dia en que efectua el deposito en el banco. Esta seguro(a) que desea contabilizar el presente pago identificado?',
+                                                            'data-message' => 'ATENCION: Para contabilizar el pago ya identificado, el sistema tomara la fecha del dia de hoy como fecha real de pago, asi que existira la posibilidad de que el propietario sea penalizado con recargo por pago tardio. Es responsabilidad del propietario presentar el comprobante de pago el mismo dia en que efectua el deposito en el banco. Esta seguro(a) que desea contabilizar el presente pago identificado?',
                                                             'data-btntxt' => 'SI, contabilizar pago',
                                                             'data-btncolor' => 'btn-success'
                                                         ))}}
                                                         {{Form::close()}} 
                                                     </li>
-                                                @elseif ($dato->identificado == 1 && $dato->contabilizado == 1)
+                                                @elseif ($pago->identificado == 1 && $pago->contabilizado == 1)
                                                     <li>
                                                         <span class="label label-success">Contabilizado</span>
                                                     </li>
@@ -104,15 +104,15 @@
                                     @elseif (Cache::get('esContadorkey'))
                                         <td col width="125px" align="right">
                                             <ul class="demo-btns">
-                                                @if ($dato->identificado == 0)
+                                                @if ($pago->identificado == 0)
                                                     <li>
                                                         <span class="label label-warning">Pendiente identificar</span>
                                                     </li>
-                                                @elseif ($dato->identificado == 1 && $dato->contabilizado == 0)
+                                                @elseif ($pago->identificado == 1 && $pago->contabilizado == 0)
                                                     <li>
                                                         <span class="label label-info">Pendiente contabilizar</span>
                                                     </li>
-                                                @elseif ($dato->identificado == 1 && $dato->contabilizado == 1)
+                                                @elseif ($pago->identificado == 1 && $pago->contabilizado == 1)
                                                     <li>
                                                         <span class="label label-success">Contabilizado</span>
                                                     </li>
@@ -138,7 +138,9 @@
 @stop
 
 @section('relatedplugins')
-
+  
+  <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>  
+  
   <script type="text/javascript">
     $(document).ready(function() {
 
@@ -151,7 +153,7 @@
         "language": {
             "decimal":        "",
             "emptyTable":     "No hay datos disponibles para esta tabla",
-            "info":           "Mostrando _END_ de un total de _MAX_ unidades",
+            "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ unidades",
             "infoEmpty":      "",
             "infoFiltered":   "",
             "infoPostFix":    "",

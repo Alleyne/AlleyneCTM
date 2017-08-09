@@ -267,7 +267,7 @@ $('.datepicker').datepicker();
         "language": {
           "decimal":        "",
           "emptyTable":     "No hay datos disponibles para esta tabla",
-          "info":           "Mostrando _END_ de un total de _MAX_ unidades",
+          "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ unidades",
           "infoEmpty":      "",
           "infoFiltered":   "",
           "infoPostFix":    "",

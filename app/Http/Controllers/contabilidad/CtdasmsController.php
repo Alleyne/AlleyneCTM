@@ -85,7 +85,7 @@ class CtdasmsController extends Controller {
 
     // agrega un nuevo elemento llamado montoCuota a la coleccion $ants
     $ants->map(function ($ant) {
-        $ant['montoCuota'] = ($ant->importe + $ant->descuento);
+        $ant['montoCuota'] = ($ant->importe - $ant->descuento);
     });
     
     $totalAnts = $ants->sum('importe') + $ants->sum('descuento'); 

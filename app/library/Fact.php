@@ -70,7 +70,7 @@ class Fact {
       }
       
       // Encuentra todas las unidades que pertenecen a la seccion 
-      $uns= Un::where('seccione_id', $secapto->seccione_id)
+      $uns = Un::where('seccione_id', $secapto->seccione_id)
               ->where('activa', 1)->get();
       // dd($uns->toArray());
 
@@ -84,9 +84,9 @@ class Fact {
         $descuento_siono= 0;
         $pagada= 0;
 
-        // antes de crear facturacion para un determinada unidad, se verifica si la misma pagó por anticipado 
-        // la respectiva orden de cobro. Si la orden de cobro ha sido pagada por anticipada, procede a contabilizarla
-        $desc= Detalledescuento::where('fecha', $fecha->toDateString())
+        // antes de crear facturacion para un determinada unidad, se verifica si la misma se pagó por anticipado. 
+        // Si la orden de cobro ha sido pagada por anticipada, procede a contabilizarla
+        $desc = Detalledescuento::where('fecha', $fecha->toDateString())
                                ->where('un_id', $un_id)->first();
 
         if ($desc) {

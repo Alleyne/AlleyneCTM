@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\library\Npagonoid;
 use App\library\Npago;
 use App\library\Sity;
-use Session, DB;
+use Session, DB, Cache;
 use Carbon\Carbon;
 use Jenssegers\Date\Date;
 use Auth;
@@ -20,6 +20,7 @@ use App\Pagosnoid;
 use App\Banco;
 use App\Un;
 use App\Pago;
+use App\Prop;
 
 class PagosnoidsController extends Controller
 {
@@ -37,11 +38,11 @@ class PagosnoidsController extends Controller
 	public function index()
 	{
 		
-		$datos = Pagosnoid::all();
-		//dd($datos->toArray());
+		$pagos = Pagosnoid::all();
+		//dd($pagos->toArray());
 
 		return view('contabilidad.pagosnoids.index')
-					->withDatos($datos);
+					->withPagos($pagos);
 	}
 
 	/**
@@ -206,16 +207,77 @@ class PagosnoidsController extends Controller
 		}
 	}
 
-	public function identificarPagoCreate($pagosnoid_id)
+	public function identificarPago($pagosnoid_id)
 	{
 
-    // obtiene todas las unidades
-    $uns= Un::orderBy('codigo')->pluck('codigo', 'id')->all();
-		//dd($uns);
+/*    // Almacena los datos de las unidades
+    $uns = Cache::get('unsAllkey')->orderBy('codigo')->get();
+    dd($datos->toArray());
+	    		
+		$i = 0;		
+		
+		foreach ($uns as $un) {
+ 
+	    $props = Prop::where('un_id', $un->id)
+	    		   ->join('users','users.id','=','props.user_id')
+	    		   ->select('cedula','nombre_completo')
+	    		   ->get();
+			//dd($props);			
 
-		return view('contabilidad.pagosnoids.identificarPagoCreate')
+			$propietarios = "";
+			foreach ($props as $prop) {
+				if ($propietarios == "") {
+					$propietarios = $un->codigo.' '.$prop->cedula.' '.$prop->nombre_completo;
+				}
+				else {
+					$propietarios = $propietarios.', '.$prop->cedula. ' '.$prop->nombre_completo;					
+				}
+			}
+			
+			//dd($propietarios);		    
+	    $uns[$i]['propietarios'] = $propietarios;
+	    $i ++;
+		}       
+    
+    //dd($uns);		->orderBy('codigo')
+
+    // obtiene todas las unidades
+    $uns= $uns->where('propietarios', '!=', "")->pluck('propietarios', 'id')->all();
+		//dd($uns);*/
+
+    // Almacena los datos de las unidades
+    $datos = Cache::get('unsAllkey');
+    //dd($datos->toArray());
+	    
+		// Determina el estatus de la unidad (Paz y salvo o Moroso)
+		$i = 0;		
+		foreach ($datos as $dato) {
+	    
+	    $props=Prop::where('un_id', $dato->id)
+	    		   ->join('users','users.id','=','props.user_id')
+	    		   ->select('cedula','nombre_completo')
+	    		   ->get();
+			//dd($props->toArray());			
+
+			$propietarios = "";
+			foreach ($props as $prop) {
+				if ($propietarios == "") {
+					$propietarios = $prop->cedula.' '.$prop->nombre_completo;
+				
+				} else {
+					$propietarios = $propietarios.', '.$prop->cedula. ' '.$prop->nombre_completo;					
+				}
+			}
+					    
+	    $datos[$i]['propietarios']=$propietarios;
+	    $i ++;
+		}       		
+
+		//dd($pagosnoid_id, $datos);
+
+		return view('contabilidad.pagosnoids.identificarPago')
 						->with('pagosnoid_id', $pagosnoid_id)
-						->with('uns', $uns);
+						->with('datos', $datos);
 	}
 
 	/**
@@ -224,57 +286,33 @@ class PagosnoidsController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function identificarPagoStore()
+	public function identificarPagoStore($un_id, $pagonoid_id)
 	{
 			
 		DB::beginTransaction();
 		try {
 
-			//dd(Input::all());
-			$input = Input::all();
-
-			$rules = array(
-       'un_id' => 'required'
-			);
-
-			$messages = [
-					'required'      => 'Informacion requerida!',
-					'before'        => 'La fecha de la factura debe ser anterior o igual a fecha del dia de hoy!',
-					'digits_between'=> 'El numero de la factura debe tener de uno a diez digitos!',
-					'numeric'       => 'Solo se admiten valores numericos!',
-					'date'          => 'Fecha invalida!',
-					'min'           => 'Se requiere un valor mayor que cero!'
-			];                
-				
-			$validation = \Validator::make($input, $rules, $messages);  
-
-			if ($validation->passes())
-			{
-				//encuentra los datos de la unidad
-				$uns = Un::find(Input::get('un_id'));
-				
-				$propietarios="";
-				foreach ($uns->props as $prop) {
-				    $propietarios= $propietarios.', '. $prop->user->nombre_completo;
-				}
-				//dd($trimmed = ltrim($propietarios, " , "));
-				
-				$pagosnoid = Pagosnoid::find(Input::get('pagosnoid_id'));
-				$pagosnoid->un_id = $uns->id;
-				$pagosnoid->codigo = $uns->codigo;
-				$pagosnoid->propietarios = ltrim($propietarios, " , "); 
-				$pagosnoid->identificado = 1;
-				$pagosnoid->save();															
-  			
-  			Sity::RegistrarEnBitacora($pagosnoid, Input::get(), 'Pagosnoid', 'Identifica pago no identificado');			
-				
-				Session::flash('success', 'Se identifico el pago no identificado!');
-				DB::commit();       
-				return redirect()->route('pagosnoids.index');
-			}       
-	
-			Session::flash('danger', '<< ATENCION >> Se encontraron errores en su formulario, recuerde llenar todos los campos!');
-			return back()->withInput()->withErrors($validation);
+			//encuentra los datos de la unidad
+			$uns = Un::find($un_id);
+			
+			$propietarios="";
+			foreach ($uns->props as $prop) {
+			    $propietarios= $propietarios.', '. $prop->user->nombre_completo;
+			}
+			//dd($trimmed = ltrim($propietarios, " , "));
+			
+			$pagosnoid = Pagosnoid::find($pagonoid_id);
+			$pagosnoid->un_id = $uns->id;
+			$pagosnoid->codigo = $uns->codigo;
+			$pagosnoid->propietarios = ltrim($propietarios, " , "); 
+			$pagosnoid->identificado = 1;
+			$pagosnoid->save();															
+			
+			Sity::RegistrarEnBitacora($pagosnoid, Input::get(), 'Pagosnoid', 'Identifica pago no identificado');			
+			
+			Session::flash('success', 'Se identifico el pago no identificado!');
+			DB::commit();       
+			return redirect()->route('pagosnoids.index');
 
 		} catch (\Exception $e) {
 			DB::rollback();
