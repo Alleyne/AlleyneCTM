@@ -916,8 +916,11 @@ class HojadetrabajosController extends Controller {
     // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
     
     // verifica si exite balance entre el $totalAjustadoDebito y $totalAjustadoCredito
-    $p3 = $saldoAjustado_debito == $saldoAjustado_credito;
-
+    if ( round((float)$saldoAjustado_debito, 2) == round((float)$saldoAjustado_credito, 2)) {
+      $p3 = true;     
+    }
+    // dd($saldoAjustado_debito, $saldoAjustado_credito, $p3);
+    
     // verifica si se trata del primer periodo en la base de datos y no esta cerrado
     if ($pcontable_id == 1 && $p3 == true) {
       $permitirAjustes= 'Si';

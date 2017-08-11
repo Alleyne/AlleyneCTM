@@ -42,6 +42,7 @@ class Desc {
     $siglas = $pago->trantipo->siglas;
     $trans_no = $pago->trans_no;
     $periodo = $periodo->id;     
+    $continuar = true;
 
     // verifica si tiene alguna cuota de mantenimiento regular por pagar
     $regulares = Ctdasm::where('un_id', $un_id)
@@ -85,49 +86,294 @@ class Desc {
     $hayPie = false;
     $regresa = array();
 
-    // verifica si la unidad tiene algun mes pagado por anticipado con descuento que aun no se han consumido
-    $anticipado= Detalledescuento::where('consumido', 0)
-                                 ->where('un_id', $un_id)
-                                 ->orderBy('id', 'desc')->first();
-    // dd($anticipado->toArray());  
-
-    if ($anticipado) {
-      // si encuentra alguno, entonces se toma la fecha como referencia para crear el nuevo mes con descuento    
-      $f_periodo = $anticipado->fecha;
-
-    } else {
-      // si no encuentra ninguno, entoncer utiliza la fecha del periodo en que se hace el pago como referencia para crear el nuevo mes con descuento
-      $f_periodo = Pcontable::find($periodo)->fecha;    
-    }
-
-    // encuentra las generales de la unidad
-    $un = Un::find($un_id);
-    
-    // encuentra el saldo de la cuenta de Pagos anticipados antes del ejercicio
-    $saldocpa= Pant::getSaldoCtaPagosAnticipados($un_id, $periodo);    
-    //dd($saldocpa);
-
-    // inicializo y me aseguro de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
-    $sobrante = round((float)$sobrante, 2);
-    $saldocpa = round((float)$saldocpa, 2);
+    // encuentra las generales de la unidad e inicializa variables,
+    // me aseguro de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
+    $un = Un::find($un_id);    
     $cuota_mant = round((float)$un->seccione->secapto->cuota_mant, 2);
     $descuento = round((float)$un->seccione->secapto->descuento, 2);
-    $m_descuento = round((float)$un->seccione->secapto->m_descuento, 2);
-    $mostrarNota = false;    
-    $totalUtilizado = 0;      
+    $m_descuento = round((float)$un->seccione->secapto->m_descuento, 2);    
     
-    // calcula la cantidad de meses que se podrian pagar con el $sobrante
-    $meses= intdiv(($sobrante + $saldocpa), $cuota_mant);
+    // ejecuta el siguiente codigo por lo menos una vez
+    do {
 
-    // determina si se aplica descuento de acuerdo con la normativa del ph
-    if ($meses >= $m_descuento) {
-      // aplica descuento
+      // encuentra el saldo de la cuenta de Pagos anticipados antes del ejercicio
+      $saldocpa = Pant::getSaldoCtaPagosAnticipados($un_id, $periodo);    
+      //dd($saldocpa);
       
-      $i = 0;  
+      // inicializo y me aseguro de que todas las variables involucradas sean de tipo float y redondeadas a dos decimales
+      $sobrante = round((float)$sobrante, 2);
+      $saldocpa = round((float)$saldocpa, 2);
+      $mostrarNota = false;    
+      $totalUtilizado = 0;   
       
-      // registra en la tabla detalledescuentos el desglose de los meses que se pagaran por adelantado y el mes que se le aplicara el descuento
-      for ($x = 1; $x <= $meses; $x++) {
-        // genera los datos para el primer renglon o mes que tendra descuento
+      // calcula la cantidad de meses que se podrian pagar con el sobrante mas pagos anticipados
+      $meses = intdiv(($sobrante + $saldocpa), $cuota_mant);    
+      
+      // determina si se aplica descuento de acuerdo con la normativa del ph
+      // repite este proceso mientras la cantidad de meses sean suficiente para aplicar descuento
+      if ($meses >= $m_descuento) {
+        // aplica descuento
+
+        // verifica si la unidad tiene algun mes pagado por anticipado con descuento que aun no se han consumido
+        $anticipado = Detalledescuento::where('consumido', 0)
+                                     ->where('un_id', $un_id)
+                                     ->orderBy('id', 'desc')->first();
+        // dd($anticipado->toArray());  
+
+        if ($anticipado) {
+          // si encuentra alguno, entonces se toma la fecha como referencia para crear el nuevo mes con descuento    
+          $f_periodo = $anticipado->fecha;
+
+        } else {
+          // si no encuentra ninguno, entoncer utiliza la fecha del periodo en que se hace el pago como referencia para crear el nuevo mes con descuento
+          $f_periodo = Pcontable::find($periodo)->fecha;    
+        }
+        //dd($f_periodo);
+
+        $i = 0;  
+        
+        // registra en la tabla detalledescuentos el desglose de los meses que se pagaran por adelantado y el mes que se le aplicara el descuento
+        for ($x = 1; $x <= $m_descuento - 1; $x++) {
+          // genera los datos para el primer renglon o mes que se paga por adelantado
+          
+          // calcula la fecha del periodo que se va a utilizar en la presente iteraccion
+          $f_periodo = Carbon::parse($f_periodo)->addMonth();
+          
+          $year = $f_periodo->year;
+          $month = $f_periodo->month;
+          $day = $un->seccione->secapto->d_registra_cmpc;
+          //dd($year, $month, $day);        
+          
+          $f_periodo = Carbon::createFromDate($year, $month, $day);
+          $mes_anio = Sity::getMonthName($month).'-'.$year;
+          
+          if ($sobrante >= $cuota_mant) {
+            // se recibio suficiente dinero para pagar por lo menos una cuota regular,
+            // no hay necesidad de utilizar la cuenta de Pagos anticipados
+
+            $dto = new Detalledescuento;
+            $dto->un_id = $un_id;
+            $dto->fecha = $f_periodo;
+            $dto->pcontable_id = $periodo;
+            $dto->mes_anio = $mes_anio;
+            $dto->detalle = 'Paga cuota de mantenimiento de '.$mes_anio.' por adelantado';
+            $dto->importe = $cuota_mant;
+            $dto->descuento = 0; 
+            $dto->pago_id = $pago_id;
+            $dto->save();          
+
+            // hace los asientos contables dependiendo del tipo de pago
+            // 4= Banca en linea se afecta derectamente a la cuenta de banco
+            if ($tipoPago == 4) {
+
+              // registra en el diario
+              // registra un aumento en la cuenta Banco  
+              $diario = new Ctdiario;
+              $diario->pcontable_id  = $periodo;
+              if ($i == 0) { $diario->fecha = $f_pago; }
+              $diario->detalle = $cuenta_8;
+              $diario->debito  = $cuota_mant;
+              $diario->credito = Null;
+              $diario->save();
+              $i = 1;
+
+              // registra en el mayor
+              // registra un aumento en la cuenta Banco 
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);              
+
+            } else {
+              
+              // registra en el diario
+              // registra un aumento en la cuenta de Caja general 
+              $diario = new Ctdiario;
+              $diario->pcontable_id  = $periodo;
+              if ($i == 0) { $diario->fecha = $f_pago; }
+              $diario->detalle = $cuenta_32;
+              $diario->debito  = $cuota_mant;
+              $diario->credito = Null;
+              $diario->save();
+              $i = 1;
+
+              // registra en el mayor
+              // registra un aumento en la cuenta de Caja general
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);     
+            }
+            
+            // registra en el diario
+            // registra un aumento en la cuenta de anticipos comprometidos  
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->detalle = $cuenta_14.', paga por adelantado cuota regular '.$mes_anio;
+            $diario->debito = Null;
+            $diario->credito = $cuota_mant;
+            $diario->save();
+
+            // registra un aumento en la cuenta de anticipos comprometidos
+            Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, $cuenta_14.' para cobrar cuota regular '.$mes_anio.', '.$un->codigo, $cuota_mant, $un_id, $pago_id); 
+
+            // Registra en Detallepago para generar un renglon en el recibo
+            Npago::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, $cuota_mant, $un_id, $pago_id, Npago::getLastNoDetallepago($pago_id), 1);
+          
+            // Actualiza el nuevo monto disponible para continuar pagando
+            $sobrante = round(($sobrante - $cuota_mant), 2); 
+            
+            if ($sobrante > 0) {
+              $dineroFresco = true;
+            }
+            
+            $hayPie = true;
+          
+          } elseif ($sobrante > 0 && (($sobrante + $saldocpa) >= $cuota_mant)) {
+            // si la suma del $sobrante mas el $saldocpas es suficiente para pagar una cuota regular,
+            // se hace lo siguiente:
+            
+            $dto = new Detalledescuento;
+            $dto->un_id = $un_id;
+            $dto->fecha = $f_periodo;
+            $dto->pcontable_id = $periodo;
+            $dto->mes_anio = $mes_anio;
+            $dto->detalle = 'Paga cuota de mantenimiento de '.$mes_anio.' por adelantado';
+            $dto->importe = $cuota_mant;
+            $dto->descuento = 0; 
+            $dto->pago_id = $pago_id;
+            $dto->save();  
+
+            // calcula el total a descontar de la cuenta de pagos anticipados necesarios para completar el pago del mes con descuento
+            $totalDescontarPa = round(($cuota_mant - $sobrante), 2);
+
+            // hace los asientos contables dependiendo del tipo de pago
+            // 4= Banca en linea se afecta derectamente a la cuenta de banco
+            if ($tipoPago == 4) {
+
+              // registra en el diario
+              // registra un aumento en la cuenta Banco  
+              $diario = new Ctdiario;
+              $diario->pcontable_id = $periodo;
+              if ($i == 0) { $diario->fecha = $f_pago; }
+              $diario->detalle = $cuenta_8;
+              $diario->debito  = $cuota_mant;
+              $diario->credito = Null;
+              $diario->save();
+              $i = 1;
+
+              // registra un aumento en la cuenta Banco 
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);              
+            
+            } else {
+              
+              // registra en el diario
+              // registra un aumento en la cuenta de Caja general 
+              $diario = new Ctdiario;
+              $diario->pcontable_id = $periodo;
+              if ($i == 0) { $diario->fecha = $f_pago; }
+              $diario->detalle = $cuenta_32;
+              $diario->debito  = $cuota_mant;
+              $diario->credito = Null;
+              $diario->save();
+              $i = 1;
+
+              // registra en el mayor
+              // registra un aumento en la cuenta de Caja general
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);              
+            }
+            
+            // registra en el diario
+            // registra una disminucion en la cuenta de Pagos anticipados   
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->detalle = $cuenta_5;
+            $diario->debito =  $totalDescontarPa;
+            $diario->credito = Null;
+            $diario->save();
+
+            // registra una disminucion en la cuenta de Pagos anticipados 
+            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.', Pago #'.$pago_id, $totalDescontarPa, $un_id, $pago_id);    
+
+            // registra un aumento en la cuenta de anticipos comprometidos  
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->detalle = $cuenta_14.', paga por adelantado cuota regular '.$mes_anio;
+            $diario->debito = Null;
+            $diario->credito = $cuota_mant;
+            $diario->save();
+
+            // registra un aumento en la cuenta de anticipos comprometidos
+            Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, $cuenta_14.' para cobrar cuota regular '.$mes_anio.', '.$un->codigo, $cuota_mant, $un_id, $pago_id);
+            
+            // Registra en Detallepago para generar un renglon en el recibo
+            Npago::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, $cuota_mant, $un_id, $pago_id, Npago::getLastNoDetallepago($pago_id), 1);
+
+            // total utilizado de la cuenta de pagos por anticipados
+            $totalUtilizado = round(($totalUtilizado + $totalDescontarPa), 2); 
+
+            // Actualiza el nuevo monto de la cuenta de pagos por anticipado
+            $saldocpa = round(($saldocpa - $totalDescontarPa), 2);  
+            
+            // actualiza variables
+            $sobrante = 0;
+            $dineroFresco = false;
+            $mostrarNota = true;
+            $hayPie = true;
+          
+          } elseif ($sobrante == 0 && $saldocpa >= $cuota_mant) {
+            // si el sobrante es cero y hay suficiente dinero para pagar un cuota de mantenimiento con descuento
+            // utilizando solamente la cuenta de pagos anticipados se hace lo siguiente:
+
+            $dto = new Detalledescuento;
+            $dto->un_id = $un_id;
+            $dto->fecha = $f_periodo;
+            $dto->pcontable_id = $periodo;
+            $dto->mes_anio = $mes_anio;
+            $dto->detalle = 'Paga cuota de mantenimiento de '.$mes_anio.' por adelantado';
+            $dto->importe = $cuota_mant;
+            $dto->descuento = 0; 
+            $dto->pago_id = $pago_id;
+            $dto->save();  
+
+            // registra en el diario
+            // registra una disminucion en la cuenta de Pagos anticipados  
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->detalle = $cuenta_5;
+            $diario->debito = $cuota_mant;
+            $diario->credito = Null;
+            $diario->save();
+            
+            // registra una disminucion en la cuenta de Pagos anticipados 
+            Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);    
+
+            // registra en el diario
+            // registra un aumento en la cuenta de anticipos comprometidos  
+            $diario = new Ctdiario;
+            $diario->pcontable_id  = $periodo;
+            $diario->detalle = $cuenta_14.', paga por adelantado cuota regular '.$mes_anio;
+            $diario->debito = Null;
+            $diario->credito = $cuota_mant;
+            $diario->save();
+            
+            // registra un aumento en la cuenta de anticipos comprometidos
+            Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago,'Para cobrar cuota regular '.$mes_anio.', '.$un->codigo, $cuota_mant, $un_id, $pago_id);
+
+            // Registra en Detallepago para generar un renglon en el recibo
+            Npago::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, $cuota_mant, $un_id, $pago_id, Npago::getLastNoDetallepago($pago_id), 1);
+
+            // total utilizado de la cuenta de pagos por anticipados
+            $totalUtilizado = $totalUtilizado + $cuota_mant; 
+
+            // Actualiza el nuevo monto de la cuenta de pagos por anticipado
+            $saldocpa = round(($saldocpa - $cuota_mant), 2);  
+           
+            $sobrante = 0;
+            $dineroFresco = false;   
+            $mostrarNota = true;
+            $hayPie = true;
+
+          } // end second if
+        } // end for
+        
+        //--------------------------------------------------------------
+        // aplica descuento al siguiente mes (inicia)
+        //--------------------------------------------------------------
         
         // calcula la fecha del periodo que se va a utilizar en la presente iteraccion
         $f_periodo = Carbon::parse($f_periodo)->addMonth();
@@ -139,292 +385,111 @@ class Desc {
         
         $f_periodo = Carbon::createFromDate($year, $month, $day);
         $mes_anio = Sity::getMonthName($month).'-'.$year;
-        
-        if ($sobrante >= $cuota_mant) {
-          // se recibio suficiente dinero para pagar por lo menos una cuota regular,
-          // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
-          $dto = new Detalledescuento;
-          $dto->un_id = $un_id;
-          $dto->fecha = $f_periodo;
-          $dto->pcontable_id = $periodo;
-          $dto->mes_anio = $mes_anio;
-          $dto->detalle = 'Paga cuota de mantenimiento de '.$mes_anio.' por adelantado';
-          $dto->importe = $cuota_mant;
-          $dto->descuento = 0; 
-          $dto->pago_id = $pago_id;
-          $dto->save();          
+        $dto = new Detalledescuento;
+        $dto->un_id = $un_id;
+        $dto->fecha = $f_periodo;
+        $dto->pcontable_id = $periodo;
+        $dto->mes_anio = $mes_anio;
+        $dto->detalle = 'Paga cuota de mantenimiento de '.$mes_anio.' por adelantado con descuento';
+        $dto->importe = ($cuota_mant - $descuento);
+        $dto->descuento = $descuento; 
+        $dto->pago_id = $pago_id;
+        $dto->save();          
 
-          // hace los asientos contables dependiendo del tipo de pago
-          // 4= Banca en linea se afecta derectamente a la cuenta de banco
-          if ($tipoPago == 4) {
+        // hace los asientos contables dependiendo del tipo de pago
+        // 4= Banca en linea se afecta derectamente a la cuenta de banco
+        if ($tipoPago == 4) {
 
-            // registra en el diario
-            // registra un aumento en la cuenta Banco  
-            $diario = new Ctdiario;
-            $diario->pcontable_id  = $periodo;
-            if ($i == 0) { $diario->fecha = $f_pago; }
-            $diario->detalle = $cuenta_8;
-            $diario->debito  = $cuota_mant;
-            $diario->credito = Null;
-            $diario->save();
-            $i = 1;
-
-            // registra en el mayor
-            // registra un aumento en la cuenta Banco 
-            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);              
-          
-          } else {
-            
-            // registra en el diario
-            // registra un aumento en la cuenta de Caja general 
-            $diario = new Ctdiario;
-            $diario->pcontable_id  = $periodo;
-            if ($i == 0) { $diario->fecha = $f_pago; }
-            $diario->detalle = $cuenta_32;
-            $diario->debito  = $cuota_mant;
-            $diario->credito = Null;
-            $diario->save();
-            $i = 1;
-
-            // registra en el mayor
-            // registra un aumento en la cuenta de Caja general
-            Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);     
-          }
-          
           // registra en el diario
-          // registra un aumento en la cuenta de anticipos comprometidos  
+          // registra un aumento en la cuenta Banco  
           $diario = new Ctdiario;
           $diario->pcontable_id  = $periodo;
-          $diario->detalle = $cuenta_14.', paga por adelantado cuota regular '.$mes_anio;
-          $diario->debito = Null;
-          $diario->credito = $cuota_mant;
-          $diario->save();
-
-          // registra un aumento en la cuenta de anticipos comprometidos
-          Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, $cuenta_14.' para cobrar cuota regular '.$mes_anio.', '.$un->codigo, $cuota_mant, $un_id, $pago_id); 
-
-          // Registra en Detallepago para generar un renglon en el recibo
-          Npago::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, $cuota_mant, $un_id, $pago_id, Npago::getLastNoDetallepago($pago_id), 1);
-        
-          // Actualiza el nuevo monto disponible para continuar pagando
-          $sobrante = round(($sobrante - $cuota_mant), 2); 
-          
-          if ($sobrante > 0) {
-            $dineroFresco = true;
-          }
-          $hayPie = true;
-        
-        } elseif ($sobrante > 0 && (($sobrante + $saldocpa) >= $cuota_mant)) {
-          // si la suma del $sobrante mas el $saldocpas es suficiente para pagar una cuota regular,
-          // se hace lo siguiente:
-          
-          $dto = new Detalledescuento;
-          $dto->un_id = $un_id;
-          $dto->fecha = $f_periodo;
-          $dto->pcontable_id = $periodo;
-          $dto->mes_anio = $mes_anio;
-          $dto->detalle = 'Paga cuota de mantenimiento de '.$mes_anio.' por adelantado';
-          $dto->importe = $cuota_mant;
-          $dto->descuento = 0; 
-          $dto->pago_id = $pago_id;
-          $dto->save();  
-
-          // calcula el total a descontar de la cuenta de pagos anticipados necesarios para completar el pago del mes con descuento
-          $totalDescontarPa = round(($cuota_mant - $sobrante), 2);
-
-          // hace los asientos contables dependiendo del tipo de pago
-          // 4= Banca en linea se afecta derectamente a la cuenta de banco
-          if ($tipoPago == 4) {
-
-            // registra en el diario
-            // registra un aumento en la cuenta Banco  
-            $diario = new Ctdiario;
-            $diario->pcontable_id = $periodo;
-            if ($i == 0) { $diario->fecha = $f_pago; }
-            $diario->detalle = $cuenta_8;
-            $diario->debito  = $cuota_mant;
-            $diario->credito = Null;
-            $diario->save();
-            $i = 1;
-
-            // registra un aumento en la cuenta Banco 
-            Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);              
-          
-          } else {
-            
-            // registra en el diario
-            // registra un aumento en la cuenta de Caja general 
-            $diario = new Ctdiario;
-            $diario->pcontable_id = $periodo;
-            if ($i == 0) { $diario->fecha = $f_pago; }
-            $diario->detalle = $cuenta_32;
-            $diario->debito  = $cuota_mant;
-            $diario->credito = Null;
-            $diario->save();
-            $i = 1;
-
-            // registra en el mayor
-            // registra un aumento en la cuenta de Caja general
-            Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);              
-          }
-          
-          // registra en el diario
-          // registra una disminucion en la cuenta de Pagos anticipados   
-          $diario = new Ctdiario;
-          $diario->pcontable_id  = $periodo;
-          $diario->detalle = $cuenta_5;
-          $diario->debito =  $totalDescontarPa;
+          if ($i == 0) { $diario->fecha = $f_pago; }
+          $diario->detalle = $cuenta_8;
+          $diario->debito  = ($cuota_mant - $descuento);
           $diario->credito = Null;
           $diario->save();
+          $i = 1;
 
-          // registra una disminucion en la cuenta de Pagos anticipados 
-          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.', Pago #'.$pago_id, $totalDescontarPa, $un_id, $pago_id);    
+          // registra en el mayor
+          // registra un aumento en la cuenta Banco 
+          Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, ($cuota_mant - $descuento), $un_id, $pago_id);              
 
-          // registra un aumento en la cuenta de anticipos comprometidos  
-          $diario = new Ctdiario;
-          $diario->pcontable_id  = $periodo;
-          $diario->detalle = $cuenta_14.', paga por adelantado cuota regular '.$mes_anio;
-          $diario->debito = Null;
-          $diario->credito = $cuota_mant;
-          $diario->save();
-
-          // registra un aumento en la cuenta de anticipos comprometidos
-          Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, $cuenta_14.' para cobrar cuota regular '.$mes_anio.', '.$un->codigo, $cuota_mant, $un_id, $pago_id);
+        } else {
           
-          // Registra en Detallepago para generar un renglon en el recibo
-          Npago::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, $cuota_mant, $un_id, $pago_id, Npago::getLastNoDetallepago($pago_id), 1);
-
-          // total utilizado de la cuenta de pagos por anticipados
-          $totalUtilizado = round(($totalUtilizado + $totalDescontarPa), 2); 
-
-          // Actualiza el nuevo monto de la cuenta de pagos por anticipado
-          $saldocpa = round(($saldocpa - $totalDescontarPa), 2);  
-          
-          // actualiza variables
-          $sobrante = 0;
-          $dineroFresco = false;
-          $mostrarNota = true;
-          $hayPie = true;
-        
-        } elseif ($sobrante == 0 && $saldocpa >= $cuota_mant) {
-          // si el sobrante es cero y hay suficiente dinero para pagar un cuota de mantenimiento con descuento
-          // utilizando solamente la cuenta de pagos anticipados se hace lo siguiente:
-
-          $dto = new Detalledescuento;
-          $dto->un_id = $un_id;
-          $dto->fecha = $f_periodo;
-          $dto->pcontable_id = $periodo;
-          $dto->mes_anio = $mes_anio;
-          $dto->detalle = 'Paga cuota de mantenimiento de '.$mes_anio.' por adelantado';
-          $dto->importe = $cuota_mant;
-          $dto->descuento = 0; 
-          $dto->pago_id = $pago_id;
-          $dto->save();  
-
           // registra en el diario
-          // registra una disminucion en la cuenta de Pagos anticipados  
+          // registra un aumento en la cuenta de Caja general 
           $diario = new Ctdiario;
           $diario->pcontable_id  = $periodo;
-          $diario->detalle = $cuenta_5;
-          $diario->debito = $cuota_mant;
+          if ($i == 0) { $diario->fecha = $f_pago; }
+          $diario->detalle = $cuenta_32;
+          $diario->debito  = ($cuota_mant - $descuento);
           $diario->credito = Null;
           $diario->save();
-          
-          // registra una disminucion en la cuenta de Pagos anticipados 
-          Sity::registraEnCuentas($periodo, 'menos', 2, 5, $f_pago, $cuenta_5.', Pago #'.$pago_id, $cuota_mant, $un_id, $pago_id);    
+          $i = 1;
 
-          // registra en el diario
-          // registra un aumento en la cuenta de anticipos comprometidos  
-          $diario = new Ctdiario;
-          $diario->pcontable_id  = $periodo;
-          $diario->detalle = $cuenta_14.', paga por adelantado cuota regular '.$mes_anio;
-          $diario->debito = Null;
-          $diario->credito = $cuota_mant;
-          $diario->save();
-          
-          // registra un aumento en la cuenta de anticipos comprometidos
-          Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago,'Para cobrar cuota regular '.$mes_anio.', '.$un->codigo, $cuota_mant, $un_id, $pago_id);
+          // registra en el mayor
+          // registra un aumento en la cuenta de Caja general
+          Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, $cuenta_1.' con descuento, '.$mes_anio.', Pago #'.$pago_id, ($cuota_mant - $descuento), $un_id, $pago_id);     
+        }
+        
+        // registra en el diario
+        // registra un aumento en la cuenta de anticipos comprometidos  
+        $diario = new Ctdiario;
+        $diario->pcontable_id  = $periodo;
+        $diario->detalle = $cuenta_14.', paga por anticipado cuota regular con descuento '.$mes_anio;
+        $diario->debito = Null;
+        $diario->credito = ($cuota_mant - $descuento);
+        $diario->save();
 
-          // Registra en Detallepago para generar un renglon en el recibo
-          Npago::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado', $dto->id, $cuota_mant, $un_id, $pago_id, Npago::getLastNoDetallepago($pago_id), 1);
+        // registra un aumento en la cuenta de anticipos comprometidos
+        Sity::registraEnCuentas($periodo, 'mas', 2, 14, $f_pago, 'paga por anticipado cuota regular con descuento '.$mes_anio.', '.$un->codigo, ($cuota_mant - $descuento), $un_id, $pago_id); 
 
-          // total utilizado de la cuenta de pagos por anticipados
-          $totalUtilizado = $totalUtilizado + $cuota_mant; 
-
-          // Actualiza el nuevo monto de la cuenta de pagos por anticipado
-          $saldocpa = round(($saldocpa - $cuota_mant), 2);  
-         
-          $sobrante= 0;
-          $dineroFresco = false;   
-          $mostrarNota = true;
-          $hayPie = true;
-
-        } // end second if
-      } // end for
+        // Registra en Detallepago para generar un renglon en el recibo
+        Npago::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Paga cuota de mantenimiento de '.$mes_anio.' por anticipado con descuento ', $dto->id, ($cuota_mant - $descuento), $un_id, $pago_id, Npago::getLastNoDetallepago($pago_id), 1);
       
-      //--------------------------------------------------------------
-      // aplica descuento al siguiente mes (inicia)
-      //--------------------------------------------------------------
-      
-      // calcula la fecha del mes al que se le aplicara el descuento
-      $f_periodo = Carbon::parse($f_periodo)->addMonth();
-      
-      $year = $f_periodo->year;
-      $month = $f_periodo->month;
-      $day = $un->seccione->secapto->d_registra_cmpc;
-      //dd($year, $month, $day);        
-      
-      $f_periodo = Carbon::createFromDate($year, $month, $day);
-      $mes_anio = Sity::getMonthName($month).'-'.$year;
+        // Actualiza el nuevo monto disponible para continuar pagando
+        $sobrante = round(($sobrante - $cuota_mant), 2); 
+        
+        if ($sobrante > 0) {
+          $dineroFresco = true;
+        }
+        
+        $hayPie = true;
 
-      $dto = new Detalledescuento;
-      $dto->un_id = $un_id;
-      $dto->fecha = $f_periodo;
+        //--------------------------------------------------------------
+        // aplica descuento al siguiente mes (termina)
+        //--------------------------------------------------------------
+       
+      } else {
+        $continuar = false;
+      
+      } // endif         
+
+    } while ($continuar); // end while
+
+    // agrega ultima linea al libro diario      
+    if ($hayPie) {
+      $diario = new Ctdiario;
+      $diario->pcontable_id  = $periodo;
+      $diario->detalle = 'Para registrar cobro de cuota de mantenimiento regular con descuento, unidad '.$un->codigo.', Pago #'.$pago_id;
+      $diario->save();
+    }
+
+    if ($mostrarNota) {
+      // salva un nuevo registro que representa una linea del recibo
+      $dto = new Detallepago;
       $dto->pcontable_id = $periodo;
-      $dto->mes_anio = $mes_anio;
-      $dto->detalle = 'Se aplicara un descuento de B/.'.$descuento.' al mes de '.$mes_anio.' por pagos anticipados';
-      $dto->importe = $cuota_mant;
-      $dto->descuento = $descuento; 
+      $dto->detalle = 'Estimado propietario, se desconto de su cuenta de pagos anticipado un total de B/. '.number_format($totalUtilizado, 2). ' para completar pago de cuotas de mantenimiento por anticipado quedando en saldo B/.'.number_format($saldocpa, 2);
+      $dto->monto = $totalUtilizado;
+      $dto->un_id = $un_id;
+      $dto->tipo = 3;
       $dto->pago_id = $pago_id;
       $dto->save();  
       
-      // Registra en Detallepago para generar un renglon en el recibo
-      Npago::registraDetallepago($periodo, $un->codigo.' '.$mes_anio, 'Estimado propietario, usted se hace merecedor de un descuento de B/.'.$descuento.' en el mes de '.$mes_anio.' por pagos anticipados, gracias por participar y aprovechar nuestros descuentos.', $dto->id, 0, $un_id, $pago_id, '', Null);
-
-      //--------------------------------------------------------------
-      // aplica descuento al siguiente mes (termina)
-      //--------------------------------------------------------------
-
-      // agrega ultima linea al libro diario      
-      if ($hayPie) {
-        $diario = new Ctdiario;
-        $diario->pcontable_id  = $periodo;
-        $diario->detalle = 'Para registrar cobro de cuota de mantenimiento regular con descuento, unidad '.$un->codigo.', Pago #'.$pago_id;
-        $diario->save();
-      }
-
-      if ($mostrarNota) {
-        // salva un nuevo registro que representa una linea del recibo
-        $dto = new Detallepago;
-        $dto->pcontable_id = $periodo;
-        $dto->detalle = 'Estimado propietario, se desconto de su cuenta de pagos anticipado un total de B/. '.number_format($totalUtilizado, 2). ' para completar pago de cuotas de mantenimiento por anticipado quedando en saldo B/.'.number_format($saldocpa, 2);
-        $dto->monto = $totalUtilizado;
-        $dto->un_id = $un_id;
-        $dto->tipo = 3;
-        $dto->pago_id = $pago_id;
-        $dto->save();  
-      }
-
-      // notifica al propietario el uso de su cuenta de pagos por anticipados
-      
-      // regresa arreglo de datos
-      $regresa["sobrante"] = $sobrante;
-      $regresa["dineroFresco"] = $dineroFresco;    
-
-      return $regresa;
-      
-    } // end if #1
+      // notifica al propietario el uso de su cuenta de pagos por anticipados    
+    }
 
     // regresa arreglo de datos
     $regresa["sobrante"] = $sobrante;
