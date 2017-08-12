@@ -906,20 +906,22 @@ class HojadetrabajosController extends Controller {
     $utilidad = $datos->sum('er_credito')-$datos->sum('er_debito'); 
     //dd($utilidad);
 
-    $saldoAjustado_debito = $datos->sum('saldoAjustado_debito');
-    $saldoAjustado_credito = $datos->sum('saldoAjustado_credito');
-    //dd($saldoAjustado_debito - $saldoAjustado_credito);
+    $total_ba_debito = round((float)$datos->sum('saldoAjustado_debito'), 2);
+    $total_ba_credito = round((float)$datos->sum('saldoAjustado_credito'), 2);
+    //dd($total_ba_debito - $total_ba_credito);
+    
     // verifica si el presente periodo admite ajustes, solo se permiten
     // hacer ajustes si se cumplen las siguientes condiciones:
     // 1. Si el periodo esta abierto
     // 2. Si el periodo previo esta cerrado
-    // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
+    // 3. Debe haber balance entre $total_ba_debito y $total_ba_credito
     
-    // verifica si exite balance entre el $totalAjustadoDebito y $totalAjustadoCredito
-    if ( round((float)$saldoAjustado_debito, 2) == round((float)$saldoAjustado_credito, 2)) {
+    // verifica si exite balance entre el $total_aj_debito y $total_aj_credito
+    if ($total_ba_debito == $total_ba_credito) {
       $p3 = true;     
+    } else {
+      $p3 = false;  
     }
-    // dd($saldoAjustado_debito, $saldoAjustado_credito, $p3);
     
     // verifica si se trata del primer periodo en la base de datos y no esta cerrado
     if ($pcontable_id == 1 && $p3 == true) {
@@ -951,8 +953,8 @@ class HojadetrabajosController extends Controller {
       // cerrar un periodo si se cumplen las siguientes condiciones:
       // 1. Si se trata de un periodo no esta cerrado
       // 2. El periodo anterior debe estar cerrado       
-      // 3. Debe haber balance entre $totalAjustadoDebito y $totalAjustadoCredito
-      // 4. Si se trata del periodo previo al periodo real pero elperiodo real aun no existe
+      // 3. Debe haber balance entre $total_ba_debito y $total_ba_credito
+      // 4. Si se trata del periodo previo al periodo real pero el periodo real aun no existe
 
       // Construye la fecha del periodo real
       $yearReal = Carbon::today()->year;
@@ -996,8 +998,8 @@ class HojadetrabajosController extends Controller {
                 ->with('total_bp_credito', $datos->sum('saldo_credito')) 
                 ->with('total_aj_debito', $datos->sum('saldoAjuste_debito'))                  
                 ->with('total_aj_credito', $datos->sum('saldoAjuste_credito')) 
-                ->with('total_ba_debito', $saldoAjustado_debito)                  
-                ->with('total_ba_credito', $saldoAjustado_credito) 
+                ->with('total_ba_debito', $total_ba_debito)                  
+                ->with('total_ba_credito', $total_ba_credito) 
                 ->with('total_er_debito', $datos->sum('er_debito'))                  
                 ->with('total_er_credito', $datos->sum('er_credito')) 
                 ->with('total_bg_debito', $datos->sum('bg_debito'))                  
