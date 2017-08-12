@@ -65,7 +65,7 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Descripción</label>
 											<div class="col-md-10">
-												{{ Form::text('description', $dato->description, array('class' => 'form-control input-sm', 'title' => 'Escriba la descripcion del permiso...')) }}
+												{{ Form::text('description', $dato->description, array('class' => 'form-control input-sm', 'title' => 'Escriba la descripción del permiso...')) }}
 												{!! $errors->first('description', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>

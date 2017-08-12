@@ -30,7 +30,7 @@
 								<a href="{{ URL::route('roles.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 
 								<button class="btn btn-success" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
-									 Vincular usuario
+									 Vincular Usuario
 								</button>
 							</div>
 						</header>

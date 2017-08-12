@@ -30,7 +30,7 @@
 								<a href="{{ URL::route('roles.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 
 								<button class="btn btn-success" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
-									 Vincular permiso
+									 Vincular Permiso
 								</button>
 							</div>
 						</header>
@@ -58,7 +58,7 @@
 										<tr>
 											<th>ID</th>
 											<th>NOMBRE</th>
-											<th>DESCRIPCION</th>
+											<th>DESCRIPCIÓN</th>
 											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>								
 										</tr>
 									</thead>

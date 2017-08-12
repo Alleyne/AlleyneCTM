@@ -32,7 +32,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-							<h2>Junta directiva </h2>
+							<h2>Junta Directiva </h2>
 		
 						</header>
 		
@@ -158,7 +158,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-sitemap"></i> </span>
-							<h2>Simple View </h2>
+							<h2>Imagen del Ph </h2>
 		
 						</header>
 		

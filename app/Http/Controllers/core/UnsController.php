@@ -259,7 +259,7 @@ class UnsController extends Controller {
 				$dato->documento     	  = Input::get('documento');
 				$dato->caracteristicas  = Input::get('caracteristicas');			
 				$dato->activa			  		= Input::has('activa');	
-				Sity::RegistrarEnBitacora($dato, Input::get(), 'Un', 'Actualiza unidad');
+				Sity::RegistrarEnBitacora($dato, Input::get(), 'Un', 'Actualiza Unidad');
 				$dato->save();			
 			
 				// refresca el cache para que refleje los cambios
@@ -274,7 +274,7 @@ class UnsController extends Controller {
 
 	  } catch (\Exception $e) {
 	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en UnsController.update, la transaccion ha sido cancelada!');
+	    Session::flash('warning', ' Ocurrió un error en UnsController.update, la transacción ha sido cancelada!');
 	    return back()->withInput();
 	  }
   }
@@ -362,7 +362,7 @@ class UnsController extends Controller {
 
 	  } catch (\Exception $e) {
 	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en UnsController.storeungrupo, la transaccion ha sido cancelada!');
+	    Session::flash('warning', ' Ocurrió un error en UnsController.storeungrupo, la transacción ha sido cancelada!');
 	    return back()->withInput();
 	  }
 	}
@@ -387,7 +387,7 @@ class UnsController extends Controller {
 	      //dd($props);
 			
 			if(!empty($props)) {
-				Session::flash('success', 'La Unidad administrada ' .$dato->codigo. ' no puede ser borrada porque tiene por lo menos un propietario asignado, deberá primero borrar todos los propietarios vinculados a esta Unidad.');
+				Session::flash('success', 'La Unidad administrada ' .$dato->codigo. ' no puede ser borrada porque ya tiene propietario asignado. Primero debe borrar todos los propietarios vinculados a esta Unidad.');
 			}  
 			
 			else {
@@ -405,7 +405,7 @@ class UnsController extends Controller {
 	  
 	  } catch (\Exception $e) {
 	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en UnsController.destroy, la transaccion ha sido cancelada!');
+	    Session::flash('warning', ' Ocurrió un error en UnsController.destroy, la transacción ha sido cancelada!');
 	    return back();
 	  }
 	}

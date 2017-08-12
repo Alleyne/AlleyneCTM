@@ -29,7 +29,7 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Editar datos de la Junta directiva</h2>
+						<h2>Editar datos de la Junta Directiva</h2>
 	
 					</header>
 	
@@ -58,7 +58,7 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Código</label>
 											<div class="col-md-10">
-												{{ Form::text('codigo', $dato->codigo, array('class' => 'form-control input-sm', 'title' => 'Escriba el codigo del Ph...', 'autocomplete' => 'off')) }}
+												{{ Form::text('codigo', $dato->codigo, array('class' => 'form-control input-sm', 'title' => 'Escriba el código del Ph...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('codigo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
@@ -114,12 +114,12 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Celular</label>
 											<div class="col-md-10">
-												{{ Form::text('celular', $dato->celular, array('class' => 'form-control input-sm', 'title' => 'Escriba el celular...', 'autocomplete' => 'off')) }}
+												{{ Form::text('celular', $dato->celular, array('class' => 'form-control input-sm', 'title' => 'Escriba el número celular...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 										<div class="form-group">
-											<label class="col-md-2 control-label">email</label>
+											<label class="col-md-2 control-label">Email</label>
 											<div class="col-md-10">
 												{{ Form::text('email', $dato->email, array('class' => 'form-control input-sm', 'title' => 'Escriba el email...')) }}
 												{!! $errors->first('email', '<li style="color:red">:message</li>') !!}

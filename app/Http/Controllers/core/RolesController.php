@@ -129,7 +129,7 @@ class RolesController extends Controller
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en RolesController.store, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en RolesController.store, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}
 	}
@@ -178,7 +178,7 @@ class RolesController extends Controller
 	
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en RolesController.roleStoreUsuario, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en RolesController.roleStoreUsuario, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}
 	}
@@ -213,7 +213,7 @@ class RolesController extends Controller
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en RolesController.desvincularpermis, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en RolesController.desvincularpermis, la transacción ha sido cancelada!');
 			return back();
 		}
 
@@ -228,7 +228,7 @@ class RolesController extends Controller
 		try {
 			
 			if ($user_id == Auth::user()->id) {
-				Session::flash('warning', 'Usted mismo(a) no se puede desvincular del presente role, solamente el Super administrador o la Junta Directiva lo pueden hacer');
+				Session::flash('warning', 'Usted mismo(a) no se puede desvincular de este role, solamente el Super administrador o la Junta Directiva lo pueden hacer');
 				return back();
 			}
 			
@@ -255,7 +255,7 @@ class RolesController extends Controller
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en RolesController.desvincularUsuario, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en RolesController.desvincularUsuario, la transacción ha sido cancelada!');
 			return back();
 		}
 	}

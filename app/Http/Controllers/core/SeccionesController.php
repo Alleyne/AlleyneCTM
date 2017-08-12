@@ -45,11 +45,11 @@ class SeccionesController extends Controller {
 		
 		//verifica que el bloque tenga por lo menos un administrador encargado
 		if ($blqadmins == 0) {
-			Session::flash('warning', 'Es obligatorio que cada bloque tenga por lo menos un administrador encargado o responsable del mismo. Favor vincular por lo menos un adminstrador ecargado o responsable!');
+			Session::flash('warning', 'Es obligatorio que cada bloque tenga al menos un Administrador encargado o responsable del mismo. Favor vincular adminstrador encargado o responsable!');
 			return redirect()->route('indexblqadmin', $bloque_id);
 		
 		} elseif ($blqadmins > 1) {
-			Session::flash('warning', 'Un bloque puede tener uno o muchos administradores pero solamente uno puede ser encargado o responsable del mismo. Este bloque tiene mas de uno!.');
+			Session::flash('warning', 'Un bloque puede tener uno o muchos administradores, pero solamente uno puede ser encargado o responsable del mismo. Este bloque tiene más de uno!.');
 			return redirect()->route('indexblqadmin', $bloque_id);
 		}
 			
@@ -164,7 +164,7 @@ class SeccionesController extends Controller {
 				$dato->bloque_id   = Input::get('bloque_id');			
 				$dato->save();
   			
-  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Crea nueva seccion');
+  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Crea Nueva Sección');
 
 				// Relaciones de uno a uno con Secciones
 				$t1 = new Secapto;
@@ -197,7 +197,7 @@ class SeccionesController extends Controller {
 				//$img_path->imagen_L = "assets/img/secciones/sec_L".$dato->id.".jpg";
 				//$img_path->save();		
 
-  			Sity::RegistrarEnBitacora($t1, Input::get(), 'Seccione', 'Crea detalle de seccion');
+  			Sity::RegistrarEnBitacora($t1, Input::get(), 'Seccione', 'Crea detalle de Sección');
 				DB::commit();
 				
 				Session::flash('success', 'La Sección administrativa ' .$dato->nombre. ' ha sido creada con éxito.');
@@ -207,7 +207,7 @@ class SeccionesController extends Controller {
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en SeccionesController.store, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en SeccionesController.store, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}
 
@@ -266,7 +266,7 @@ class SeccionesController extends Controller {
 				$dato->descripcion     = Input::get('descripcion');
 				$dato->save();
   			//dd($dato->isDirty());
-  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Edita seccion');				
+  			Sity::RegistrarEnBitacora($dato, Input::get(), 'Seccione', 'Edita Sección');				
 				
 				// Relaciones de uno a uno con Secciones
 				// Actualiza en la tabla Secapto
@@ -292,7 +292,7 @@ class SeccionesController extends Controller {
 				$t1->area                  = Input::get('area');
 				$t1->save();			
 
-  			Sity::RegistrarEnBitacora($t1, Input::get(), 'Secapto', 'Edita detalle de seccion');
+  			Sity::RegistrarEnBitacora($t1, Input::get(), 'Secapto', 'Edita detalle de Sección');
   			DB::commit();				
 				
 				Session::flash('success', 'La Sección administrativa ' . $dato->nombre . ' ha sido editada con éxito.');
@@ -302,7 +302,7 @@ class SeccionesController extends Controller {
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en SeccionesController.update, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en SeccionesController.update, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}  	
 	}
@@ -326,7 +326,7 @@ class SeccionesController extends Controller {
 			//dd($un);
 
 			if(!empty($un)) {
-				Session::flash('success', 'La Sección ' .$dato->nombre. ' no puede ser borrada porque tiene uno o más unidades asignadoa a la misma.');
+				Session::flash('success', 'La Sección ' .$dato->nombre. ' no puede ser borrada porque tiene una o más unidades asignadas.');
 			
 			} else {
 			
@@ -335,7 +335,7 @@ class SeccionesController extends Controller {
 				$seccion->delete();
 
 				// Registra en bitacoras
-  			Sity::RegistrarEnBitacora($seccion, Null, 'Seccione', 'Elimina seccion'); 
+  			Sity::RegistrarEnBitacora($seccion, Null, 'Seccione', 'Elimina Sección'); 
 				DB::commit();
 				
 				Session::flash('success', 'La Sección administrativa ' .$dato->nombre. ' ha sido borrada permanentemente de la base de datos.');		
@@ -344,7 +344,7 @@ class SeccionesController extends Controller {
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en SeccionesController@destroy, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en SeccionesController@destroy, la transacción ha sido cancelada!');
 			return back();
 		}
 	}
@@ -362,10 +362,10 @@ class SeccionesController extends Controller {
 			);
 
 			$messages = array(
-					'required' => 'Debe seleccinar una imagen',
+					'required' => 'Debe seleccionar una imagen',
 					'image' => 'El archivo no es una imagen',
 					'max' => 'La imagen sobrepasa el tamaño máximo de 300',
-					'mimes' => 'La imagen deberá tener una de las siguienes extensiones jpg,gif,png,bmp'
+					'mimes' => 'La imagen debe tener una de las siguienes extensiones: jpg,gif,png,bmp'
 			);
 
 				$validation = Validator::make($input, $rules, $messages);
@@ -414,7 +414,7 @@ class SeccionesController extends Controller {
 
 	  } catch (\Exception $e) {
 	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en SeccionesController.subirImagenSeccione, la transaccion ha sido cancelada!');
+	    Session::flash('warning', ' Ocurrió un error en SeccionesController.subirImagenSeccione, la transacción ha sido cancelada!');
 	    return back()->withInput();
 	  }
 	}
