@@ -52,7 +52,7 @@
 										{{ Form::hidden('seccione_id', $seccione_id) }}
 										
 										<div class="form-group">
-											<label class="col-md-4 control-label">Usuarios disponibles</label>
+											<label class="col-md-4 control-label">Usuarios Disponibles</label>
 											<div class="col-md-8">
 												{{ Form::select('user_id', array('' => 'Escoja al Usuario que desea agregar...') + $datos, array('title' => 'Escoja el usuario que desea agregar')) }}
 												{!! $errors->first('user_id', '<li style="color:red">:message</li>') !!}
@@ -72,7 +72,7 @@
 							          'data-toggle' => 'modal',
 							          'data-target' => '#confirmAction',
 							          'data-title' => 'Vincular propietario',
-							          'data-message' => 'Esta seguro(a) que desea vincular el presente propietario?',
+							          'data-message' => 'Esta seguro(a) que desea vincular este propietario?',
 							          'data-btntxt' => 'Si, vincular propietario',
 							          'data-btncolor' => 'btn-success'
 							      ))}}

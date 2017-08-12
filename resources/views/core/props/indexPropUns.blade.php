@@ -42,7 +42,7 @@
                     <div class="content-boxes-v3">
                         <i class="icon-custom icon-sm rounded-x icon-bg-light-grey icon-line icon-graduation"></i>
                         <div class="content-boxes-in-v3">
-                            <h3><a href="{{ URL::route('editUn', $dato->un->id) }}"> Editar propiedad</a></h3>
+                            <h3><a href="{{ URL::route('editUn', $dato->un->id) }}"> Editar Propiedad</a></h3>
                             <p>Permite editar datos, tales como número de finca, documento, etc.</p>
                         </div>
                     </div>

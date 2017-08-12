@@ -55,7 +55,7 @@
 										<tr>
 											<th>ID</th>
 											<th>NOMBRE</th>
-											<th>DESCRIPCION</th>
+											<th>DESCRIPCIÓN</th>
 											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
 										</tr>
 									</thead>
@@ -123,8 +123,8 @@
             "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
             "paginate": {
               "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
+              "last":       "Último",
+              "next":       "Próximo",
               "previous":   "Anterior"
             },
             "aria": {

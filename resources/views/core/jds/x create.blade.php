@@ -29,7 +29,7 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear una nueva Junta directiva</h2>
+						<h2>Crear una nueva Junta Directiva</h2>
 	
 					</header>
 	

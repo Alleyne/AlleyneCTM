@@ -31,7 +31,7 @@
 							<h2>Permisos </h2>
 							<div class="widget-toolbar">
 								@if (Cache::get('esAdminkey'))
-									<a href="{{ URL::route('permissions.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar permiso</a>
+									<a href="{{ URL::route('permissions.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Permiso</a>
 								@endif	
 							</div>	
 						</header>
@@ -59,7 +59,7 @@
 										<tr>
 											<th>ID</th>
 											<th>NOMBRE</th>
-											<th>DESCRIPCION</th>
+											<th>DESCRIPCIÓN</th>
 											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
 										</tr>
 									</thead>
@@ -91,7 +91,7 @@
 											            'data-toggle' => 'modal',
 											            'data-target' => '#confirmAction',
 											            'data-title' => 'Eliminar permiso permanentemente',
-											            'data-message' => 'Esta seguro(a) que desea eliminar el presente permiso?',
+											            'data-message' => 'Esta seguro(a) que desea eliminar este permiso?',
 											            'data-btntxt' => 'SI, eliminar',
 											            'data-btncolor' => 'btn-danger'
 											        ))}}
@@ -151,8 +151,8 @@
             "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
             "paginate": {
               "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
+              "last":       "Último",
+              "next":       "Próximo",
               "previous":   "Anterior"
             },
             "aria": {

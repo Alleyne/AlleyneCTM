@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Serviproductos por organizacion')
+@section('title', '| Serviproductos por Organización')
 
 @section('content')
 
@@ -27,12 +27,12 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-							<h2>Serviproductos vinculados al proveedor </h2>
+							<h2>Serviproductos vinculados al Proveedor </h2>
 							<div class="widget-toolbar">
 								<a href="{{ URL::route('orgs.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 
 								<button class="btn btn-success" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i>
-									 Vincular serviproducto
+									 Vincular Serviproducto
 								</button>
 							</div>
 						</header>
@@ -81,8 +81,8 @@
 												            'class' => 'btn btn-warning btn-xs',
 												            'data-toggle' => 'modal',
 												            'data-target' => '#confirmAction',
-												            'data-title' => 'Desvincular serviproducto de la Organizacion',
-												            'data-message' => 'Esta seguro(a) que desea desvincular el presente serviproducto de la organizacion?',
+												            'data-title' => 'Desvincular serviproducto de la organizacion',
+												            'data-message' => 'Esta seguro(a) que desea desvincular el presente serviproducto de la organización?',
 												            'data-btntxt' => 'SI, desvincular',
 												            'data-btncolor' => 'btn-warning'
 												        ))}}
@@ -120,7 +120,7 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Vincular serviproducto</h4>
+						<h4 class="modal-title" id="myModalLabel">Vincular Serviproducto</h4>
 					</div>
 					<div class="modal-body">
 
@@ -145,7 +145,7 @@
 							<div class="form-group productos">
 								<label class="col-md-3 control-label">Productos</label>
 								<div class="col-md-9">
-									{{ Form::select('producto_id', ['' => 'Escoja el producto que desea vincular!'] + $productos, 0, ['class' => 'form-control']) }}
+									{{ Form::select('producto_id', ['' => 'Escoja el Producto que desea vincular!'] + $productos, 0, ['class' => 'form-control']) }}
 									{!! $errors->first('producto_id', '<li style="color:red">:message</li>') !!}
 								</div>
 							</div>
@@ -153,7 +153,7 @@
 							<div class="form-group servicios" style="display: none;">
 								<label class="col-md-3 control-label">Servicios</label>
 								<div class="col-md-9">
-									{{ Form::select('servicio_id', ['' => 'Escoja el servicio que desea vincular!'] + $servicios, 0, ['class' => 'form-control']) }}
+									{{ Form::select('servicio_id', ['' => 'Escoja el Servicio que desea vincular!'] + $servicios, 0, ['class' => 'form-control']) }}
 									{!! $errors->first('servicio_id', '<li style="color:red">:message</li>') !!}
 								</div>
 							</div>
