@@ -22,7 +22,7 @@
             
             <header>
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                <h2>Estado de morosidad a la fecha </h2>
+                <h2>Estado de morosidad o pagos anticipados con descuento a la fecha </h2>
                 <div class="widget-toolbar">
                     <a href="{{ URL::route('uns.show', $data['un_id']) }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>            
                 </div>
@@ -55,7 +55,12 @@
 
                     <div class="row">
                       <div class="col-xs-12">
-                        <h4><p class="text-center"><strong>ESTADO DE MOROSIDAD</strong></p></h4>
+                        @if (count($imps)==0 && count($recs)==0 && count($extras)==0 && $data['activa']==1 && count($ants)>0)
+                          <h4><p class="text-center"><strong>PAGOS ANTICIPADOS CON DESCUENTO</strong></p></h4>
+                        @else
+                          <h4><p class="text-center"><strong>ESTADO DE MOROSIDAD</strong></p></h4>                        
+                        @endif
+
                         <h7><p class="text-center"><strong>UNIDAD NO. {{ $data['codigo'] }}</strong></p></h7>       
                         <h7><p class="text-center">al dia  {{ $data['fecha'] }}</p></h7>
                       </div>

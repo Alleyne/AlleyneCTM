@@ -543,7 +543,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta Banco por "Recargo en cuota de mantenimiento por cobrar" 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Cobra recargo en mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);   
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Cobra recargo en cuota de mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);   
             
             } else {  // se registra un aumento en la cta Caja general
               
@@ -560,7 +560,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta de Caja general por "Recargo en cuota de mantenimiento por cobrar"
-              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, 'Cobra recargo en mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);     
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, 'Cobra recargo en cuota de mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);     
             }
             
             // registra en el diario
@@ -620,7 +620,7 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en cuotad de mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // salva un nuevo registro que representa una linea del recibo
             $dto = new Detallepago;
@@ -662,7 +662,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta Banco por "Recargo en cuota de mantenimiento por cobrar" 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Cobra recargo en mant regular de '.$mesAnio.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);
+              Sity::registraEnCuentas($periodo, 'mas', 1, 8, $f_pago, 'Cobra recargo en cuota de mant regular de '.$mesAnio.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);
             
             } else {  // se registra un aumento en la cta Caja general
               
@@ -678,7 +678,7 @@ class Npago {
 
               // registra en el mayor
               // registra un aumento en la cuenta de Caja general 
-              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, 'Cobra recargo en mant regular de '.$mesAnio.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);
+              Sity::registraEnCuentas($periodo, 'mas', 1, 32, $f_pago, 'Cobra recargo en cuota de mant regular de '.$mesAnio.$nota, $montoRecibido, $un_id, $pago_id, Null, Null, $ctdasm_id);
             }
              
             // registra en el diario
@@ -704,7 +704,7 @@ class Npago {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en cuota de mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en Detallepago para generar un renglon en el recibo
             Self::registraDetallepago($periodo, $ocobro, 'Paga recargo en cuota de mantenimiento regular de '. $mesAnio, $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);

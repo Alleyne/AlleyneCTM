@@ -60,7 +60,7 @@
                             @foreach ($datos as $dato)
                                 <tr>
                                     <td col width="30px">{{ $dato->id }}</td>
-                                    <td col width="75px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_inicio)->format('M j\\, Y') }}</td>
+                                    <td col width="95px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->f_inicio)->format('M j\\, Y') }}</td>
                                     <td>{{ $dato->responsable }}</td>
                                     <td col width="60px"><strong>{{ $dato->saldo }}</strong></td>
                                     @if(is_null($dato->f_cierre))

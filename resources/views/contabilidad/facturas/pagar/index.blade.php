@@ -54,7 +54,7 @@
 							<table id="dt_basic" class="display compact" cellspacing="0" width="100%">
 								<thead>
 									<tr>
-											<th col width="25px">NUMERO</th>
+											<th col width="25px">NO</th>
 											<th>PROVEEDOR</th>
 											<th col width="70px">FECHA</th>
 											<th col width="20px">TOTAL FAC</th>

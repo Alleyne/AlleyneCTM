@@ -57,7 +57,7 @@
                         <tbody>
                             @foreach ($pagos as $pago)
                                 <tr>
-                                    <td col width="80px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $pago->f_pago)->format('M j\\, Y') }}</td>
+                                    <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $pago->f_pago)->format('M j\\, Y') }}</td>
                                     <td>{{ $pago->banco }}</td>
                                     <td col width="20px" align="left">{{ $pago->tipo }}</td>                                    
                                     <td col width="50px" align="left">{{ $pago->monto }}</td>  

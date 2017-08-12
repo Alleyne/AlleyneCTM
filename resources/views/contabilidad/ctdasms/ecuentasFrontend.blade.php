@@ -34,7 +34,7 @@
 <div class="contenedor-principal">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Estado de morosidad</h3>
+      <h3 class="panel-title">Estado de morosidad o pagos anticipados con descuento a la fecha</h3>
     </div>
     <div class="panel-body">
         <div class="row"><!-- row -->
@@ -56,7 +56,11 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <h4><p class="text-center"><strong>ESTADO DE MOROSIDAD</strong></p></h4>
+            @if (count($imps)==0 && count($recs)==0 && count($extras)==0 && $data['activa']==1 && count($ants)>0)
+              <h4><p class="text-center"><strong>PAGOS ANTICIPADOS CON DESCUENTO</strong></p></h4>
+            @else
+              <h4><p class="text-center"><strong>ESTADO DE MOROSIDAD</strong></p></h4>                        
+            @endif
             <h7><p class="text-center"><strong>UNIDAD NO. {{ $data['codigo'] }}</strong></p></h7>       
             <h7><p class="text-center">al dia  {{ $data['fecha'] }}</p></h7>
           </div>

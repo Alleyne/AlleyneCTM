@@ -477,7 +477,7 @@ class Npagonoid {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar"  
-            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en cuota de mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // Registra en Detallepago para generar un renglon en el recibo
             Self::registraDetallepago($periodo, $ocobro, 'Paga recargo en cuota de mantenimiento regular de '. $mesAnio, $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
@@ -534,7 +534,7 @@ class Npagonoid {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en cuota de mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // salva un nuevo registro que representa una linea del recibo
             $dto = new Detallepago;
@@ -596,7 +596,7 @@ class Npagonoid {
 
             // registra en el mayor
             // registra un disminucion en la cuenta 1130.00 "Recargo en cuota de mantenimiento por cobrar" 
-            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
+            Sity::registraEnCuentas($periodo, 'menos', 1, 2, $f_pago, 'Cobra recargo en cuota de mant regular de '.$mesAnio.$nota, $recargo, $un_id, $pago_id, Null, Null, $ctdasm_id);
 
             // registra en Detallepago para generar un renglon en el recibo
             Self::registraDetallepago($periodo, $ocobro, 'Paga recargo en cuota de mantenimiento regular de '. $mesAnio, $dato->id, $recargo, $un_id, $pago_id, self::getLastNoDetallepago($pago_id), 1);
