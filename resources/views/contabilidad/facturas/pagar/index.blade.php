@@ -91,7 +91,7 @@
 																<span class="label label-success">Factura pagada</span>
 															</li>
 															<li>
-																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-success btn-xs"> Ver Programacion</a>
+																<a href="{{ URL::route('detallepagofacturas.show', $dato->id) }}" class="btn btn-success btn-xs"> Ver Programación</a>
 															</li>									
 														@endif	
 													</ul>												

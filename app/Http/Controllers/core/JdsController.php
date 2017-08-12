@@ -167,7 +167,7 @@ class JdsController extends Controller {
 				
 				$dato->save();			
 				
-				Sity::RegistrarEnBitacora($dato, Input::get(), 'Jd', 'Actualiza Junta directiva');
+				Sity::RegistrarEnBitacora($dato, Input::get(), 'Jd', 'Actualiza Junta Directiva');
 				Session::flash('success', 'La Junta directiva ' .$dato->nombre. ' ha sido editada con éxito.');
 	  		
 	  		DB::commit();			
@@ -177,7 +177,7 @@ class JdsController extends Controller {
 
 	  } catch (\Exception $e) {
 	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en JdController@update, la transaccion ha sido cancelada!');
+	    Session::flash('warning', ' Ocurrió un error en JdController@update, la transacción ha sido cancelada!');
 	    return back()->withInput();
 	  }
 	}
@@ -240,10 +240,10 @@ class JdsController extends Controller {
 		);
 
 		$messages = array(
-			'required' => 'Debe seleccinar una imagen',
+			'required' => 'Debe seleccionar una imagen',
 			'image' => 'El archivo no es una imagen',
 			'max' => 'La imagen sobrepasa el tamaño máximo de 300',
-			'mimes' => 'La imagen deberá tener una de las siguienes extensiones jpg,gif,png,bmp'
+			'mimes' => 'La imagen debe tener una de las siguienes extensiones: jpg,gif,png,bmp'
 		);
 
 		$validation = Validator::make($input, $rules, $messages);

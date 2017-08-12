@@ -128,7 +128,7 @@ $("#smart-mod-eg1").click(function(e) {
 		if (ButtonPressed === "Yes") {
 
 			$.smallBox({
-				title : "Salvar nueva Junta Directiva",
+				title : "Guardar nueva Junta Directiva",
 				content : "<i class='fa fa-clock-o'></i> <i>Usted presionó SI...</i>",
 				color : "#659265",
 				iconSmall : "fa fa-check fa-2x fadeInRight animated",
@@ -137,7 +137,7 @@ $("#smart-mod-eg1").click(function(e) {
 		}
 		if (ButtonPressed === "No") {
 			$.smallBox({
-				title : "Salvar nueva Junta Directiva",
+				title : "Guardar nueva Junta Directiva",
 				content : "<i class='fa fa-clock-o'></i> <i>Usted presionó No...</i>",
 				color : "#C46A69",
 				iconSmall : "fa fa-times fa-2x fadeInRight animated",

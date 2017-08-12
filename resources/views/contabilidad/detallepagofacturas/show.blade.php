@@ -46,7 +46,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-							<h2>Programacion de pagos de la factura </h2>
+							<h2>Programación de pagos de la factura </h2>
 							<div class="widget-toolbar">
 								<a href="{{ URL::route('pagarfacturas') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 									@if ($factura->pagada == 0)

@@ -83,7 +83,7 @@
         "language": {
             "decimal":        "",
             "emptyTable":     "No hay datos disponibles para esta tabla",
-            "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ unidades",
+            "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ registros",
             "infoEmpty":      "",
             "infoFiltered":   "",
             "infoPostFix":    "",
@@ -92,11 +92,11 @@
             "loadingRecords": "Cargando...",
             "processing":     "Procesando...",
             "search":         "Buscar:",
-            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+            "zeroRecords":    "No se encontró ninguna unidad con ese filtro",
             "paginate": {
               "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
+              "last":       "Último",
+              "next":       "Próximo",
               "previous":   "Anterior"
             },
             "aria": {

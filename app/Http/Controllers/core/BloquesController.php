@@ -148,7 +148,7 @@ class BloquesController extends Controller {
 
 	  } catch (\Exception $e) {
 	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en BloquesController.store, la transaccion ha sido cancelada!');
+	    Session::flash('warning', ' Ocurrió un error en BloquesController.store, la transacción ha sido cancelada!');
 	    return back()->withInput();
 	  }
 	}
@@ -202,7 +202,7 @@ class BloquesController extends Controller {
 
 	  } catch (\Exception $e) {
 	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en BloquesController.update, la transaccion ha sido cancelada!');
+	    Session::flash('warning', ' Ocurrió un error en BloquesController.update, la transacción ha sido cancelada!');
 	    return back()->withInput();
 	  }
 	}
@@ -228,12 +228,12 @@ class BloquesController extends Controller {
 			$users= Blqadmin::where('bloque_id', $bloque_id)->first();		
 			
 			if(!empty($users)) {
-				Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos un administrador vinculado al mismo.');
+				Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene al menos un administrador vinculado.');
 				return back();
 			}
 			
 			elseif(!empty($secciones)) {
-				Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene por lo menos una sección asignada al mismo.');
+				Session::flash('warning', 'El Bloque administrativo ' .$bloque->nombre. ' no puede ser borrado porque tiene al menos una sección asignada.');
 				return back();
 			}
 			
@@ -249,7 +249,7 @@ class BloquesController extends Controller {
 
 	  } catch (\Exception $e) {
 	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en BloquesController.destroy, la transaccion ha sido cancelada!');
+	    Session::flash('warning', ' Ocurrió un error en BloquesController.destroy, la transacción ha sido cancelada!');
 	    return back();
 	  }	
 
@@ -268,10 +268,10 @@ class BloquesController extends Controller {
 			);
 
 			$messages = array(
-					'required' => 'Debe seleccinar una imagen',
+					'required' => 'Debe seleccionar una imagen',
 					'image' => 'El archivo no es una imagen',
 					'max' => 'La imagen sobrepasa el tamaño máximo de 300',
-					'mimes' => 'La imagen deberá tener una de las siguienes extensiones jpg,gif,png,bmp'
+					'mimes' => 'La imagen debe tener una de las siguienes extensiones: jpg,gif,png,bmp'
 			);
 
 				$validation = Validator::make($input, $rules, $messages);
@@ -320,7 +320,7 @@ class BloquesController extends Controller {
 
 	  } catch (\Exception $e) {
 	    DB::rollback();
-	    Session::flash('warning', ' Ocurrio un error en BloquesController.subirImagenBloque, la transaccion ha sido cancelada!');
+	    Session::flash('warning', ' Ocurrió un error en BloquesController.subirImagenBloque, la transacción ha sido cancelada!');
 	    return back()->withInput();
 	  }
 	}

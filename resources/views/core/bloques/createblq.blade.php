@@ -28,7 +28,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear un nuevo Bloque administrativo</h2>
+						<h2>Crear un nuevo Bloque Administrativo</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -51,15 +51,15 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{{ Form::text('nombre', '', array('class' => 'form-control','title' => 'Escriba el nombre del Bloque administrativo...', 'autocomplete' => 'off')) }}
+												{{ Form::text('nombre', '', array('class' => 'form-control','title' => 'Escriba el nombre del Bloque Administrativo...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					
 
 										<div class="form-group">
-											<label class="col-md-2 control-label">Codigo</label>
+											<label class="col-md-2 control-label">Código</label>
 											<div class="col-md-10">
-												{{ Form::text('codigo', '', array('class' => 'form-control','title' => 'Escriba el codigo del bloque ejemplo ABCDEF...', 'autocomplete' => 'off')) }}
+												{{ Form::text('codigo', '', array('class' => 'form-control','title' => 'Escriba el código del bloque. Ejemplo ABCDEF...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('codigo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
@@ -67,7 +67,7 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Descripción</label>
 											<div class="col-md-10">
-												{{ Form::text('descripcion', '', array('class' => 'form-control','title' => 'Escriba la descripción del Bloque administrativo...', 'autocomplete' => 'off')) }}
+												{{ Form::text('descripcion', '', array('class' => 'form-control','title' => 'Escriba la descripción del Bloque Administrativo...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>				
