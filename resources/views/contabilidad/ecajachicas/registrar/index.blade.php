@@ -56,11 +56,11 @@
                     -->
                     <header>
                         <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                        <h2>Facturas de Egreso de Caja</h2>
+                        <h2>Facturas de compras por Caja chica</h2>
                         <div class="widget-toolbar">
                             @if ($status == 4)                                          
                                 @if (Cache::get('esAdminkey') || Cache::get('esAdministradorkey'))
-                                    <a href="{{ URL::route('ecajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Registrar factura de egreso de Caja Chica</a>
+                                    <a href="{{ URL::route('ecajachicas.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Registrar factura de compra por Caja Chica</a>
                                 @endif
                             @endif
                         </div>
@@ -90,8 +90,8 @@
                                         <th>ID</th>
                                         <th>FECHA</th>  
                                         <th>A FAVOR DE</th>
-                                        <th col width="20px">TOTAL FAC</th>
-                                        <th col width="20px">TOTAL DETALLES</th>
+                                        <th class="text-right" col width="75px">T FACTURA</th>
+                                        <th class="text-right" col width="85px">T DETALLES</th>
                                         <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                            
                                     </tr>
                                 </thead>
@@ -100,13 +100,13 @@
                                         <td col width="40px"><strong>{{ $dato->id }}</strong></td>
                                         <td col width="90px" align="left">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $dato->fecha)->format('M j\\, Y') }}</td>
                                         <td><strong>{{ $dato->afavorde }}</strong></td>
-                                        <td>{{ $dato->total }}</td>
+                                        <td align="right">{{ $dato->total }}</td>
                                         @if ($dato->total == $dato->totaldetalle)
-                                            <td>{{ $dato->totaldetalle }}</td>
+                                            <td align="right">{{ $dato->totaldetalle }}</td>
                                         @else
-                                            <td><mark>{{ $dato->totaldetalle }}</mark></td>
+                                            <td align="right"><mark>{{ $dato->totaldetalle }}</mark></td>
                                         @endif
-                                        <td col width="250px" align="right">
+                                        <td col width="195px" align="right">
                                             <ul class="demo-btns">
                                                 @if ($dato->etapa == 1)
                                                     <li>
@@ -127,7 +127,7 @@
                                                           'data-toggle' => 'modal',
                                                           'data-target' => '#confirmAction',
                                                           'data-title' => 'Borrar factura',
-                                                          'data-message' => 'Esta seguro(a) que desea borrar el presente de factura de egreso de Caja chica?',
+                                                          'data-message' => 'Esta seguro(a) que desea borrar el presente de factura de compras por Caja chica?',
                                                           'data-btntxt' => 'SI, borrar factura',
                                                           'data-btncolor' => 'btn-danger'
                                                       ))}}
@@ -147,7 +147,7 @@
                                                             'data-toggle' => 'modal',
                                                             'data-target' => '#confirmAction',
                                                             'data-title' => 'Contabilizar egreso de Caja chica',
-                                                            'data-message' => 'Esta seguro(a) que desea contabilizar el presente egreso de Caja chica?',
+                                                            'data-message' => 'Esta seguro(a) que desea contabilizar la presente factura de compra por Caja chica?',
                                                             'data-btntxt' => 'Contabilizar egreso de caja Chica',
                                                             'data-btncolor' => 'btn-warning'
                                                         ))}}
@@ -168,7 +168,7 @@
                                                           'data-toggle' => 'modal',
                                                           'data-target' => '#confirmAction',
                                                           'data-title' => 'Borrar factura',
-                                                          'data-message' => 'Esta seguro(a) que desea borrar el presente de factura de egreso de Caja chica?',
+                                                          'data-message' => 'Esta seguro(a) que desea borrar el presente de factura de compra por Caja chica?',
                                                           'data-btntxt' => 'SI, borrar factura',
                                                           'data-btncolor' => 'btn-danger'
                                                       ))}}
@@ -221,7 +221,7 @@
         "language": {
             "decimal":        "",
             "emptyTable":     "No hay datos disponibles para esta tabla",
-            "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ unidades",
+            "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ registros",
             "infoEmpty":      "",
             "infoFiltered":   "",
             "infoPostFix":    "",

@@ -128,7 +128,7 @@
         "language": {
             "decimal":        "",
             "emptyTable":     "No hay datos disponibles para esta tabla",
-            "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ unidades",
+            "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ registros",
             "infoEmpty":      "",
             "infoFiltered":   "",
             "infoPostFix":    "",
