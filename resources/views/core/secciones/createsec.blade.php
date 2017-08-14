@@ -129,7 +129,7 @@
 										</div>	
 										
 										<div class="form-group">
-											<label class="col-md-4 control-label">No. de Estacionamientos</label>
+											<label class="col-md-4 control-label">No. de estacionamientos</label>
 											<div class="col-md-8">
 												{{ Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}

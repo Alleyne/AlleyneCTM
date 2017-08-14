@@ -15,7 +15,7 @@
 
 	<header>
 		<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-		<h2>Datos de la Sección administrativa</h2>
+		<h2>Datos de la Sección Administrativa</h2>
 	</header>
 	
 	<div><!-- widget div-->
@@ -52,7 +52,7 @@
 
 							@if ($seccion->tipo != 3) <!-- Oficinas o locales comerciales -->
 								<div class="form-group">
-									<label class="col-md-3 control-label">No de Cuartos</label>
+									<label class="col-md-3 control-label">No. de cuartos</label>
 									<div class="col-md-9">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->cuartos }}">
 									</div>
@@ -60,7 +60,7 @@
 							@endif
 							
 							<div class="form-group">
-								<label class="col-md-3 control-label">No de baños</label>
+								<label class="col-md-3 control-label">No. de baños</label>
 								<div class="col-md-9">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->banos }}">
 								</div>
@@ -88,14 +88,14 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="col-md-3 control-label">Genera Orden de Cobro el dia</label>
+								<label class="col-md-3 control-label">Genera Orden de Cobro el Día</label>
 								<div class="col-md-9">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->d_registra_cmpc }}">
 								</div>
 							</div>				
 							
 							<div class="form-group">
-								<label class="col-md-3 control-label">Area/m2</label>
+								<label class="col-md-3 control-label">Área/m2</label>
 								<div class="col-md-9">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->area }}">
 								</div>
@@ -109,7 +109,7 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="col-md-3 control-label">Despues del dia</label>
+								<label class="col-md-3 control-label">Después del día</label>
 								<div class="col-md-9">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->d_vence }}">
 								</div>

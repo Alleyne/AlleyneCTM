@@ -27,7 +27,7 @@
                          @endif --}}
                         
                         {{-- @if ($seccion->tipo==1 or $seccion->tipo==3) --}} 
-                            <a href="{{ URL::route('createungrupo', array($seccion->id)) }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Unidades en grupo</a>
+                            <a href="{{ URL::route('createungrupo', array($seccion->id)) }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Unidades en Grupo</a>
                         {{-- @endif --}}            
 
                     {{-- @else

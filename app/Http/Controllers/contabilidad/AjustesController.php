@@ -69,7 +69,7 @@ class AjustesController extends Controller {
 
 				foreach ($ajustes as $ajuste) {
 					if (floatval($ajuste[1]) > 0 && $ajuste[2] > 0 ) {
-						Session::flash('danger', 'No puede ajustar una cuenta por el lado debito y credito al mismo tiempo.');
+						Session::flash('danger', 'No puede ajustar una cuenta por el lado débito y crédito al mismo tiempo.');
 						return back();
 					}
 				}

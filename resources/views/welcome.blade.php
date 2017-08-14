@@ -33,7 +33,7 @@
       </div>
     </div>    
 
-    <div class="headline"><h2>Articulos recientes</h2></div>
+    <div class="headline"><h2>ArtÍculos recientes</h2></div>
     <div class="row blog-page">    
         <!-- Left Sidebar -->
     	<div class="col-md-10 col-md-offset-1 md-margin-bottom-40">

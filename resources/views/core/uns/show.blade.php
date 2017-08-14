@@ -40,7 +40,7 @@
 					<form class="form-horizontal">
 						<fieldset>
 							<div class="form-group">
-								<label class="col-md-4 control-label">Codigo</label>
+								<label class="col-md-4 control-label">Código</label>
 								<div class="col-md-8">
 									<input class="form-control input-lg" style="font-size:200% " name="numero" type="text" readonly value="{{ $dato->codigo }}">
 								</div>
@@ -61,7 +61,7 @@
 							</div>					
 							
 							<div class="form-group">
-								<label class="col-md-4 control-label">Características propia</label>
+								<label class="col-md-4 control-label">Características propias</label>
 								<div class="col-md-8">
 									{{ Form::textarea('caracteristicas', $dato->caracteristicas, array('class' => 'form-control input-sm', 'rows' => '2', 'readonly' => 'readonly')) }}
 								</div>
@@ -69,7 +69,7 @@
 							
 							@if ($seccion->tipo != 3) <!-- Apartamentos -->
 								<div class="form-group">
-									<label class="col-md-4 control-label">No de Cuartos</label>
+									<label class="col-md-4 control-label">No. de cuartos</label>
 									<div class="col-md-8">
 										<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuartos }}">
 									</div>
@@ -77,7 +77,7 @@
 							@endif
 							
 							<div class="form-group">
-								<label class="col-md-4 control-label">No de baños</label>
+								<label class="col-md-4 control-label">No. de baños</label>
 								<div class="col-md-8">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->banos }}">
 								</div>
@@ -105,7 +105,7 @@
 							</div>
 											
 							<div class="form-group">
-								<label class="col-md-4 control-label">Area/m2</label>
+								<label class="col-md-4 control-label">Área/m2</label>
 								<div class="col-md-8">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->area }}">
 								</div>
@@ -119,7 +119,7 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="col-md-4 control-label">Despues del dia</label>
+								<label class="col-md-4 control-label">Despueés del día</label>
 								<div class="col-md-8">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->d_vence }}">
 								</div>
@@ -163,7 +163,7 @@
                 <table id="dt_basic" class="table table-hover">
                     <thead>
                         <tr>
-                            <th>CEDULA</th>
+                            <th>CÉDULA</th>
                             <th>NOMBRE</th>                          
                             <th>RESPONSABLE</th>       
                         </tr>
