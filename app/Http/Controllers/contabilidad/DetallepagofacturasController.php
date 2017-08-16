@@ -240,7 +240,7 @@ class DetallepagofacturasController extends Controller {
 		    // verifica si existe algun pago programado anterior al presente que no haya sido contabilizado
 		    $exiteAnterior= Detallepagofactura::whereDate('fecha', '<', Carbon::parse($dato->fecha)->toDateString())->where('etapa', 1)->first();
 		    if ($exiteAnterior) {
-		      Session::flash('danger', 'Debe pagar sus pagos programados en orden cronologico!');
+		      Session::flash('warning', 'Debe realizar sus pagos programados en orden cronologico!');
 		      return back();
 		    }
 
@@ -260,7 +260,7 @@ class DetallepagofacturasController extends Controller {
 				Npago::contabilizaDetallePagoFactura($detallepagofactura_id, $periodo);
 
 				//Sity::RegistrarEnBitacora($dato, Input::get(), 'Detallepagofactura', 'Programa pago parcial de factura de egreso de Caja general');
-				Session::flash('info', 'Pago realizado con exito!');
+				Session::flash('success', 'Pago realizado con exito!');
 				DB::commit();				
 				return redirect()->route('detallepagofacturas.show', $dato->factura_id);	 	  
 	 	  }

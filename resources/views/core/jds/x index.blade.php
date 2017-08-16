@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Justa directiva')
+@section('title', '| Junta Directiva')
 
 @section('content')
 
@@ -57,7 +57,7 @@
 										<tr>
 											<th>ID</th>
 											<th>NOMBRE</th>
-											<th>CODIGO</th>
+											<th>CÓDIGO</th>
 											<th>PAÍS</th>
 											<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
 										</tr>

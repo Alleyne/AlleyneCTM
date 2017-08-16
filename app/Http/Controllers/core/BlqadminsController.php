@@ -150,7 +150,7 @@ class BlqadminsController extends Controller {
 	
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en BlqadminsController.store, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en BlqadminsController.store, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}
 
@@ -199,7 +199,7 @@ class BlqadminsController extends Controller {
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en BlqadminsController.desvincularblqdmin, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en BlqadminsController.desvincularblqdmin, la transacción ha sido cancelada!');
 			return back();
 		}
 	}

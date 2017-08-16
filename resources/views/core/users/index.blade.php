@@ -28,7 +28,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-							<h2>Usuarios del sistema </h2>
+							<h2>Usuarios del Sistema </h2>
 							<div class="widget-toolbar">
 								<!-- <a href="{{ URL::route('users.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Usuario</a> -->
 							</div>
@@ -95,7 +95,7 @@
 											            'data-toggle' => 'modal',
 											            'data-target' => '#confirmAction',
 											            'data-title' => 'Eliminar usuario',
-											            'data-message' => 'Esta seguro(a) que desea eliminar el presente usuario?',
+											            'data-message' => 'Está seguro(a) que desea eliminar este usuario?',
 											            'data-btntxt' => 'SI, eliminar',
 											            'data-btncolor' => 'btn-danger'
 											        ))}}
@@ -153,11 +153,11 @@
             "loadingRecords": "Cargando...",
             "processing":     "Procesando...",
             "search":         "Buscar:",
-            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+            "zeroRecords":    "No se encontró ninguna unidad con ese filtro",
             "paginate": {
               "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
+              "last":       "Último",
+              "next":       "Próximo",
               "previous":   "Anterior"
             },
             "aria": {

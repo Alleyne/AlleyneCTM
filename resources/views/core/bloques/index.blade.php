@@ -18,7 +18,7 @@
 		<h2>Bloques </h2>
 		<div class="widget-toolbar">
 			@if (Cache::get('esAdminkey'))
-				<a href="{{ URL::route('createblq', $jd->id) }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Bloque administrativo</a>
+				<a href="{{ URL::route('createblq', $jd->id) }}" class="btn btn-success"><i class="fa fa-plus"></i> Agregar Bloque Administrativo</a>
 			@endif	
 		</div>
 	</header>
@@ -37,7 +37,7 @@
 			<table id="dt_basic" class="display compact" cellspacing="0" width="100%">
 				<thead>
 					<tr>
-						<th>CODIGO</th>
+						<th>CÓDIGO</th>
 						<th>NOMBRE</th>
 						<th class="text-center"><i class="fa fa-gear fa-lg"></i></th>										
 					</tr>

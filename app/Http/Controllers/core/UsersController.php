@@ -177,7 +177,7 @@ class UsersController extends Controller {
 				$dato->telefono      = Input::get('telefono');			
 				$dato->celular       = Input::get('celular');			
 				$dato->activated     = Input::has('activated');		
-				Sity::RegistrarEnBitacora($dato, Input::get(), 'User', 'Actualiza usuario');
+				Sity::RegistrarEnBitacora($dato, Input::get(), 'User', 'Actualiza Usuario');
 				$dato->save();		
 			
 				DB::commit();
@@ -189,7 +189,7 @@ class UsersController extends Controller {
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en UnsController.update, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en UnsController.update, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}
 	}
@@ -210,21 +210,21 @@ class UsersController extends Controller {
 			$dato = Blqadmin::where('user_id', $id)->first();
 			if(!empty($dato)) {
 				
-				Session::flash('warning', 'El Usuario no se puede borrar porque es administrador de bloque.');
+				Session::flash('warning', 'El Usuario no se puede borrar porque es Administrador de Bloque.');
 				return redirect()->route('users.index');
 			}
 			
 			$dato = Prop::where('user_id', $id)->first();
 			if(!empty($dato)) {
 				
-				Session::flash('warning', 'El Usuario no se puede borrar porque es propietario de unidad.');
+				Session::flash('warning', 'El Usuario no se puede borrar porque es Propietario de Unidad.');
 				return redirect()->route('users.index');
 			}
 
 			$user = User::find($id);
   		$user->delete();
 
-  		Sity::RegistrarEnBitacora($user, Null, 'User', 'Elimina usuario');  
+  		Sity::RegistrarEnBitacora($user, Null, 'User', 'Elimina Usuario');  
 			DB::commit();
 			
 			Session::flash('success', 'El Administrador de Phs ' .$user->FullName. ' ha sido borrado permanentemente de la base de datos.');
@@ -255,7 +255,7 @@ class UsersController extends Controller {
 			);
 
 			$messages = array(
-				'required' 	=> 'Debe seleccinar una imagen',
+				'required' 	=> 'Debe seleccionar una imagen',
 				'image' 		=> 'El archivo no es una imagen',
 				'max' 			=> 'La imagen sobrepasa el tamaño máximo de 300',
 				'mimes' 		=> 'La imagen deberá tener una de las siguienes extensiones jpg,gif,png,bmp'
@@ -311,7 +311,7 @@ class UsersController extends Controller {
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en UnsController.subirImagen, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en UnsController.subirImagen, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}
 	}

@@ -70,14 +70,14 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-3 control-label">Seg nombre</label>
+											<label class="col-md-3 control-label">Segundo nombre</label>
 											<div class="col-md-9">
 												{{ Form::text('middle_name', $dato->middle_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su segundo nombre...')) }}
 												{!! $errors->first('middle_name', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-3 control-label">Apellido</label>
+											<label class="col-md-3 control-label">Apellido paterno</label>
 											<div class="col-md-9">
 												{{ Form::text('last_name', $dato->last_name, array('class' => 'form-control input-sm', 'title' => 'Escriba su apellido paterno...')) }}
 												{!! $errors->first('last_name', '<li style="color:red">:message</li>') !!}
@@ -91,16 +91,16 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-3 control-label">Cedula</label>
+											<label class="col-md-3 control-label">Cédula</label>
 											<div class="col-md-9">
-												{{ Form::text('cedula', $dato->cedula, array('class' => 'form-control input-sm', 'title' => 'Escriba su cedula...')) }}
+												{{ Form::text('cedula', $dato->cedula, array('class' => 'form-control input-sm', 'title' => 'Escriba su cédula...')) }}
 												{!! $errors->first('cedula', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-3 control-label">Telefono</label>
+											<label class="col-md-3 control-label">Teléfono</label>
 											<div class="col-md-9">
-												{{ Form::text('telefono', $dato->telefono, array('class' => 'form-control input-sm', 'title' => 'Escriba su telefono...')) }}
+												{{ Form::text('telefono', $dato->telefono, array('class' => 'form-control input-sm', 'title' => 'Escriba su teléfono...')) }}
 												{!! $errors->first('telefono', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>

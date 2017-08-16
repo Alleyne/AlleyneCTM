@@ -32,7 +32,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-							<h2>Descripcion completa de la Bitacora </h2>
+							<h2>Descripcion completa de la Bitácora </h2>
 		
 						</header>
 		

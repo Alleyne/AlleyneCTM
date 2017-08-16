@@ -15,7 +15,7 @@
 	
 	<header>
 		<span class="widget-icon"> <i class="fa fa-sitemap"></i> </span>
-		<h2>Simple View </h2>
+		<h2>Imagen de Ph</h2>
 	</header>
 	
 	<div><!-- widget div-->
