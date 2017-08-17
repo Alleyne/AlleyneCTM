@@ -147,7 +147,7 @@
 										<div class="form-group">
 											<label class="col-md-4 control-label">Cuota mantenimiento</label>
 											<div class="col-md-8">
-												{{ Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
+												{{ Form::text('cuota_mant', '', array('class' => 'form-control','title' => 'Escriba la cuota de mantenimiento mensual...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
@@ -155,7 +155,7 @@
 										<div class="form-group">
 											<label class="col-md-4 control-label">Recargo (%)</label>
 											<div class="col-md-8">
-												{{ Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el recargo a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
+												{{ Form::text('recargo', '', array('class' => 'form-control','title' => 'Escriba el recargo a cobrar por atraso en pago de la cuota de mantenimiento mensual...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('recargo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
@@ -163,7 +163,7 @@
 										<div class="form-group">
 											<label class="col-md-4 control-label">Descuento (%)</label>
 											<div class="col-md-8">
-												{{ Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
+												{{ Form::text('descuento', '', array('class' => 'form-control','title' => 'Escriba el descuento por pagos adelantados en la cuota de mantenimiento mensual...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('descuento', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
