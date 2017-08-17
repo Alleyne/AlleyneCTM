@@ -70,7 +70,7 @@
 										</div>	
 										@if ($id == 1 || $id ==2)
 											<div class="form-group">
-												<label class="col-md-2 control-label">Clasificacion</label>
+												<label class="col-md-2 control-label">Clasificación</label>
 												<div class="col-md-10">
 												{{ Form::select('corriente_siono', ['Seleccione el Tipo de cuenta ...', 'Corriente', 'No corriente'], 0, ['class' => 'form-control']) }}
 												{!! $errors->first('corriente_siono', '<li style="color:red">:message</li>') !!}

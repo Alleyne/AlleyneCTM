@@ -21,12 +21,12 @@
              
             @if (Cache::get('esAdminkey'))
                 <div class="btn-group">
-                    <a class="btn btn-success btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Agregar Sección administrativa</a>
+                    <a class="btn btn-success btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Agregar Sección Administrativa</a>
                     <a class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ URL::route('createsec', array($bloque->id, 1)) }}">Apartamentos</a></li>
                         <li><a href="{{ URL::route('createsec', array($bloque->id, 2)) }}">Residencias</a></li>
-                        <li><a href="{{ URL::route('createsec', array($bloque->id, 3)) }}">Oficinas o Locales comerciales</a></li>
+                        <li><a href="{{ URL::route('createsec', array($bloque->id, 3)) }}">Oficinas o Locales Comerciales</a></li>
                         <!--<li class="divider"></li>
                         <li><a href="{{ URL::route('createsec', array($bloque->id, 4)) }}">Amenidades</a></li>
                         <li><a href="{{ URL::route('createsec', array($bloque->id, 7)) }}">Estacionamientos alquilables</a></li>-->
@@ -50,7 +50,7 @@
             <table id="dt_basic" class="display compact" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th>CODIGO</th>
+                        <th>CÓDIGO</th>
                         <th>NOMBRE</th>
                         <th>TIPO</th>                        
                         <th class="text-center"><i class="fa fa-gear fa-lg"></i></th>                                        
