@@ -28,7 +28,7 @@ s@extends('templates.backend._layouts.smartAdmin')
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-						<h2>Bitacoras </h2>
+						<h2>Bitácoras </h2>
 						<div class="widget-toolbar">
 
 						</div>

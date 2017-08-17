@@ -107,7 +107,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Celular</label>
 											<div class="col-md-9">
-												{{ Form::text('celular', $dato->celular, array('class' => 'form-control input-sm', 'title' => 'Escriba su celular...')) }}
+												{{ Form::text('celular', $dato->celular, array('class' => 'form-control input-sm', 'title' => 'Escriba su número celular...')) }}
 												{!! $errors->first('celular', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>

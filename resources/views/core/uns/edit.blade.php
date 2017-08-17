@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Editar usuario')
+@section('title', '| Editar Unidad')
 
 @section('content')
 	<!-- widget grid -->
@@ -67,7 +67,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Documento</label>
 												<div class="col-md-9">
-													{{ Form::text('documento', $dato->documento, array('class' => 'form-control','title' => 'Escriba el númeo del documento...', 'autocomplete' => 'off')) }}
+													{{ Form::text('documento', $dato->documento, array('class' => 'form-control','title' => 'Escriba el número del documento...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('documento', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>			
@@ -87,16 +87,16 @@
 											</div>	
 											
 											@if ($seccion->tipo == 'AP') <!-- Apartamentos -->
-												<legend>Sección tipo apartamentos</legend>
+												<legend>Sección tipo Apartamentos</legend>
 											@elseif ($seccion->tipo == 'RE') <!-- Residencias -->
-												<legend>Sección tipo residencias</legend>
+												<legend>Sección tipo Residencias</legend>
 											@elseif ($seccion->tipo == 'LC') <!-- Oficinas o locales comerciales -->
-												<legend>Sección tipo Oficinas o locales comerciales</legend>
+												<legend>Sección tipo Oficinas o Locales Comerciales</legend>
 											@endif	
 
 											<legend>Sección tipo Apartamentos</legend>
 											<div class="form-group">
-												<label class="col-md-3 control-label">No de Cuartos</label>
+												<label class="col-md-3 control-label">No. de cuartos</label>
 												<div class="col-md-9">
 													<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->cuartos }}">
 												</div>

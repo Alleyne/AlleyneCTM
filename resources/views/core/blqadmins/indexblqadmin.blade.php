@@ -139,7 +139,7 @@
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="cargo"> Cargo</label>
-											{{ Form::select('cargo', array('0' => 'Persona Natural', '1' => 'Persona Jurídica'), array('title' => 'Escoja su tipo de propietario')) }}
+											{{ Form::select('cargo', array('0' => 'Persona Natural', '1' => 'Persona Jurídica'), array('title' => 'Escoja el tipo de propietario')) }}
  											{!! $errors->first('cargo', '<li style="color:red">:message</li>') !!}										
 										</div>
 									</div>
@@ -148,7 +148,7 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
-											<label for="category"> Organizacion</label>
+											<label for="category"> Organización</label>
 											{{ Form::select('org_id', array('' => 'Escoja la organización...') + $orgs, array('title' => 'Escoja la organización a la cual pertenece')) }}
 											{!! $errors->first('org_id', '<li style="color:red">:message</li>') !!}
 										</div>

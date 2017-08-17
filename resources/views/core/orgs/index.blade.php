@@ -88,7 +88,7 @@
 											            'class' => 'btn btn-danger btn-xs',
 											            'data-toggle' => 'modal',
 											            'data-target' => '#confirmAction',
-											            'data-title' => 'Eliminar organizacion',
+											            'data-title' => 'Eliminar organización',
 											            'data-message' => 'Esta seguro(a) que desea eliminar la presente organización?',
 											            'data-btntxt' => 'SI, eliminar',
 											            'data-btncolor' => 'btn-danger'

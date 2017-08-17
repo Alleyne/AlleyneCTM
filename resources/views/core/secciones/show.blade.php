@@ -29,7 +29,7 @@
 					<form class="form-horizontal">
 						<fieldset>
 							<div class="form-group">
-								<label class="col-md-3 control-label">Sección Nombre</label>
+								<label class="col-md-3 control-label">Nombre Sección</label>
 								<div class="col-md-9">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->nombre }}">
 								</div>
@@ -43,11 +43,11 @@
 							</div>	
 
 							@if ($seccion->tipo== 1) <!-- Apartamentos -->
-								<legend>Sección tipo apartamentos</legend>
+								<legend>Sección tipo Apartamentos</legend>
 							@elseif ($seccion->tipo== 2) <!-- Residencias -->
-								<legend>Sección tipo residencias</legend>
+								<legend>Sección tipo Residencias</legend>
 							@elseif ($seccion->tipo== 3) <!-- Oficinas o locales comerciales -->
-								<legend>Sección tipo Oficinas o locales comerciales</legend>
+								<legend>Sección tipo Oficinas o Locales Comerciales</legend>
 							@endif
 
 							@if ($seccion->tipo != 3) <!-- Oficinas o locales comerciales -->
@@ -88,7 +88,7 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="col-md-3 control-label">Genera Orden de Cobro el Día</label>
+								<label class="col-md-3 control-label">Genera Orden de Cobro el día</label>
 								<div class="col-md-9">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->d_registra_cmpc }}">
 								</div>

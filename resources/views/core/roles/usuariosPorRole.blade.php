@@ -25,7 +25,7 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-							<h2>Usuarios por role </h2>
+							<h2>Usuarios por Role </h2>
 							<div class="widget-toolbar">
 								<a href="{{ URL::route('roles.index') }}" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i></a>
 
