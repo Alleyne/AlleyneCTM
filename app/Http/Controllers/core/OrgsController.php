@@ -110,15 +110,15 @@ class OrgsController extends Controller
 			//$dato->imagen = $request->imagen;
 			$dato->save();
 
-  		Sity::RegistrarEnBitacora($dato, $request, 'Org', 'Registra un nuevo proveedor');
+  		Sity::RegistrarEnBitacora($dato, $request, 'Org', 'Registra un nuevo Proveedor');
 			DB::commit();  		
 
-			Session::flash('success', 'La organizacion ' .$dato->nombre. ' ha sido creada con exito');
+			Session::flash('success', 'La organización ' .$dato->nombre. ' ha sido creada con éxito');
 			return redirect()->route('orgs.index');
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en OrgsController.store, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en OrgsController.store, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}	
 
@@ -170,16 +170,16 @@ class OrgsController extends Controller
 			$org->celular = $request->celular;					
 			$org->email = $request->email;		
 			$org->imagen = $request->imagen;
-  		Sity::RegistrarEnBitacora($org, $request, 'Org', 'Actualiza proveedor');
+  		Sity::RegistrarEnBitacora($org, $request, 'Org', 'Actualiza Proveedor');
 			$org->save();
 			
 			DB::commit();
-			Session::flash('success', 'La organizacion ' .$org->nombre. ' ha sido actualizada!');
+			Session::flash('success', 'La organización ' .$org->nombre. ' ha sido actualizada!');
 			return redirect()->route('orgs.index');
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en OrgsController.update, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en OrgsController.update, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}
 	}
@@ -200,32 +200,32 @@ class OrgsController extends Controller
 			//dd($org->facturas);
 		
 			if (!$org->facturas->isEmpty()) {
-				Session::flash('warning', 'El proveedor ' .$org->nombre. ' no puede ser borrada porque tiene por lo menos una factura por Caja general acreditada.');
+				Session::flash('warning', 'El proveedor ' .$org->nombre. ' no puede ser borrado porque tiene al menos una factura por Caja General acreditada.');
 				return back();
 			}
 			
 			if (!$org->ecajachicas->isEmpty()) {
-				Session::flash('warning', 'El proveedor ' .$org->nombre. ' no puede ser borrada porque tiene por lo menos una factura por Caja chica acreditada.');
+				Session::flash('warning', 'El proveedor ' .$org->nombre. ' no puede ser borrado porque tiene al menos una factura por Caja Chica acreditada.');
 				return back();
 			}
 			
 
 			if (!$org->serviproductos->isEmpty()) {
-				Session::flash('warning', 'El proveedor ' .$org->nombre. ' no puede ser borrada porque tiene por lo menos un serviproducto asignado.');
+				Session::flash('warning', 'El proveedor ' .$org->nombre. ' no puede ser borrado porque tiene al menos un Serviproducto asignado.');
 				return back();
 			}    
 
 			$org->delete();
   		
-  		Sity::RegistrarEnBitacora($org, Null, 'Org', 'Elimina proveedor'); 
+  		Sity::RegistrarEnBitacora($org, Null, 'Org', 'Elimina Proveedor'); 
 			DB::commit(); 
 
-			Session::flash('success', 'El proveedor ' .$org->nombre. ' ha sido borrada permanentemente de la base de datos.');			
+			Session::flash('success', 'El proveedor ' .$org->nombre. ' ha sido borrado permanentemente de la base de datos.');			
 			return back();
 
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en OrgController.destroy, la transaccion ha sido cancelada!');
+			Session::flash('warning', ' Ocurrió un error en OrgController.destroy, la transacción ha sido cancelada!');
 			return back()->withInput();
 		}
 	}
@@ -289,7 +289,7 @@ class OrgsController extends Controller
 		
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en el modulo OrgsController.vinculaServiproductoStore, la transaccion ha sido cancelada! '.$e->getMessage());
+			Session::flash('warning', ' Ocurrió un error en el módulo OrgsController.vinculaServiproductoStore, la transacción ha sido cancelada! '.$e->getMessage());
 			return back();
 		}
 
@@ -325,7 +325,7 @@ class OrgsController extends Controller
 	
 		} catch (\Exception $e) {
 			DB::rollback();
-			Session::flash('warning', ' Ocurrio un error en OrgsController.desvincularServiproducto, la transaccion ha sido cancelada! '.$e->getMessage());
+			Session::flash('warning', ' Ocurrió un error en OrgsController.desvincularServiproducto, la transacción ha sido cancelada! '.$e->getMessage());
 			return back();
 		}
 	}

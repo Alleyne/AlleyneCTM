@@ -51,84 +51,84 @@
 										<div class="form-group">
 											<label class="col-md-2 control-label">Nombre</label>
 											<div class="col-md-10">
-												{{ Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre de la Organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('nombre', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el nombre de la Organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Tipo</label>
 											<div class="col-md-10">
-												{{ Form::text('tipo', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el tipo de organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('tipo', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el tipo de organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('tipo', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">RUC</label>
 											<div class="col-md-10">
-												{{ Form::text('ruc', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el ruc de la Organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('ruc', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el ruc de la Organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('ruc', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-2 control-label">digitov</label>
+											<label class="col-md-2 control-label">Dígito Verif.</label>
 											<div class="col-md-10">
-												{{ Form::text('digitov', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el digito verificador de la organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('digitov', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el dígito verificador de la organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('digitov', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>									
 										<div class="form-group">
-											<label class="col-md-2 control-label">Pais</label>
+											<label class="col-md-2 control-label">País</label>
 											<div class="col-md-10">
-												{{ Form::text('pais', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el pais de la Organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('pais', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el país de la organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('pais', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Provincia</label>
 											<div class="col-md-10">
-												{{ Form::text('provincia', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la provincia de la organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('provincia', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la provincia de la organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('provincia', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 										<div class="form-group">
 											<label class="col-md-2 control-label">Distrito</label>
 											<div class="col-md-10">
-												{{ Form::text('distrito', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el distrito de la Organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('distrito', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el distrito de la organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('distrito', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Corregimiento</label>
 											<div class="col-md-10">
-												{{ Form::text('corregimiento', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el corregimiento de la organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('corregimiento', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el corregimiento de la organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('corregimiento', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 										<div class="form-group">
 											<label class="col-md-2 control-label">Comunidad</label>
 											<div class="col-md-10">
-												{{ Form::text('comunidad', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la comunidad de la organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('comunidad', '', array('class' => 'form-control input-sm', 'title' => 'Escriba la comunidad de la organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('comunidad', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 										<div class="form-group">
-											<label class="col-md-2 control-label">Telefono</label>
+											<label class="col-md-2 control-label">Teléfono</label>
 											<div class="col-md-10">
-												{{ Form::text('telefono', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el telefono de la Organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('telefono', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el teléfono de la organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('telefono', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Celular</label>
 											<div class="col-md-10">
-												{{ Form::text('celular', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el celular de la organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('celular', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el número celular de la organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('celular', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
 										<div class="form-group">
 											<label class="col-md-2 control-label">Email</label>
 											<div class="col-md-10">
-												{{ Form::text('email', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el distrito de la Organizacion...', 'autocomplete' => 'off')) }}
+												{{ Form::text('email', '', array('class' => 'form-control input-sm', 'title' => 'Escriba el email de la organización...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('email', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>

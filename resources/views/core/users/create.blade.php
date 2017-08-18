@@ -89,16 +89,16 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-md-2 control-label">Telefono</label>
+											<label class="col-md-2 control-label">Teléfono</label>
 											<div class="col-md-10">
-												{{ Form::text('telefono', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su telefono...', 'autocomplete' => 'off')) }}
+												{{ Form::text('telefono', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su teléfono...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('telefono', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-md-2 control-label">Celular</label>
 											<div class="col-md-10">
-												{{ Form::text('celular', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su celular...', 'autocomplete' => 'off')) }}
+												{{ Form::text('celular', '', array('class' => 'form-control input-sm', 'title' => 'Escriba su número de celular...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('celular', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
@@ -235,7 +235,7 @@ $("#smart-mod-eg1").click(function(e) {
 		if (ButtonPressed === "Yes") {
 
 			$.smallBox({
-				title : "Salvar nueva Junta Directiva",
+				title : "Guardar nueva Junta Directiva",
 				content : "<i class='fa fa-clock-o'></i> <i>Usted presionó SI...</i>",
 				color : "#659265",
 				iconSmall : "fa fa-check fa-2x fadeInRight animated",
@@ -244,7 +244,7 @@ $("#smart-mod-eg1").click(function(e) {
 		}
 		if (ButtonPressed === "No") {
 			$.smallBox({
-				title : "Salvar nueva Junta Directiva",
+				title : "Guardar nueva Junta Directiva",
 				content : "<i class='fa fa-clock-o'></i> <i>Usted presionó No...</i>",
 				color : "#C46A69",
 				iconSmall : "fa fa-times fa-2x fadeInRight animated",

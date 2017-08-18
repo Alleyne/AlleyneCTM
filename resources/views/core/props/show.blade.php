@@ -15,7 +15,7 @@
 
 	<header>
 		<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-		<h2>Datos del Bloque administrativo </h2>
+		<h2>Datos del Bloque Administrativo </h2>
 	</header>
 	
 	<div><!-- widget div-->

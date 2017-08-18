@@ -358,15 +358,15 @@ class PagosnoidsController extends Controller
 			$dato = new Pago;
 			$dato->banco_id    = $pagoid->banco_id;
 			$dato->trantipo_id = 4;
-		  $dato->trans_no    = $pagoid->doc_no; 
+		  	$dato->trans_no    = $pagoid->doc_no; 
 			$dato->monto       = $montoRecibido;
 			$dato->f_pago      = Carbon::today();
 			$dato->descripcion = 'Para registrar pago no identificado';
-		  $dato->fecha 	   	 = Carbon::today(); 		    
+		  	$dato->fecha 	   = Carbon::today(); 		    
 			$dato->entransito  = 0;
 			$dato->un_id       = $pagoid->un_id;
-	    $dato->user_id 	   = Auth::user()->id; 		    
-	    $dato->save();
+	    	$dato->user_id 	   = Auth::user()->id; 		    
+	    	$dato->save();
 			
 			// Registra en bitacoras
   		Sity::RegistrarEnBitacora($dato, Null, 'Pago', 'Contabiliza pago identificado');

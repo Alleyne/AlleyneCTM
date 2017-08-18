@@ -29,7 +29,7 @@
                     -->
                     <header>
                         <span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-                        <h2>Editar datos de la Seccion</h2>
+                        <h2>Editar datos de la Sección</h2>
     
                     </header>
     
@@ -52,7 +52,7 @@
                                   <div class="form-group">
                                       <label class="col-md-4 control-label">Sección Nombre</label>
                                       <div class="col-md-8">
-                                          {{ Form::text('nombre', $dato->nombre, array('class' => 'form-control','title' => 'Escriba el nombre del Bloque administrativo...', 'autocomplete' => 'off')) }}
+                                          {{ Form::text('nombre', $dato->nombre, array('class' => 'form-control','title' => 'Escriba el nombre de la Sección del Bloque...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
                                       </div>
                                   </div>                    
@@ -60,7 +60,7 @@
                                   <div class="form-group">
                                       <label class="col-md-4 control-label">Descripción</label>
                                       <div class="col-md-8">
-                                          {{ Form::textarea('descripcion', $dato->descripcion, array('class' => 'form-control input-sm', 'rows' => '7', 'title' => 'Escriba el Ruc o número de cédula del Administrador...')) }}
+                                          {{ Form::textarea('descripcion', $dato->descripcion, array('class' => 'form-control input-sm', 'rows' => '7', 'title' => 'Escriba la descripción de la Sección...')) }}
                                           {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}
                                       </div>
                                   </div>                                                    
@@ -72,7 +72,7 @@
                                     <legend>Sección tipo residencias</legend>
                                     {{ Form::hidden('codigo', 'RE') }}
                                   @elseif ($dato->codigo == 'LC') <!-- Oficinas o locales comerciales -->
-                                    <legend>Sección tipo Oficinas o locales comerciales</legend>
+                                    <legend>Sección tipo Oficinas o Locales Comerciales</legend>
                                     {{ Form::hidden('codigo', 'LC') }}
                                   @endif
 
@@ -86,7 +86,7 @@
 
                                   @if ($dato->codigo != 'LC') <!-- Oficinas o locales comerciales -->
                                     <div class="form-group">
-                                        <label class="col-md-4 control-label">No de Cuartos</label>
+                                        <label class="col-md-4 control-label">No. de cuartos</label>
                                         <div class="col-md-8">
                                             {{ Form::text('cuartos', $dato->secapto->cuartos, array('class' => 'form-control','title' => 'Escriba el número de cuartos que tiene la unidad...', 'autocomplete' => 'off')) }}
                                             {!! $errors->first('cuartos', '<li style="color:red">:message</li>') !!}
@@ -95,7 +95,7 @@
                                   @endif
 
                                   <div class="form-group">
-                                      <label class="col-md-4 control-label">No de baños</label>
+                                      <label class="col-md-4 control-label">No.de baños</label>
                                       <div class="col-md-8">
                                           {{ Form::text('banos', $dato->secapto->banos, array('class' => 'form-control','title' => 'Escriba el número de baños que tiene la unidad...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('banos', '<li style="color:red">:message</li>') !!}
@@ -111,7 +111,7 @@
                                   </div>                    
                                   
                                   <div class="form-group">
-                                      <label class="col-md-4 control-label">No de Estacionamientos</label>
+                                      <label class="col-md-4 control-label">No. de estacionamientos</label>
                                       <div class="col-md-8">
                                           {{ Form::text('estacionamientos', $dato->secapto->estacionamientos, array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}
@@ -119,7 +119,7 @@
                                   </div>
                                   
                                   <div class="form-group">
-                                      <label class="col-md-4 control-label">Area/m2</label>
+                                      <label class="col-md-4 control-label">Área/m2</label>
                                       <div class="col-md-8">
                                           {{ Form::text('area', $dato->secapto->area, array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('area', '<li style="color:red">:message</li>') !!}
@@ -127,9 +127,9 @@
                                   </div>    
                                   
                                   <div class="form-group">
-                                      <label class="col-md-4 control-label">Cuota mant (B/.)</label>
+                                      <label class="col-md-4 control-label">Cuota manten. (B/.)</label>
                                       <div class="col-md-8">
-                                          {{ Form::text('cuota_mant', $dato->secapto->cuota_mant, array('class' => 'form-control','title' => 'Escriba la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
+                                          {{ Form::text('cuota_mant', $dato->secapto->cuota_mant, array('class' => 'form-control','title' => 'Escriba la cuota de mantenimiento mensual...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
                                       </div>
                                   </div>
@@ -137,7 +137,7 @@
                                   <div class="form-group">
                                       <label class="col-md-4 control-label">Recargo (B/.)</label>
                                       <div class="col-md-8">
-                                          {{ Form::text('recargo', $dato->secapto->recargo, array('class' => 'form-control','title' => 'Escriba el porcentaje a cobrar por atraso en pago de la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
+                                          {{ Form::text('recargo', $dato->secapto->recargo, array('class' => 'form-control','title' => 'Escriba el recargo a cobrar por atraso en pago de la cuota de mantenimiento mensual...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('recargo', '<li style="color:red">:message</li>') !!}
                                       </div>
                                   </div>
@@ -145,13 +145,13 @@
                                   <div class="form-group">
                                       <label class="col-md-4 control-label">Descuento (B/.)</label>
                                       <div class="col-md-8">
-                                          {{ Form::text('descuento', $dato->secapto->descuento, array('class' => 'form-control','title' => 'Escriba el porcentaje de descuento por pagos adelantados en la cuota de mantenimento mensual...', 'autocomplete' => 'off')) }}
+                                          {{ Form::text('descuento', $dato->secapto->descuento, array('class' => 'form-control','title' => 'Escriba el descuento que se dará por pagos adelantados en la cuota de mantenimiento mensual...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('descuento', '<li style="color:red">:message</li>') !!}
                                       </div>
                                   </div>
 
                                   <div class="form-group">
-                                      <label class="col-md-4 control-label">Genera Orden de cobro</label>
+                                      <label class="col-md-4 control-label">Genera Orden de Cobro</label>
                                       <div class="col-md-8">
                                           <input class="form-control spinner-left"  id="spinner1" name="d_registra_cmpc" value= "{{ $dato->secapto->d_registra_cmpc }}" type="text">
                                           <p class="text-left">Día del mes en que se registra en el ctdiario la cuota de mantenimiento por cobrar.</p>
@@ -164,13 +164,13 @@
                                       <div class="col-md-8">
                                           <div class="col-md-6">              
                                               <input class="form-control spinner-left" id="spinner4" name="m_vence" value="{{ $dato->secapto->m_vence }}" type="text">
-                                              <p class="text-left">0= actual    1= proximo</p>
+                                              <p class="text-left">0= actual    1= próximo</p>
                                               {!! $errors->first('m_vence', '<li style="color:red">:message</li>') !!}
                                           </div>
                                           
                                           <div class="col-md-6">              
                                               <input class="form-control spinner-left" id="spinner2" name="d_vence" value="{{ $dato->secapto->d_vence }}" type="text">
-                                              <p class="text-left">Día limite del mes para aplicar recargo</p>
+                                              <p class="text-left">Día límite del mes para aplicar recargo</p>
                                               {!! $errors->first('d_vence', '<li style="color:red">:message</li>') !!}
                                           </div>
                                       </div>
@@ -186,7 +186,7 @@
                                   </div>  
                               
                                   <div class="form-group">
-                                      <label class="col-md-4 control-label">Cuota extra-ordinaria</label>
+                                      <label class="col-md-4 control-label">Cuota extraordinaria</label>
                                       <div class="col-md-8">
                               
                                       <div class="form-group">

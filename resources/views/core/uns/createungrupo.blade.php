@@ -29,7 +29,7 @@
 					
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Crear unidades en grupo</h2>
+						<h2>Crear unidades en Grupo</h2>
 	
 					</header>
 	
@@ -56,9 +56,9 @@
 										{{ Form::hidden('codigo_ph', $codigo_ph) }}	
 										
 										@if ($dato->tipo==1) 
-											<legend>Crear grupo de Unidades tipo apartamento</legend>
+											<legend>Crear grupo de Unidades tipo Apartamento</legend>
 										@elseif ($dato->tipo==3)
-											<legend>Crear grupo de Unidades tipo local u oficina en un edificio</legend>
+											<legend>Crear grupo de Unidades tipo Local u Oficina</legend>
 										@endif
 	
 										<div class="form-group">

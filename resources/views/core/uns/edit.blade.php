@@ -60,7 +60,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">Finca</label>
 												<div class="col-md-9">
-													{{ Form::text('finca', $dato->finca, array('class' => 'form-control','title' => 'Escriba el númeo de finca...', 'autocomplete' => 'off')) }}
+													{{ Form::text('finca', $dato->finca, array('class' => 'form-control','title' => 'Escriba el número de finca...', 'autocomplete' => 'off')) }}
 												    {!! $errors->first('finca', '<li style="color:red">:message</li>') !!}
 												</div>
 											</div>			
@@ -73,7 +73,7 @@
 											</div>			
 											
 											<div class="form-group">
-												<label class="col-md-3 control-label">Caracteristicas propia</label>
+												<label class="col-md-3 control-label">Características propias</label>
 												<div class="col-md-9">
 													{{ Form::textarea('caracteristicas', $dato->caracteristicas, array('class' => 'form-control input-sm', 'rows' => '2', 'title' => 'Escriba las características propias de la unidad...')) }}
 												    {!! $errors->first('caracteristicas', '<li style="color:red">:message</li>') !!}
@@ -94,7 +94,7 @@
 												<legend>Sección tipo Oficinas o locales comerciales</legend>
 											@endif	
 
-											<legend>Sección tipo apartamentos</legend>
+											<legend>Sección tipo Apartamentos</legend>
 											<div class="form-group">
 												<label class="col-md-3 control-label">No de Cuartos</label>
 												<div class="col-md-9">
@@ -103,7 +103,7 @@
 											</div>						
 
 											<div class="form-group">
-												<label class="col-md-3 control-label">No de baños</label>
+												<label class="col-md-3 control-label">No. de baños</label>
 												<div class="col-md-9">
 													<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->banos }}">
 												</div>
@@ -131,7 +131,7 @@
 											</div>
 															
 											<div class="form-group">
-												<label class="col-md-3 control-label">Area/m2</label>
+												<label class="col-md-3 control-label">Área/m2</label>
 												<div class="col-md-9">
 													<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->area }}">
 												</div>
