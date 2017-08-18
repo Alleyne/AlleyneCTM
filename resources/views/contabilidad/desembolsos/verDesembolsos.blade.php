@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Desembolsos de caja chica')
+@section('title', '| Desembolsos de Caja Chica')
 
 @section('content')
 
@@ -65,7 +65,7 @@
                                             @if($dato->aprobado == 0)
                                                 <ul class="demo-btns">
                                                     <li>
-                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
+                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolso</a>
                                                     </li>                
                                                     <li>
                                                         <a href="{{ URL::route('aprobarInforme', array($dato->id, $cajachica_id)) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-list-alt"></span> Aprobar Desembolso</a>
@@ -74,7 +74,7 @@
                                             @else
                                                 <ul class="demo-btns">
                                                     <li>
-                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
+                                                        <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolso</a>
                                                     </li>                
                                                 </ul>
                                             @endif
@@ -83,7 +83,7 @@
                                         <td col width="100px" align="right">
                                             <ul class="demo-btns">
                                                 <li>
-                                                    <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolo</a>
+                                                    <a href="{{ URL::route('desembolsos.show', $dato->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Informe de Desembolso</a>
                                                 </li>                
                                             </ul>
                                         </td>
@@ -125,11 +125,11 @@
             "loadingRecords": "Cargando...",
             "processing":     "Procesando...",
             "search":         "Buscar:",
-            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+            "zeroRecords":    "No se encontró ninguna unidad con ese filtro",
             "paginate": {
               "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
+              "last":       "Último",
+              "next":       "Próximo",
               "previous":   "Anterior"
             },
             "aria": {
