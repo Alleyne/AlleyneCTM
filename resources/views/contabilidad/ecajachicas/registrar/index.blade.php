@@ -208,7 +208,8 @@
 @stop
 
 @section('relatedplugins')
-
+  <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script>   
+  
   <script type="text/javascript">
     $(document).ready(function() {
 
