@@ -53,7 +53,7 @@
 				 						{{ Form::hidden('tipo', $tipo) }}
 							
 										<div class="form-group">
-											<label class="col-md-4 control-label">Sección Nombre</label>
+											<label class="col-md-4 control-label">Nombre Sección</label>
 											<div class="col-md-8">
 												{{ Form::text('nombre', '', array('class' => 'form-control','title' => 'Escriba el nombre de la Sección...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
@@ -90,7 +90,7 @@
 										<div class="form-group">
 											<label class="col-md-4 control-label">Avenida</label>
 											<div class="col-md-8">
-												{{ Form::text('avenida', '', array('class' => 'form-control','title' => 'Escriba la avenida en donde se encuentra localizada la residencia...', 'autocomplete' => 'off')) }}
+												{{ Form::text('avenida', '', array('class' => 'form-control','title' => 'Escriba la avenida en donde se encuentra localizada la unidad...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('avenida', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>	
@@ -129,15 +129,19 @@
 										</div>	
 										
 										<div class="form-group">
+<<<<<<< HEAD
 											<label class="col-md-4 control-label">No. de estacionamientos</label>
+=======
+											<label class="col-md-4 control-label">No. de Estacionamientos</label>
+>>>>>>> origin/master
 											<div class="col-md-8">
-												{{ Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) }}
+												{{ Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>
 										
 										<div class="form-group">
-											<label class="col-md-4 control-label">Area/m2</label>
+											<label class="col-md-4 control-label">Área/m2</label>
 											<div class="col-md-8">
 												{{ Form::text('area', '', array('class' => 'form-control','title' => 'Escriba el área en metros cuadrados de la unidad...', 'autocomplete' => 'off')) }}
 												{!! $errors->first('area', '<li style="color:red">:message</li>') !!}
@@ -172,7 +176,11 @@
 											<label class="col-md-4 control-label">Genera Orden de Cobro</label>
 											<div class="col-md-8">
 												<input class="form-control spinner-left"  id="spinner1" name="d_registra_cmpc" value="1" type="text">
+<<<<<<< HEAD
 												<p class="text-left">Día del mes en que se registrara la facturación mensual.</p>
+=======
+												<p class="text-left">Día del mes en que se registrará la facturación mensual.</p>
+>>>>>>> origin/master
 												{!! $errors->first('d_registra_cmpc', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>

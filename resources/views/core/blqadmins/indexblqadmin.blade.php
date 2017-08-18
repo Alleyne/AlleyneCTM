@@ -62,7 +62,7 @@
 											<th>NOMBRE</th>
 											<th>APELLIDO</th>
 											<th>CARGO</th>
-											<th>ORGANIZACION</th>
+											<th>ORGANIZACIÓN</th>
 											<th>RES</th>											
 											<th>BLOQUES</th>
 											<th>ACCIONES</th>										
@@ -74,7 +74,7 @@
 												<td col width="40px"><strong>{{ $dato->id }}</strong></td>
 												<td col width="120px">{{ $dato->user->first_name }}</td>
 												<td col width="120px">{{ $dato->user->last_name }}</td>
-												<td col width="130px">{{ $dato->cargo ? 'Persona Juridica' : 'Persona Natural' }}</td>
+												<td col width="130px">{{ $dato->cargo ? 'Persona Jurídica' : 'Persona Natural' }}</td>
 												<td>{{{ $dato->org->nombre or '' }}}</td>
 												<td col width="10px">{{ $dato->encargado ? 'Si' : 'No' }}</td>
 												<td>{{ $dato->bloque->nombre }}</td>
@@ -129,7 +129,7 @@
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="cargo"> Usuarios</label>
-											{{ Form::select('user_id', array('' => 'Escoja al Usuario que desea vincular...') + $usuarios, array('title' => 'Escoja el usuario que desea vincular')) }}
+											{{ Form::select('user_id', array('' => 'Escoja usuario que desea vincular...') + $usuarios, array('title' => 'Escoja el usuario que desea vincular')) }}
 											{!! $errors->first('user_id', '<li style="color:red">:message</li>') !!}
 										</div>
 									</div>
@@ -139,7 +139,7 @@
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="cargo"> Cargo</label>
-											{{ Form::select('cargo', array('0' => 'Persona Natural', '1' => 'Persona Jurídica'), array('title' => 'Escoja su tipo de propietario')) }}
+											{{ Form::select('cargo', array('0' => 'Persona Natural', '1' => 'Persona Jurídica'), array('title' => 'Escoja el tipo de propietario')) }}
  											{!! $errors->first('cargo', '<li style="color:red">:message</li>') !!}										
 										</div>
 									</div>
@@ -148,7 +148,7 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
-											<label for="category"> Organizacion</label>
+											<label for="category"> Organización</label>
 											{{ Form::select('org_id', array('' => 'Escoja la organización...') + $orgs, array('title' => 'Escoja la organización a la cual pertenece')) }}
 											{!! $errors->first('org_id', '<li style="color:red">:message</li>') !!}
 										</div>
@@ -204,8 +204,8 @@
             "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
             "paginate": {
               "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
+              "last":       "Último",
+              "next":       "Próximo",
               "previous":   "Anterior"
             },
             "aria": {

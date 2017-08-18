@@ -79,7 +79,7 @@
 											            'data-toggle' => 'modal',
 											            'data-target' => '#confirmAction',
 											            'data-title' => 'Desvincular propietario',
-											            'data-message' => 'Esta seguro(a) que desea desvincular el presente propietario?',
+											            'data-message' => 'Esta seguro(a) que desea desvincular este propietario?',
 											            'data-btntxt' => 'SI, desvincular',
 											            'data-btncolor' => 'btn-success'
 											        ))}}
@@ -137,11 +137,11 @@
             "loadingRecords": "Cargando...",
             "processing":     "Procesando...",
             "search":         "Buscar:",
-            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+            "zeroRecords":    "No se encontró ninguna unidad con ese filtro",
             "paginate": {
               "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
+              "last":       "Último",
+              "next":       "Próximo",
               "previous":   "Anterior"
             },
             "aria": {

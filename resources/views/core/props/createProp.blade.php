@@ -54,7 +54,7 @@
 										<div class="form-group">
 											<label class="col-md-4 control-label">Usuarios Disponibles</label>
 											<div class="col-md-8">
-												{{ Form::select('user_id', array('' => 'Escoja al Usuario que desea agregar...') + $datos, array('title' => 'Escoja el usuario que desea agregar')) }}
+												{{ Form::select('user_id', array('' => 'Escoja el usuario que desea agregar...') + $datos, array('title' => 'Escoja el usuario que desea agregar')) }}
 												{!! $errors->first('user_id', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>					

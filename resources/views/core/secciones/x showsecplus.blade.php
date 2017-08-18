@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Ver Seccion')
+@section('title', '| Ver Sección')
 
 @section('content')
 	<div class="row"><!-- row -->
@@ -30,7 +30,7 @@
 
 					<ul class="nav nav-tabs pull-right in" id="myTab">
 						<li class="active">
-							<a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Seccion</span></a>
+							<a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Sección</span></a>
 						</li>
 						<li>
 							<a data-toggle="tab" href="#s2"><i class="fa fa-dollar"></i> <span class="hidden-mobile hidden-tablet">Bloque</span></a>

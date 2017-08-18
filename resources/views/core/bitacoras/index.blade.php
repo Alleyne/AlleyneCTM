@@ -1,6 +1,6 @@
-@extends('templates.backend._layouts.smartAdmin')
+s@extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Bitacora')
+@section('title', '| Bitácora')
 
 @section('content')
 
@@ -28,7 +28,7 @@
 					-->
 					<header>
 						<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-						<h2>Bitacoras </h2>
+						<h2>Bitácoras </h2>
 						<div class="widget-toolbar">
 
 						</div>
@@ -114,11 +114,11 @@
             "loadingRecords": "Cargando...",
             "processing":     "Procesando...",
             "search":         "Buscar:",
-            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+            "zeroRecords":    "No se encontró ninguna unidad con ese filtro",
             "paginate": {
               "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
+              "last":       "Último",
+              "next":       "Próximo",
               "previous":   "Anterior"
             },
             "aria": {

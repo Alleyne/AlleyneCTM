@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Editar Seccion')
+@section('title', '| Editar Sección')
 
 @section('content')
     <!-- widget grid -->
@@ -50,7 +50,7 @@
                                   {{ csrf_field() }}
                                   {{ Form::hidden('bloque_id', $dato->bloque_id) }}
                                   <div class="form-group">
-                                      <label class="col-md-4 control-label">Sección Nombre</label>
+                                      <label class="col-md-4 control-label">Nombre Sección</label>
                                       <div class="col-md-8">
                                           {{ Form::text('nombre', $dato->nombre, array('class' => 'form-control','title' => 'Escriba el nombre de la Sección del Bloque...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('nombre', '<li style="color:red">:message</li>') !!}
@@ -66,10 +66,10 @@
                                   </div>                                                    
                                   
                                   @if ($dato->codigo == 'AP') <!-- Apartamentos -->
-                                    <legend>Sección tipo apartamentos</legend>
+                                    <legend>Sección tipo Apartamentos</legend>
                                     {{ Form::hidden('codigo', 'AP') }}
                                   @elseif ($dato->codigo == 'RE') <!-- Residencias -->
-                                    <legend>Sección tipo residencias</legend>
+                                    <legend>Sección tipo Residencias</legend>
                                     {{ Form::hidden('codigo', 'RE') }}
                                   @elseif ($dato->codigo == 'LC') <!-- Oficinas o locales comerciales -->
                                     <legend>Sección tipo Oficinas o Locales Comerciales</legend>
@@ -113,7 +113,7 @@
                                   <div class="form-group">
                                       <label class="col-md-4 control-label">No. de estacionamientos</label>
                                       <div class="col-md-8">
-                                          {{ Form::text('estacionamientos', $dato->secapto->estacionamientos, array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad administrada...', 'autocomplete' => 'off')) }}
+                                          {{ Form::text('estacionamientos', $dato->secapto->estacionamientos, array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}
                                       </div>
                                   </div>
@@ -127,7 +127,11 @@
                                   </div>    
                                   
                                   <div class="form-group">
+<<<<<<< HEAD
                                       <label class="col-md-4 control-label">Cuota manten. (B/.)</label>
+=======
+                                      <label class="col-md-4 control-label">Cuota Manten. (B/.)</label>
+>>>>>>> origin/master
                                       <div class="col-md-8">
                                           {{ Form::text('cuota_mant', $dato->secapto->cuota_mant, array('class' => 'form-control','title' => 'Escriba la cuota de mantenimiento mensual...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}
@@ -180,7 +184,7 @@
                                       <label class="col-md-4 control-label">Meses para descuento</label>
                                       <div class="col-md-8">
                                           <input class="form-control spinner-left"  id="spinner3" name="m_descuento" value= "{{ $dato->secapto->m_descuento }}" type="text">
-                                          <p class="text-left">Cantidad de meses que se debera pagar por adelantado para obtener descuento por pagos anticipados.</p>
+                                          <p class="text-left">Cantidad de meses que se debe pagar por adelantado para obtener descuento por pagos anticipados.</p>
                                           {!! $errors->first('m_descuento', '<li style="color:red">:message</li>') !!}
                                       </div>
                                   </div>  

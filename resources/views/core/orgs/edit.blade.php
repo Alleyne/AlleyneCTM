@@ -28,7 +28,11 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label">RUC</label>
 								<div class="col-md-10">
+<<<<<<< HEAD
 									{{ Form::text('ruc', $org->ruc, array('class' => 'form-control input-sm', 'title' => 'Escriba el ruc de la organización...', 'autocomplete' => 'off')) }}
+=======
+									{{ Form::text('ruc', $org->ruc, array('class' => 'form-control input-sm', 'title' => 'Escriba el RUC de la organización...', 'autocomplete' => 'off')) }}
+>>>>>>> origin/master
 									{!! $errors->first('ruc', '<li style="color:red">:message</li>') !!}
 								</div>
 							</div>
@@ -56,7 +60,7 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label">Distrito</label>
 								<div class="col-md-10">
-									{{ Form::text('distrito', $org->distrito, array('class' => 'form-control input-sm', 'title' => 'Escriba el distrito de la Organizacion...', 'autocomplete' => 'off')) }}
+									{{ Form::text('distrito', $org->distrito, array('class' => 'form-control input-sm', 'title' => 'Escriba el distrito de la Organización...', 'autocomplete' => 'off')) }}
 									{!! $errors->first('distrito', '<li style="color:red">:message</li>') !!}
 								</div>
 							</div>
