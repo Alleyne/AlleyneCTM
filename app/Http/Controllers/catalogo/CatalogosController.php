@@ -155,7 +155,7 @@ class CatalogosController extends Controller {
 	  DB::beginTransaction();
 	  try {
 			
-			dd($request->toArray());
+			//dd($request->toArray());
 			$cuenta= Catalogo::find($id);
 	   
 			$this->validate($request, array(

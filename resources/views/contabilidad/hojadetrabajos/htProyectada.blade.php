@@ -145,12 +145,11 @@
 		  
 		  <tbody> 
 				@foreach ($datos as $dato)		   
+
 				  <tr> 
 						<td class="hidden-print"><a href="{{ URL::route('verMayorAux',
 														 array($dato['periodo'],
-																  $dato['cuenta'],
-																	0 ,
-																	$dato['un_id']
+																  $dato['cuenta']
 																)) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-book"></i></a>
 						</td>
 
@@ -218,7 +217,7 @@
 				<tr> 
 					<td class="hidden-print"></td>
 					<td></td> 
-					<td>Utilidad</td> 
+					<td>Utilidad proyectada</td> 
 					<td></td> 
 					<td></td> 
 					<td></td> 

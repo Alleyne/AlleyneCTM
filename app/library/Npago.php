@@ -1401,7 +1401,7 @@ class Npago {
               4,
               4, //'4130.00'
               Carbon::parse($dato->f_vencimiento)->addDay(),
-              '   Ingreso por recargo en cuota de mantenimiento unidad '.$dato->ocobro,
+              '   Ingreso por recargo en cuota de mant unidad '.$dato->ocobro,
               $dato->recargo,
               $dato->un_id,
               Null,

@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
 	<link href="{{ URL::asset('assets/backend/css/bootstrap-3.3.7.min.css') }}" rel="stylesheet" type="text/css" media="screen">
-
+	
 	<style type="text/css">
 		.borde {
 			border: 1px; 
@@ -59,6 +59,7 @@
   	.rojo {
   		color:#FF0000;
   	}
+
 	</style>
 </head>
 
@@ -73,12 +74,10 @@
 			  <p class="text-center" style="margin:0px">(en balboas)</p>
       </div>
       <div class="col-xs-1">
-        <img style="margin-top:10px; border-radius: 4px;" src="{{ asset(Cache::get('jdkey')->imagen_M) }}" class="img-responsive" alt="Responsive image">
+        <img style="margin-top:10px; border-radius: 4px;" src="{{ asset(Cache::get('jdkey')->imagen_M) }}" class="img-responsive" alt="Logo">
       </div>
     </div><!-- end row -->
-		
-		<br />
-		
+
 		<table class="table table-hove table-hover">
 		  <thead>
 			  <tr>
@@ -108,41 +107,43 @@
 			   <th class="text-center borde celBg-gray">Credito</th> 
 			  </tr>
 		  </thead> 
-
+		  
 		  <tbody> 
 				@foreach ($datos as $dato)		   
+
 				  <tr> 
 						<td class="hidden-print"><a href="{{ URL::route('verMayorAuxHis',
-														 array($dato['pcontable_id'],
-																  $dato['cuenta']
+														 array($dato['periodo'],
+																  $dato['cuenta'],
+																	0 
 																)) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-book"></i></a>
 						</td>
 
 						<td>{{ $dato['codigo'] }}</td>
-						<td>{{ $dato['nombre'] }}</td>
+						<td>{{ $dato['cta_nombre'] }}</td>
 					
 						<td class="text-right celBg-yellow borde">
-							{{ $dato['bp_debito'] == '0.00' ? '' : number_format($dato['bp_debito'],2) }}
+							{{ $dato['saldo_debito'] == '0.00' ? '' : number_format($dato['saldo_debito'],2) }}
 						</td>
 						
 						<td class="text-right celBg-yellow borde">
-							{{ $dato['bp_credito'] == '0.00' ? '' : number_format($dato['bp_credito'],2) }}
+							{{ $dato['saldo_credito'] == '0.00' ? '' : number_format($dato['saldo_credito'],2) }}
 						</td>
 
 						<td class="text-right celBg-red borde">
-							{{ $dato['aj_debito'] == '0.00' ? '' : number_format($dato['aj_debito'],2) }}
+							{{ $dato['saldoAjuste_debito'] == '0.00' ? '' : number_format($dato['saldoAjuste_debito'],2) }}
 						</td>
 						
 						<td class="text-right celBg-red borde">
-							{{ $dato['aj_credito'] == '0.00' ? '' : number_format($dato['aj_credito'],2) }}
+							{{ $dato['saldoAjuste_credito'] == '0.00' ? '' : number_format($dato['saldoAjuste_credito'],2) }}
 						</td>
 
 						<td class="text-right celBg-green borde">
-							{{ $dato['ba_debito'] == '0.00' ? '' : number_format($dato['ba_debito'],2) }}
+							{{ $dato['saldoAjustado_debito'] == '0.00' ? '' : number_format($dato['saldoAjustado_debito'],2) }}
 						</td>
 					    
 						<td class="text-right celBg-green borde">
-							{{ $dato['ba_credito'] == '0.00' ? '' : number_format($dato['ba_credito'],2) }}
+							{{ $dato['saldoAjustado_credito'] == '0.00' ? '' : number_format($dato['saldoAjustado_credito'],2) }}
 						</td>
 					    
 						<td class="text-right celBg-blue borde">
@@ -169,11 +170,11 @@
 					<td>&nbsp;</td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_bp_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_bp_credito,2) }}</p></td> 
-					<td class="text-right"><p class="mix">{{ number_format($total_aj_debito,2) }}</p></td> 
+					<th class="text-right"><p class="mix">{{ number_format($total_aj_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_aj_credito,2) }}</p></td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_ba_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix">{{ number_format($total_ba_credito,2) }}</p></td> 
-					<td class="text-right"><p class="mix lineup">{{ number_format($total_er_debito,2) }}</p></td> 
+					<th class="text-right"><p class="mix lineup">{{ number_format($total_er_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix lineup">{{ number_format($total_er_credito,2) }}</p></td> 
 					<td class="text-right"><p class="mix lineup">{{ number_format($total_bg_debito,2) }}</p></td> 
 					<td class="text-right"><p class="mix lineup">{{ number_format($total_bg_credito,2) }}</p></td> 
@@ -181,15 +182,15 @@
 
 				<tr> 
 					<td class="hidden-print"></td>
-					<th></th> 
-					<td>Utilidad</td> 
+					<td></td> 
+					<td>Utilidad del periodo</td> 
 					<td></td> 
 					<td></td> 
 					<td></td> 
 					<td></td> 
 					<td></td> 
 					<td></td> 
-					
+
 					@if ($utilidad > 0)
 						<td class="text-right"><strong>{{ number_format($utilidad,2) }}</strong></td> 
 						<td class="text-right">&nbsp;</td> 
@@ -208,8 +209,8 @@
 				</tr>	
 				
 				<tr> 
-					<td class="hidden-print"></td>
-					<th></th> 
+					<td class="hidden-print"></td> 
+					<td></td>
 					<td></td> 
 					<td></td> 
 					<td></td> 
@@ -247,7 +248,7 @@
     </div> 
 
 	</div> <!-- end container -->
-  
+
   <script src="{{ URL::asset('assets/backend/js/libs/jquery-3.2.1.min.js') }}"></script>
 	<script src="{{ URL::asset('assets/backend/js/bootstrap/bootstrap-3.3.7.min.js') }}"></script>
   <script src="{{ URL::asset('assets/backend/js/modalconfirm.js') }}"></script> 

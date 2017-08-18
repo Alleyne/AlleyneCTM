@@ -378,6 +378,62 @@ dd($historial[1]['fecha']);
 string '2012-08-01' (length=10)
 
 |-------------------------------------------------------------------------- 
+|- Ordena un array multidimensional por dos de sus elementos,
+|- en este caso la codigo y cta_nombre.
+|-------------------------------------------------------------------------- 
+
+  ]
+  3 => array:17 [▼
+    "periodo" => "1"
+    "cuenta" => 1
+    "tipo" => 1
+    "codigo" => "1120.00"
+    "clase" => 1
+    "un_id" => null
+    "cta_nombre" => "Cuota de mant regular por cobrar"
+    "saldo_debito" => 6269.25
+    "saldo_credito" => 0
+    "saldoAjuste_debito" => 0
+    "saldoAjuste_credito" => 0
+    "saldoAjustado_debito" => 6269.25
+    "saldoAjustado_credito" => 0
+    "er_debito" => 0
+    "er_credito" => 0
+    "bg_debito" => 6269.25
+    "bg_credito" => 0
+  ]
+  4 => array:17 [▼
+    "periodo" => "1"
+    "cuenta" => 1
+    "tipo" => 1
+    "codigo" => "1120.00"
+    "clase" => 1
+    "un_id" => "1A-T100AP"
+    "cta_nombre" => "Cuota de mant regular por cobrar 1A-T100AP"
+    "saldo_debito" => 0
+    "saldo_credito" => 173.25
+    "saldoAjuste_debito" => 0
+    "saldoAjuste_credito" => 0
+    "saldoAjustado_debito" => 0
+    "saldoAjustado_credito" => 173.25
+    "er_debito" => 0
+    "er_credito" => 0
+    "bg_debito" => 0
+    "bg_credito" => 173.25
+  ]
+
+  $sort = array();
+  foreach($data as $k=>$v) {
+      $sort['codigo'][$k] = $v['codigo'];
+      $sort['cta_nombre'][$k] = $v['cta_nombre'];
+  }
+  # sort by event_type desc and then title asc
+  array_multisort($sort['codigo'], SORT_ASC, $sort['cta_nombre'], SORT_ASC,$data);
+
+  dd($data);
+
+
+|-------------------------------------------------------------------------- 
 |- 
 |- html Nombre y apellido horizontalmente
 |--------------------------------------------------------------------------       
@@ -3016,3 +3072,54 @@ Work::with(
    * user->roles return null
    ************************************************************************************/    
    composer dump-autoload
+
+
+  /*************************************************************************************
+   * codigo para authenticated method
+   ************************************************************************************/    
+    namespace Illuminate\Foundation\Auth;
+
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Lang;
+    use Cache, Log, DB;
+
+    use App\Role;
+    use App\Un;
+    use App\Post;
+    use App\Jd;
+    use App\User;  
+
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+      Cache::flush();
+
+      // encuentra todos los roles registrados 
+      $allRoles = Role::all();
+      //dd($allRoles, $user);
+      
+      // encuentra el o los roles que tiene el usuario autenticado
+      $userRoles = $user->roles;
+      //dd($userRoles);
+
+      foreach ($allRoles as $allRole) {
+        $key = 'es'.$allRole->name.'key';
+      
+        if ($userRoles->contains('name', $allRole->name)) {
+            Cache::forever($key, true);
+        }
+      }      
+
+      Cache::forever('unsAllkey', Un::all());
+      Cache::forever('recentPostkey', Post::orderBy('created_at', 'desc')->limit(3)->get());
+      Cache::forever('jdkey', Jd::first());
+    
+    }

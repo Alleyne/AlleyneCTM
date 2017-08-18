@@ -58,6 +58,10 @@
 			border-style:  hidden hidden double hidden;
 			font-weight:bold,
 		}	.Estilo2 {font-weight: bold}
+    	
+    	.rojo {
+    		color:#FF0000;
+
 	</style>
 </head>
 <body>
@@ -70,7 +74,7 @@
 					<td width="66%">
 						<div class="encabezado-principal">
 							<label>MONAGRE CORP. S.A.</label><br>
-							<label>BALANCE GENERAL PROYECTADO</label><br>
+							<label>BALANCE GENERAL</label><br>
 							<label>Periodo contable de {{ $periodo }}</label>
 						</div>					</td>
 					<td width="20%"><div align="center" class="Estilo1 Estilo2"></div></td>
@@ -96,9 +100,9 @@
 					@foreach ($activoCorrientes as $activoCorriente)
 						<tr align="right">
 							<td width="3%" align="left"></td>
-							<td width="55%" align="left">{{ $activoCorriente['cta_nombre'] }}</td>
+							<td width="55%" align="left">{{ $activoCorriente->nombre }}</td>
 							<td width="7%" align="left">&nbsp;</td>
-							<td width="15%" align="left"><div align="right">{{ number_format($activoCorriente['saldo_debito'],2) }}</div></td>
+							<td width="15%" align="left"><div align="right">{{ number_format(($activoCorriente->bg_debito - $activoCorriente->bg_credito),2) }}</div></td>
 							<td width="15%">&nbsp;</td>
 						</tr>				
 					@endforeach
@@ -127,9 +131,9 @@
 					@foreach ($activoNoCorrientes as $activoNoCorriente)
 						<tr align="right">
 							<td width="3%" align="left"></td>
-							<td width="55%" align="left">{{ $activoNoCorriente['cta_nombre'] }} </td>
+							<td width="55%" align="left">{{ $activoNoCorriente->nombre }} </td>
 							<td width="7%" align="left">&nbsp;</td>
-							<td width="15%" align="left"><div align="right">{{ number_format($activoNoCorriente['saldo_debito'],2) }}</div></td>
+							<td width="15%" align="left"><div align="right">{{ number_format($activoNoCorriente->bg_debito,2) }}</div></td>
 							<td width="15%">&nbsp;</td>
 						</tr>				
 					@endforeach
@@ -145,7 +149,7 @@
 						<td colspan="2" align="left">&nbsp;&nbsp;<strong>TOTAL DE ACTIVO</strong></td>
 						<td width="7%" align="left">&nbsp;</td>
 						<td width="15%" align="left">&nbsp;</td>
-						<td width="15%" align="right"><p class="mix4"><strong>{{ number_format($totalActivos,2) }}</strong></p></td>
+						<td width="15%" align="right"><p class="mix4"><strong>{{ number_format(($total_activoCorrientes + $total_activoNoCorrientes),2) }}</strong></p></td>
 					</tr>
 					<tr align="right">
 						<td width="3%" align="left">&nbsp;</td>
@@ -170,9 +174,9 @@
 					@foreach ($pasivoCorrientes as $pasivoCorriente)
 						<tr align="right">
 							<td width="3%" align="left"></td>
-							<td width="55%" align="left">{{ $pasivoCorriente['cta_nombre'] }} </td>
+							<td width="55%" align="left">{{ $pasivoCorriente->nombre }} </td>
 							<td width="7%" align="left">&nbsp;</td>
-							<td width="15%" align="left"><div align="right">{{ number_format($pasivoCorriente['saldo_credito'],2) }}</div></td>
+							<td width="15%" align="left"><div align="right">{{ number_format($pasivoCorriente->bg_credito,2) }}</div></td>
 							<td width="15%">&nbsp;</td>
 						</tr>				
 					@endforeach
@@ -201,9 +205,9 @@
 					@foreach ($pasivoNoCorrientes as $pasivoNoCorriente)
 						<tr align="right">
 							<td width="3%" align="left"></td>
-							<td width="55%" align="left">{{ $pasivoNoCorriente['cta_nombre'] }} </td>
+							<td width="55%" align="left">{{ $pasivoNoCorriente->nombre }} </td>
 							<td width="7%" align="left">&nbsp;</td>
-							<td width="15%" align="left"><div align="right">{{ number_format($pasivoNoCorriente['saldo_credito'],2) }}</div></td>
+							<td width="15%" align="left"><div align="right">{{ number_format($pasivoNoCorriente->bg_credito,2) }}</div></td>
 							<td width="15%">&nbsp;</td>
 						</tr>				
 					@endforeach
@@ -219,7 +223,7 @@
 						<td colspan="2" align="left">&nbsp;&nbsp;<strong>TOTAL DE PASIVO</strong></td>
 						<td width="7%" align="left">&nbsp;</td>
 						<td width="15%" align="left">&nbsp;</td>
-						<td width="15%" align="right"><p>{{ number_format($totalPasivos,2) }}</p></td>
+						<td width="15%" align="right"><p>{{ number_format(($total_pasivoCorrientes + $total_pasivoNoCorrientes),2) }}</p></td>
 					</tr>
 					<tr align="right">
 						<td width="3%" align="left">&nbsp;</td>
@@ -238,25 +242,41 @@
 					@foreach ($patrimonios as $patrimonio)
 						<tr align="right">
 							<td width="3%" align="left"></td>
-							<td width="55%" align="left">{{ $patrimonio['cta_nombre'] }} </td>
+							<td width="55%" align="left">{{ $patrimonio->nombre }} </td>
 							<td width="7%" align="left">&nbsp;</td>
-							<td width="15%" align="left"><div align="right">{{ number_format($patrimonio['saldo_credito'],2) }}</div></td>
+							<td width="15%" align="left"><div align="right">{{ number_format($patrimonio->bg_credito,2) }}</div></td>
 							<td width="15%">&nbsp;</td>
 						</tr>				
 					@endforeach
+					<tr align="right">
+						<td width="3%" align="left"></td>
+						<td width="55%" align="left">Utilidad del periodo </td>
+						<td width="7%" align="left">&nbsp;</td>
+
+						@if ($utilidad>=0)
+							<td width="15%" align="left"><div align="right">{{ number_format($utilidad,2) }}</div></td>
+						@else
+							<td width="15%" align="left"><div class="rojo" align="right">{{ number_format($utilidad,2) }}</div></td>
+						@endif
+						<td width="15%">&nbsp;</td>
+					</tr>	
 					
 					<tr align="right">
 						<td width="3%" align="left">&nbsp;</td>
 						<td width="55%" align="left"><strong>Total de Patrimonio</strong> </td>
 						<td width="7%" align="left">&nbsp;</td>
 						<td width="15%" align="left">&nbsp;</td>
-						<td width="15%" align="right"><p class="mix3">{{ number_format($total_patrimonio,2) }}</p></td>
+						@if (($total_patrimonios+$utilidad)>=0)
+							<td width="15%" align="right"><p class="mix3">{{ number_format(($total_patrimonios+$utilidad),2) }}</p></td>
+						@else
+							<td width="15%" align="right"><p class="mix3 rojo">{{ number_format(($total_patrimonios+$utilidad),2) }}</p></td>
+						@endif
 					</tr>		  
 					<tr align="right">
 						<td colspan="2" align="left">&nbsp;&nbsp;<strong>TOTAL DE PASIVO Y PATRIMONIO</strong></td>
 						<td width="7%" align="left">&nbsp;</td>
 						<td width="15%" align="left">&nbsp;</td>
-						<td width="15%" align="right"><p class="mix4"><strong>{{ number_format($totalPasivoPatrimonio,2) }}</strong></p></td>
+						<td width="15%" align="right"><p class="mix4"><strong>{{ number_format(($total_pasivoCorrientes + $total_pasivoNoCorrientes + $total_patrimonios + $utilidad),2) }}</strong></p></td>
 					</tr>
 			  </table>
 			</div>

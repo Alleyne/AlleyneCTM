@@ -69,6 +69,46 @@ class Sity {
     return $sa;
   }
 
+  
+  /****************************************************************************************
+   * Encuentra el saldo actual de una cuenta de acuerdo al tipo de cuenta y periodo contable
+   *****************************************************************************************/
+  public static function getSaldoCuentaHis($cuenta, $pcontable_id)
+  {
+  
+    // encuentra el tipo de cuenta
+    $tipo= Catalogo::find($cuenta)->tipo;
+
+    $tdebito= Ctmayorehi::where('cuenta', $cuenta)
+                ->where('cierre', 0)
+                ->where('pcontable_id', $pcontable_id)
+                ->sum('debito');
+    $tdebito= round(floatval($tdebito),2);
+    
+    $tcredito= Ctmayorehi::where('cuenta', $cuenta)
+                ->where('cierre', 0)
+                ->where('pcontable_id', $pcontable_id)
+                ->sum('credito');
+    $tcredito= round(floatval($tcredito),2);    
+    
+    if ($tipo==1 || $tipo==6) {  
+      $sa= $tdebito-$tcredito;
+
+    } elseif ($tipo==2 || $tipo==3 || $tipo==4) {  
+      $sa= $tcredito-$tdebito;
+    
+    } else {
+      return 'Error: tipo de cuenta no exite en function Sity::getSaldoCuenta()';
+    } 
+
+    // si no tiene saldo, iniciliza en cero
+    $sa = ($sa) ? $sa : 0;
+    //dd($sa);    
+    return $sa;
+  }
+
+
+
   /****************************************************************************************
    * Encuentra el saldo actual de una cuenta de acuerdo al tipo de cuenta y periodo contable
    *****************************************************************************************/

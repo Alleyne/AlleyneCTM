@@ -122,7 +122,7 @@ class penalizar extends Command
                     1,
                     2, //'1130.00',
                     $today,
-                    'Recargo en cuota de mantenimiento por cobrar unidad '.$dato->ocobro,
+                    'Recargo en cuota de mant por cobrar unidad '.$dato->ocobro,
                     $dato->recargo,
                     $dato->un_id
                    );
@@ -134,7 +134,7 @@ class penalizar extends Command
                     4,
                     4, //'4130.00',
                     $today,
-                    '   Ingreso por recargo en cuota de mantenimiento unidad '.$dato->ocobro,
+                    '   Ingreso por recargo en cuota de mant unidad '.$dato->ocobro,
                     $dato->recargo,
                     $dato->un_id
                    );
@@ -170,7 +170,7 @@ class penalizar extends Command
             // registra en Ctdiario principal
             $dto = new Ctdiario;
             $dto->pcontable_id = $periodo;
-            $dto->detalle = 'Para registrar resumen de recargos en cuotas de mantenimiento por cobrar vencidas a '.Date::parse($dato->f_vencimiento)->toFormattedDateString();
+            $dto->detalle = 'Para registrar resumen de recargos en cuotas de mant por cobrar vencidas a '.Date::parse($dato->f_vencimiento)->toFormattedDateString();
             $dto->save();     
            
             $totalRecargos= 0;

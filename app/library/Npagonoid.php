@@ -1175,7 +1175,7 @@ class Npagonoid {
               1,
               2, //'1130.00'
               Carbon::parse($dato->f_vencimiento)->addDay(),
-              'Recargo en cuota de mantenimiento por cobrar unidad '.$dato->ocobro,
+              'Recargo en cuota de mant por cobrar unidad '.$dato->ocobro,
               $dato->recargo,
               $dato->un_id,
               Null,
@@ -1192,7 +1192,7 @@ class Npagonoid {
               4,
               4, //'4130.00'
               Carbon::parse($dato->f_vencimiento)->addDay(),
-              '   Ingreso por recargo en cuota de mantenimiento unidad '.$dato->ocobro,
+              '   Ingreso por recargo en cuota de mant unidad '.$dato->ocobro,
               $dato->recargo,
               $dato->un_id,
               Null,
@@ -1233,7 +1233,7 @@ class Npagonoid {
       // registra en Ctdiario principal
       $dto = new Ctdiario;
       $dto->pcontable_id = $periodo_id;
-      $dto->detalle = 'Para registrar resumen de recargos en cuotas de mantenimiento por cobrar vencidas a '.Date::parse($dato->f_vencimiento)->toFormattedDateString();
+      $dto->detalle = 'Para registrar resumen de recargos en cuotas de mant por cobrar vencidas a '.Date::parse($dato->f_vencimiento)->toFormattedDateString();
       $dto->save();     
      
       $totalRecargos= 0;

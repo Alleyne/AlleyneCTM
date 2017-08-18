@@ -23,6 +23,7 @@ use App\Concilia;
 use App\Cajachica;
 use App\Bloque;
 use App\Ctdasm;
+use App\Ctdasmhi;
 use App\Detallepagofactura;
 
 class HojadetrabajosController extends Controller {
@@ -76,30 +77,42 @@ class HojadetrabajosController extends Controller {
   * Despliega el estado de resultado final
   ************************************************************************************/ 
   public function er($pcontable_id) {
-      
-    $ingresos = Ht::where('pcontable_id', $pcontable_id)
-                ->where('tipo', 4)
-                ->where('er_credito', '>', 0)
-                ->get();
-    //dd($ingresos->toArray());
-    
-    $gastos = Ht::where('pcontable_id', $pcontable_id)
-                ->where('tipo', 6)
-                ->where('er_debito', '>', 0)
-                ->get();
-    //dd($ingresos->toArray());      
+  
+    // encuentra todas las cuentas de Ingresos de un determinado periodo contable
+    $ingresos= Hojat::getDataParaEstadoResultadoHis($pcontable_id, 4);
+    //dd($ingresos);
 
-    $utilidad= $ingresos->sum('er_credito')-$gastos->sum('er_debito'); 
-    //dd($utilidad);
+    // encuentra todas las cuentas de Gastos de un determinado periodo contable
+    $gastos= Hojat::getDataParaEstadoResultadoHis($pcontable_id, 6);
+    //dd($gastos);
+            
+    //calcula el total de la columna debito y el de la columna credito
+    $totalIngresos = 0;
+    $totalGastos = 0;
+    
+    // calcula en total de ingresos recibidos         
+    foreach($ingresos as $ingreso) {
+      $totalIngresos += $ingreso['saldo_credito'];
+    }        
+    
+    foreach($gastos as $gasto) {
+      // totales balance ajustado        
+      $totalGastos += $gasto['saldo_debito'];
+    }
+    //dd($totalIngresos, $totalGastos);
+    
+    // calcula la utilidad neta
+    $utilidad= $totalIngresos - $totalGastos;
 
     return \View::make('contabilidad.estadoderesultado.er')
+                ->with('periodo', Pcontable::find($pcontable_id)->periodo)
                 ->with('ingresos', $ingresos)
                 ->with('gastos', $gastos)
-                ->with('total_ingresos', $ingresos->sum('er_credito'))                  
-                ->with('total_gastos', $gastos->sum('er_debito')) 
-                ->with('utilidad', $utilidad) 
-                ->with('periodo', Pcontable::find($pcontable_id)->periodo);
+                ->with('totalIngresos', $totalIngresos)
+                ->with('totalGastos', $totalGastos)
+                ->with('utilidad', $utilidad);
   }
+
 
   /***********************************************************************************
   * Despliega el estado de resultado final
@@ -136,7 +149,7 @@ class HojadetrabajosController extends Controller {
     $data = str_replace(array('[',']'), '',$data);
     //dd($data); 
     
-    return \View::make('contabilidad.estadoderesultado.facturasporpagar')
+    return \View::make('contabilidad.detallepagofacturas.facturasporpagar')
             ->with('data', $data)
             ->with('totalPorPagar', $totalPorPagar);
   }  
@@ -146,68 +159,78 @@ class HojadetrabajosController extends Controller {
   * Despliega el balance general final
   ************************************************************************************/ 
   public function bg($pcontable_id) {
-      
-    $activoCorrientes = Ht::where('pcontable_id', $pcontable_id)
-                ->where('tipo', 1)
-                ->where('clase', 1)
-                ->get();
-    //dd($activoCorrientes->toArray());
+        
+    //---------------------------------
+    // SECCION BALANCE GENERAL
+    //---------------------------------
+    $activoCorrientes= Hojat::getDataParaBalanceGeneralHis($pcontable_id, 1, 1);
+    //dd($activoCorrientes);        
     
-    $activoNoCorrientes = Ht::where('pcontable_id', $pcontable_id)
-                ->where('tipo', 1)
-                ->where('clase', Null)
-                ->get();
-    //dd($activoNoCorrientes->toArray());
+    $activoNoCorrientes= Hojat::getDataParaBalanceGeneralHis($pcontable_id, 1, 0);
+    //dd($activoNoCorrientes);        
+    
+    $pasivoCorrientes= Hojat::getDataParaBalanceGeneralHis($pcontable_id, 2, 1);
+    //dd($pasivoCorrientes);        
+    
+    $pasivoNoCorrientes= Hojat::getDataParaBalanceGeneralHis($pcontable_id, 2, 0);
+    //dd($pasivoNoCorrientes);        
 
-    $pasivoCorrientes = Ht::where('pcontable_id', $pcontable_id)
-                ->where('tipo', 2)
-                ->where('clase', 1)
-                ->get();
-    //dd($pasivoCorrientes->toArray());      
-
-    $pasivoNoCorrientes = Ht::where('pcontable_id', $pcontable_id)
-                ->where('tipo', 2)
-                ->where('clase', Null)
-                ->get();
-    //dd($pasivoCorrientes->toArray()); 
-
-    $patrimonios = Ht::where('pcontable_id', $pcontable_id)
-                ->where('tipo', 3)
-                ->get();
-    //dd($patrimonios->toArray()); 
+    $patrimonios= Hojat::getDataParaBalanceGeneralHis($pcontable_id, 3, Null);
+    //dd($patrimonios); 
  
-    // calcula Utilidad del periodo en estudio
-    $total_ingresos = Ht::where('pcontable_id', $pcontable_id)
-                ->where('tipo', 4)
-                ->sum('ba_credito');
-    //dd($total_ingresos);
+    //calcula el total de cada uno de los tipos de cuentas
+    $total_activoCorrientes= 0;
+    $total_activoNoCorrientes= 0;
+    $total_pasivoCorrientes= 0;
+    $total_pasivoNoCorrientes= 0;
+    $total_patrimonios= 0;
 
-    // calcula Utilidad del periodo en estudio
-    $total_gastos = Ht::where('pcontable_id', $pcontable_id)
-                ->where('tipo', 6)
-                ->sum('ba_debito');
-    //dd($total_gastos);
+    foreach($activoCorrientes as $activoCorriente) {
+      $total_activoCorrientes += ($activoCorriente['saldo_debito'] - $activoCorriente['saldo_credito']);
+    }
+
+    foreach($activoNoCorrientes as $activoNoCorriente) {
+      $total_activoNoCorrientes += ($activoNoCorriente['saldo_debito'] - $activoNoCorriente['saldo_credito']);
+    }
+
+    foreach($pasivoCorrientes as $pasivoCorriente) {
+       $total_pasivoCorrientes += ($pasivoCorriente['saldo_credito'] - $pasivoCorriente['saldo_debito']);
+    }
+
+    foreach($pasivoNoCorrientes as $pasivoNoCorriente) {
+      $total_pasivoNoCorrientes += ($pasivoNoCorriente['saldo_credito'] - $pasivoNoCorriente['saldo_debito']);
+    }
+
+    foreach($patrimonios as $patrimonio) {
+      $total_patrimonios += ($patrimonio['saldo_credito'] - $patrimonio['saldo_debito']);
+    }
+    // dd($total_activoCorrientes, $total_activoNoCorrientes, $total_pasivoCorrientes, $total_pasivoNoCorrientes, $total_patrimonios);        
+
+    $totalActivos = $total_activoCorrientes + $total_activoNoCorrientes;
+    $totalPasivos = $total_pasivoCorrientes + $total_pasivoNoCorrientes;
+    $totalPasivoPatrimonio = $totalPasivos + $total_patrimonios;       
+
+    // calcula la Utilidad retenida del periodo
+    //$utilidad= Sity::getUtilidadRetenida($pcontable_id); 
     
-    $utilidad = $total_ingresos - $total_gastos;          
-   
-    return \View::make('contabilidad.balancegeneral.bg')
+    return \View::make('contabilidad.balancegeneral.balancegeneral')
                 ->with('activoCorrientes', $activoCorrientes)
                 ->with('activoNoCorrientes', $activoNoCorrientes)
-                
                 ->with('pasivoCorrientes', $pasivoCorrientes)
                 ->with('pasivoNoCorrientes', $pasivoNoCorrientes)
-                
                 ->with('patrimonios', $patrimonios)
-
-                ->with('total_activoCorrientes', ($activoCorrientes->sum('bg_debito') - $activoCorrientes->sum('bg_credito')))                
-                ->with('total_activoNoCorrientes', ($activoNoCorrientes->sum('bg_debito') - $activoNoCorrientes->sum('bg_credito')))
                 
-                ->with('total_pasivoCorrientes', ($pasivoCorrientes->sum('bg_credito') - $pasivoCorrientes->sum('bg_debito')))                  
-                ->with('total_pasivoNoCorrientes', ($pasivoNoCorrientes->sum('bg_credito') - $pasivoNoCorrientes->sum('bg_debito')))                     
+                ->with('total_activoCorrientes', $total_activoCorrientes)
+                ->with('total_activoNoCorrientes', $total_activoNoCorrientes)
+                ->with('total_pasivoCorrientes', $total_pasivoCorrientes)
+                ->with('total_pasivoNoCorrientes', $total_pasivoNoCorrientes)
+                ->with('total_patrimonio', $total_patrimonios)                    
                 
-                ->with('total_patrimonios', ($patrimonios->sum('bg_credito') - $patrimonios->sum('bg_debito')))                     
-
-                ->with('utilidad', $utilidad) 
+                ->with('totalActivos', $totalActivos)
+                ->with('totalPasivos', $totalPasivos)
+                ->with('totalPasivoPatrimonio', $totalPasivoPatrimonio)
+                
+                //->with('utilidad', $utilidad)
                 ->with('periodo', Pcontable::find($pcontable_id)->periodo);
   }
 
@@ -245,6 +268,7 @@ class HojadetrabajosController extends Controller {
 
     $i=0;      
     $totalCuotasPorCobrar = 0;
+    
     foreach ($bloques as $bloque) {
       // encuentra el total de cuota regular por cobrar de un bloque en especial
       $cuotaRegPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('pagada', 0)->sum('importe');    
@@ -282,6 +306,7 @@ class HojadetrabajosController extends Controller {
 
     $otrosActivos = array();
     $i = 0;
+    
     foreach ($cuentas as $cuenta) {
       // encuentra el saldo actual de cada una de las cuentas
       $otrosActivos[$i]['nombre'] = $cuenta->nombre; 
@@ -301,20 +326,21 @@ class HojadetrabajosController extends Controller {
     //  Calcula pasivos
     //------------------------------------------------------
     $pasivos = Catalogo::where('tipo', 2)->get();
-    //dd($pasivos);
+    //dd($pasivos->toArray());
     
     $i = 0;      
     $totalPasivos = 0;
+    
     foreach ($pasivos as $pasivo) {
 
       // calcula el saldo actual de la cuenta
       $saldo = Sity::getSaldoCuenta($pasivo->id, $pcontable_id); 
     
-      // Agrega la cantidad en almacen al array principal para enviar toda la información consolidada en un solo array
+      // Agrega saldo a la collection
       $pasivos[$i]['saldo'] = $saldo;  
       $i++;
 
-      // calcula el total de cuentas por cobrar
+      // calcula el total de pasivos
       $totalPasivos = $totalPasivos + $saldo;
     }
     //dd($pasivos->toArray());
@@ -364,55 +390,21 @@ class HojadetrabajosController extends Controller {
   public function bg_m2_final($pcontable_id) {
     //dd($pcontable_id);      
     
-    //----------------------------------------------------------
-    // calcula el saldo actual del banco en historicos
-    //----------------------------------------------------------
-    $bg_debito = Ht::where('pcontable_id', $pcontable_id)
-                ->where('cuenta', 8)
-                ->sum('bg_debito');
-    //dd($bg_debito);
-
-    $bg_credito = Ht::where('pcontable_id', $pcontable_id)
-                ->where('cuenta', 8)
-                ->sum('bg_credito');
-    //dd($bg_debito, $bg_credito);    
-
-    // calcula el saldo en banco
-    $saldoBanco = $bg_debito - $bg_credito;
-  
-    //----------------------------------------------------------
-    // calcula el saldo final de Caja general en historicos
-    //----------------------------------------------------------
-    $bg_debito = Ht::where('pcontable_id', $pcontable_id)
-                ->where('cuenta', 32)
-                ->sum('bg_debito');
-    //dd($bg_debito);
-
-    $bg_credito = Ht::where('pcontable_id', $pcontable_id)
-                ->where('cuenta', 32)
-                ->sum('bg_credito');
-    //dd($bg_debito, $bg_credito);    
-
-    // calcula el saldo de Caja general
-    $cgeneralSaldo = $bg_debito - $bg_credito;
-
-    //----------------------------------------------------------
-    // calcula el saldo final de Caja chica en historicos
-    //----------------------------------------------------------
-    $bg_debito = Ht::where('pcontable_id', $pcontable_id)
-                ->where('cuenta', 30)
-                ->sum('bg_debito');
-    //dd($bg_debito);
-
-    $bg_credito = Ht::where('pcontable_id', $pcontable_id)
-                ->where('cuenta', 30)
-                ->sum('bg_credito');
-    //dd($bg_debito, $bg_credito);    
-
-    // calcula el saldo de Caja chica
-    $cchicaSaldo = $bg_debito - $bg_credito;
-
-
+    //------------------------------------------------------
+    //  Calcula Activos liquidos banco, caja generla y caja chica
+    //------------------------------------------------------
+    
+    // encuentra el saldo actual del banco
+    $saldoBanco = Sity::getSaldoCuentaHis(8, $pcontable_id); 
+    //dd($saldoBanco);
+    
+    // encuentra el saldo actual de la caja general
+    $cgeneralSaldo = Sity::getSaldoCuentaHis(32, $pcontable_id); 
+    //dd($cgeneralSaldo);      
+    
+    // encuentra el saldo actual de la caja chica
+    $cchicaSaldo = Sity::getSaldoCuentaHis(30, $pcontable_id); 
+    //dd($cchicaSaldo);
 
     // calcula el total de activos liquido
     $totalLiquido = $saldoBanco + $cgeneralSaldo + $cchicaSaldo;
@@ -426,16 +418,17 @@ class HojadetrabajosController extends Controller {
 
     $i=0;      
     $totalCuotasPorCobrar = 0;
+    
     foreach ($bloques as $bloque) {
       // encuentra el total de cuota regular por cobrar de un bloque en especial
-      $cuotaRegPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('pagada', 0)->sum('importe');    
+      $cuotaRegPorCobrar = Ctdasmhi::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('pagada', 0)->sum('importe');    
       //dd( $cuotaRegPorCobrar);
 
       // encuentra el total de cuota extraordinaria por cobrar de un bloque en especial
-      $cuotaExtraPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('extra_pagada', 0)->where('extra_siono', 1)->sum('extra');    
+      $cuotaExtraPorCobrar = Ctdasmhi::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('extra_pagada', 0)->where('extra_siono', 1)->sum('extra');    
 
       // encuentra el total recargos por cobrar de un bloque en especial
-      $recargoPorCobrar = Ctdasm::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('recargo_pagado', 0)->where('recargo_siono', 1)->sum('recargo'); 
+      $recargoPorCobrar = Ctdasmhi::where('pcontable_id', '<=', $pcontable_id)->where('bloque_id', $bloque->id)->where('recargo_pagado', 0)->where('recargo_siono', 1)->sum('recargo'); 
     
        // Agrega la cantidad en almacen al array principal para enviar toda la información consolidada en un solo array
       $bloques[$i]["cuotaRegPorCobrar"] = $cuotaRegPorCobrar;
@@ -450,56 +443,79 @@ class HojadetrabajosController extends Controller {
     //------------------------------------------------------
     //  Calcula otros Activos menos banco, caja general, caja chica, cuentas de mant regular, extraordinarias y recargos
     //------------------------------------------------------
-    $otrosActivos = Ht::where('pcontable_id', $pcontable_id)
-                      ->where('tipo', 1)  // tipo activos
-                      ->where('cuenta', '!=', 8)  // banco
-                      ->where('cuenta', '!=', 30) // caja chica
-                      ->where('cuenta', '!=', 32) // caja general
-                      ->where('cuenta', '!=', 1)  // cuotas de mant regular por cobrar                        
-                      ->where('cuenta', '!=', 2)  // recargos en cuotas de mant regular por cobrar
-                      ->where('cuenta', '!=', 16) // cuotas de mant extraordinarias por cobrar
+
+    $cuentas = Catalogo::where('tipo', 1)
+                      ->where('id', '!=', 8)  // banco
+                      ->where('id', '!=', 30) // caja chica
+                      ->where('id', '!=', 32) // caja general
+                      ->where('id', '!=', 1)  // cuotas de mant regular por cobrar                        
+                      ->where('id', '!=', 2)  // recargos en cuotas de mant regular por cobrar
+                      ->where('id', '!=', 16) // cuotas de mant extraordinarias por cobrar
                       ->get();
+    //dd($cuentas->toArray());
+
+    $otrosActivos = array();
+    $i = 0;
+    
+    foreach ($cuentas as $cuenta) {
+      // encuentra el saldo actual de cada una de las cuentas
+      $otrosActivos[$i]['nombre'] = $cuenta->nombre; 
+      $otrosActivos[$i]['saldo'] = Sity::getSaldoCuentaHis($cuenta->id, $pcontable_id); 
+      $i++;
+    }
+      
+    // combierte el array a collection
+    $otrosActivos = Collection::make($otrosActivos);
     
     // calcula el total de otros activos
     $totalOtrosActivos = $otrosActivos->sum('saldo');
     //dd($otrosActivos,  $totalOtrosActivos);
 
+
     //------------------------------------------------------
     //  Calcula pasivos
     //------------------------------------------------------
-    $pasivos = Ht::where('pcontable_id', $pcontable_id)
-                      ->where('tipo', 2)  // tipo pasivos
-                      ->get();
+    $pasivos = Catalogo::where('tipo', 2)->get();
+    //dd($pasivos->toArray());
     
-    // calcula el total de pasivos
-    $totalPasivos = $pasivos->sum('saldo');
-    //dd($pasivos,  $totalPasivos);    
+    $i = 0;      
+    $totalPasivos = 0;
+    
+    foreach ($pasivos as $pasivo) {
+
+      // calcula el saldo actual de la cuenta
+      $saldo = Sity::getSaldoCuentaHis($pasivo->id, $pcontable_id); 
+    
+      // Agrega saldo a la collection
+      $pasivos[$i]['saldo'] = $saldo;  
+      $i++;
+
+      // calcula el total de pasivos
+      $totalPasivos = $totalPasivos + $saldo;
+    }
+    //dd($pasivos->toArray());
 
     //------------------------------------------------------
     //  Calcula patrimonio
     //------------------------------------------------------
-    $patrimonios = Ht::where('pcontable_id', $pcontable_id)
-                      ->where('tipo', 3)  // tipo patrimonio
-                      ->get();
+    $patrimonios = Catalogo::where('tipo', 3)->get();  // cuenta tipo patrimonio
+    //dd($cta_pasivos);
     
-    // calcula el total de patrimonio
-    $totalPatrimonios = $patrimonios->sum('saldo');
-    //dd($pasivos,  $totalPasivos);    
-  
-    //------------------------------------------------------
-    //  Calcula la utilidad
-    //------------------------------------------------------
-    $er_credito = Ht::where('pcontable_id', $pcontable_id)
-                      ->where('tipo', 4)  // tipo ingresos
-                      ->sum('er_credito'); 
+    $i=0;      
+    $totalPatrimonios = 0;
+    foreach ($patrimonios as $patrimonio) {
 
-    $er_debito = Ht::where('pcontable_id', $pcontable_id)
-                      ->where('tipo', 4)  // tipo ingresos
-                      ->sum('er_debito');
+      // calcula el saldo actual de la cuenta
+      $saldo = Sity::getSaldoCuentaHis($patrimonio->id, $pcontable_id); 
     
-    // calcula la utilidad
-    $utilidad = $er_credito - $er_debito;
-    //dd($utilidad);        
+       // Agrega la cantidad en almacen al array principal para enviar toda la información consolidada en un solo array
+      $patrimonios[$i]['saldo'] = $saldo;  
+      $i++;
+
+      // calcula el total de cuentas por cobrar
+      $totalPatrimonios = $totalPatrimonios + $saldo;
+    }
+    //dd($patrimonios->toArray());
 
     return \View::make('contabilidad.balancegeneral.bg_m2_final')
               ->with('bloques', $bloques) 
@@ -514,7 +530,6 @@ class HojadetrabajosController extends Controller {
               ->with('totalPasivos', $totalPasivos) 
               ->with('patrimonios', $patrimonios) 
               ->with('totalPatrimonios', $totalPatrimonios)
-              ->with('utilidad', $utilidad)
               ->with('periodo', Pcontable::find($pcontable_id));
   }
 
@@ -601,21 +616,12 @@ class HojadetrabajosController extends Controller {
   /***********************************************************************************
   * Despliega el mayor auxiliar de una determinada cuenta
   ************************************************************************************/   
-  public function verMayorAux($periodo, $cuenta, $un_id) {
+  public function verMayorAux($periodo, $cuenta) {
 
-    if ($un_id != 0) {
-      $unCodigo = Un::find($un_id)->codigo;
-      $datos= Ctmayore::where('pcontable_id', $periodo)
-                     ->where('cuenta', $cuenta)
-                     ->where('un_id', $un_id)
-                     ->get();
-
-    } else {
-      $unCodigo = '';
-      $datos = Ctmayore::where('pcontable_id', $periodo)
+    $datos = Ctmayore::where('pcontable_id', $periodo)
                      ->where('cuenta', $cuenta)
                      ->get();
-    }
+
     //dd($datos->toArray());      
 
     $data=array();    
@@ -676,7 +682,6 @@ class HojadetrabajosController extends Controller {
     $cuenta= Catalogo::find($cuenta);
     return view('contabilidad.hojadetrabajos.verMayorAux')
             ->with('datas', $datas)
-            ->with('unCodigo', $unCodigo)
             ->with('cuenta', $cuenta);
   }
 
@@ -802,7 +807,7 @@ class HojadetrabajosController extends Controller {
         $fnext= $fnext->addMonth();
        
         // almacena datos del periodo antes de cerrarlo y las almacena en la tabla Hts (hoja de trabajo historica)
-        Hojat::migraDatosHts($pcontable_id);
+        //Hojat::migraDatosHts($pcontable_id);
 
         // cierra todas la cuentas nominales o temporales por finalizacion de periodo contable
         Hojat::cierraCuentasTemp($pcontable_id, $fecha);
@@ -832,6 +837,9 @@ class HojadetrabajosController extends Controller {
         // posteriormente los borra de la tabla ctdiarios
         Hojat::migraDatosCtdiariohis($pcontable_id);
         
+        // migra los datos de ctdasms a la tabla de datos historicos ctdasmhis
+        Hojat::migraDatosCtdasmhis($pcontable_id);        
+
         // crea el nuevo periodo contable
         $newPeriodo = Npdo::periodo($fechaNuevoPeriodo);
 
@@ -899,16 +907,20 @@ class HojadetrabajosController extends Controller {
     $periodo= Pcontable::find($pcontable_id);
     
     // encuentra los datos de la hoja de trabajo para un periodo determinado
-    $data = Hojat::getDataParaHojaDeTrabajo($pcontable_id);
+    //$data = Hojat::getDataParaHojaDeTrabajo($pcontable_id);
+    //$data = Hojat::getDataParaMigrarHtHistoricos($pcontable_id);    
+    $data = Hojat::getDataParaHtProyectada($pcontable_id);  // ok   
+    //dd($data);
+    
     $datos = Collection::make($data);
     //dd($datos);
     
-    $utilidad = $datos->sum('er_credito')-$datos->sum('er_debito'); 
-    //dd($utilidad);
+    $utilidad = $datos->sum('er_credito') - $datos->sum('er_debito'); 
+    //dd($datos->sum('er_credito'), $datos->sum('er_debito'), $utilidad);
 
     $total_ba_debito = round((float)$datos->sum('saldoAjustado_debito'), 2);
     $total_ba_credito = round((float)$datos->sum('saldoAjustado_credito'), 2);
-    //dd($total_ba_debito - $total_ba_credito);
+    //dd($total_ba_debito, $total_ba_credito);
     
     // verifica si el presente periodo admite ajustes, solo se permiten
     // hacer ajustes si se cumplen las siguientes condiciones:
@@ -996,8 +1008,8 @@ class HojadetrabajosController extends Controller {
                 ->with('datos', $datos)
                 ->with('total_bp_debito', $datos->sum('saldo_debito'))                  
                 ->with('total_bp_credito', $datos->sum('saldo_credito')) 
-                ->with('total_aj_debito', $datos->sum('saldoAjuste_debito'))                  
-                ->with('total_aj_credito', $datos->sum('saldoAjuste_credito')) 
+                ->with('total_aj_debito', $datos->sum('saldoAjustado_debito'))                  
+                ->with('total_aj_credito', $datos->sum('saldoAjustado_credito')) 
                 ->with('total_ba_debito', $total_ba_debito)                  
                 ->with('total_ba_credito', $total_ba_credito) 
                 ->with('total_er_debito', $datos->sum('er_debito'))                  
@@ -1019,21 +1031,46 @@ class HojadetrabajosController extends Controller {
     // encuentra los datos de periodo
     $periodo= Pcontable::find($pcontable_id);
     
-    //encuentra los datos del periodo en la tabla de hoja de trabajo historicas
-    $datos = Ht::where('pcontable_id', $pcontable_id)->get();
-    //dd($datos->toArray());
+    // encuentra los datos de la hoja de trabajo para un periodo determinado  
+    $data = Hojat::getDataParaHtFinal($pcontable_id);  // ok   
+    //dd($data);
+    
+    // calcula la utilidad del periodo
+    $utilidad = Collection::make($data);
+    $utilidad =  $utilidad->sum('er_credito') - $utilidad->sum('er_debito'); 
+    //dd($datos->sum('er_credito'), $datos->sum('er_debito'), $utilidad)    
 
-    $utilidad = $datos->sum('er_credito') - $datos->sum('er_debito'); 
-    //dd($utilidad);
+    // ajusta la utilidad acumulada al valor real.
+    // Cuando se cierra un periodo la cuenta de Utilidad acumulada incluye la 
+    // utilidad del periodo, por esa razon hay que restarle la utilidad del periodo actual 
+    // para que refleje en la hoja de trabajo su valor real.
+    
+    $i = 0; 
+    foreach ($data as $dto) {
+      if ($dto['cuenta'] == 7) {
+        $data[$i]['saldo_credito'] = $dto['saldo_credito'] - $utilidad;
+        $data[$i]['saldoAjustado_credito'] = $dto['saldoAjustado_credito'] - $utilidad;
+        $data[$i]['bg_credito'] = $dto['bg_credito'] - $utilidad;        
+      }
+      $i++;
+    }    
 
+    // convierte el array en colleccion para facilitar el calculo de totales
+    $datos = Collection::make($data);
+    //dd($datos);    
+    
+    $total_ba_debito = round((float)$datos->sum('saldoAjustado_debito'), 2);
+    $total_ba_credito = round((float)$datos->sum('saldoAjustado_credito'), 2);
+    //dd($total_ba_debito, $total_ba_credito);
+        
     return \View::make('contabilidad.hojadetrabajos.htFinal')
                 ->with('datos', $datos)
-                ->with('total_bp_debito', $datos->sum('bp_debito'))                  
-                ->with('total_bp_credito', $datos->sum('bp_credito')) 
-                ->with('total_aj_debito', $datos->sum('aj_debito'))                  
-                ->with('total_aj_credito', $datos->sum('aj_credito')) 
-                ->with('total_ba_debito', $datos->sum('ba_debito'))                  
-                ->with('total_ba_credito', $datos->sum('ba_credito')) 
+                ->with('total_bp_debito', $datos->sum('saldo_debito'))                  
+                ->with('total_bp_credito', $datos->sum('saldo_credito')) 
+                ->with('total_aj_debito', $datos->sum('saldoAjustado_debito'))                  
+                ->with('total_aj_credito', $datos->sum('saldoAjustado_credito')) 
+                ->with('total_ba_debito', $total_ba_debito)                  
+                ->with('total_ba_credito', $total_ba_credito) 
                 ->with('total_er_debito', $datos->sum('er_debito'))                  
                 ->with('total_er_credito', $datos->sum('er_credito')) 
                 ->with('total_bg_debito', $datos->sum('bg_debito'))                  

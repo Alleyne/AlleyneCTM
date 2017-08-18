@@ -286,29 +286,11 @@
 					@endif
 				
 				@endforeach		
-				  
-			  @if ($utilidad > 0)
-				  <tr>
-				   <td col width="10px"></td>		   
-				   <td col width="210px" colspan="2" class="text-left borde">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilidad</td> 
-				   <td col width="100px" class="text-right borde">{{ number_format($utilidad, 2) }}</td> 
-				   <td col width="100px" class="text-right"></td> 		  
-				   <td col width="100px"></td> 
-				  </tr>		
-				@else
-		  		<tr>
-				   <td col width="10px"></td>		   
-				   <td col width="210px" colspan="2" class="text-left borde">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Perdida</td> 
-				   <td col width="100px" class="text-right borde">{{ number_format($utilidad, 2) }}</td> 
-				   <td col width="100px" class="text-right"></td> 		  
-				   <td col width="100px"></td> 
-				  </tr>		
-				@endif
 
 			  <tr>
 			   <td col width="10px"></td>		   
 			   <td col width="210px" colspan="4" class="text-left borde">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Total pasivo y patrimonio</strong></td> 
-			   <td col width="100px" class="text-right"><strong><p class="mix">{{ number_format($totalPasivos + $totalPatrimonios + $utilidad, 2) }}</p></strong></td> 
+			   <td col width="100px" class="text-right"><strong><p class="mix">{{ number_format($totalPasivos + $totalPatrimonios, 2) }}</p></strong></td> 
 			  </tr>
 
 		  </tbody>

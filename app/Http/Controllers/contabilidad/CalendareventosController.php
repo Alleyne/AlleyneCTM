@@ -470,7 +470,7 @@ class CalendareventosController extends Controller
     $start = $_POST['start'];
     $end = $_POST['end'];
     $allDay = $_POST['allDay'];
-    dd($id, $start, $end, $allDay);
+    //dd($id, $start, $end, $allDay);
     Log::info([$id, $start, $end, $allDay]);
     
     $evento = Calendarevento::find($id);

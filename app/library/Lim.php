@@ -14,6 +14,7 @@ class Lim {
     DB::table('dte_cajachicas')->truncate();
 
     DB::table('ctdasms')->truncate(); 
+    DB::table('ctdasmhis')->truncate(); 
     DB::table('detallepagos')->truncate();
     DB::table('pagos')->truncate();
     DB::table('detallepagofacturas')->truncate();
@@ -25,7 +26,7 @@ class Lim {
     DB::table('detallefacturas')->truncate();
     DB::table('pcontables')->truncate();
     DB::table('bitacoras')->truncate();   
-    DB::table('hts')->truncate();   
+
     DB::table('detalledescuentos')->truncate();  
     DB::table('diariocajas')->truncate();  
     

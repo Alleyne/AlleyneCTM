@@ -7,6 +7,7 @@
 		html { margin: 0px}
 		
 		body {
+			/*background-image: url("proyectado.png");*/
 			margin: 0px;
 			font-family: Arial, Helvetica, sans-serif;
 		}
@@ -57,7 +58,7 @@
 					<td width="66%">
 						<div class="encabezado-principal">
 							<label>MONAGRE CORP. S.A.</label><br>
-							<label>ESTADO DE RESULTADO</label><br>
+							<label>ESTADO DE RESULTADO FINAL</label><br>
 							<label>Periodo contable de {{ $periodo }}</label>
 						</div>					</td>
 					<td width="20%"><div align="center" class="Estilo1 Estilo2"></div></td>
@@ -73,43 +74,41 @@
 						<td width="13%" align="left">&nbsp;</td>
 						<td width="13%">&nbsp;</td>
 					</tr>
-
 					@foreach ($ingresos as $ingreso)
 				  		<tr align="right">
 							<td width="3%" align="left">&nbsp;</td>
-							<td width="57%" align="left">{{ $ingreso->nombre }}</td>
+							<td width="57%" align="left">{{ $ingreso['cta_nombre'] }}</td>
 							<td width="7%" align="left">&nbsp;</td>
-							<td width="13%" align="left"><div align="right">{{ number_format(floatval($ingreso->ba_credito),2) }}</div></td>
+							<td width="13%" align="left"><div align="right">{{ number_format(floatval($ingreso['saldo_credito']),2) }}</div></td>
 							<td width="13%">&nbsp;</td>
 						</tr>				
 					@endforeach
-					
-					<tr align="right">
-						<td width="3%" align="left">&nbsp;</td>
-						<td width="57%" align="left"><strong><em>Total de Ingresos</em></strong></td>
-						<td width="7%" align="left">&nbsp;</td>
-						<td width="13%" align="left">&nbsp;</td>
-						<td width="13%"><p class="mix"><strong>{{ number_format($total_ingresos,2) }}</strong></p></td>
-					</tr>
 					
 					<tr>&nbsp;</tr>					
 					<tr>&nbsp;</tr>
 					<tr>&nbsp;</tr>
 					<tr>&nbsp;</tr>
-
+					
 					<tr align="right">
-						<td colspan="2" align="left"><strong>Menos Gastos</strong></td>
+						<td width="3%" align="left">&nbsp;</td>
+						<td width="57%" align="left"><em><strong>Total de Ingresos</em></strong></td>
+						<td width="7%" align="left">&nbsp;</td>
+						<td width="13%" align="left">&nbsp;</td>
+						<td width="13%"><p class="mix" ><strong>{{ number_format($totalIngresos,2) }}</strong></p></td>
+					</tr>
+					<tr align="right">
+						<td colspan="2" align="left"><strong>Menos Gastos </strong></td>
 						<td width="7%" align="left">&nbsp;</td>
 						<td width="13%" align="left">&nbsp;</td>
 						<td width="13%">&nbsp;</td>
 					</tr>
-
+					
 					@foreach ($gastos as $gasto)
 						<tr align="right">
 							<td width="3%" align="left">&nbsp;</td>
-							<td width="57%" align="left">{{ $gasto->nombre }}</td>
+							<td width="57%" align="left">{{ $gasto['cta_nombre'] }}</td>
 							<td width="7%" align="left">&nbsp;</td>
-							<td width="13%" align="right">{{ number_format(floatval($gasto->ba_debito),2) }}</td>
+							<td width="13%" align="right">{{ number_format(floatval($gasto['saldo_debito']),2) }}</td>
 							<td width="13%">&nbsp;</td>
 						</tr>				
 					@endforeach
@@ -117,14 +116,14 @@
 					<tr>&nbsp;</tr>					
 					<tr>&nbsp;</tr>
 					<tr>&nbsp;</tr>
-					<tr>&nbsp;</tr>
+					<tr>&nbsp;</tr>					
 
 					<tr align="right">
 						<td width="3%" align="left">&nbsp;</td>
-						<td width="57%" align="left"><strong><em>Total de Gastos</em></strong></td>
+						<td width="57%" align="left"><em><strong>Total de Gastos</em></strong></td>
 						<td width="7%" align="left">&nbsp;</td>
 						<td width="13%" align="left">&nbsp;</td>
-						<td width="13%"><p class="mix" ><strong>{{ number_format($total_gastos,2) }}</strong></p></td>
+						<td width="13%"><p class="mix" ><strong>{{ number_format($totalGastos,2) }}</strong></p></td>
 					</tr>
 
 					<tr align="right">
