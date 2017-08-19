@@ -1,7 +1,13 @@
 <?php namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\library\Graph;
+use Cache, DB;
+
 use App\Post;
+use App\Role;
+use App\Un;
+use App\Jd;
+
 
 class WelcomeController extends Controller {
 
@@ -33,6 +39,33 @@ class WelcomeController extends Controller {
 	 */
 	public function index() {
 		
+    Cache::flush();
+
+    if (Auth::check()) {
+    // The user is logged in...
+	    // encuentra todos los roles registrados 
+	    $allRoles = Role::all();
+	    //dd($allRoles, $user);
+	    
+	    // encuentra el o los roles que tiene el usuario autenticado
+	    //dd(Auth::user()->roles);
+	    $userRoles = Auth::user()->roles;
+	    //dd($userRoles);
+
+	    foreach ($allRoles as $allRole) {
+	      $key = 'es'.$allRole->name.'key';
+	    
+	      if ($userRoles->contains('name', $allRole->name)) {
+	          Cache::forever($key, true);
+	      }
+	    }  		
+		}
+
+    Cache::forever('unsAllkey', Un::all());
+    //Cache::forever('recentPostkey', Post::orderBy('created_at', 'desc')->limit(3)->get());
+    Cache::forever('jdkey', Jd::first());		
+
+
 		// encuentra la data para la grafica de propietarios morosos a la fecha
 		$data= Graph::getDataGraphMorosos();
 		
