@@ -247,8 +247,8 @@
           
           "paginate": {
             "first":      "Primer",
-            "last":       "Ultimo",
-            "next":       "Proximo",
+            "last":       "Último",
+            "next":       "Próximo",
             "previous":   "Anterior"
           },
 

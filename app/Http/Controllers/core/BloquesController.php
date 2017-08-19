@@ -103,7 +103,7 @@ class BloquesController extends Controller {
 			$rules = array(
 				'nombre'    	=> 'required',
 				'codigo'    	=> 'Required|Min:4|Max:4|Alpha_num',
-				'descripcion' => 'required'
+				'descripcion'   => 'required'
 			);
 
 			$messages = [
@@ -116,9 +116,9 @@ class BloquesController extends Controller {
 			if ($validation->passes())
 			{
 				$dato = new Bloque;
-				$dato->nombre      = Input::get('nombre');
-				$dato->codigo      = strtoupper(Input::get('codigo'));
-				$dato->descripcion = Input::get('descripcion');
+				$dato->nombre        = Input::get('nombre');
+				$dato->codigo        = strtoupper(Input::get('codigo'));
+				$dato->descripcion   = Input::get('descripcion');
 				$dato->jd_id 	  	 = Input::get('jd_id'); 
 				$dato->save(); 
 				

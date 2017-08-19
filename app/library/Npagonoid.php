@@ -1272,7 +1272,7 @@ class Npagonoid {
 
   /** 
   *=============================================================================================
-  * Encuentra el ultimo renglon de un determinado pago
+  * Encuentra el Último renglon de un determinado pago
   * @param  integer $pago_id 7       
   * @return void
   *===========================================================================================*/
@@ -1469,7 +1469,7 @@ class Npagonoid {
     // determina el codigo de la unidad
     $unCodigo = Un::find($evento->un_id)->codigo;
     
-    if ($evento->res_tipopago == '4' ) {    // sea banca en linea
+    if ($evento->res_tipopago == '4' ) {    // sea Banca en línea
       // registra en ctmayores un aumento en banco
       Sity::registraEnCuentas(
         $periodo,
@@ -1576,7 +1576,7 @@ class Npagonoid {
     // determina el codigo de la unidad
     $unCodigo = Un::find($evento->un_id)->codigo;
     
-    if ($evento->pc_tipopago == '4' ) {   // sea banca en linea
+    if ($evento->pc_tipopago == '4' ) {   // sea Banca en línea
       // registra en ctmayores un aumento en banco
       Sity::registraEnCuentas(
         $periodo,
@@ -1712,7 +1712,7 @@ class Npagonoid {
     $diario->debito = $evento->res_monto;
     $diario->save();  
 
-    if ($devolucion->trantipo_id == '4' ) {  // si es banca en linea
+    if ($devolucion->trantipo_id == '4' ) {  // si es Banca en línea
       // registra en ctmayores un aumento en banco
       Sity::registraEnCuentas(
         $periodo,
@@ -1766,7 +1766,7 @@ class Npagonoid {
 
   /** 
   *=============================================================================================
-  *  Esta function registra devolucion en el pago de alquiler de Area social & BB
+  *  Esta function registra devolución en el pago de alquiler de Area social & BB
   * @param  collection devolucion       
   * @return periodo
   * @return void
@@ -1815,7 +1815,7 @@ class Npagonoid {
     $diario->debito = $evento->pc_monto;
     $diario->save();  
 
-    if ($devolucion->tipopago == '4' ) {  // sea banca en linea
+    if ($devolucion->tipopago == '4' ) {  // sea Banca en línea
       // registra en ctmayores un aumento en banco
       Sity::registraEnCuentas(
         $periodo,
@@ -1860,7 +1860,7 @@ class Npagonoid {
     // registra en Ctdiario principal
     $diario = new Ctdiario;
     $diario->pcontable_id = $periodo;
-    $diario->detalle = 'Para registra devolucion por alquiler de '.$evento->title.', '.$devolucion->trantipo->siglas.', doc #'.$devolucion->docno;
+    $diario->detalle = 'Para registrar devolución por alquiler de '.$evento->title.', '.$devolucion->trantipo->siglas.', doc #'.$devolucion->docno;
     $diario->save(); 
     
     // Registra en Detallepago para generar un renglon en el recibo

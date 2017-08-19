@@ -1383,7 +1383,7 @@ Work::with(
     <?=$data['total_bids']?> 
 
     /****************************************************************************************
-     * Esta function encuentra el ultimo id de la tabla dasm para usarlo como
+     * Esta function encuentra el Último id de la tabla dasm para usarlo como
      * referencia en asientos de otras cuentas.
      *****************************************************************************************/
     public static function findUltimoid()
@@ -1398,7 +1398,7 @@ Work::with(
         return $ultimoid;
     }
 
-    //encuentra el ultimo id de la tabla Dasm para usarlo para referencia
+    //encuentra el Último id de la tabla Dasm para usarlo para referencia
     $ultimoid = Sity::findUltimoid();
 
     To get last record details
@@ -2486,7 +2486,7 @@ Work::with(
    Se formatea a dolares para mostrar al usuario
    $dollars = number_format(($cents / 100), 2);
 
-   Por ultimo se transforma a dolares para almacenar en la base de datos
+   Por Último se transforma a dolares para almacenar en la base de datos
    $dollars = $cents / 100;
 
    More details
@@ -3017,7 +3017,7 @@ Work::with(
 
 
   /*************************************************************************************
-   * determinar el ultimo elemento de una collection / get the last item of a collection, method last()
+   * determinar el Último elemento de una collection / get the last item of a collection, method last()
    ************************************************************************************/
         @foreach ($pasivos as $pasivo)
     

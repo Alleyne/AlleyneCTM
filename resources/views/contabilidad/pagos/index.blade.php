@@ -43,13 +43,13 @@
                             <a class="btn btn-primary btn-xs" href="javascript:void(0);"><i class="fa fa-plus"></i> Registrar cobro de cuotas y recargos</a>
                             <a class="btn btn-primary dropdown-toggle btn-xs" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Banca en linea</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 4)) }}">Banca en línea</a></li>
                                
                                 <li class="divider"></li>                                
                                 <li><a href="{{ URL::route('createPago', array($un_id, 5)) }}">Efectivo</a></li>
                                 <li><a href="{{ URL::route('createPago', array($un_id, 1)) }}">Cheque</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 6)) }}">Tarjeta de debito</a></li>
-                                <li><a href="{{ URL::route('createPago', array($un_id, 7)) }}">Tarjeta de credito</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 6)) }}">Tarjeta de Débito</a></li>
+                                <li><a href="{{ URL::route('createPago', array($un_id, 7)) }}">Tarjeta de Crédito</a></li>
                                 <li><!-- <a href="#">Separated link</a> --></li>
                             </ul>
                         </div><!-- /btn-group -->       
@@ -112,7 +112,7 @@
                                                           'data-toggle' => 'modal',
                                                           'data-target' => '#confirmAction',
                                                           'data-title' => 'Anular pago de propietario',
-                                                          'data-message' => 'Esta seguro(a) que desea anular el presente pago?',
+                                                          'data-message' => 'Estaá seguro(a) que desea anular este pago?',
                                                           'data-btntxt' => 'SI, anular',
                                                           'data-btncolor' => 'btn-warning'
                                                         ))}}
@@ -136,7 +136,7 @@
                                                       'data-toggle' => 'modal',
                                                       'data-target' => '#confirmAction',
                                                       'data-title' => 'Contabiliza cheque',
-                                                      'data-message' => 'Esta seguro(a) que desea contabilizar el presente cheque?',
+                                                      'data-message' => 'Esta seguro(a) que desea contabilizar este cheque?',
                                                       'data-btntxt' => 'SI, contabilizar',
                                                       'data-btncolor' => 'btn-primary'
                                                     ))}}
@@ -188,11 +188,11 @@
             "loadingRecords": "Cargando...",
             "processing":     "Procesando...",
             "search":         "Buscar:",
-            "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+            "zeroRecords":    "No se encontró ninguna unidad con ese filtro",
             "paginate": {
               "first":      "Primer",
-              "last":       "Ultimo",
-              "next":       "Proximo",
+              "last":       "Último",
+              "next":       "Próximo",
               "previous":   "Anterior"
             },
             "aria": {

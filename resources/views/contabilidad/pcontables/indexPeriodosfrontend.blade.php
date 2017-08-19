@@ -5,7 +5,7 @@
 @section('content')
 <!--Hover Rows-->
 <div class="alert alert-success" role="alert">
-    <strong>Estimado Propietario</strong>, acontinuacion se muestran todos los Periodos contables a la fecha.
+    <strong>Estimado Propietario</strong>, A continuación se muestran todos los Períodos contables a la fecha.
 </div>
     <table id="dt_basic" class="table table-hover">
         <thead>
@@ -31,7 +31,7 @@
                             <a href="{{ URL::route('estadoderesultado', $dato->id) }}" class="btn btn-info btn-xs"><i class="fa fa-search"></i> Estado Resultado Proyectado</a>
                             <a href="{{ URL::route('balancegeneral', array($dato->id, $dato->periodo)) }}" class="btn btn-warning btn-xs"><i class="fa fa-search"></i> Balance General Proyectado</a>
                         @else
-                            <a href="{{ URL::route('htFinal', $dato->id) }}" class="btn btn-default txt-color-purple btn-xs"><i class="glyphicon glyphicon-lock"></i> Hoja de trabajo</a>
+                            <a href="{{ URL::route('htFinal', $dato->id) }}" class="btn btn-default txt-color-purple btn-xs"><i class="glyphicon glyphicon-lock"></i> Hoja de Trabajo</a>
                             <a href="{{ URL::route('diarioFinal', $dato->id) }}" class="btn btn-default txt-color-green btn-xs"><i class="glyphicon glyphicon-lock"></i> Diario</a>
                             <a href="{{ URL::route('er', $dato->id) }}" class="btn btn-default txt-color-blue btn-xs"><i class="glyphicon glyphicon-lock"></i> Estado Resultado Final</a>
                             <a href="{{ URL::route('bg', $dato->id) }}" class="btn btn-default txt-color-yellow btn-xs"><i class="glyphicon glyphicon-lock"></i> Balance General Final</a>
@@ -80,11 +80,11 @@
                     "loadingRecords": "Cargando...",
                     "processing":     "Procesando...",
                     "search":         "Buscar:",
-                    "zeroRecords":    "No se encontro ningun pago con ese filtro",
+                    "zeroRecords":    "No se encontró ningun pago con ese filtro",
                     "paginate": {
                         "first":      "Primer",
-                        "last":       "Ultimo",
-                        "next":       "Proximo",
+                        "last":       "Último",
+                        "next":       "Próximo",
                         "previous":   "Anterior"
                     },
                     "aria": {

@@ -30,7 +30,7 @@
 			<thead>
 				<tr>
 					<th>FECHA</th>
-					<th>DESCRIPCION</th>
+					<th>DESCRIPCIÓN</th>
 					<th>DOC_NO</th>
 					<th>AUME</th>
 					<th>DISM</th>

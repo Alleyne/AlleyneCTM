@@ -50,13 +50,13 @@
                                     </div>
         
                                     <div class="form-group">
-                                        <label>Titulo del evento</label>
+                                        <label>Título del evento</label>
                                         <input class="form-control"  id="title" name="title" maxlength="40" type="text" placeholder="Event Title">
                                     </div>
                                     <div class="form-group">
-                                        <label>Descripcion</label>
-                                        <textarea class="form-control" placeholder="Una breve descripcion" rows="3" maxlength="40" id="description"></textarea>
-                                        <p class="note">Maximo 40 characteres</p>
+                                        <label>descripción</label>
+                                        <textarea class="form-control" placeholder="Una breve descripción" rows="3" maxlength="40" id="description"></textarea>
+                                        <p class="note">Máximo 40 carácteres</p>
                                     </div>
         
                                     <div class="form-group">

@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Crear pago')
+@section('title', '| Crear Pago')
 
 @section('stylesheets')
 	{!! Html::style('css/parsley.css') !!}
@@ -33,7 +33,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Registrar pagos tipo cheque</h2>
+						<h2>Registrar Pagos Tipo Cheque</h2>
 					</header>
 	
 					<!-- widget div-->
@@ -53,7 +53,7 @@
 
 	 									{{ Form::hidden('un_id', $un_id) }}
 	 									{{ Form::hidden('key', $key) }}
-										<h2>Registra pago con cheques</h2>
+										<h2>Registra pago con cheque</h2>
                     <div class="form-group">
                         <label class="col-md-3 control-label">Fecha de pago</label>
                         <div class="col-md-9">
@@ -67,7 +67,7 @@
 										<div class="form-group">
 											<label class="col-md-3 control-label">Banco</label>
 											<div class="col-md-9">
-												{{ Form::select('banco_id', ['' => 'Selecione una Institucion Bancaria ...'] + $bancos, 0, ['class' => 'form-control', 'required' => '']) }}
+												{{ Form::select('banco_id', ['' => 'Selecione una Institución Bancaria ...'] + $bancos, 0, ['class' => 'form-control', 'required' => '']) }}
 											</div>
 										</div>	
 
@@ -78,7 +78,7 @@
 													array(
 													    'class' => 'form-control',
 													    'id' => 'transno',
-													    'placeholder' => 'Escriba el numero de la transaccion...',
+													    'placeholder' => 'Escriba el número de la transacción...',
 															'autocomplete' => 'off',
 															'required' => '',
 															'data-parsley-type'=>'digits',
@@ -112,7 +112,7 @@
 								        {{ Form::textarea('descripcion', old('descripcion'),
 								        	array(
 								        		'class' => 'form-control',
-								        		'title' => 'Escriba la descripcion',
+								        		'title' => 'Escriba la descripción',
 								        		'rows' => '3',
 								        		'required' => ''
 								        	))
@@ -151,7 +151,7 @@
 		$(document).ready(function(){
 		    $("input[type='submit']").attr("disabled", false);
 		    $("form").submit(function(){
-		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envía la información . . .");
 		      return true;
 		    })
 		})

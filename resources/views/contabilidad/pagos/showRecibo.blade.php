@@ -105,7 +105,7 @@
       @if ($total > 0)       
         <div class="row">
           <div class="col-md-12">
-            <p>Acontinuacion se deglosa la forma en que se contabilizo su pago:</p>
+            <p>A continuación se deglosa la forma en que se contabilizó su pago:</p>
           </div>
         </div>
 

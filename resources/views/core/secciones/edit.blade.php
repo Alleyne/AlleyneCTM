@@ -128,8 +128,6 @@
                                   
                                   <div class="form-group">
 
-                                      <label class="col-md-4 control-label">Cuota manten. (B/.)</label>
-
                                       <label class="col-md-4 control-label">Cuota Manten. (B/.)</label>
 
                                       <div class="col-md-8">

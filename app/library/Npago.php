@@ -204,9 +204,9 @@ class Npago {
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 4= Banca en linea
+            // 4= Banca en línea
             
-            if ($tipoPago == 4) { // si es Banca en linea se registra un aumento en la cta banco
+            if ($tipoPago == 4) { // si es Banca en línea se registra un aumento en la cta banco
               // registra en el diario
               // registra un aumento en la cuenta Banco  
               $diario = new Ctdiario;
@@ -326,9 +326,9 @@ class Npago {
             $saldocpa = round(($saldocpa - ($importe - $montoRecibido)), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 4= Banca en linea
+            // 4= Banca en línea
             // se afecta derectamente a la cuenta de banco
-            if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
+            if ($tipoPago == 4) {  // si es Banca en línea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -526,9 +526,9 @@ class Npago {
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 4= Banca en linea
+            // 4= Banca en línea
             // se afecta derectamente a la cuenta de banco o caja general
-            if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
+            if ($tipoPago == 4) {  // si es Banca en línea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -646,9 +646,9 @@ class Npago {
             $saldocpa = round(($saldocpa - ($recargo - $montoRecibido)), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 4= Banca en linea
+            // 4= Banca en línea
             // se afecta derectamente a la cuenta de banco
-            if ($tipoPago == 4) { // si es Banca en linea se registra un aumento en la cta banco
+            if ($tipoPago == 4) { // si es Banca en línea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -845,9 +845,9 @@ class Npago {
             // no hay necesidad de utilizar la cuenta de Pagos anticipados
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 4= Banca en linea
+            // 4= Banca en línea
             // se afecta derectamente a la cuenta de banco o caja general
-            if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
+            if ($tipoPago == 4) {  // si es Banca en línea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -964,9 +964,9 @@ class Npago {
             $saldocpa = round(($saldocpa - ($extra - $montoRecibido)), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 4= Banca en linea
+            // 4= Banca en línea
             // se afecta derectamente a la cuenta de banco
-            if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
+            if ($tipoPago == 4) {  // si es Banca en línea se registra un aumento en la cta banco
 
               // registra en el diario
               // registra un aumento en la cuenta Banco  
@@ -1114,9 +1114,9 @@ class Npago {
     //dd($saldocpa);
 
     // hace los asientos contables dependiendo del tipo de pago
-    // 4= Banca en linea
+    // 4= Banca en línea
     // se afecta derectamente a la cuenta de banco o caja general
-    if ($tipoPago == 4) {  // si es Banca en linea se registra un aumento en la cta banco
+    if ($tipoPago == 4) {  // si es Banca en línea se registra un aumento en la cta banco
 
       // registra en el diario
       // registra un aumento en la cuenta Banco por "Anticipos recibidos de propietarios"
@@ -1481,7 +1481,7 @@ class Npago {
 
   /** 
   *=============================================================================================
-  * Encuentra el ultimo renglon de un determinado pago
+  * Encuentra el Último renglon de un determinado pago
   * @param  integer $pago_id 7       
   * @return void
   *===========================================================================================*/
@@ -1678,7 +1678,7 @@ class Npago {
     // determina el codigo de la unidad
     $unCodigo = Un::find($evento->un_id)->codigo;
     
-    if ($evento->res_tipopago == '4' ) {    // sea banca en linea
+    if ($evento->res_tipopago == '4' ) {    // sea Banca en línea
       // registra en ctmayores un aumento en banco
       Sity::registraEnCuentas(
         $periodo,
@@ -1785,7 +1785,7 @@ class Npago {
     // determina el codigo de la unidad
     $unCodigo = Un::find($evento->un_id)->codigo;
     
-    if ($evento->pc_tipopago == '4' ) {   // sea banca en linea
+    if ($evento->pc_tipopago == '4' ) {   // sea Banca en línea
       // registra en ctmayores un aumento en banco
       Sity::registraEnCuentas(
         $periodo,
@@ -1921,7 +1921,7 @@ class Npago {
     $diario->debito = $evento->res_monto;
     $diario->save();  
 
-    if ($devolucion->trantipo_id == '4' ) {  // si es banca en linea
+    if ($devolucion->trantipo_id == '4' ) {  // si es Banca en línea
       // registra en ctmayores un aumento en banco
       Sity::registraEnCuentas(
         $periodo,
@@ -1975,7 +1975,7 @@ class Npago {
 
   /** 
   *=============================================================================================
-  *  Esta function registra devolucion en el pago de alquiler de Area social & BB
+  *  Esta function registra devolución en el pago de alquiler de Area social & BB
   * @param  collection devolucion       
   * @return periodo
   * @return void
@@ -2024,7 +2024,7 @@ class Npago {
     $diario->debito = $evento->pc_monto;
     $diario->save();  
 
-    if ($devolucion->tipopago == '4' ) {  // sea banca en linea
+    if ($devolucion->tipopago == '4' ) {  // sea Banca en línea
       // registra en ctmayores un aumento en banco
       Sity::registraEnCuentas(
         $periodo,
@@ -2069,7 +2069,7 @@ class Npago {
     // registra en Ctdiario principal
     $diario = new Ctdiario;
     $diario->pcontable_id = $periodo;
-    $diario->detalle = 'Para registra devolucion por alquiler de '.$evento->title.', '.$devolucion->trantipo->siglas.', doc #'.$devolucion->docno;
+    $diario->detalle = 'Para registrar devolución por alquiler de '.$evento->title.', '.$devolucion->trantipo->siglas.', doc #'.$devolucion->docno;
     $diario->save(); 
     
     // Registra en Detallepago para generar un renglon en el recibo

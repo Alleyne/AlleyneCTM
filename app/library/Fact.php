@@ -39,7 +39,7 @@ class Fact {
       $day='01';
     }
       
-    // encuentra el ultimo periodo contable registrado
+    // encuentra el Último periodo contable registrado
     $periodo= Pcontable::all()->last(); 
     //dd($periodo);
 

@@ -308,9 +308,9 @@
 	      <div class="panel-body">
 					<div class="row" style="background-color:rgb(200,200,200);">
 					  <div class="col-xs-2"><strong>Fecha</strong></div>
-					  <div class="col-xs-6"><strong>Descripcion</strong></div>	
-					  <div class="col-xs-2 text-right"><strong>Debito</strong></div>	
-					  <div class="col-xs-2 text-right"><strong>Credito</strong></div>	
+					  <div class="col-xs-6"><strong>Descripción</strong></div>	
+					  <div class="col-xs-2 text-right"><strong>Débito</strong></div>	
+					  <div class="col-xs-2 text-right"><strong>Crédito</strong></div>	
 					</div>
 
 					@if (!$ncs->isEmpty())
@@ -332,7 +332,7 @@
 						
 						<div class="row">	
 						  <div class="col-xs-2"></div>
-						  <div class="col-xs-6"><em><strong>Para registrar Notas de credito del mes</strong></em></div>	
+						  <div class="col-xs-6"><em><strong>Para registrar Notas de Crédito del mes</strong></em></div>	
 						  <div class="col-xs-2"></div>	
 						  <div class="col-xs-2"></div>
 						</div>
@@ -368,7 +368,7 @@
 						
 						<div class="row">	
 						  <div class="col-xs-2"></div>
-						  <div class="col-xs-6"><em><strong>Para registrar Nota de debito</strong></em></div>
+						  <div class="col-xs-6"><em><strong>Para registrar Nota de Débito</strong></em></div>
 						  <div class="col-xs-2"></div>	
 						  <div class="col-xs-2"></div>
 						</div>	
@@ -395,18 +395,18 @@
 	    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 	      <div class="panel-body">
 			  	<dl>
-		  			<dt style="margin-top:9px;">Depositos del mes</dt>
-		  			<dd>Los conforman el efectivo que recibe la organizacion diariamente por concepto de cobro por servicio de mantenimiento, recargos, etc, menos aquellos gastos o pagos que no fueron girados en cheques.</dd>
-		  			<dt style="margin-top:9px;">Cheques girados en el mes</dt>
-		  			<dd>Se consideran los cheques emitidos por la organizacion en concepto de compras al contado, pagos a terceros o abonos.</dd>
-		  			<dt style="margin-top:9px;">Nota de crédito</dt>
-		  			<dd>Se llama así al documento que envía el banco a la organización para aumentar el efectivo bajo su custodia, por transacciones como: intereses ganados, documentos por cobrar, cuentas por cobrar, cobro de facturas, remesas de tarjetas debito/credito, diferencias en depósitos, préstamos solicitados, etc.</dd>
-		  			<dt style="margin-top:9px;">Nota de debito</dt>
-		  			<dd>Documento que envía el banco a la organización en concepto de disminución del efectivo bajo su custodia, por operaciones tales como: intereses pagoas, pago de documentos, cheques devueltos, cargos bancarios, diferencia en depósitos, cargos por tarjeta debito/credito, documentos por pagar, pago de obligaciones, etc.</dd>
-		  			<dt style="margin-top:9px;">Depósitos en tránsito</dt>
-		  			<dd>Son las cantidades que ya han sido registradas en los libros de la organizacion, pero aún no están incluidos en el estado de cuentas del banco. Por lo tanto, es necesario incluirlos en la conciliación bancaria como un incremento al saldo del banco, de tal forma que se reporte la cantidad correcta de efectivo.</dd>
-		  			<dt style="margin-top:9px;">Cheques en tránsito</dt>
-		  			<dd>Un cheque en tránsito está en los registros de la organizacion, pero no en el estado de cuenta bancario. Por lo tanto, es necesario incluirlos en la conciliación bancaria como una disminucion al saldo del bancos, pues una vez girados y entregados a sus beneficiarios, la organizacion ya no contará con ese dinero.</dd>
+		  			<dt style="margin-top:9px;">Depósitos del mes</dt>
+		  			<dd>Los conforman el efectivo que recibe la Organización diariamente en concepto de cobro por servicio de mantenimiento, recargos, etc.; no se incluyen aquellos gastos o pagos que no fueron girados en cheques.</dd>
+		  			<dt style="margin-top:9px;">Cheques Girados en el mes</dt>
+		  			<dd>Son los cheques emitidos por la Organización en concepto de compras al contado, pagos a terceros o abonos.</dd>
+		  			<dt style="margin-top:9px;">Nota de Crédito</dt>
+		  			<dd>Se llama así al documento que envía el Banco a la Organización para aumentar el efectivo bajo su custodia por transacciones como: intereses ganados, documentos por cobrar, cuentas por cobrar, cobro de facturas, remesas de tarjetas débito/crédito, diferencias en depósitos, préstamos solicitados, etc.</dd>
+		  			<dt style="margin-top:9px;">Nota de Débito</dt>
+		  			<dd>Documento que envía el Banco a la Organización en concepto de disminución del efectivo bajo su custodia por operaciones tales como: intereses pagados, pago de documentos, cheques devueltos, cargos bancarios, diferencia en depósitos, cargos por tarjeta débito/crédito, documentos por pagar, pago de obligaciones, etc.</dd>
+		  			<dt style="margin-top:9px;">Depósitos en Tránsito</dt>
+		  			<dd>Son las cantidades que ya han sido registradas en los libros de la Organización, pero aún no están incluidos en el Estado de Cuentas del Banco. Por lo tanto, es necesario incluirlos en la Conciliación Bancaria como un incremento al saldo del banco, de tal forma que se reporte la cantidad correcta de efectivo.</dd>
+		  			<dt style="margin-top:9px;">Cheques en Tránsito</dt>
+		  			<dd>Un cheque en tránsito está en los registros de la Organización, pero no en el estado de Cuenta Bancaria. Por lo tanto, es necesario incluirlos en la Conciliación Bancaria como una disminución al saldo del Banco, pues una vez estos son girados y entregados a sus beneficiarios la Organización ya no contará con ese dinero.</dd>
 		  			<dt style="margin-top:9px;">Ajustes</dt>
 		  			<dd>Registros para corregir errores u omisiones de los tenedores de libros, que pueden provocar una diferencia en los saldos de las cuentas.</dd>
 					</dl>

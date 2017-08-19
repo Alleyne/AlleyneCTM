@@ -108,7 +108,7 @@
 							<div class="form-group">
 								<label class="col-md-3 control-label">Aplica recargo</label>
 								<div class="col-md-9">
-									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->m_vence == 0 ? 'Mes corriente' : 'Proximo mes' }}">
+									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->m_vence == 0 ? 'Mes corriente' : 'Próximo mes' }}">
 								</div>
 							</div>
 							

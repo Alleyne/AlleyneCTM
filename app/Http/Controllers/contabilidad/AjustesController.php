@@ -85,7 +85,7 @@ class AjustesController extends Controller {
 				);
 		
 				$messages = [
-					'required' => 'Informacion requerida!'
+					'required' => 'Información requerida!'
 				];         
 				//dd($rules, $messages);
 				

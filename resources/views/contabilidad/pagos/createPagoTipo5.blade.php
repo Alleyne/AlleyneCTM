@@ -1,6 +1,6 @@
 @extends('templates.backend._layouts.smartAdmin')
 
-@section('title', '| Crear pago')
+@section('title', '| Crear Pago')
 
 @section('stylesheets')
 	{!! Html::style('css/parsley.css') !!}
@@ -33,7 +33,7 @@
 	
 					<header>
 						<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-						<h2>Registrar pagos en efectivo tipo efectivo</h2>
+						<h2>Registrar pagos en Efectivo </h2>
 					</header>
 	
 					<!-- widget div-->
@@ -86,7 +86,7 @@
 								        {{ Form::textarea('descripcion', old('descripcion'),
 								        	array(
 								        		'class' => 'form-control',
-								        		'title' => 'Escriba la descripcion',
+								        		'title' => 'Escriba la descripción',
 								        		'rows' => '3',
 								        		'required' => ''
 								        	))
@@ -125,7 +125,7 @@
 		$(document).ready(function(){
 		    $("input[type='submit']").attr("disabled", false);
 		    $("form").submit(function(){
-		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envia la informacion . . .");
+		      $("input[type='submit']").attr("disabled", true).val("Por favor espere mientras se envía la información . . .");
 		      return true;
 		    })
 		})

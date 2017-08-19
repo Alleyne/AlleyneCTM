@@ -46,7 +46,7 @@ class Bloque extends Model
           "jd_id" => 1
           "jd" => array:3 [▼
             "nombre" => "Junta Directiva Ph El Marquez"
-            "descripcion" => "Descripcion de la Junta Directiva Ph El Marquezz"
+            "descripcion" => "Descripción de la Junta Directiva Ph El Marquezz"
             "imagen_L" => "assets/img/jds/jd_1.jpg"
           ]
         ]
@@ -60,7 +60,7 @@ class Bloque extends Model
           "jd_id" => 1
           "jd" => array:3 [▼
             "nombre" => "Junta Directiva Ph El Marquez"
-            "descripcion" => "Descripcion de la Junta Directiva Ph El Marquezz"
+            "descripcion" => "Descripción de la Junta Directiva Ph El Marquezz"
             "imagen_L" => "assets/img/jds/jd_1.jpg"
           ]
         ]

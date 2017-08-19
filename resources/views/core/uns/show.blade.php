@@ -120,8 +120,6 @@
 							
 							<div class="form-group">
 
-								<label class="col-md-4 control-label">Despueés del día</label>
-
 								<label class="col-md-4 control-label">Después del día</label>
 
 								<div class="col-md-8">

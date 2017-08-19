@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Conciliacion bancaria</title>
+  <title>Conciliación Bancaria</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -12,7 +12,7 @@
 
 <div class="container" style="width:8.5in; background-color:white";>
   <h4 class="text-center">PH El Marquez</h4>
-  <p class="text-center" style="margin:0px">Conciliacion Bancaria- Banco Nacional</p>
+  <p class="text-center" style="margin:0px">Conciliación Bancaria- Banco Nacional</p>
   <p class="text-center" style="margin:0px">31 de Agosto de 2017</p>
   <p class="text-center" style="margin:0px">(en balboas)</p>
 
@@ -22,7 +22,7 @@
 	</div>	
 
 	<!-- Seccion del libro de Banco -->
-	<h4><b><i>Informacion en libro</i></b></h4>
+	<h4><b><i>Información en Libro</i></b></h4>
 	
 	<div style="background-color:white";>
 		<div class="row" style="margin-top:0px; background-color:rgb(200,200,200);">
@@ -36,7 +36,7 @@
 		
 		<div style="background-color:lavender;">
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;<strong>Depositos del mes</strong></div>
+			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;<strong>Depósitos del mes</strong></div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2 text-right">{{ number_format(floatval($t_depositado),2) }}</div>	
 			  <div class="col-xs-2"></div>	
@@ -44,7 +44,7 @@
 
 			<div class="row">	
 			  <!-- <div class="col-xs-6">&nbsp;&nbsp;<a href="#" class="hidden-print"><span class="glyphicon glyphicon-plus text-success" aria-hidden="true"></span></a> Cheques en circulacion</div> -->
-			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Notas de credito</strong></div>
+			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Notas de Crédito</strong></div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
@@ -64,7 +64,7 @@
 		          'data-toggle' => 'modal',
 		          'data-target' => '#confirmAction',
 		          'data-title' => 'Eliminar Nota de credito',
-		          'data-message' => 'Esta seguro(a) que desea eliminar la presente Nota de credito?',
+		          'data-message' => 'Esta seguro(a) que desea eliminar esta Nota de Crédito?',
 		          'data-btntxt' => 'SI, eliminar',
 		          'data-btncolor' => 'btn-danger'
 		        ))}}
@@ -79,7 +79,7 @@
 			@endforeach
 			
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total notas de credito</div>
+			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Notas de Crédito</div>
 			  <div class="col-xs-2" style="border-style: hidden hidden solid hidden;"></div>	
 			  <div class="col-xs-2 text-right">{{ number_format(floatval($ncs->sum('monto')),2) }}</div>	
 			  <div class="col-xs-2"></div>	
@@ -88,7 +88,7 @@
 
 		<div style="background-color:lavender;">
 			<div class="row" style="margin-top:5px;">
-			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Ajustes por error</strong></div>
+			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Ajustes por Error</strong></div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
@@ -108,7 +108,7 @@
 		          'data-toggle' => 'modal',
 		          'data-target' => '#confirmAction',
 		          'data-title' => 'Eliminar Ajuste por error',
-		          'data-message' => 'Esta seguro(a) que desea eliminar el presene ajuste por error?',
+		          'data-message' => 'Esta seguro(a) que desea eliminar este ajuste por error?',
 		          'data-btntxt' => 'SI, eliminar',
 		          'data-btncolor' => 'btn-danger'
 		        ))}}
@@ -123,7 +123,7 @@
 			@endforeach	
 
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total ajustes</div>
+			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Ajustes</div>
 			  <div class="col-xs-2" style="border-style: hidden hidden solid hidden;"></div>	
 			  <div class="col-xs-2 text-right">{{ number_format(floatval($aj_lmas->sum('monto')),2) }}</div>	
 			  <div class="col-xs-2"></div>	
@@ -150,7 +150,7 @@
 			</div>	
 		
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Notas de debito</strong></div>
+			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Notas de Débito</strong></div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
@@ -170,7 +170,7 @@
 		          'data-toggle' => 'modal',
 		          'data-target' => '#confirmAction',
 		          'data-title' => 'Eliminar Nota de credito',
-		          'data-message' => 'Esta seguro(a) que desea eliminar la presente Nota de credito?',
+		          'data-message' => 'Esta seguro(a) que desea eliminar esta Nota de Crédito?',
 		          'data-btntxt' => 'SI, eliminar',
 		          'data-btncolor' => 'btn-danger'
 		        ))}}
@@ -185,7 +185,7 @@
 			@endforeach	
 			
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total notas de debito</div>
+			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Notas de Débito</div>
 			  <div class="col-xs-2" style="border-style: hidden hidden solid hidden;"></div>	
 			  <div class="col-xs-2 text-right">{{ number_format(floatval($nds->sum('monto')),2) }}</div>	
 			  <div class="col-xs-2"></div>	
@@ -194,7 +194,7 @@
 		
 		<div style="background-color:lavender;">
 			<div class="row" style="margin-top:5px;">
-			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Ajustes por error</strong></div>
+			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Ajustes por Error</strong></div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
@@ -214,7 +214,7 @@
 		          'data-toggle' => 'modal',
 		          'data-target' => '#confirmAction',
 		          'data-title' => 'Eliminar Nota de credito',
-		          'data-message' => 'Esta seguro(a) que desea eliminar la presente Nota de credito?',
+		          'data-message' => 'Esta seguro(a) que desea eliminar esta Nota de Crédito?',
 		          'data-btntxt' => 'SI, eliminar',
 		          'data-btncolor' => 'btn-danger'
 		        ))}}
@@ -253,7 +253,7 @@
 	<br>
 	
 	<!-- Seccion del Banco -->
-	<h4><i><b>Informacion en banco</i></b></h4>
+	<h4><i><b>Informacion en Banco</i></b></h4>
 	<div style="background-color:white";>
 		<div class="row" style="margin-top:0px;background-color:rgb(200,200,200);">
 		  <div class="col-xs-6">Saldo en banco al 31 de agosto de 2017</div>
@@ -266,7 +266,7 @@
 
 		<div style="background-color:lavenderblush;">
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Depositos en tránsito</strong></div>
+			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Depósitos en Tránsito</strong></div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
@@ -286,7 +286,7 @@
 		          'data-toggle' => 'modal',
 		          'data-target' => '#confirmAction',
 		          'data-title' => 'Eliminar Nota de credito',
-		          'data-message' => 'Esta seguro(a) que desea eliminar la presente Nota de credito?',
+		          'data-message' => 'Esta seguro(a) que desea eliminar esta Nota de Crédito?',
 		          'data-btntxt' => 'SI, eliminar',
 		          'data-btncolor' => 'btn-danger'
 		        ))}}
@@ -301,7 +301,7 @@
 			@endforeach	
 
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total depositos en tránsito</div>
+			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Depósitos en Tránsito</div>
 			  <div class="col-xs-2" style="border-style: hidden hidden solid hidden;"></div>	
 		  	<div class="col-xs-2 text-right">{{ number_format(floatval($d_transitos->sum('monto')),2) }}</div>	
 			  <div class="col-xs-2"></div>	
@@ -310,7 +310,7 @@
 
 		<div style="background-color:lavenderblush;">
 			<div class="row" style="margin-top:5px;">
-			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Ajustes por error</strong></div>
+			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Ajustes por Error</strong></div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
@@ -330,7 +330,7 @@
 		          'data-toggle' => 'modal',
 		          'data-target' => '#confirmAction',
 		          'data-title' => 'Eliminar ajuste por aumento',
-		          'data-message' => 'Esta seguro(a) que desea eliminar el presente ajuste?',
+		          'data-message' => 'Esta seguro(a) que desea eliminar este ajuste?',
 		          'data-btntxt' => 'SI, eliminar',
 		          'data-btncolor' => 'btn-danger'
 		        ))}}
@@ -345,7 +345,7 @@
 			@endforeach	
 
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total ajustes</div>
+			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Ajustes</div>
 			  <div class="col-xs-2" style="border-style: hidden hidden solid hidden;"></div>	
 			  <div class="col-xs-2 text-right">{{ number_format(floatval($aj_bmas->sum('monto')),2) }}</div>	
 			  <div class="col-xs-2"></div>	
@@ -365,7 +365,7 @@
 		
 		<div style="background-color:lavenderblush;">	
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Cheques en tránsito</strong></div>
+			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Cheques en Tránsito</strong></div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
@@ -384,8 +384,8 @@
 		          'class' => 'btn btn-danger btn-xs hidden-print',
 		          'data-toggle' => 'modal',
 		          'data-target' => '#confirmAction',
-		          'data-title' => 'Eliminar Nota de credito',
-		          'data-message' => 'Esta seguro(a) que desea eliminar la presente Nota de credito?',
+		          'data-title' => 'Eliminar Nota de crédito',
+		          'data-message' => 'Esta seguro(a) que desea eliminar esta Nota de Crédito?',
 		          'data-btntxt' => 'SI, eliminar',
 		          'data-btncolor' => 'btn-danger'
 		        ))}}
@@ -400,7 +400,7 @@
 			@endforeach	
 	
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total de cheques en tránsito</div>
+			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total de Cheques en Tránsito</div>
 			  <div class="col-xs-2" style="border-style: hidden hidden solid hidden;"></div>	
 			  <div class="col-xs-2 text-right">{{ number_format(floatval($chq_circulacions->sum('monto')),2) }}</div>	
 			  <div class="col-xs-2"></div>	
@@ -409,7 +409,7 @@
 		
 		<div style="background-color:lavenderblush;">
 			<div class="row" style="margin-top:5px;">
-			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Ajustes por error</strong></div>
+			  <div class="col-xs-6">&nbsp;&nbsp; <strong>Ajustes por Error</strong></div>
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
 			  <div class="col-xs-2"></div>	
@@ -429,7 +429,7 @@
 		          'data-toggle' => 'modal',
 		          'data-target' => '#confirmAction',
 		          'data-title' => 'Eliminar ajuste por aumento',
-		          'data-message' => 'Esta seguro(a) que desea eliminar el presente ajuste?',
+		          'data-message' => 'Esta seguro(a) que desea eliminar este ajuste?',
 		          'data-btntxt' => 'SI, eliminar',
 		          'data-btncolor' => 'btn-danger'
 		        ))}}
@@ -444,7 +444,7 @@
 			@endforeach	
 
 			<div class="row">
-			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total ajustes</div>
+			  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Ajustes</div>
 			  <div class="col-xs-2" style="border-style: hidden hidden solid hidden;"></div>	
 			  <div class="col-xs-2 text-right" style="border-style: hidden hidden solid hidden;">{{ number_format(floatval($aj_bmenos->sum('monto')),2) }}</div>	
 			  <div class="col-xs-2"></div>	
@@ -460,7 +460,7 @@
 
 		
 		<div class="row" style="margin-top:5px; background-color:rgb(200,200,200);">
-		  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;Saldo conciliado en banco al 31 de agosto 2017</div>
+		  <div class="col-xs-6">&nbsp;&nbsp;&nbsp;Saldo conciliado en Banco al 31 de agosto 2017</div>
 		  <div class="col-xs-2"></div>	
 		  <div class="col-xs-2"></div>	
 		  <div class="col-xs-2 text-right" style="border-style: solid hidden double hidden;"><strong>{{ number_format(floatval($concilia->saldo_banco + ($d_transitos->sum('monto') + $aj_bmas->sum('monto')) + ($chq_circulacions->sum('monto') + $aj_bmenos->sum('monto'))),2) }}</strong></div>
@@ -474,17 +474,17 @@
 	@if (($concilia->saldo_libro + ($t_depositado + $ncs->sum('monto') + $aj_lmas->sum('monto'))+ ($t_chq_girados +  $nds->sum('monto') +  $aj_lmenos->sum('monto'))) == ($concilia->saldo_banco + ($d_transitos->sum('monto') + $aj_bmas->sum('monto')) + ($chq_circulacions->sum('monto') + $aj_bmenos->sum('monto'))))
 		<div class="row" style="margin-top:10px; margin-bottom:35px;">
 		  <div class="col-xs-6"></div>
-		  <div class="col-xs-6 text-right"><a href="{{ URL::route('contabilizaConcilia', [$concilia->id, $concilia->periodo_id]) }}" class="btn btn-warning btn-sm hidden-print"><i class="fa fa-search"></i> Contabilizar conciliacion</a></div>
+		  <div class="col-xs-6 text-right"><a href="{{ URL::route('contabilizaConcilia', [$concilia->id, $concilia->periodo_id]) }}" class="btn btn-warning btn-sm hidden-print"><i class="fa fa-search"></i> Contabilizar conciliación</a></div>
 		</div>
 	@endif
 	
 	<hr style="margin-top:60px">
-	<h4><strong>Diario de conciliacion proyectado</strong></h4>
+	<h4><strong>Diario de conciliación proyectado</strong></h4>
 	<div class="row" style="background-color:rgb(200,200,200);">
 	  <div class="col-xs-2"><strong>Fecha</strong></div>
-	  <div class="col-xs-6"><strong>Descripcion</strong></div>	
-	  <div class="col-xs-2 text-right"><strong>Debito</strong></div>	
-	  <div class="col-xs-2 text-right"><strong>Credito</strong></div>	
+	  <div class="col-xs-6"><strong>Descripción</strong></div>	
+	  <div class="col-xs-2 text-right"><strong>Débito</strong></div>	
+	  <div class="col-xs-2 text-right"><strong>Crédito</strong></div>	
 	</div>
 
 	@if (!$ncs->isEmpty())
@@ -506,7 +506,7 @@
 		
 		<div class="row">	
 		  <div class="col-xs-2"></div>
-		  <div class="col-xs-6"><em>Para registrar Notas de credito del mes</em></div>	
+		  <div class="col-xs-6"><em>Para registrar Notas de Crédito del mes</em></div>	
 		  <div class="col-xs-2"></div>	
 		  <div class="col-xs-2"></div>
 		</div>
@@ -567,7 +567,7 @@
 		
 		<div class="row">	
 		  <div class="col-xs-2"></div>
-		  <div class="col-xs-6"><em>Para registrar Nota de debito</em></div>
+		  <div class="col-xs-6"><em>Para registrar Nota de Débito</em></div>
 		  <div class="col-xs-2"></div>	
 		  <div class="col-xs-2"></div>
 		</div>	
@@ -620,20 +620,20 @@
 
 	<div class="row hidden-print" style="margin-top:0px; background-color:white;">
 	  <div class="col-xs-12">
-	  	<h3>Glosario de teminos contables:</h3>
+	  	<h3>Glosario de términos contables:</h3>
 	  	<dl>
-  			<dt style="margin-top:9px;">Depositos del mes</dt>
-  			<dd>Los conforman el efectivo que recibe la organizacion diariamente por concepto de cobro por servicio de mantenimiento, recargos, etc, menos aquellos gastos o pagos que no fueron girados en cheques.</dd>
+  			<dt style="margin-top:9px;">Depósitos del mes</dt>
+  			<dd>Los conforman el efectivo que recibe la Organización diariamente en concepto de cobro por servicio de mantenimiento, recargos, etc.; no se incluyen aquellos gastos o pagos que no fueron girados en cheques.</dd>
   			<dt style="margin-top:9px;">Cheques girados en el mes</dt>
-  			<dd>Se consideran los cheques emitidos por la organizacion en concepto de compras al contado, pagos a terceros o abonos.</dd>
-  			<dt style="margin-top:9px;">Nota de crédito</dt>
-  			<dd>Se llama así al documento que envía el banco a la organización para aumentar el efectivo bajo su custodia, por transacciones como: intereses ganados, documentos por cobrar, cuentas por cobrar, cobro de facturas, remesas de tarjetas debito/credito, diferencias en depósitos, préstamos solicitados, etc.</dd>
-  			<dt style="margin-top:9px;">Nota de debito</dt>
-  			<dd>Documento que envía el banco a la organización en concepto de disminución del efectivo bajo su custodia, por operaciones tales como: intereses pagoas, pago de documentos, cheques devueltos, cargos bancarios, diferencia en depósitos, cargos por tarjeta debito/credito, documentos por pagar, pago de obligaciones, etc.</dd>
-  			<dt style="margin-top:9px;">Depósitos en tránsito</dt>
-  			<dd>Son las cantidades que ya han sido registradas en los libros de la organizacion, pero aún no están incluidos en el estado de cuentas del banco. Por lo tanto, es necesario incluirlos en la conciliación bancaria como un incremento al saldo del banco, de tal forma que se reporte la cantidad correcta de efectivo.</dd>
-  			<dt style="margin-top:9px;">Cheques en tránsito</dt>
-  			<dd>Un cheque en tránsito está en los registros de la organizacion, pero no en el estado de cuenta bancario. Por lo tanto, es necesario incluirlos en la conciliación bancaria como una disminucion al saldo del bancos, pues una vez girados y entregados a sus beneficiarios, la organizacion ya no contará con ese dinero.</dd>
+  			<dd>Son los cheques emitidos por la Organización en concepto de compras al contado, pagos a terceros o abonos.</dd>
+  			<dt style="margin-top:9px;">Nota de Crédito</dt>
+  			<dd>Se llama así al documento que envía el Banco a la Organización para aumentar el efectivo bajo su custodia, por transacciones como: intereses ganados, documentos por cobrar, cuentas por cobrar, cobro de facturas, remesas de tarjetas débito/crédito, diferencias en depósitos, préstamos solicitados, etc.</dd>
+  			<dt style="margin-top:9px;">Nota de Débito</dt>
+  			<dd>Documento que envía el Banco a la Organización en concepto de disminución del efectivo bajo su custodia por operaciones tales como: intereses pagados, pago de documentos, cheques devueltos, cargos bancarios, diferencia en depósitos, cargos por tarjeta débito/crédito, documentos por pagar, pago de obligaciones, etc.</dd>
+  			<dt style="margin-top:9px;">Depósitos en Tránsito</dt>
+  			<dd>Son las cantidades que ya han sido registradas en los libros de la Organización, pero aún no están incluidos en el Estado de Cuentas del Banco. Por lo tanto, es necesario incluirlos en la conciliación bancaria como un incremento al saldo del Banco, de tal forma que se reporte la cantidad correcta de efectivo.</dd>
+  			<dt style="margin-top:9px;">Cheques en Tránsito</dt>
+  			<dd>Un cheque en tránsito está en los registros de la Organización, pero no en el Estado de Cuenta Bancario. Por lo tanto, es necesario incluirlos en la conciliación bancaria como una disminución al saldo del Banco, pues una vez éstos son girados y entregados a sus beneficiarios la Organización ya no contará con ese dinero.</dd>
   			<dt style="margin-top:9px;">Ajustes</dt>
   			<dd>Registros para corregir errores u omisiones de los tenedores de libros, que pueden provocar una diferencia en los saldos de las cuentas.</dd>
 			</dl>
