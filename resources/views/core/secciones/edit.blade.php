@@ -127,11 +127,11 @@
                                   </div>    
                                   
                                   <div class="form-group">
-<<<<<<< HEAD
+
                                       <label class="col-md-4 control-label">Cuota manten. (B/.)</label>
-=======
+
                                       <label class="col-md-4 control-label">Cuota Manten. (B/.)</label>
->>>>>>> origin/master
+
                                       <div class="col-md-8">
                                           {{ Form::text('cuota_mant', $dato->secapto->cuota_mant, array('class' => 'form-control','title' => 'Escriba la cuota de mantenimiento mensual...', 'autocomplete' => 'off')) }}
                                           {!! $errors->first('cuota_mant', '<li style="color:red">:message</li>') !!}

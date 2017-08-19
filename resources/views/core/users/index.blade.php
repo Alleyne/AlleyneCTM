@@ -4,7 +4,7 @@
 
 @section('content')
 
-<<<<<<< HEAD
+
 	<!-- widget grid -->
 	<section id="widget-grid" class="">
 	
@@ -49,7 +49,7 @@
 						<div class="widget-body no-padding">
 							<div class="widget-body-toolbar">
 								<div class="col-xs-3 col-sm-7 col-md-7 col-lg-11 text-right">
-=======
+
 		<!-- widget grid -->
 		<section id="widget-grid" class="">
 		
@@ -94,7 +94,7 @@
 							<div class="widget-body no-padding">
 								<div class="widget-body-toolbar">
 									<div class="col-xs-3 col-sm-7 col-md-7 col-lg-11 text-right">
->>>>>>> origin/master
+
 
 								</div>
 							</div>
@@ -152,14 +152,14 @@
 												</ul>
 											</td>
 										</tr>
-<<<<<<< HEAD
+
 									@endforeach
 						
 								</tbody>
 							</table>
 					    <!-- Incluye la modal box -->
 					    @include('templates.backend._partials.modal_confirm')
-=======
+
 									</thead>
 									<tbody>
 							
@@ -198,7 +198,7 @@
 											            'data-btncolor' => 'btn-danger'
 											        ))}}
 											        {{Form::close()}}  
->>>>>>> origin/master
+
 
 						</div>
 						<!-- end widget content -->
@@ -231,7 +231,7 @@
         "stateSave": true,
 
         "language": {
-<<<<<<< HEAD
+
           "decimal":        "",
           "emptyTable":     "No hay datos disponibles para esta tabla",
           "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ registros",
@@ -243,7 +243,7 @@
           "loadingRecords": "Cargando...",
           "processing":     "Procesando...",
           "search":         "Buscar:",
-          "zeroRecords":    "No se encontro ninguna unidad con ese filtro",
+          "zeroRecords":    "No se encontró ninguna unidad con ese filtro",
           
           "paginate": {
             "first":      "Primer",
@@ -256,7 +256,7 @@
 	          "sortAscending":  ": active para ordenar ascendentemente",
 	          "sortDescending": ": active para ordenar descendentemente"
 	        }
-=======
+
             "decimal":        "",
             "emptyTable":     "No hay datos disponibles para esta tabla",
             "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ registros",
@@ -279,7 +279,7 @@
               "sortAscending":  ": active para ordenar ascendentemente",
               "sortDescending": ": active para ordenar descendentemente"
             }
->>>>>>> origin/master
+
         }
       
       });

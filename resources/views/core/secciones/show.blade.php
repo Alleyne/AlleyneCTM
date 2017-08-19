@@ -88,11 +88,11 @@
 							</div>
 							
 							<div class="form-group">
-<<<<<<< HEAD
+
 								<label class="col-md-3 control-label">Genera Orden de Cobro el Día</label>
-=======
+
 								<label class="col-md-3 control-label">Genera Orden de Cobro el día</label>
->>>>>>> origin/master
+
 								<div class="col-md-9">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $seccion->secapto->d_registra_cmpc }}">
 								</div>
