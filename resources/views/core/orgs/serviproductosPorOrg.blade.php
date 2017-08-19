@@ -81,13 +81,10 @@
 												            'class' => 'btn btn-warning btn-xs',
 												            'data-toggle' => 'modal',
 												            'data-target' => '#confirmAction',
-<<<<<<< HEAD
 												            'data-title' => 'Desvincular serviproducto de la organizacion',
 												            'data-message' => 'Esta seguro(a) que desea desvincular el presente serviproducto de la organización?',
-=======
 												            'data-title' => 'Desvincular serviproducto de la organización',
 												            'data-message' => 'Esta seguro(a) que desea desvincular el serviproducto de esta organización?',
->>>>>>> origin/master
 												            'data-btntxt' => 'SI, desvincular',
 												            'data-btncolor' => 'btn-warning'
 												        ))}}
