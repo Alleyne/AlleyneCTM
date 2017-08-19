@@ -52,12 +52,12 @@ class HojadetrabajosController extends Controller {
     
     // calcula en total de ingresos recibidos         
     foreach($ingresos as $ingreso) {
-      $totalIngresos += $ingreso['saldo_credito'];
+      $totalIngresos = $totalIngresos + $ingreso['saldo_credito'];
     }        
     
     foreach($gastos as $gasto) {
       // totales balance ajustado        
-      $totalGastos += $gasto['saldo_debito'];
+      $totalGastos = $totalGastos + $gasto['saldo_debito'];
     }
     //dd($totalIngresos, $totalGastos);
     
@@ -92,12 +92,12 @@ class HojadetrabajosController extends Controller {
     
     // calcula en total de ingresos recibidos         
     foreach($ingresos as $ingreso) {
-      $totalIngresos += $ingreso['saldo_credito'];
+      $totalIngresos = $totalIngresos + $ingreso['saldo_credito'];
     }        
     
     foreach($gastos as $gasto) {
       // totales balance ajustado        
-      $totalGastos += $gasto['saldo_debito'];
+      $totalGastos = $totalGastos + $gasto['saldo_debito'];
     }
     //dd($totalIngresos, $totalGastos);
     
@@ -565,23 +565,23 @@ class HojadetrabajosController extends Controller {
     $total_patrimonios= 0;
 
     foreach($activoCorrientes as $activoCorriente) {
-      $total_activoCorrientes += ($activoCorriente['saldo_debito'] - $activoCorriente['saldo_credito']);
+      $total_activoCorrientes = $total_activoCorrientes + ($activoCorriente['saldo_debito'] - $activoCorriente['saldo_credito']);
     }
 //dd($total_activoCorrientes);
     foreach($activoNoCorrientes as $activoNoCorriente) {
-      $total_activoNoCorrientes += ($activoNoCorriente['saldo_debito'] - $activoNoCorriente['saldo_credito']);
+      $total_activoNoCorrientes = $total_activoNoCorrientes + ($activoNoCorriente['saldo_debito'] - $activoNoCorriente['saldo_credito']);
     }
 
     foreach($pasivoCorrientes as $pasivoCorriente) {
-       $total_pasivoCorrientes += ($pasivoCorriente['saldo_credito'] - $pasivoCorriente['saldo_debito']);
+       $total_pasivoCorrientes = $total_pasivoCorrientes + ($pasivoCorriente['saldo_credito'] - $pasivoCorriente['saldo_debito']);
     }
 
     foreach($pasivoNoCorrientes as $pasivoNoCorriente) {
-      $total_pasivoNoCorrientes += ($pasivoNoCorriente['saldo_credito'] - $pasivoNoCorriente['saldo_debito']);
+      $total_pasivoNoCorrientes = $total_pasivoNoCorrientes + ($pasivoNoCorriente['saldo_credito'] - $pasivoNoCorriente['saldo_debito']);
     }
 
     foreach($patrimonios as $patrimonio) {
-      $total_patrimonios += ($patrimonio['saldo_credito'] - $patrimonio['saldo_debito']);
+      $total_patrimonios = $total_patrimonios + ($patrimonio['saldo_credito'] - $patrimonio['saldo_debito']);
     }
     // dd($total_activoCorrientes, $total_activoNoCorrientes, $total_pasivoCorrientes, $total_pasivoNoCorrientes, $total_patrimonios);        
 

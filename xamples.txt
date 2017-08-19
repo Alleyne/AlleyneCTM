@@ -3070,7 +3070,11 @@ Work::with(
 
   /*************************************************************************************
    * user->roles return null
+   * cuando el sistema en produccion (digital ocean) envia mensaje Class 'App\Models\****' not found
+   * class method no found
    ************************************************************************************/    
+   en la consola del proyecto en digital ocean correr
+   
    composer dump-autoload
 
 
