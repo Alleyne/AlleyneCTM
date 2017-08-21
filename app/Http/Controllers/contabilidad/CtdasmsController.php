@@ -298,7 +298,7 @@ class CtdasmsController extends Controller {
     foreach ($renglones as $renglon) { 
 
         if ($i == 1) {
-          $saldo = round((float)($renglon['paga'] - $renglon['debe']), 2);
+          $saldo = round((float)($renglon['debe'] - $renglon['paga']), 2);
           $datos[$i]['id'] = $i;
           $datos[$i]['fecha'] = Date::parse($renglon['fecha'])->toFormattedDateString();
           $datos[$i]['detalle'] = $renglon['detalle'];
@@ -307,7 +307,7 @@ class CtdasmsController extends Controller {
           $datos[$i]['saldo'] = $saldo;
         
         } else {
-          $saldo = round((float)(($renglon['paga'] - $renglon['debe']) + $saldo), 2);
+          $saldo = round((float)(($renglon['debe'] - $renglon['paga']) + $saldo), 2);
           $datos[$i]['id'] = $i;
           $datos[$i]['fecha'] = Date::parse($renglon['fecha'])->toFormattedDateString();
           $datos[$i]['detalle'] = $renglon['detalle'];
