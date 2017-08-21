@@ -312,4 +312,67 @@ class DetallepagofacturasController extends Controller {
 		}
 	}
 
+  /***********************************************************************************
+  * Despliega el estado de resultado final
+  ************************************************************************************/ 
+  public function facturasporpagar() {
+    
+    $datos = Detallepagofactura::where('pagada', '=', 0)->orderBy('fecha', 'desc')->get();
+    //dd($datos->toArray());
+
+    // calcula el total por pagar
+    $totalPorPagar = $datos->sum('monto');
+    //dd($totalPorPagar);
+    
+    $i = 0;
+    foreach ($datos as $dato) {
+      // agrega los datos a la collection
+      $datos[$i]["afavorde"] = $dato->factura->afavorde;
+      $datos[$i]["f_pago"] = Date::parse($dato->fecha)->toFormattedDateString();
+      $i++;
+    }
+
+    //dd($datos->toArray());
+
+    return \View::make('contabilidad.detallepagofacturas.facturasporpagar')
+            ->with('datos', $datos)
+            ->with('totalPorPagar', $totalPorPagar);
+  } 
+
+  /***********************************************************************************
+  * Despliega el estado de resultado final
+  ************************************************************************************/ 
+  public function facturasporpagarhoy() {
+    
+    $datos = Detallepagofactura::whereDate('fecha',  Carbon::today())
+    													->where('pagada', '=', 0)
+    													->orderBy('fecha', 'desc')
+    													->get();
+    //dd($datos->toArray());
+
+    // obtiene todos los diferentes tipos de pagos
+    $trantipos= Trantipo::pluck('nombre', 'id')->all();
+    $trantipos= Trantipo::orderBy('nombre')->get();		
+		//dd($trantipos);	
+
+    // calcula el total por pagar
+    $totalPorPagar = $datos->sum('monto');
+    //dd($totalPorPagar);
+    
+    $i = 0;
+    foreach ($datos as $dato) {
+      // agrega los datos a la collection
+      $datos[$i]["afavorde"] = $dato->factura->afavorde;
+      $datos[$i]["f_pago"] = Date::parse($dato->fecha)->toFormattedDateString();
+      $i++;
+    }
+
+    //dd($datos->toArray());
+
+    return \View::make('contabilidad.detallepagofacturas.facturasporpagarhoy')
+            ->with('trantipos', $trantipos)
+            ->with('datos', $datos)
+            ->with('totalPorPagar', $totalPorPagar);
+  } 
+
 } 

@@ -15,6 +15,7 @@ use App\Ph;
 use App\Un;
 use App\Pcontable;
 use App\Detalledescuento;
+use App\Detallepago; 
 
 class CtdasmsController extends Controller {
     
@@ -172,5 +173,189 @@ class CtdasmsController extends Controller {
             ->with('extras', $extras)
             ->with('ants', $ants);
     }
+  }
+
+  
+  /***********************************************************************************************************
+   * Esta funcion gerera el estado de cuentas de una determinada unidad, puede ser en formato corto y largo
+  ************************************************************************************************************/ 
+  //public function ecuentas_m2($un_id, $tipo) {  
+  public function ecuentas_m2($un_id, $tipo) {      
+    //dd($un_id, $tipo);
+    
+    //=== primero ================================================================
+    // calcula el total adeudado en cuotas de mantenimiento regulares    
+    //============================================================================
+    $imps = Ctdasm::where('un_id', $un_id)
+                      ->where('pcontable_id', 1)
+                      ->select('id','fecha','mes_anio','f_vencimiento','importe')
+                      ->get();
+
+    // modifica la collection
+    $imps = $imps->map(function ($imp) {
+      return ['fecha' => $imp->fecha,
+              'detalle' => 'Cuota de mant regular de '.$imp->mes_anio.' (Vence '.Date::parse($imp->f_vencimiento)->toFormattedDateString().')',
+              'debe' => $imp->importe,
+              'paga' => '',
+              'saldo' => ''];
+    });
+
+    //dd($imps->toArray());
+    
+    
+    //=== segundo ================================================================
+    // calcula el total adeudado en recargos en cuotas de mantenimiento regulares    
+    //============================================================================
+    $recs = Ctdasm::where('un_id', $un_id)
+                      ->where('pcontable_id', 1)
+                      ->where('recargo_siono', 1) 
+                      ->select('id','fecha','mes_anio','f_vencimiento','recargo')
+                      ->get();
+
+    // modifica la collection
+    $recs = $recs->map(function ($rec) {
+      return ['fecha' => Carbon::parse($rec['f_vencimiento'])->addDay()->format('Y-m-d'),
+              'detalle' => 'Recargo en cuota de mant regular de '.$rec->mes_anio.' (Vence '.Date::parse($rec->f_vencimiento)->toFormattedDateString().')',
+              'debe' => $rec->recargo,
+              'paga' => '',
+              'saldo' => ''];
+    });    
+
+    //dd($recs->toArray());
+    
+    //=== tercero ================================================================
+    // calcula el total en cuotas extraordinarias    
+    //============================================================================
+    $extras = Ctdasm::where('un_id', $un_id)
+                      ->where('pcontable_id', 1)
+                      ->where('extra_siono', 1) 
+                      ->select('id','fecha','mes_anio','f_vencimiento','extra')
+                      ->get();       
+    
+    // modifica la collection
+    $extras = $extras->map(function ($extra) {
+      return ['fecha' => $extra->fecha,
+              'detalle' => 'Recargo en cuota de mant regular de '.$extra->mes_anio.' (Vence '.Date::parse($extra->f_vencimiento)->toFormattedDateString().')',
+              'debe' => $extra->importe,
+              'paga' => '',
+              'saldo' => ''];
+    });
+
+    //dd($extras->toArray());
+    
+    //=== primero ================================================================
+    //   
+    //============================================================================
+    $dtepagos = Detallepago::where('un_id', $un_id)
+                      ->where('pcontable_id', 1)
+                      ->get();    
+    //dd($dtepagos->toArray());
+    
+    // modifica la collection
+    $dtepagos = $dtepagos->map(function ($dtepago) {
+      
+      if ($dtepago->tipo == 4) {
+        $detalle = 'Sobrante a su favor del ';
+      
+      } elseif ($dtepago->tipo == 3){
+        $detalle = 'Descuenta de su cuenta de pagos Anticipados';
+      
+      } else {
+        $detalle = $dtepago->detalle;
+      }   
+
+      // genera el texto que detalla que unidad realizo el pago y que metodo de pago se utilizo
+      if ($dtepago->pago->trantipo_id == 5) { // si el pago es en efectivo, no tiene trans_no
+        $nota = 'Pago #'.$dtepago->pago->id.' '.$dtepago->pago->trantipo->siglas;
+      
+      } else {
+        $nota = 'Pago #'.$dtepago->pago->id.' '.$dtepago->pago->trantipo->siglas.'-'.$dtepago->pago->siglas;
+      }
+
+      //dd($nota);
+
+      return ['fecha' => $dtepago->pago->f_pago,
+              'detalle' => $detalle.' '.$nota,
+              'debe' => '',
+              'paga' => $dtepago->monto,
+              'saldo' => ''];
+    });
+    
+    //dd($dtepagos->toArray());
+    
+    // une las cuatro collections
+    $renglones = $imps->toBase()->merge($recs);
+    $renglones = $renglones->toBase()->merge($extras);    
+    $renglones = $renglones->toBase()->merge($dtepagos);  
+
+    // ordena por fecha ascendente
+    $renglones = $renglones->sortBy('fecha');
+    //dd($renglones->toArray());
+
+    // calcula saldo
+    $i = 1;
+
+    foreach ($renglones as $renglon) { 
+
+        if ($i == 1) {
+          $saldo = round((float)($renglon['paga'] - $renglon['debe']), 2);
+          $datos[$i]['id'] = $i;
+          $datos[$i]['fecha'] = Date::parse($renglon['fecha'])->toFormattedDateString();
+          $datos[$i]['detalle'] = $renglon['detalle'];
+          $datos[$i]['debe'] = $renglon['debe'];
+          $datos[$i]['paga'] = $renglon['paga']; 
+          $datos[$i]['saldo'] = $saldo;
+        
+        } else {
+          $saldo = round((float)(($renglon['paga'] - $renglon['debe']) + $saldo), 2);
+          $datos[$i]['id'] = $i;
+          $datos[$i]['fecha'] = Date::parse($renglon['fecha'])->toFormattedDateString();
+          $datos[$i]['detalle'] = $renglon['detalle'];
+          $datos[$i]['debe'] = $renglon['debe'];
+          $datos[$i]['paga'] = $renglon['paga']; 
+          $datos[$i]['saldo'] = $saldo;
+        }    
+
+      $i++;
+    }
+
+    //dd($datos);
+
+    // Obtiene el primer propietario encargado de la unidad  
+    $prop = Prop::where('un_id', $un_id)
+                  ->where('encargado', '1')
+                  ->with('user')
+                  ->first();
+    //dd($prop); 
+
+    if(is_null($prop))  {
+      Session::flash('warning', 'La Unidad No. '. $un_id . ' selecciona no tiene propietario encargado asignado...');
+      return back();
+    } 
+                  
+    // Encuentra los datos de la unidad
+    $un = Un::find($un_id);
+    // dd($un->toArray());
+
+    // Prepara datos del encabezado del Estado de cuenta
+    $data = [
+      'propnombre'        => $prop->user->nombre_completo,          
+      'propdireccion'     => $prop->user->direccion,
+      'propprovincia'     => $prop->user->provincia,
+      'propdistrito'      => $prop->user->distrito,
+      'propcorregimiento' => $prop->user->corregimiento,
+      'proppais'          => $prop->user->pais,
+      'proptelefono'      => $prop->user->telefono,      
+      
+      'un_id'             => $un->id, 
+      'activa'            => $un->activa,
+      'codigo'            => $un->codigo, 
+      'fecha'             => Date::today()->format('l\, j \d\e F Y')
+
+    ];
+    
+    return view('contabilidad.ctdasms.ecuenta_m2')
+          ->with('data', $data)
+          ->with('datos', $datos);
   }
 }

@@ -9,7 +9,7 @@
 
 	<!-- Note: The activity badge color changes when clicked and resets the number to 0
 	Suggestion: You may want to set a flag when this happens to tick off all checked messages / notifications -->
-	<span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i> <b class="badge"> 29 </b> </span>
+	<span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i> <b class="badge">{{ Cache::get('facturasPorPagarHoy') }}</b> </span>
 
 </div>
 
@@ -22,10 +22,10 @@
 	<!-- Suggestion: populate this list with fetch and push technique -->
 	<ul class="dropdown-menu">
 		<li>
-			<a href="javascript:void(0);">Pagos pendientes a proveedores <b class="badge"> 21 </b></a>
+			<a href="{{ URL::route('facturasporpagarhoy') }}">Facturas pendientes por pagar &nbsp;&nbsp;&nbsp;<b class="badge">{{ Cache::get('facturasPorPagarHoy') }}</b></a>
 		</li>
 		<li>
-			<a href="javascript:void(0);">Informes de Caja general pendientes oor aprobar <b class="badge"> 8 </b></a>
+			<a href="javascript:void(0);">Informes de Caja general pendientes por aprobar <b class="badge"> 8 </b></a>
 		</li>
 		<li class="divider"></li>
 		<li>

@@ -156,5 +156,5 @@
         }
       });
     })
-    </script>
+  </script>
 @stop

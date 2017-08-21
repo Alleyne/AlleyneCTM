@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\library\Graph;
+use Carbon\Carbon;
 use Cache, DB;
 
 use App\Post;
 use App\Role;
 use App\Un;
 use App\Jd;
-
+use App\Detallepagofactura;
 
 class WelcomeController extends Controller {
 
@@ -64,7 +65,7 @@ class WelcomeController extends Controller {
     Cache::forever('unsAllkey', Un::all());
     //Cache::forever('recentPostkey', Post::orderBy('created_at', 'desc')->limit(3)->get());
     Cache::forever('jdkey', Jd::first());		
-
+    Cache::forever('facturasPorPagarHoy', Detallepagofactura::whereDate('fecha', Carbon::today())->where('pagada', 0)->count());
 
 		// encuentra la data para la grafica de propietarios morosos a la fecha
 		$data= Graph::getDataGraphMorosos();

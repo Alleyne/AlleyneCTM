@@ -1521,7 +1521,8 @@ Work::with(
 
   /****************************************************************************************
   * Combine two DB query results in Laravel?
-  * Merging two collecction
+  * Merging two eloquent collection
+  * union unir collection colecciones
   *****************************************************************************************/
  	// get all film projects
 	$filmProjects= FilmProject::all();
@@ -3127,3 +3128,11 @@ Work::with(
       Cache::forever('jdkey', Jd::first());
     
     }
+
+  /*************************************************************************************
+   * model has
+   ************************************************************************************/ 
+    $data = Org::has('facturas')->with(array(
+        'facturas' => function($query) { $query->where('pagada', '=', 0); },
+        'facturas.detallepagofacturas' => function($query) { $query->where('pagada', '=', 0); }
+    ))->get();

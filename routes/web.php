@@ -139,13 +139,16 @@ Route::group(['namespace' => 'contabilidad'], function()
 	//---------------------------------------------------------// 		
 	Route::get('contabilizaDetallePagoFactura/{detallepagofactura_id}', 'DetallepagofacturasController@contabilizaDetallePagoFactura')->name('contabilizaDetallePagoFactura');
 	Route::post('pagarContabilizar', 'DetallepagofacturasController@pagarContabilizar')->name('pagarContabilizar');
+  Route::get('facturasporpagar', 'DetallepagofacturasController@facturasporpagar')->name('facturasporpagar');
+  Route::get('facturasporpagarhoy', 'DetallepagofacturasController@facturasporpagarhoy')->name('facturasporpagarhoy');
 	Route::resource('detallepagofacturas', 'DetallepagofacturasController');
-
+	
 	//---------------------------------------------------------//
 	// Funciones del controlador CtdasmsController
 	//---------------------------------------------------------// 	
   Route::get('ecuentas/{un_id}, {tipo}', 'CtdasmsController@ecuentas')->name('ecuentas');
   Route::get('ecuentas/{un_id}', 'CtdasmsController@ecuentasfrontend')->name('ecuentasfrontend');	
+  Route::get('ecuentas_m2/{un_id}, {tipo}', 'CtdasmsController@ecuentas_m2')->name('ecuentas_m2');	
 	Route::resource('ctdasms', 'CtdasmsController');		
 
 	//---------------------------------------------------------//
@@ -175,7 +178,6 @@ Route::group(['namespace' => 'contabilidad'], function()
   Route::get('bg_m2_proyectado/{pcontable_id}', 'HojadetrabajosController@bg_m2_proyectado')->name('bg_m2_proyectado');
   Route::get('bg_m2_final/{pcontable_id}', 'HojadetrabajosController@bg_m2_final')->name('bg_m2_final');
   Route::get('balancegeneral/{pcontable_id},{periodo}', 'HojadetrabajosController@balancegeneral')->name('balancegeneral');
-  Route::get('facturasporpagar/{pcontable_id}', 'HojadetrabajosController@facturasporpagar')->name('facturasporpagar');  
 
   Route::get('verMayorAux/{periodo}, {cuenta}', 'HojadetrabajosController@verMayorAux')->name('verMayorAux');
   Route::get('verMayorAuxHis/{periodo}, {cuenta}', 'HojadetrabajosController@verMayorAuxHis')->name('verMayorAuxHis');

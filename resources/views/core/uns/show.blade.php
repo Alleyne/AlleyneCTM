@@ -119,11 +119,9 @@
 							</div>
 							
 							<div class="form-group">
-<<<<<<< HEAD
-								<label class="col-md-4 control-label">Despueés del día</label>
-=======
+
 								<label class="col-md-4 control-label">Después del día</label>
->>>>>>> origin/master
+
 								<div class="col-md-8">
 									<input class="form-control input-sm" name="nombre" type="text" readonly value="{{ $secapto->d_vence }}">
 								</div>
@@ -141,11 +139,17 @@
 
 				  <div class="col-md-6">
 						<div class="row">
-						  <div class="col-md-6">
+						  <div class="col-md-5">
 						  	<a href="{{ URL::route('indexPagos', $dato->id) }}"><img src="{{asset('assets/backend/img/rpago.png') }}" alt="" style="width:110px;height:110px;border:0;"></a>
 						  </div>
-						  <div class="col-md-6">
-						  	<a href="{{ URL::route('ecuentas', array($dato->id, 'backend')) }}"><img src="{{asset('assets/backend/img/ecuentas.png') }}" alt="" style="width:82px;height:82px;border:0;"></a>
+						  <div class="col-md-7">
+						  	<img src="{{asset('assets/backend/img/ecuentas.png') }}" alt="" style="width:82px;height:82px;border:0;">
+
+								<div>
+									<a href="{{ URL::route('ecuentas', array($dato->id, 'backend')) }}" class="btn btn-primary btn-large">Morosidad / Pagos Anticipados</a>
+									<a href="{{ URL::route('ecuentas_m2', array($dato->id, 'backend')) }}" class="btn btn-primary btn-large">Estado de Cuentas</a>
+								</div>
+
 						  </div>
 						
 						</div>

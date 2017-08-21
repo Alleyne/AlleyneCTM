@@ -225,7 +225,7 @@
 			  
 			  <tr>
 			   <th colspan="4" class="text-left borde celBg-gray">&nbsp;<strong>Pasivos</strong> 
-				  <span class="hidden-print"><a href="{{ URL::route('facturasporpagar', $periodo->id) }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-book"></i></a>
+				  <span class="hidden-print"><a href="{{ URL::route('facturasporpagar') }}" class="btn bg-color-purple txt-color-white btn-xs"><i class="glyphicon glyphicon-book"></i></a>
 					</span>
 				</th>
 

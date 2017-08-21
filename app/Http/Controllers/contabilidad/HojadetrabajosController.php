@@ -112,48 +112,7 @@ class HojadetrabajosController extends Controller {
                 ->with('totalGastos', $totalGastos)
                 ->with('utilidad', $utilidad);
   }
-
-
-  /***********************************************************************************
-  * Despliega el estado de resultado final
-  ************************************************************************************/ 
-  public function facturasporpagar($pcontable_id) {
-    
-/*    $data = Org::has('facturas')->with(array(
-        'facturas' => function($query) { $query->where('pagada', '=', 0); },
-        'facturas.detallepagofacturas' => function($query) { $query->where('pagada', '=', 0); }
-    ))->get();*/
-    
-    $datos = Detallepagofactura::where('pagada', '=', 0)->get();
-    
-    // calcula el total por pagar
-    $totalPorPagar = $datos->sum('monto');
-    //dd($totalPorPagar);
-    
-    $i = 0;
-    foreach ($datos as $dato) {
-      // agrega los datos a la collection
-      $datos[$i]["afavorde"] = $dato->factura->afavorde;
-      $datos[$i]["factura_no"] = $dato->factura->doc_no;
-      $datos[$i]["f_pago"] = Date::parse($dato->fecha)->toFormattedDateString();
-      $i++;
-    }
-
-    //dd($datos->toArray());
-
-    $data = $datos->toJson();
-    
-    // Remove first and last char from string
-    $data = substr($data, 1, -1);
-    
-    $data = str_replace(array('[',']'), '',$data);
-    //dd($data); 
-    
-    return \View::make('contabilidad.detallepagofacturas.facturasporpagar')
-            ->with('data', $data)
-            ->with('totalPorPagar', $totalPorPagar);
-  }  
-
+ 
 
   /***********************************************************************************
   * Despliega el balance general final
