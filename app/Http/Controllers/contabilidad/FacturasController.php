@@ -94,20 +94,20 @@ class FacturasController extends Controller {
 	      $f_final=Carbon::today()->addDay(1);
 
         $rules = array(
-            'fecha' => 'required|date',          
-            'org_id' => 'required|Numeric|min:1',
-            'no' => 'required|Numeric|min:1',
-            'descripcion' => 'required',
-            'monto' => 'required|Numeric|min:0.01'
+            'fecha'    		=> 'required|date',          
+            'org_id' 		=> 'required|Numeric|min:1',
+            'no' 			=> 'required|Numeric|min:1',
+            'descripcion' 	=> 'required',
+            'monto' 		=> 'required|Numeric|min:0.01'
         );
   
         $messages = [
-            'required'      => 'Informacion requerida!',
-            'before'        => 'La fecha de la factura debe ser anterior o igual a fecha del dia de hoy!',
-            'digits_between'=> 'El numero de la factura debe tener de uno a diez digitos!',
-            'numeric'       => 'Solo se admiten valores numericos!',
-            'date'          => 'Fecha invalida!',
-            'min'           => 'Se requiere un valor mayor que cero!'
+            'required'      => 'Información requerida!',
+            'before'        => 'La fecha de la factura debe ser anterior o igual a fecha del día de hoy!',
+            'digits_between'=> 'El número de la factura debe tener de uno a diez dígitos!',
+            'numeric'       => 'Sólo se admiten valores numéricos!',
+            'date'          => 'Fecha inválida!',
+            'min'           => 'Se requiere un valor mayor a cero!'
         ];                
 
         $validation = \Validator::make($input, $rules, $messages);  
@@ -149,7 +149,7 @@ class FacturasController extends Controller {
             $factura->pcontable_id = $periodo->id;
             $factura->save();
 						
-						Sity::RegistrarEnBitacora($factura, Input::get(), 'Factura', 'Registra factura de egreso de Caja general');
+						Sity::RegistrarEnBitacora($factura, Input::get(), 'Factura', 'Registra factura de egreso de Caja General');
 					
 						Session::flash('success', 'La factura No. ' .$factura->doc_no. ' ha sido creada con éxito.');
             DB::commit();       

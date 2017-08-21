@@ -79,7 +79,7 @@ class PagosController extends Controller {
 						->with('key', $key)
 						->with('un_id', $un_id);
     
-    } elseif ($key == 4 || $key == 6 || $key == 7 ) { //tipo banca en linea
+    } elseif ($key == 4 || $key == 6 || $key == 7 ) { //tipo Banca en línea
 	    return view('contabilidad.pagos.createPagoTipo467')        			
 						->with('bancos', $bancos)
 						->with('key', $key)
@@ -115,18 +115,18 @@ class PagosController extends Controller {
 	      $rules = array(
           'monto'   	 	=> 'required|Numeric|min:0.01',
           'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
-          'descripcion'	=> 'required',
-          'un_id'		 		=> 'required'            
+          'descripcion'	    => 'required',
+          'un_id'		 	=> 'required'            
 	      );   
       
       } else {
-	      $rules = array(	// pago tipo Banca en linea, cheques, tarjetas debito o tarjetas credito
+	      $rules = array(	// pago tipo Banca en línea, cheques, tarjetas debito o tarjetas credito
           'banco_id'   	=> 'required|not_in:0',
           'transno'   	=> 'Required|Numeric|digits_between:1,10|min:1',
-          'monto'   	 	=> 'required|Numeric|min:0.01',
-          'f_pago'   	 	=> 'required|Date|Before:'.$f_final,
+          'monto'    	=> 'required|Numeric|min:0.01',
+          'f_pago' 	 	=> 'required|Date|Before:'.$f_final,
           'descripcion'	=> 'required',
-          'un_id'		 		=> 'required'            
+          'un_id' 		=> 'required'            
 	      );  
       }
 
@@ -138,7 +138,7 @@ class PagosController extends Controller {
 			{
 				// verifica si existe registro para informe de diario de caja para el dia de hoy,
 				// si no existe entonces lo crea.
-				if (Input::get('key') != '4') {  // que el tipo de pago no sea Banca en linea
+				if (Input::get('key') != '4') {  // que el tipo de pago no sea Banca en línea
 					$diariocaja= Diariocaja::where('fecha', Input::get('f_pago'))->first();
 
 			    if (!$diariocaja) {

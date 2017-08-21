@@ -32,11 +32,11 @@
 						-->
 						<header>
 							<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i> </span>
-<<<<<<< HEAD
-							<h2>Descripcion completa de la Bitácora </h2>
-=======
+
 							<h2>Descripción completa de la Bitácora </h2>
->>>>>>> origin/master
+
+							<h2>Descripción completa de la Bitácora </h2>
+
 		
 						</header>
 		

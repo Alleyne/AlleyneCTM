@@ -139,11 +139,11 @@ class SeccionesController extends Controller {
 
 			$rules = array(
 				'nombre'    			=> 'required',
-				'descripcion' 		=> 'required',
+				'descripcion' 	    	=> 'required',
 				'codigo'    			=> 'Required|Min:2|Max:2|Alpha_num',
 				'm_vence' 				=> 'required|Numeric',
 				'd_vence' 				=> 'required|Numeric',
-				'd_registra_cmpc' => 'required'	    
+				'd_registra_cmpc'       => 'required'	    
 			);
 			
 			$messages = [
@@ -242,11 +242,11 @@ class SeccionesController extends Controller {
 			$input = Input::all();
 			$rules = array(
 				'nombre'    			=> 'required',
-				'descripcion' 		=> 'required',
+				'descripcion' 	    	=> 'required',
 				'codigo'    			=> 'Required|Min:2|Max:2|Alpha_num',
 				'm_vence' 				=> 'required|Numeric',
 				'd_vence' 				=> 'required|Numeric',
-				'd_registra_cmpc' => 'required'	  
+				'd_registra_cmpc'       => 'required'	  
 
 			);
 

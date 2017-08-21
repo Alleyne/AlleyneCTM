@@ -92,12 +92,12 @@ class DetallepagofacturasController extends Controller {
 					return back()->withInput()->withErrors($validation);
 		    }
 
-		    // encuentra la fecha del ultimo pago programado de la presente factura que haya sido pagado y contabilizado
+		    // encuentra la fecha del Último pago programado de la presente factura que haya sido pagado y contabilizado
 	 	    $ultimaFecha = Detallepagofactura::orderBy('fecha', 'desc')->where('factura_id', Input::get('factura_id'))->where('etapa', 2)->first();
 				//dd(Carbon::parse($ultimaFecha->fecha), Carbon::parse(Input::get('fecha')));
 
 				if ($ultimaFecha) {
-			    // solamente se permite programar pagos cuya fecha se mayor o igual a la fecha del ultimo pago programado pagado y contabilizado
+			    // solamente se permite programar pagos cuya fecha se mayor o igual a la fecha del Último pago programado pagado y contabilizado
 			    if (Carbon::parse(Input::get('fecha'))->lt(Carbon::parse($ultimaFecha->fecha))) {
 						Session::flash('danger', 'Solamente se permite programar pagos con fecha igual o posterior a '. Date::parse($ultimaFecha->fecha)->toFormattedDateString());
 						return back()->withInput()->withErrors($validation);
@@ -286,7 +286,7 @@ class DetallepagofacturasController extends Controller {
 			//$exitePosterior= Detallepagofactura::where('id', '>', $detallepagofactura_id)->first();
 	    
 	    //if ($exitePosterior) {
-        //Session::flash('danger', 'No puede eliminar el presente pago programado, solo se puede eliminar el ultimo pago programado!');
+        //Session::flash('danger', 'No puede eliminar el presente pago programado, solo se puede eliminar el Último pago programado!');
     		//return back();
 	   // }
 			//dd($detallefactura_id);

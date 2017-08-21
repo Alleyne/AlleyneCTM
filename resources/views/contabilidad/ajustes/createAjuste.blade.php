@@ -79,7 +79,7 @@
 							        {{ Form::textarea('descripcion', old('descripcion'),
 							        	array(
 							        		'class' => 'form-control',
-							        		'title' => 'Escriba la descripcion',
+							        		'title' => 'Escriba la descripción',
 							        		'rows' => '2'
 							        	)) }}
 							        {!! $errors->first('descripcion', '<li style="color:red">:message</li>') !!}   

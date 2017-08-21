@@ -129,11 +129,9 @@
 										</div>	
 										
 										<div class="form-group">
-<<<<<<< HEAD
-											<label class="col-md-4 control-label">No. de estacionamientos</label>
-=======
+
 											<label class="col-md-4 control-label">No. de Estacionamientos</label>
->>>>>>> origin/master
+
 											<div class="col-md-8">
 												{{ Form::text('estacionamientos', '', array('class' => 'form-control','title' => 'Escriba el número de estacionamientos que posee la unidad...', 'autocomplete' => 'off')) }}
 											    {!! $errors->first('estacionamientos', '<li style="color:red">:message</li>') !!}
@@ -176,11 +174,9 @@
 											<label class="col-md-4 control-label">Genera Orden de Cobro</label>
 											<div class="col-md-8">
 												<input class="form-control spinner-left"  id="spinner1" name="d_registra_cmpc" value="1" type="text">
-<<<<<<< HEAD
-												<p class="text-left">Día del mes en que se registrara la facturación mensual.</p>
-=======
+
 												<p class="text-left">Día del mes en que se registrará la facturación mensual.</p>
->>>>>>> origin/master
+
 												{!! $errors->first('d_registra_cmpc', '<li style="color:red">:message</li>') !!}
 											</div>
 										</div>

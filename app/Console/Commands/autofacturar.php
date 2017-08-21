@@ -106,8 +106,8 @@ class autofacturar extends Command
                 /*-------------------------------------------------------------------------------------*/
                 /*-- PERIODICAMENTE REVISA SI HAY FACTURACION PAR EL DIA DIECISEIS DEL MES CORRIENTE --*/
                 /*-------------------------------------------------------------------------------------*/        
-                // Pregunta si la fecha actual esta entre el dia dieciséis y el ultimo dia del mes,
-                // incluyento el dia dieciséis y el dia ultimo del mes.
+                // Pregunta si la fecha actual esta entre el dia dieciséis y el Último dia del mes,
+                // incluyento el dia dieciséis y el dia Último del mes.
                 elseif (Carbon::now()->between(Carbon::create($year, $month, 16), Carbon::today()->endOfMonth())) {
                     // Encuentra todas las secciones de apartamentos en las cuales la fecha de facturacion
                     // es el dia dieciséis de cada mes.

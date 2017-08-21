@@ -7,7 +7,7 @@
 <div class="col-xs-12 col-sm-12 col-md-12">
 
     <div class="alert alert-success" role="alert">
-        <strong>Estimado Propietario</strong>, acontinuacion se muestran todos su pagos.
+        <strong>Estimado Propietario</strong>, A continuación se muestran todos su pagos.
     </div>
     <table id="dt_basic" class="table table-hover table-condensed">
         <thead>
@@ -78,11 +78,11 @@
                     "loadingRecords": "Cargando...",
                     "processing":     "Procesando...",
                     "search":         "Buscar:",
-                    "zeroRecords":    "No se encontro ningun pago con ese filtro",
+                    "zeroRecords":    "No se encontró ningun pago con ese filtro",
                     "paginate": {
                         "first":      "Primer",
-                        "last":       "Ultimo",
-                        "next":       "Proximo",
+                        "last":       "Último",
+                        "next":       "Próximo",
                         "previous":   "Anterior"
                     },
                     "aria": {

@@ -96,11 +96,11 @@ class EcajachicasController extends Controller
 				$input = Input::all();
 
 				$rules = array(
-						'fecha' => 'required|date',          
-						'org_id' => 'required|Numeric|min:1',
-						'no' => 'required|Numeric|min:1',
-						'descripcion' => 'required',
-						'monto' => 'required|Numeric|min:0.01'
+						'fecha' 		=> 'required|date',          
+						'org_id' 		=> 'required|Numeric|min:1',
+						'no' 			=> 'required|Numeric|min:1',
+						'descripcion' 	=> 'required',
+						'monto' 		=> 'required|Numeric|min:0.01'
 				);
 	
 				$messages = [

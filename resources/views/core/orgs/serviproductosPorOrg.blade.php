@@ -54,8 +54,8 @@
 
 									</div>
 								</div>
-								
-								<table id="dt_basic" class="table table-hover">
+								<table id="dt_basic" class="display compact" cellspacing="0" width="100%">
+								<!--table id="dt_basic" class="table table-hover">-->
 									<thead>
 										<tr>
 											<th col width="25px">ID</th>
@@ -185,8 +185,36 @@
         pageSetUp();
  
         $('#dt_basic').dataTable({
-            "sPaginationType" : "bootstrap_full"
-        });
+        "paging": false,
+        "scrollY": "393px",
+        "scrollCollapse": true,
+        "stateSave": true,
+
+        "language": {
+            "decimal":        "",
+            "emptyTable":     "No hay datos disponibles para esta tabla",
+            "info":           "&nbsp;&nbsp;  Mostrando _END_ de un total de _MAX_ registros",
+            "infoEmpty":      "",
+            "infoFiltered":   "",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ unidades",
+            "loadingRecords": "Cargando...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "zeroRecords":    "No se encontró ninguna unidad con ese filtro",
+            "paginate": {
+              "first":      "Primer",
+              "last":       "Último",
+              "next":       "Próximo",
+              "previous":   "Anterior"
+            },
+            "aria": {
+              "sortAscending":  ": active para ordenar ascendentemente",
+              "sortDescending": ": active para ordenar descendentemente"
+            }
+        }
+      });
     })
     </script>
     

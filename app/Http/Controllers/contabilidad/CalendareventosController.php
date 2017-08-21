@@ -305,7 +305,7 @@ class CalendareventosController extends Controller
           $dato->monto       = $monto->deposito; 
           $dato->f_pago      = Carbon::createFromFormat('d/m/Y', Input::get('fecha'));
           $dato->descripcion = 'Deposito por alquiler de amenidades';
-          $dato->concepto    = 'deposito para alquiler de amenidades';   
+          $dato->concepto    = 'Depósito para alquiler de amenidades';   
           $dato->fecha       = Carbon::today();         
           $dato->entransito  = 0;
           $dato->un_id       = Input::get('un_id');
@@ -320,8 +320,8 @@ class CalendareventosController extends Controller
           //$dato->trans_no    = Input::get('transno'); 
           $dato->monto       = $monto->deposito; 
           $dato->f_pago      = Carbon::createFromFormat('d/m/Y', Input::get('fecha'));
-          $dato->descripcion = 'Deposito por alquiler de amenidades';
-          $dato->concepto    = 'deposito para alquiler de amenidades';   
+          $dato->descripcion = 'Depósito por alquiler de amenidades';
+          $dato->concepto    = 'Depósito para alquiler de amenidades';   
           $dato->fecha       = Carbon::today();         
           $dato->entransito  = 0;
           $dato->un_id       = Input::get('un_id');
@@ -336,8 +336,8 @@ class CalendareventosController extends Controller
           $dato->trans_no    = Input::get('transno'); 
           $dato->monto       = $monto->deposito; 
           $dato->f_pago      = Carbon::createFromFormat('d/m/Y', Input::get('fecha'));
-          $dato->descripcion = 'Deposito por alquiler de amenidades';
-          $dato->concepto    = 'deposito para alquiler de amenidades';   
+          $dato->descripcion = 'Depósito por alquiler de amenidades';
+          $dato->concepto    = 'Depósito para alquiler de amenidades';   
           $dato->fecha       = Carbon::today();         
           $dato->entransito  = 0;
           $dato->un_id       = Input::get('un_id');
@@ -926,8 +926,8 @@ class CalendareventosController extends Controller
           $dato->trans_no    = Input::get('chqno'); 
           $dato->monto       = $monto->alquiler; 
           $dato->f_pago      = Input::get('fecha');
-          $dato->descripcion = 'Deposito por alquiler de amenidades';
-          $dato->concepto    = 'deposito para alquiler de amenidades';   
+          $dato->descripcion = 'Depósito por alquiler de amenidades';
+          $dato->concepto    = 'Depósito para alquiler de amenidades';   
           $dato->fecha       = Carbon::today();         
           $dato->entransito  = 0;
           $dato->un_id       = $evento->un_id;
@@ -942,8 +942,8 @@ class CalendareventosController extends Controller
           //$dato->trans_no    = Input::get('transno'); 
           $dato->monto       = $monto->alquiler; 
           $dato->f_pago      = Input::get('fecha');
-          $dato->descripcion = 'Deposito por alquiler de amenidades';
-          $dato->concepto    = 'deposito para alquiler de amenidades';   
+          $dato->descripcion = 'Depósito por alquiler de amenidades';
+          $dato->concepto    = 'Depósito para alquiler de amenidades';   
           $dato->fecha       = Carbon::today();         
           $dato->entransito  = 0;
           $dato->un_id       = $evento->un_id;
@@ -958,8 +958,8 @@ class CalendareventosController extends Controller
           $dato->trans_no    = Input::get('transno'); 
           $dato->monto       = $monto->alquiler; 
           $dato->f_pago      = Input::get('fecha');
-          $dato->descripcion = 'Deposito por alquiler de amenidades';
-          $dato->concepto    = 'deposito para alquiler de amenidades';   
+          $dato->descripcion = 'Depósito por alquiler de amenidades';
+          $dato->concepto    = 'Depósito para alquiler de amenidades';   
           $dato->fecha       = Carbon::today();         
           $dato->entransito  = 0;
           $dato->un_id       = $evento->un_id;

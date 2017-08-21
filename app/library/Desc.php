@@ -163,7 +163,7 @@ class Desc {
             $dto->save();          
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 4= Banca en linea se afecta derectamente a la cuenta de banco
+            // 4= Banca en línea se afecta derectamente a la cuenta de banco
             if ($tipoPago == 4) {
 
               // registra en el diario
@@ -242,7 +242,7 @@ class Desc {
             $totalDescontarPa = round(($cuota_mant - $sobrante), 2);
 
             // hace los asientos contables dependiendo del tipo de pago
-            // 4= Banca en linea se afecta derectamente a la cuenta de banco
+            // 4= Banca en línea se afecta derectamente a la cuenta de banco
             if ($tipoPago == 4) {
 
               // registra en el diario
@@ -398,7 +398,7 @@ class Desc {
         $dto->save();          
 
         // hace los asientos contables dependiendo del tipo de pago
-        // 4= Banca en linea se afecta derectamente a la cuenta de banco
+        // 4= Banca en línea se afecta derectamente a la cuenta de banco
         if ($tipoPago == 4) {
 
           // registra en el diario
